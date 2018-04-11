@@ -1,0 +1,7 @@
+/*!
+ * textarea component
+ * http://www.wadecn.com/
+ * auth:xiedx@asiainfo.com
+ * Copyright 2015, WADE
+ */
+!function(e,t,i){"use strict";if(e&&"undefined"==typeof e.TextArea){var n=i.createElement("input"),a="oninput"in n;n=null;var l=/[\[\]\{\}'"\/\\]+/,d=/[\[\]\{\}'"\/\\]*/g,s=function(t,n){var a=this;a.el=t&&1==t.nodeType?t:i.getElementById(t),a.el&&a.el.nodeType&&(a.id=e.attr(a.el,"id"))&&(n&&e.isObject(n)&&e.extend(a,n),e.attr(a.el,"x-wade-uicomponent")||e.attr(a.el,"x-wade-uicomponent","textarea"),a._init(),a.constructor.call(a))};s.prototype=e.extend(new e.UIComponent,{getDisabled:function(){var e=this;return e.disabled},setDisabled:function(t){var i=this;if(i.el&&i.el.nodeType){i.disabled=!!t;var n=i.el.className?i.el.className:"";i.disabled?((" "+n+" ").indexOf(" e_dis ")<0&&(i.el.className=e.trim(n+" e_dis")),i.el.disabled=!0):(n=e.trim((" "+n+" ").replace(/ e_dis /gi," ")),i.el.className=n,i.el.disabled=!1)}},destroy:function(){var e=this;e.el=null},_init:function(){var t=this,i=function(){return""==this.value||!l.test(""+this.value)||(this.value=(""+this.value).replace(d,""),!1)};a?e(t.el).bind("input",i):e(t.el).bind("keyup",i)}}),t.TextArea=e.TextArea=s}}(window.Wade,window,document);

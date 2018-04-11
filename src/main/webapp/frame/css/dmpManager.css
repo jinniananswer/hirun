@@ -1,0 +1,7 @@
+.p_index { font-weight:200;}
+.p_index > .header { height:2.67em; font-weight:200; font-family:"microsoft yahei"; line-height:2.67em; font-size:150%; color:#fff; background:#4d5b65; box-sizing:border-box;}
+.p_index > .header .logo { display:inline-block; padding:0 0.67em; cursor:pointer;}
+.p_index > .header .logo img { height:2.67em; box-sizing:border-box; padding:0.5em 0; margin-right:0.6em;}
+.p_index > .header .logo:hover { color:#f3b100;}
+.p_index > .main { position:absolute; left:0em; top:4em; right:0; bottom:0;}
+.p_index > .main iframe { border:0 none; height:100%; width:100%; vertical-align:top; display:block;}
