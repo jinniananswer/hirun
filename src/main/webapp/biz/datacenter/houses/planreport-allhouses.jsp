@@ -73,15 +73,17 @@
         var chart = echarts.init(document.getElementById("myPieChart"));
         var option = {
             "title": {
-                "text": "总规划楼盘数：524",
-                "subtext": "重点楼盘分布比例",
+                "text": "总规划楼盘数：534",
+                "subtext": "楼盘分布",
                 "left": "center"
             },
             "legend": {
                 "orient": "vertical",
                 "data": [
-                    "重点楼盘-75%",
-                    "责任楼盘-25%"
+                    "重点现盘:209",
+                    "重点期盘:288",
+                    "责任楼盘:35",
+                    "散盘:2"
                 ],
                 "left": "left"
             },
@@ -95,28 +97,20 @@
                     "type": "pie",
                     "data": [
                         {
-                            "name": "重点楼盘：占比76%",
-                            "value": 400,
-                            "itemStyle": {
-                                "normal": {
-                                    "color": "#F7464A"
-                                },
-                                "emphasis": {
-                                    "color": "#FF5A5E"
-                                }
-                            }
+                            "name": "重点现盘:209",
+                            "value": 209
                         },
                         {
-                            "name": "责任楼盘：占比24%",
-                            "value": 124,
-                            "itemStyle": {
-                                "normal": {
-                                    "color": "#46BFBD"
-                                },
-                                "emphasis": {
-                                    "color": "#5AD3D1"
-                                }
-                            }
+                            "name": "重点期盘:288",
+                            "value": 288
+                        },
+                        {
+                            "name": "责任楼盘:35",
+                            "value": 35
+                        },
+                        {
+                            "name": "散盘:2",
+                            "value": 2
                         }
                     ]
                 }

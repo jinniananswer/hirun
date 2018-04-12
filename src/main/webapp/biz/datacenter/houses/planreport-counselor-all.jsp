@@ -73,7 +73,7 @@
         var chart = echarts.init(document.getElementById("myPieChart"));
         var option = {
             "title": {
-                "text": "家装顾问总缺口数：89",
+                "text": "家装顾问总缺口数：92",
                 "subtext": "分公司家装顾问缺口数",
                 "left": "center"
             },
@@ -87,10 +87,10 @@
                     "武汉鸿扬:6",
                     "娄底鸿扬:4",
                     "怀化鸿扬:6",
-                    "常德鸿扬:13",
+                    "常德鸿扬:14",
                     "郴洲鸿扬:12",
                     "浏阳鸿扬:6",
-                    "宁乡鸿扬:2",
+                    "宁乡鸿扬:4",
                     "萍乡鸿扬:3"
                 ],
                 "left": "left"

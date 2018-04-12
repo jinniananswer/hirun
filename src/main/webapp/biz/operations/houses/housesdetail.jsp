@@ -43,12 +43,13 @@
             <table>
                 <thead>
                 <tr>
-                    <th class="e_center"><span>规划时间</span></th>
+                    <th class="e_center"><span>进入时间</span></th>
+                    <th class="e_center"><span>状态</span></th>
                     <th class="e_center"><span>楼盘名称</span></th>
                     <th class="e_center"><span>归属分公司</span></th>
                     <th class="e_center"><span>归属店面</span></th>
                     <th class="e_center"><span>楼盘性质</span></th>
-                    <th class="e_center"><span>楼盘属性</span></th>
+                    <th class="e_center"><span>家装顾问</span></th>
                     <th class="e_center"><span>总户数</span></th>
                     <th class="e_center"><span>交房时间</span></th>
 
@@ -56,102 +57,112 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-01-02</td>
+                    <td class="e_center">已进驻</td>
                     <td class="e_center">中国铁建山语城</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">袁家岭店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">重点楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">宁艳城</td>
                     <td class="e_center">700</td>
                     <td class="e_center">2018-3-30</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-01-20</td>
+                    <td class="e_center">已进驻</td>
                     <td class="e_center">辉煌国际城</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">袁家岭店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">重点楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">宁艳城、唐德文、唐耿华</td>
                     <td class="e_center">720</td>
                     <td class="e_center">2018-04-20</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-01-18</td>
+                    <td class="e_center">已进驻</td>
                     <td class="e_center">鸿涛翡翠湾</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">袁家岭店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">责任楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">宁艳城</td>
                     <td class="e_center">48</td>
                     <td class="e_center">2018-04-18</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-02-20</td>
+                    <td class="e_center">已进驻</td>
                     <td class="e_center">美联天骄城四期</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">袁家岭店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">责任楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">龙飞</td>
                     <td class="e_center">69</td>
                     <td class="e_center">2018-05-20</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
-                    <td class="e_center">美联天骄城四期</td>
+                    <td class="e_center">2018-02-20</td>
+                    <td class="e_center">已进驻</td>
+                    <td class="e_center">东云台</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">袁家岭店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">责任楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">唐球、刘云枫、刘爱爱</td>
                     <td class="e_center">69</td>
                     <td class="e_center">2018-05-20</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
-                    <td class="e_center">万境园</td>
+                    <td class="e_center">2018-04-15</td>
+                    <td class="e_center">未进驻</td>
+                    <td class="e_center">爵世名邸</td>
                     <td class="e_center">长沙鸿扬</td>
-                    <td class="e_center">新芙蓉店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">重点楼盘</td>
-                    <td class="e_center">360</td>
+                    <td class="e_center">袁家岭店</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">待定</td>
+                    <td class="e_center">1000</td>
                     <td class="e_center">2018-03-19</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2017-12-18</td>
+                    <td class="e_center">已进驻</td>
                     <td class="e_center">半山壹号二期</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">新芙蓉店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">重点楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">彭静、彭杰</td>
                     <td class="e_center">800</td>
                     <td class="e_center">2018-05-30</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2017-12-12</td>
+                    <td class="e_center">已进驻</td>
                     <td class="e_center">湘熙水郡</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">新芙蓉店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">重点楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">刘祖林、丁珊</td>
                     <td class="e_center">600</td>
                     <td class="e_center">2018-06-01</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-11-08</td>
+                    <td class="e_center">未进驻</td>
                     <td class="e_center">达美西湖湾三期</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">新芙蓉店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">重点楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">陈博航</td>
                     <td class="e_center">1166</td>
                     <td class="e_center">2018-06-30</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2017-10-30</td>
+                    <td class="e_center">已进驻</td>
                     <td class="e_center">梅岭国际</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">河西店</td>
-                    <td class="e_center">期盘</td>
-                    <td class="e_center">重点楼盘</td>
+                    <td class="e_center">重点期盘</td>
+                    <td class="e_center">田敏</td>
                     <td class="e_center">240</td>
                     <td class="e_center">2018-01-30</td>
                 </tr>
@@ -201,24 +212,30 @@
                                             <span class="e_select">袁家岭店</span>
                                         </div>
                                     </li>
-                                    <li class="link">
-                                        <div class="label">规划时间</div>
+                                    <li>
+                                        <div class="label">楼盘名称（模糊匹配）</div>
                                         <div class="value">
                                             <input type="text" />
                                         </div>
-                                        <div class="more"></div>
+                                    </li>
+                                    <li class="link">
+                                        <div class="label">状态</div>
+                                        <div class="value">
+                                            <span class="e_select">未进驻</span>
+                                        </div>
                                     </li>
                                     <li>
                                         <div class="label">楼盘性质</div>
                                         <div class="value">
-                                            <span class="e_select">期盘</span>
+                                            <span class="e_select">重点期盘</span>
                                         </div>
                                     </li>
                                     <li>
-                                        <div class="label">楼盘属性</div>
+                                        <div class="label">家装顾问</div>
                                         <div class="value">
-                                            <span class="e_select">重点楼盘</span>
+                                            <input type="text" />
                                         </div>
+                                        <div class="more"></div>
                                     </li>
                                 </ul>
                             </div>

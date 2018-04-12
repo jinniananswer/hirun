@@ -36,9 +36,9 @@
                                 <ul>
                                     <li>
                                         <div class="main">
-                                            <div class="title e_size-xxl">楼盘规划-2018长沙公司门店家装顾问计划数与实际分配数统计</div>
+                                            <div class="title e_size-xxl">楼盘规划-2018长沙公司门店重点楼盘家装顾问计划数与实际分配数统计</div>
                                             <div class="content content-auto">
-                                                查看分公司门店家装顾问计划数与实际分配数的对比
+                                                查看分公司门店重点楼盘家装顾问计划数与实际分配数的对比
                                                 <div class="c_space-2"></div>
                                                 <div class="e_right">
 
@@ -69,7 +69,7 @@
         var chart = echarts.init(document.getElementById("myBarChart"));
         var option = {
             "title": {
-                "text": "长沙公司家装顾问计划数与实际分配数对比-按门店",
+                "text": "长沙公司重点楼盘家装顾问计划数与实际分配数对比-按门店",
                 "subtext": ""
             },
             "tooltip": {"trigger": "axis","axisPointer": {"type": "shadow"}},

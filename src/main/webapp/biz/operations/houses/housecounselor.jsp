@@ -43,7 +43,7 @@
             <table>
                 <thead>
                 <tr>
-                    <th class="e_center"><span>规划年份</span></th>
+                    <th class="e_center"><span>进入时间</span></th>
                     <th class="e_center"><span>楼盘名称</span></th>
                     <th class="e_center"><span>归属分公司</span></th>
                     <th class="e_center"><span>归属门店</span></th>
@@ -55,7 +55,7 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">待定</td>
                     <td class="e_center">麓阳和景</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">河西店</td>
@@ -65,7 +65,7 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">待定</td>
                     <td class="e_center">南山雍江汇</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">河西店</td>
@@ -75,7 +75,7 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-03-31</td>
                     <td class="e_center">润和紫郡</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">金星店</td>
@@ -85,7 +85,7 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-03-31</td>
                     <td class="e_center">山与墅（别墅）</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">金星店</td>
@@ -95,7 +95,7 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-03-31</td>
                     <td class="e_center">玛丽的花园一期</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">金星店</td>
@@ -105,7 +105,7 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-04-15</td>
                     <td class="e_center">盈峰翠邸（别墅）</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">金星店</td>
@@ -115,7 +115,7 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-04-15</td>
                     <td class="e_center">龙湾</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">优仕馆</td>
@@ -125,8 +125,8 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
-                    <td class="e_center">湘熙水郡</td>
+                    <td class="e_center">2018-03-30</td>
+                    <td class="e_center">北辰中央公园</td>
                     <td class="e_center">长沙鸿扬</td>
                     <td class="e_center">新芙蓉店</td>
                     <td class="e_center">未分配</td>
@@ -135,7 +135,7 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-03-30</td>
                     <td class="e_center">逸景华庭</td>
                     <td class="e_center">株洲鸿扬</td>
                     <td class="e_center">攸县店</td>
@@ -145,11 +145,11 @@
                     <td class="e_center">-1</td>
                 </tr>
                 <tr>
-                    <td class="e_center">2018年</td>
+                    <td class="e_center">2018-03-30</td>
                     <td class="e_center">新伟未来城</td>
                     <td class="e_center">株洲鸿扬</td>
-                    <td class="e_center">河西店</td>
                     <td class="e_center">攸县店</td>
+                    <td class="e_center">未分配</td>
                     <td class="e_center">1</td>
                     <td class="e_center">0</td>
                     <td class="e_center">-1</td>

@@ -47,11 +47,11 @@
                         <div class="main">楼盘分配</div>
                         <div class="more"></div>
                     </li>
-                    <li class="link" title="楼盘规划报表" ontap="$.index.openNav('biz/datacenter/houses/planreport-counselor-all.jsp','家装顾问缺口数报表')">
+                    <li class="link" title="楼盘规划报表" ontap="$.index.openNav('biz/datacenter/houses/planreport-store.jsp','重点楼盘计划数与实际分配数的对比')">
                         <div class="main">楼盘规划报表</div>
                         <div class="more"></div>
                     </li>
-                    <li class="link" title="楼盘分配情况报表" ontap="$.index.openNav('biz/datacenter/houses/planreport-store.jsp','楼盘规划报表')">
+                    <li class="link" title="楼盘分配情况报表" ontap="$.index.openNav('biz/datacenter/houses/planreport-counselor-all.jsp','家装顾问缺口数报表')">
                         <div class="main">楼盘分配情况报表</div>
                         <div class="more"></div>
                     </li>
