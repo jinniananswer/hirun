@@ -111,8 +111,10 @@ public class GenericSqlProducer implements ISqlProducer {
         StringBuilder sb = (StringBuilder)objects[0];
         List<String> variables = (List<String>)objects[1];
         this.appendPageSql(sb, startNum, endNum);
+        if(log.isDebugEnabled())
+            log.debug("生成的select语句为:"+sb.toString());
 
-        PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
+        PreparedStatement stmt = conn.getConnection().prepareStatement(sb.toString());
         this.bindValueWithoutColumnType(stmt, variables, parameter);
         return stmt;
     }
@@ -122,6 +124,8 @@ public class GenericSqlProducer implements ISqlProducer {
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
         this.bindValue(stmt, tableMetaData.getColumns(), parameter);
+        if(log.isDebugEnabled())
+            log.debug("生成的insert语句为："+sql);
         return stmt;
     }
 
@@ -129,6 +133,10 @@ public class GenericSqlProducer implements ISqlProducer {
         if(ArrayTool.isEmpty(parameters))
             throw new SQLException("批量插入数据时，绑定参数集合不能为空");
         String sql = this.generateInsertAllCols(conn, tableName);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的insert语句为"+sql);
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
         List<ColumnData> cols = tableMetaData.getColumns();
@@ -150,6 +158,9 @@ public class GenericSqlProducer implements ISqlProducer {
      */
     public PreparedStatement generateUpdateSql(ConnectionWrapper conn, String tableName, Map<String, String> parameter) throws SQLException{
         String sql = generateUpdateAllCols(conn, tableName, null);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的update语句为："+sql);
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
         List<ColumnData> columns = new ArrayList<ColumnData>();
@@ -165,6 +176,10 @@ public class GenericSqlProducer implements ISqlProducer {
             throw new SQLException("批量修改数据时，绑定参数集合不能为空");
 
         String sql = generateUpdateAllCols(conn, tableName, null);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的update语句为："+sql);
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
         List<ColumnData> columns = new ArrayList<ColumnData>();
@@ -193,6 +208,10 @@ public class GenericSqlProducer implements ISqlProducer {
             return this.generateUpdateSql(conn, tableName, parameter);
         }
         String sql = this.generateUpdateAllCols(conn, tableName, columns);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的update语句为："+sql);
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
         List<ColumnData> columnDatas = new ArrayList<ColumnData>();
@@ -215,6 +234,10 @@ public class GenericSqlProducer implements ISqlProducer {
             throw new SQLException("批量修改数据时，绑定参数集合不能为空");
 
         String sql = this.generateUpdateAllCols(conn, tableName, columns);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的update语句为："+sql);
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
         List<ColumnData> columnDatas = new ArrayList<ColumnData>();
@@ -245,6 +268,10 @@ public class GenericSqlProducer implements ISqlProducer {
         String[] primaryKeys = tableMetaData.getPrimaryKeys();
         String whereSql = this.generateWhereSql(primaryKeys, false);
         sb.append(whereSql);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的delete语句为："+sb.toString());
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sb.toString());
         this.bindValue(stmt, tableMetaData.getPrimaryColumns(), parameter);
         return stmt;
@@ -272,6 +299,10 @@ public class GenericSqlProducer implements ISqlProducer {
         }
         String whereSql = this.generateWhereSql(cols, false);
         sb.append(whereSql);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的delete语句为："+sb.toString());
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sb.toString());
         this.bindValue(stmt, columnDatas, parameter);
         return stmt;
@@ -284,6 +315,10 @@ public class GenericSqlProducer implements ISqlProducer {
         String[] primaryKeys = tableMetaData.getPrimaryKeys();
         String whereSql = this.generateWhereSql(primaryKeys, false);
         sb.append(whereSql);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的delete语句为："+sb.toString());
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sb.toString());
         for(Map<String, String> parameter : parameters) {
             this.bindValue(stmt, tableMetaData.getPrimaryColumns(), parameter);
@@ -307,6 +342,10 @@ public class GenericSqlProducer implements ISqlProducer {
         }
         String whereSql = this.generateWhereSql(cols, false);
         sb.append(whereSql);
+
+        if(log.isDebugEnabled())
+            log.debug("生成的delete语句为："+sb.toString());
+
         PreparedStatement stmt = conn.getConnection().prepareStatement(sb.toString());
         for(Map<String, String> parameter : parameters) {
             this.bindValue(stmt, columnDatas, parameter);
@@ -368,7 +407,7 @@ public class GenericSqlProducer implements ISqlProducer {
             if(i == columnSize - 1)
                 sb.append("?");
             else
-                sb.append("?");
+                sb.append("?,");
         }
         sb.append(")");
         String sql = sb.toString();
@@ -384,7 +423,7 @@ public class GenericSqlProducer implements ISqlProducer {
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("UPDATE " + tableName.toUpperCase() + "SET ");
+        sb.append("UPDATE " + tableName.toUpperCase() + " SET ");
         List<ColumnData> cols = tableMetaData.getColumns();
         int index = 0;
         int colSize = cols.size();
@@ -408,7 +447,7 @@ public class GenericSqlProducer implements ISqlProducer {
         if (ArrayTool.isEmpty(cols))
             return "";
         StringBuilder sb = new StringBuilder();
-        sb.append("WHERE ");
+        sb.append(" WHERE ");
         int i = 0;
         for (String col : cols) {
             if (i != 0)
