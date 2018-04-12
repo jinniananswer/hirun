@@ -5,18 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>Always Online Office</title>
-    <link rel="stylesheet" href="frame/TouchUI/content/css/base.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="frame/css/project.css" rel="stylesheet" type="text/css"/>
-    <script src="frame/TouchUI/content/js/jcl-base.js"></script>
-    <script src="frame/TouchUI/content/js/jcl.js"></script>
-    <script src="frame/TouchUI/content/js/i18n/code.zh_CN.js"></script>
-    <script src="frame/TouchUI/content/js/jcl-plugins.js"></script>
-    <script src="frame/TouchUI/content/js/jcl-ui.js"></script>
-    <script src="frame/TouchUI/content/js/ui/component/base/popup.js"></script>
-    <script src="frame/TouchUI/content/js/ui/component/base/segment.js"></script>
-    <script src="frame/TouchUI/content/js/ui/component/base/switch.js"></script>
-    <script src="frame/TouchUI/content/js/ui/component/tabset/tabset.js"></script>
-    <script src="frame/TouchUI/content/js/local.js"></script>
+    <jsp:include page="/common.jsp"></jsp:include>
     <script src="scripts/index.js"></script>
 </head>
 <body>
