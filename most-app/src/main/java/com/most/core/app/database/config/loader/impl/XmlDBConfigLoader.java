@@ -2,16 +2,13 @@ package com.most.core.app.database.config.loader.impl;
 
 import com.most.core.app.database.config.DatabaseConfig;
 import com.most.core.app.database.config.loader.IDBConfigLoader;
+import com.most.core.pub.tools.file.XmlTool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +29,7 @@ public class XmlDBConfigLoader implements IDBConfigLoader {
     public List<DatabaseConfig> load() {
         Element root = null;
         try {
-            root = this.getRoot();
+            root = XmlTool.getRoot(fileName);
         } catch (DocumentException e) {
             log.error("数据库配置文件初始化出错");
         } catch (IOException e) {
@@ -43,7 +40,7 @@ public class XmlDBConfigLoader implements IDBConfigLoader {
             return null;
         }
 
-        List<Element> elements = this.getConnectConfigs(root);
+        List<Element> elements = XmlTool.getRootSubNodes(root);
         if(elements == null || elements.size() <= 0){
             log.error("没有读取到一个数据库配置节点，请检查database.xml文件配置");
             return null;
@@ -70,43 +67,5 @@ public class XmlDBConfigLoader implements IDBConfigLoader {
         }
 
         return configs;
-    }
-
-    /**
-     * 解析数据库配置文件的根节点
-     * @return
-     * @throws FileNotFoundException
-     * @throws DocumentException
-     * @throws IOException
-     */
-    private Element getRoot() throws FileNotFoundException,DocumentException,IOException{
-        InputStream in = null;
-        try {
-            in = this.getClass().getClassLoader().getResourceAsStream(fileName);
-            if (in == null) {
-                throw new FileNotFoundException(fileName);
-            }
-            SAXReader reader = new SAXReader();
-            Document doc = reader.read(in);
-            Element root = doc.getRootElement();
-            return root;
-        }
-        finally {
-            if(in != null){
-                in.close();
-            }
-        }
-    }
-
-    /**
-     * 将根节点下所有的connect子节点返回
-     * @param root
-     * @return
-     */
-    private List<Element> getConnectConfigs(Element root){
-        if(root != null){
-            return root.selectNodes("*");
-        }
-        return null;
     }
 }
