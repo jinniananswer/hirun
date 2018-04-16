@@ -3,13 +3,14 @@ package com.most.core.app.session;
 import com.most.core.app.database.conn.ConnectionFactory;
 import com.most.core.app.database.wrapper.ConnectionWrapper;
 import com.most.core.pub.tools.datastruct.MapTool;
+import com.most.core.pub.tools.time.TimeTool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * @Author jinnian
@@ -21,6 +22,15 @@ public class AppSession{
     private transient Logger log = LogManager.getLogger(AppSession.class.getName());
 
     private Map<String, ConnectionWrapper> connections = new HashMap<String, ConnectionWrapper>();
+
+    private String createTime;
+
+    private String sessionId;
+
+    public AppSession(){
+        this.createTime = TimeTool.now();
+        this.sessionId = UUID.randomUUID().toString();
+    }
 
     public ConnectionWrapper getConnection(String databaseName){
         if(connections.containsKey(databaseName)){
