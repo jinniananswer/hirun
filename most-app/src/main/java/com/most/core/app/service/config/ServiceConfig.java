@@ -1,5 +1,7 @@
 package com.most.core.app.service.config;
 
+import java.lang.reflect.Method;
+
 /**
  * @Author jinnian
  * @Date 2018/4/16 21:39
@@ -14,6 +16,10 @@ public class ServiceConfig {
     private String methodName;
 
     private String desc;
+
+    private Class<?> serviceClass;
+
+    private Method serviceMethod;
 
     public String getServiceName() {
         return serviceName;
@@ -45,5 +51,21 @@ public class ServiceConfig {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public Class<?> getServiceClass() {
+        return serviceClass;
+    }
+
+    public void setServiceClass(Class<?> serviceClass) {
+        this.serviceClass = serviceClass;
+    }
+
+    public Method getServiceMethod() {
+        return serviceMethod;
+    }
+
+    public void setServiceMethod(Method serviceMethod) {
+        this.serviceMethod = serviceMethod;
     }
 }
