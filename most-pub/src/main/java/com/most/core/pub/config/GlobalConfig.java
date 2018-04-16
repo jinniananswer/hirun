@@ -16,6 +16,8 @@ public class GlobalConfig {
 
     public final static String DATABASE_CONFIG_TYPE;
 
+    public final static String SERVICE_CONFIG_TYPE;
+
     private static Logger log = LogManager.getLogger(GlobalConfig.class.getName());
 
     static{
@@ -25,6 +27,7 @@ public class GlobalConfig {
         }
         Map<String, String> globalConfig = PropertiesTool.getProperties(properties);
         DATABASE_CONFIG_TYPE = globalConfig.get("dbconfigtype");
+        SERVICE_CONFIG_TYPE = globalConfig.get("serviceconfigtype");
         if(log.isDebugEnabled()){
             log.debug("DATABASE_CONFIG_TYPE=" + DATABASE_CONFIG_TYPE);
         }
