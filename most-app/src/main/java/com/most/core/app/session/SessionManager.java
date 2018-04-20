@@ -22,4 +22,8 @@ public class SessionManager {
         }
         return session;
     }
+
+    public static void destroy(){
+        threadSession.remove();
+    }
 }

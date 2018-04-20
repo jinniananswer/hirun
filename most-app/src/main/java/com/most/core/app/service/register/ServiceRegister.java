@@ -3,6 +3,7 @@ package com.most.core.app.service.register;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.service.config.ServiceConfig;
 import com.most.core.app.service.config.ServiceConfigFactory;
+import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.tools.datastruct.MapTool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,14 +33,14 @@ public class ServiceRegister {
             String classPath = config.getClassPath();
             try {
                 Class<GenericService> classes = (Class<GenericService>) Class.forName(classPath);
-                Method method = classes.getMethod(config.getMethodName(), new Class<?>[]{Map.class});
+                Method method = classes.getMethod(config.getMethodName(), new Class<?>[]{ServiceRequest.class});
                 config.setServiceClass(classes);
                 config.setServiceMethod(method);
             }
             catch (ClassNotFoundException e){
-                log.debug("服务"+config.getServiceName()+"注册失败，未到找定义的服务类");
+                log.debug("服务"+config.getServiceName()+"注册失败，未找到定义的服务类");
             } catch (NoSuchMethodException e) {
-                log.debug("服务"+config.getServiceName()+"注册失败，未到找定义的服务方法");
+                log.debug("服务"+config.getServiceName()+"注册失败，未找到定义的服务方法");
             }
         }
     }

@@ -11,4 +11,8 @@ public class Encryptor {
         md.update(text.getBytes());
         return new BigInteger(1, md.digest()).toString(32);
     }
+
+    public static void main(String[] args) throws Exception{
+        System.out.println(encryptMd5("123456"));
+    }
 }

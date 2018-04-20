@@ -1,0 +1,4 @@
+<service>
+    <!--服务名命名规范 中心名.模块名.类名.方法名 -->
+    <entity name="OrgCenter.login.LoginService.login"  class="com.hirun.app.biz.login.LoginService" method="login"/>
+</service>

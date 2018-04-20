@@ -54,4 +54,12 @@ public class ResultSetWrapper {
     public String getString(String columnLabel) throws SQLException{
         return resultSet.getString(columnLabel);
     }
+
+    public Object getObject(String columnLabel) throws SQLException{
+        return resultSet.getObject(columnLabel);
+    }
+
+    public Object getObject(int columnIndex) throws SQLException{
+        return resultSet.getObject(columnIndex);
+    }
 }

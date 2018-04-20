@@ -22,7 +22,7 @@
 </head>
 <body>
 <div class="p_index">
-    <div class="header">
+    <div class="data">
         <div class="logo">HI-RUN - 用户注册</div>
     </div>
     <div class="main">

@@ -31,6 +31,36 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <filter>
+    <filter-name>sessionVerifyFilter</filter-name>
+    <filter-class>com.most.core.web.filter.SessionVerifyFilter</filter-class>
+    <init-param>
+      <description>
+        不需要进行拦截的 url 的正则表达式，即：如果当前请求的 url 的 servletPath 能匹配该正则表达式，则直接放行（即使未登录系统）。
+      </description>
+      <param-name>excepUrlRegex</param-name>
+      <param-value>/(login|register|loginPost|login.jsp|register.jsp)</param-value>
+    </init-param>
+    <init-param>
+      <description>
+        跳转的url
+      </description>
+      <param-name>forwardUrl</param-name>
+      <param-value>/login</param-value>
+    </init-param>
+    <init-param>
+      <description>
+        放入session中用于验证是否登陆的KEY
+      </description>
+      <param-name>sessionKey</param-name>
+      <param-value>USER</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>sessionVerifyFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
   <!-- Spring view分发器 -->
   <servlet>
     <servlet-name>hirun</servlet-name>

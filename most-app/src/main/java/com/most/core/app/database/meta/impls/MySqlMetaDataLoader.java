@@ -8,6 +8,8 @@ import com.most.core.app.database.meta.data.DataFieldType;
 import com.most.core.app.database.meta.data.TableMetaData;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,6 +29,8 @@ public class MySqlMetaDataLoader implements IMetaDataLoader {
 
     private Map<String, TableMetaData> cached = new HashMap<String, TableMetaData>();
 
+    private Logger log = LogManager.getLogger(MySqlMetaDataLoader.class.getName());
+
     /**
      * 根据数据库名和表名加载该表的源数据定义
      * @param databaseName 数据库名
@@ -42,9 +46,12 @@ public class MySqlMetaDataLoader implements IMetaDataLoader {
         ConnectionWrapper connectionWrapper = ConnectionFactory.getConnection(databaseName);
         Connection conn = connectionWrapper.getConnection();
 
-        PreparedStatement statement = conn.prepareStatement("select b.column_name from information_schema.TABLE_CONSTRAINTS a, information_schema.KEY_COLUMN_USAGE b where a.table_name = b.table_name and a.table_schema = ? and b.table_name = ?");
-        statement.setString(1, databaseName);
-        statement.setString(2, tableName);
+        if(log.isDebugEnabled()){
+            log.debug("获取数据库"+connectionWrapper.getDatabaseName()+"连接");
+        }
+
+        PreparedStatement statement = conn.prepareStatement("select b.column_name from information_schema.TABLE_CONSTRAINTS a, information_schema.KEY_COLUMN_USAGE b where a.table_name = b.table_name and b.table_name = ?");
+        statement.setString(1, tableName);
         ResultSet resultSet = statement.executeQuery();
 
         List<String> primaryKeys = new ArrayList<String>();

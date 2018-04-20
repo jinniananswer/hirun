@@ -25,7 +25,7 @@
 
 <div class="p_index">
 
-    <div class="c_scroll c_scroll-float c_scroll-phone-header" id="UI-scroller">
+    <div class="c_scroll c_scroll-float c_scroll-phone-data" id="UI-scroller">
         <div class="p_paper" id="UI-paper">
 
             <!-- 基础 开始 -->

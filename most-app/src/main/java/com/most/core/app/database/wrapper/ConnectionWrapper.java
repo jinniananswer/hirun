@@ -29,6 +29,10 @@ public class ConnectionWrapper {
         this.connection.close();
     }
 
+    public void rollback() throws SQLException{
+        this.connection.rollback();
+    }
+
     public void commit() throws  SQLException{
         this.connection.commit();
     }

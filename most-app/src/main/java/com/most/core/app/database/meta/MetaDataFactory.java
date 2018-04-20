@@ -30,10 +30,10 @@ public class MetaDataFactory {
         String[] preTables = new String[]{"SYS_STATIC_DATA"};
 
         for(String table : preTables){
-            IMetaDataLoader loader = loaderCache.get("hirun_sys");
+            IMetaDataLoader loader = loaderCache.get("sys");
             TableMetaData tableMetaData = null;
             try {
-                tableMetaData = loader.loadMetaData("hirun_sys",table);
+                tableMetaData = loader.loadMetaData("sys",table);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

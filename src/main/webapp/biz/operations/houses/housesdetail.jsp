@@ -182,7 +182,7 @@
                     <div class="c_header">
                         <div class="back" onclick="hidePopup('popup')">查询条件</div>
                     </div>
-                    <div class="c_scroll c_scroll-float c_scroll-header">
+                    <div class="c_scroll c_scroll-float c_scroll-data">
                         <div class="c_scrollContent l_padding">
                             <!-- 查询表单 开始 -->
                             <div class="c_list c_list-form">

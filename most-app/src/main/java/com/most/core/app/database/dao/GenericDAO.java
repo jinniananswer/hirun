@@ -5,6 +5,7 @@ import com.most.core.app.database.producer.SqlProducerFactory;
 import com.most.core.app.database.tools.DBTool;
 import com.most.core.app.database.wrapper.ConnectionWrapper;
 import com.most.core.app.database.wrapper.ResultSetWrapper;
+import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import org.apache.logging.log4j.LogManager;
@@ -23,16 +24,21 @@ import java.util.Map;
  */
 public class GenericDAO {
 
-    private Logger log = LogManager.getLogger(GenericDAO.class.getName());
+    protected Logger log = LogManager.getLogger(GenericDAO.class.getName());
 
-    private ConnectionWrapper connection;
+    protected ConnectionWrapper connection;
 
-    private ISqlProducer producer;
+    protected ISqlProducer producer;
 
-    private static final int fetchSize = 2000;
+    protected static final int fetchSize = 2000;
 
     public GenericDAO(ConnectionWrapper connection){
         this.connection = connection;
+        this.producer = SqlProducerFactory.getSqlProducer(this.connection.getDatabaseName());
+    }
+
+    public GenericDAO(String databaseName){
+        this.connection = SessionManager.getSession().getConnection(databaseName);
         this.producer = SqlProducerFactory.getSqlProducer(this.connection.getDatabaseName());
     }
 

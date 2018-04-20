@@ -39,7 +39,7 @@ public class XmlServiceConfigLoader implements IServiceConfigLoader{
 
         List<Element> elements = XmlTool.getRootSubNodes(root);
         if(elements == null || elements.size() <= 0){
-            log.error("没有读取到一个数据库配置节点，请检查services.xml文件配置");
+            log.error("没有读取到一个服务配置节点，请检查services.xml文件配置");
             return null;
         }
 
@@ -52,7 +52,7 @@ public class XmlServiceConfigLoader implements IServiceConfigLoader{
             config.setDesc(element.attributeValue("desc"));
             configs.add(config);
             if(log.isDebugEnabled()){
-                log.debug("已加载数据库"+config.getServiceName()+"的配置，配置清单为"+config);
+                log.debug("已加载服务"+config.getServiceName()+"的配置，服务名为"+config.getServiceName());
             }
         }
 

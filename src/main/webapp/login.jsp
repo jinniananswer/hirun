@@ -6,6 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>hi-run</title>
 	<jsp:include page="/common.jsp"></jsp:include>
+	<style>
+		.c_tooltip { z-index:99999 !important; }
+	</style>
+	<script src="scripts//login.js"></script>
 </head>
 <body>
 	<div class="p_login">
@@ -27,7 +31,7 @@
 						</div>
 					</div>
 					<div class="l_padding-3 l_padding-u">
-						<form name="loginForm" method="post" action="/loginPost">
+						<form name="loginForm" id="loginForm" method="post" action="">
 							<div class="c_space"></div>
 							<!-- 表单 开始 -->
 							<div class="c_form c_form-label-3 c_form-col-1">
@@ -35,13 +39,13 @@
 									<li>
 										<div class="label">用户名：</div>
 										<div class="value">
-											<input id="username" name="username" type="text" value="SUPERUSR"/>
+											<input type="text" id="username" name="username" datatype="text" nullable="no" desc="用户名" />
 										</div>
 									</li>
 									<li>
 										<div class="label">密　码：</div>
 										<div class="value">
-											<input id="password" name="password"  type="password" value="lc" />
+											<input type="password" id="password" name="password" datatype="text" nullable="no" desc="密码" />
 										</div>
 									</li>
 								</ul>
@@ -50,14 +54,15 @@
 							<div class="c_space-2"></div>
 							<!-- 提交 开始 -->
 							<div class="c_submit c_submit-full">
-								<button id="login_btn" type="submit" class="e_button-l e_button-green">登陆</button>
+								<button id="login_btn" type="button" class="e_button-l e_button-green" ontap="$.login.verifyLogin();">登陆</button>
 							</div>
 							<!-- 提交 结束 -->
+							<!--
 							<div class="c_space-2"></div>
 							<div class="e_right p_loginLinks">
-								<a href="#nogo">忘记密码？</a>
-								<a href="#nogo">免费注册</a>
+
 							</div>
+							-->
 						</form>
 					</div>
 				</div>
@@ -65,7 +70,7 @@
 			<!-- 悬浮层 结束 -->
 		</div>
 		<div class="copyright">
-			Copyright © 2017 m.o.s.t. All rights reserved.
+			Copyright © 2018 m.o.s.t. All rights reserved.
 		</div>
 	</div>
 	<script>
