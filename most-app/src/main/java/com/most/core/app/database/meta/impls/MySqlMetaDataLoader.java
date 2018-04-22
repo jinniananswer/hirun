@@ -41,6 +41,7 @@ public class MySqlMetaDataLoader implements IMetaDataLoader {
         if(cached.containsKey(tableName.toUpperCase())){
             return cached.get(tableName.toUpperCase());
         }
+        tableName = tableName.toUpperCase();
         TableMetaData metaData = new TableMetaData();
         metaData.setTableName(tableName);
         ConnectionWrapper connectionWrapper = ConnectionFactory.getConnection(databaseName);
