@@ -33,7 +33,7 @@
 		addNav : function(title){
 			this.hideAllTitles();
 			var pageTitle = $("#page_titles");
-			var html = "<li class='on' title='"+title+"' onclick=$.index.switchPage('"+title+"')><span class='text'>"+title+"</span><div class='close' onclick=$.index.closePage('"+title+"')><span class='e_ico-close'></span></div></li>";
+			var html = "<li class='on' title='"+title+"' onclick=$.index.switchPage('"+title+"')><div class='text'>"+title+"</div><div class='close' onclick=$.index.closePage('"+title+"',this)><span class='e_ico-close'></span></div></li>";
 			pageTitle.append(html);
 		},
 		
@@ -89,7 +89,7 @@
 				var pageTitle = $(pageTitles[i]);
 				var currentTitle = pageTitle.attr("title");
 				if(title == currentTitle){
-					pageTitle.attr("class","on");
+					pageTitle.addClass("on");
 				}
 				else{
 					pageTitle.removeClass("on");
@@ -109,9 +109,10 @@
 			}
 		},
 		
-		closePage: function(title){
+		closePage: function(title, obj){
 			var isActive = false;
 			var pageTitles = $("#page_titles li");
+
 			for(var i=0;i<pageTitles.length;i++){
 				var pageTitle = $(pageTitles[i]);
 				var currentTitle = pageTitle.attr("title");
@@ -120,18 +121,21 @@
 					if(currentClass == "on"){
 						isActive = true;
 					}
+
 					pageTitle.remove();
 					break;
 				}
 			}
+
 			pageTitles = $("#page_titles li");
-			
+
 			if(isActive){
 				var pageTitle = $(pageTitles[pageTitles.length-1]);
-				pageTitle.attr("class", "on");
+				pageTitle.addClass("on");
 			}
-			
+
 			var contents = $("#page_contents iframe");
+			$(contents[i]).remove();
 			for(var i=0;i<contents.length;i++){
 				var content = $(contents[i]);
 				var currentTitle = content.attr('title');
@@ -140,11 +144,14 @@
 					break;
 				}
 			}
+
 			contents = $("#page_contents iframe");
 			if(isActive){
 				var content = $(contents[contents.length-1]);
 				content.css("display","");
 			}
+
+			event.stopPropagation();
 		}
 	}});
 })($);
