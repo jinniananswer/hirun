@@ -9,7 +9,7 @@
 	<style>
 		.c_tooltip { z-index:99999 !important; }
 	</style>
-	<script src="scripts//login.js"></script>
+	<script src="scripts/login.js"></script>
 </head>
 <body>
 	<div class="p_login">
