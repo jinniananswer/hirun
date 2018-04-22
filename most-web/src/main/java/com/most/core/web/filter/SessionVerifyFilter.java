@@ -1,6 +1,8 @@
 package com.most.core.web.filter;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -32,11 +34,16 @@ public class SessionVerifyFilter implements Filter{
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
+        Logger log = LogManager.getLogger(SessionVerifyFilter.class.getName());
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
         String servletPath = request.getServletPath();
-        if (excepUrlPattern.matcher(servletPath).matches()) {
+        String uri = request.getRequestURI();
+
+        log.debug("===========================servletpath============================="+servletPath);
+        if (excepUrlPattern.matcher(servletPath).matches() || uri.contains(".css") || uri.contains(".js") || uri.contains(".png") || uri.contains(".jpg")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
