@@ -3,6 +3,7 @@ package com.most.core.app.database.dao;
 import com.most.core.pub.data.GenericEntity;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,6 +19,14 @@ public class StrongObjectDAO extends GenericDAO {
 
     public StrongObjectDAO(String databaseName){
         super(databaseName);
+    }
+
+    public <K extends GenericEntity> K queryByPk(Class<K> classes, String tableName, Map<String, String> parameter) throws SQLException{
+        List<K> objects = this.query(classes, tableName, parameter);
+
+        if(ArrayTool.isEmpty(objects))
+            return null;
+        return objects.get(0);
     }
 
     public <K extends GenericEntity> List<K> query(Class<K> classes, String tableName, Map<String, String> parameter) throws SQLException{
