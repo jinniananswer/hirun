@@ -28,6 +28,14 @@
             <!-- 列表 开始 -->
             <div class="c_list c_list-s">
                 <ul>
+                    <li class="link" title="今日计划录入" ontap="$.index.openNav('biz/operations/contactplan/plan_entry.jsp','今日计划录入')">
+                        <div class="main">今日计划录入</div>
+                        <div class="more"></div>
+                    </li>
+                    <li class="link" title="今日计划总结" ontap="$.index.openNav('biz/operations/contactplan/plan_summarize.jsp','今日计划总结')">
+                        <div class="main">今日计划总结</div>
+                        <div class="more"></div>
+                    </li>
                     <li class="link" title="楼盘规划" ontap="$.index.openNav('biz/operations/houses/housesdetail.jsp','楼盘规划详情')">
                         <div class="main">楼盘规划</div>
                         <div class="more"></div>
