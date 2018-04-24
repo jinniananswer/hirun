@@ -23,8 +23,8 @@
 			<div class="text">2018-04-20计划总结</div>
 			<div class="fn">
 				<ul>
-					<li>
-						<span class="e_ico-add"></span>客户信息补录
+					<li class="link" ontap="top.$.index.openNav('biz/operations/cust/cust_add.jsp','新增客户')">
+						<span class="e_ico-add"></span>新增客户
 					</li>
 				</ul>
 			</div>

@@ -34,7 +34,7 @@
 				</li>
 			</ul>
 		</div>
-		<div id="ACTION_PART" style="display: 'none';">
+		<div id="ACTION_PART" style="display: '';">
 			<!--<div class="c_space"></div>-->
 			<!--
 			<div class="c_title">
@@ -47,7 +47,7 @@
 					<li class="link" tag="ACTION_TAG" x_tag="x-databind-template" style="display:none" id={ACTION_CODE}>
 						<div class="main">
 							<div class="title group">
-								<span tag="ACTION_NAME_TEXT">{ACTION_NAME}<span>
+								<span tag="ACTION_NAME_TEXT">{ACTION_NAME}</span>
 								<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok"></span></span>
 							</div>
 							<div tag="ACTION_NAME_CONTENT" class="content content-auto"></div>
