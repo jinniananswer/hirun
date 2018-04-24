@@ -43,6 +43,14 @@ public class EmployeeEntity extends GenericEntity{
         this.set("NAME", name);
     }
 
+    public String getSex(){
+        return this.get("SEX");
+    }
+
+    public void setSex(String sex){
+        this.set("SEX", sex);
+    }
+
     public String getIndentityNo(){
         return this.get("IDENTITY_NO");
     }

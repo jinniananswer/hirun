@@ -1,14 +1,24 @@
 package com.hirun.app.biz.login;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.dao.employee.EmployeeDAO;
+import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
+import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
+import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
+import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.security.Encryptor;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 /**
  * @Author jinnian
@@ -38,6 +48,24 @@ public class LoginService extends GenericService{
 
         EmployeeDAO employeeDao = new EmployeeDAO("ins");
         EmployeeEntity employee = employeeDao.queryEmployeeByUserId(user.getUserId());
+
+        if(employee != null) {
+            EmployeeJobRoleDAO jobRoleDAO = new EmployeeJobRoleDAO("ins");
+            List<EmployeeJobRoleEntity> jobRoles = jobRoleDAO.queryJobRoleByEmployeeId(employee.getEmployeeId());
+            if(ArrayTool.isNotEmpty(jobRoles)){
+                JSONArray jobRoleArray = new JSONArray();
+                OrgDAO orgDAO = new OrgDAO("ins");
+                for(EmployeeJobRoleEntity jobRole : jobRoles){
+                    JSONObject jobRoleJson = jobRole.toJson();
+                    String jobRoleName = StaticDataTool.getCodeName("JOB_ROLE", jobRole.getJobRole());
+                    jobRoleJson.put("JOB_ROLE_NAME", jobRoleName);
+                    OrgEntity org = orgDAO.queryOrgById(jobRole.getOrgId());
+                    jobRoleJson.put("ORG_INFO", org.toJson());
+                    jobRoleArray.add(jobRoleJson);
+                }
+                response.set("JOB_ROLE", jobRoleArray);
+            }
+        }
         response.set("USER", user.toJson());
         response.set("EMPLOYEE", employee.toJson());
 

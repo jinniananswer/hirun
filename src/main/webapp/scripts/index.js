@@ -1,5 +1,22 @@
 (function($){
 	$.extend({index:{
+		init : function(){
+            $.ajaxPost('initUser',null,function(data){
+				var userInfo = new Wade.DataMap(data);
+				var name = userInfo.get("NAME");
+				var orgName = userInfo.get("ORG_NAME");
+				var jobRoleName = userInfo.get("JOB_ROLE_NAME");
+				var headImage = userInfo.get("HEAD_IMAGE");
+
+                $.insertHtml('beforeend',$("#USER_NAME"),name);
+                $.insertHtml('beforeend',$("#ORG_NAME"),orgName);
+                $.insertHtml('beforeend',$("#JOB_ROLE_NAME"),jobRoleName);
+				$("#HEAD_IMAGE").attr("src", headImage);
+
+            },function(){
+                alert('error');
+            });
+		},
 		openNav : function(url, title){
 			if(this.exists(title)){
 				this.switchPage(title);

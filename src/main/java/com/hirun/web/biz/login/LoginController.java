@@ -1,6 +1,7 @@
 package com.hirun.web.biz.login;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
@@ -33,11 +34,13 @@ public class LoginController extends RootController {
 
             JSONObject userInfo = response.getJSONObject("USER");
             JSONObject employeeInfo = response.getJSONObject("EMPLOYEE");
+            JSONArray jobRoles = response.getJSONArray("JOB_ROLE");
 
             UserEntity user = new UserEntity(JSON.parseObject(userInfo.toJSONString(), Map.class));
             EmployeeEntity employee = new EmployeeEntity(JSON.parseObject(employeeInfo.toJSONString(), Map.class));
             session.setAttribute("USER", user);
             session.setAttribute("EMPLOYEE", employee);
+            session.setAttribute("JOB_ROLE", jobRoles);
         }
         return response.toJsonString();
     }
