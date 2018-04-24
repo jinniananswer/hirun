@@ -48,7 +48,7 @@
 						<div class="main">
 							<div class="title group">
 								<span tag="ACTION_NAME_TEXT">{ACTION_NAME}</span>
-								<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok"></span></span>
+								<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok e_ico-pic e_ico-pic-xxxs"></span></span>
 							</div>
 							<div tag="ACTION_NAME_CONTENT" class="content content-auto"></div>
 						</div>
@@ -95,44 +95,46 @@
 						<div class="c_space"></div>
 						<!--</div>-->
 						<!-- 新客户 结束 -->
-						<div class="l_queryFn">
-							<div class="c_fn">
-								<div class="right">
-									<button class="e_button-blue" type="button" ontap="forwardPopup(this,'customerSelectPopup2');">
-										<span class="e_ico-search"></span>
-									</button>
+						<!-- 查询客户 开始-->
+						<div id="QUERY_CUST_PART" style="display: none;">
+							<div class="l_queryFn">
+								<div class="c_fn">
+									<div class="right">
+										<button class="e_button-blue" type="button" ontap="forwardPopup(this,'customerSelectPopup2');">
+											<span class="e_ico-search"></span>
+										</button>
+									</div>
+								</div>
+							</div>
+							<div class="c_list">
+								<div class="c_list c_list c_list-col-2 c_list-phone-col-1">
+									<ul id="CUST_LIST">
+										<li x_tag="x-databind-template" style="display:none">
+											<label class="group link">
+												<div class="content">
+													<div class="main">
+														<div class="title">{CUST_NAME}</div>
+														<div class="content">
+															<ul>
+																<li>{SERIAL_NUMBER}</li>
+																<li>{HOUSE_INFO}</li>
+															</ul>
+														</div>
+													</div>
+													<div class="fn"><input name="selectCustBox" value={CUST_NAME} type="checkbox" /></div>
+												</div>
+											</label>
+										</li>
+									</ul>
 								</div>
 							</div>
 						</div>
-						<div class="c_list">
-						<!-- 客户列表 开始 -->
-							<div class="c_list c_list c_list-col-2 c_list-phone-col-1">
-								<ul id="CUST_LIST">
-									<li x_tag="x-databind-template" style="display:none">
-										<label class="group link">
-											<div class="content">
-												<div class="main">
-													<div class="title">{CUST_NAME}</div>
-													<div class="content">
-														<ul>
-															<li>{SERIAL_NUMBER}</li>
-															<li>{HOUSE_INFO}</li>
-														</ul>
-													</div>
-												</div>
-												<div class="fn"><input name="selectCustBox" value={CUST_NAME} type="checkbox" /></div>
-											</div>
-										</label>
-									</li>
-								</ul>
-							</div>
-							<!-- 客户列表 结束 -->
-							<div class="c_space"></div>
-							<div class="c_submit c_submit-full">
-								<button type="button" class="e_button-l e_button-green" ontap="planEntry.afterSelectedCust(this)">确定</button>
-							</div>
-							<div class="c_space"></div>
+						<!-- 查询客户 结束 -->
+						<div class="c_space"></div>
+						<div class="c_submit c_submit-full">
+							<button type="button" class="e_button-l e_button-green" ontap="planEntry.afterSelectedCust(this)">确定</button>
 						</div>
+						<div class="c_space"></div>
 					</div>
 				</div>
 				<div class="c_popupItem" id="planTargetSetPopup">
