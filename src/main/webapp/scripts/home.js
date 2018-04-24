@@ -11,6 +11,9 @@
         },
 
         draw : function(menus){
+            if(menus == null || typeof(menus) == 'undefined'){
+                return;
+            }
             var length = menus.length;
             var html=[];
             for(var i=0;i<length;i++){
