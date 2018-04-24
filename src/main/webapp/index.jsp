@@ -15,10 +15,11 @@
             <div class="c_list c_list-v">
                 <ul>
                     <li>
-                        <div class="pic"><img class="e_pic-r" src="frame/img/staff.jpg" alt="" /></div>
+                        <div class="pic"><img id="HEAD_IMAGE" name="HEAD_IMAGE" class="e_pic-r" src="frame/img/staff.jpg" alt="" /></div>
                         <div class="main">
-                            <div class="title">薛帅</div>
-                            <div class="content">人力资源部经理</div>
+                            <div class="title" id="USER_NAME" name="USER_NAME"></div>
+                            <div class="content" id="ORG_NAME" name="ORG_NAME"></div>
+                            <div class="content" id="JOB_ROLE_NAME" name="JOB_ROLE_NAME"></div>
                         </div>
                     </li>
                 </ul>
@@ -74,5 +75,8 @@
         </div>
     </div>
 </div>
+<script>
+    $.index.init();
+</script>
 </body>
 </html>
