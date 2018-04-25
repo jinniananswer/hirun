@@ -29,32 +29,16 @@
             <!-- 列表 开始 -->
             <div class="c_list c_list-s">
                 <ul>
-                    <li class="link" title="今日计划录入" ontap="$.index.openNav('biz/operations/contactplan/plan_entry.jsp','今日计划录入')">
-                        <div class="main">今日计划录入</div>
+                    <li class="link" title="密码变更" ontap="">
+                        <div class="main">密码变更</div>
                         <div class="more"></div>
                     </li>
-                    <li class="link" title="今日计划总结" ontap="$.index.openNav('biz/operations/contactplan/plan_summarize.jsp','今日计划总结')">
-                        <div class="main">今日计划总结</div>
+                    <li class="link" title="我的档案" ontap="">
+                        <div class="main">我的档案</div>
                         <div class="more"></div>
                     </li>
-                    <li class="link" title="楼盘规划" ontap="$.index.openNav('biz/operations/houses/housesdetail.jsp','楼盘规划详情')">
-                        <div class="main">楼盘规划</div>
-                        <div class="more"></div>
-                    </li>
-                    <li class="link" title="楼盘分配" ontap="$.index.openNav('biz/operations/houses/housecounselor.jsp','楼盘分配家装顾问情况查询')">
-                        <div class="main">楼盘分配</div>
-                        <div class="more"></div>
-                    </li>
-                    <li class="link" title="楼盘规划报表" ontap="$.index.openNav('biz/datacenter/houses/planreport-store.jsp','重点楼盘计划数与实际分配数的对比')">
-                        <div class="main">楼盘规划报表</div>
-                        <div class="more"></div>
-                    </li>
-                    <li class="link" title="楼盘分配情况报表" ontap="$.index.openNav('biz/datacenter/houses/planreport-counselor-all.jsp','家装顾问缺口数报表')">
-                        <div class="main">楼盘分配情况报表</div>
-                        <div class="more"></div>
-                    </li>
-                    <li class="link" title="家装顾问人员缺口报表" ontap="$.index.openNav('biz/operations/houses/housestarget.jsp','开发咨询目标占比数与实际数据对比')">
-                        <div class="main">家装顾问人员缺口报表</div>
+                    <li class="link" title="系统帮助" ontap="">
+                        <div class="main">系统帮助</div>
                         <div class="more"></div>
                     </li>
                 </ul>
