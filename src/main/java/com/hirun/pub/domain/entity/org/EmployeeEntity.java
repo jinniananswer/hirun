@@ -107,6 +107,22 @@ public class EmployeeEntity extends GenericEntity{
         this.set("DESTROY_DATE", destroyDate);
     }
 
+    public String getWorkNature(){
+        return this.get("WORK_NATURE");
+    }
+
+    public void setWorkNature(String workNature){
+        this.set("WORK_NATURE", workNature);
+    }
+
+    public String getWorkPlace(){
+        return this.get("WORKPLACE");
+    }
+
+    public void setWorkPlace(String workplace){
+        this.set("WORKPLACE", workplace);
+    }
+
     public String getStatus(){
         return this.get("STATUS");
     }
