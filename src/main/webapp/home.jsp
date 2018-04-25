@@ -39,7 +39,6 @@
 <script>
     Wade.setRatio();
     window["homeTab"] = new Wade.Tabset("homeTab", {slidable:false});
-    window["menuTab"] = new Wade.Tabset("menuTab", {slidable:false});
 </script>
 
 </body>
