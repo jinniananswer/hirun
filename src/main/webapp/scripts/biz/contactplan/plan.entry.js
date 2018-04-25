@@ -159,6 +159,11 @@ var planEntry = {
 		}
 		
 		var currentActionCode = actionList[planEntry.currentActionIndex].ACTION_CODE;
+		if(currentActionCode == 'JW') {
+			$('#QUERY_CUST_PART').hide();
+		} else {
+            $('#QUERY_CUST_PART').show();
+		}
 		
 		$("#newCustNum").val("0")
 		

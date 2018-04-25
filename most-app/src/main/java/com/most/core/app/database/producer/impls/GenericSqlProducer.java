@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.*;
 
 /**
@@ -483,23 +484,26 @@ public class GenericSqlProducer implements ISqlProducer {
         for(ColumnData column : columns){
             DataFieldType type = column.getType();
             String value = parameter.get(column.getName());
-            if(StringUtils.isBlank(value))
-                value = "";
+
             if(log.isDebugEnabled())
                 log.debug("绑定参数" + i + ": " + column.getName() + ",其绑定值为" + value + ";\n");
 
-            if(type == DataFieldType.NUMBER){
-                if(value.length() <= 18)
-                    preparedStatement.setInt(i, Integer.parseInt(value));
+            if(StringUtils.isBlank(value)) {
+                preparedStatement.setNull(i, Types.VARCHAR);
+            } else {
+                if(type == DataFieldType.NUMBER){
+                    if(value.length() <= 18)
+                        preparedStatement.setInt(i, Integer.parseInt(value));
+                    else
+                        preparedStatement.setLong(i, Long.parseLong(value));
+                }
+                else if(type == DataFieldType.STRING)
+                    preparedStatement.setString(i, value);
+                else if(type == DataFieldType.DATE)
+                    preparedStatement.setString(i, value);
                 else
-                    preparedStatement.setLong(i, Long.parseLong(value));
+                    preparedStatement.setString(i, value);
             }
-            else if(type == DataFieldType.STRING)
-                preparedStatement.setString(i, value);
-            else if(type == DataFieldType.DATE)
-                preparedStatement.setString(i, value);
-            else
-                preparedStatement.setString(i, value);
 
             i++;
         }

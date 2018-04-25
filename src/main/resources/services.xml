@@ -2,4 +2,6 @@
     <!--服务名命名规范 中心名.模块名.类名.方法名 -->
     <entity name="OrgCenter.login.LoginService.login"  class="com.hirun.app.biz.login.LoginService" method="login"/>
     <entity name="OrgCenter.menu.MenuService.loadMenus"  class="com.hirun.app.biz.menu.MenuService" method="loadMenus"/>
+
+    <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
 </service>
