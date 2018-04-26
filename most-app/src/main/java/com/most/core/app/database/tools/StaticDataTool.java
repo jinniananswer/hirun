@@ -51,4 +51,20 @@ public class StaticDataTool {
         codeTypeCached.put(codeType, recordSet);
         return recordSet;
     }
+
+    public static RecordSet getRelCodeTypeDatas(String codeType, String codeValue) throws SQLException{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CODE_TYPE", codeType);
+        parameter.put("CODE_VALUE", codeValue);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select c.* from sys_static_data a, sys_static_data_rel b, sys_static_data c ");
+        sb.append("where a.code_type = :CODE_TYPE and a.code_value = :CODE_VALUE ");
+        sb.append("and b.data_id = a.data_id ");
+        sb.append("and c.data_id = b.rel_data_id ");
+
+        GenericDAO dao = new GenericDAO("sys");
+        RecordSet recordSet = dao.queryBySql(sb.toString(), parameter);
+        return recordSet;
+    }
 }
