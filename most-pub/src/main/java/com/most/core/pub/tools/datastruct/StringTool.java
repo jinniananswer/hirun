@@ -125,9 +125,11 @@ public class StringTool {
 
                     inVariable = false;
                     begin = -1;
+                    sb.append(c);
                 }
                 continue;
             }
+            sb.append(c);
         }
 
         if(begin != -1){
