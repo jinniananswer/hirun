@@ -25,7 +25,7 @@ import java.util.*;
  */
 public class GenericSqlProducer implements ISqlProducer {
 
-    private transient Logger log = LogManager.getLogger(GenericSqlProducer.class.getName());
+    protected transient Logger log = LogManager.getLogger(GenericSqlProducer.class.getName());
 
     //SQL语句的相关缓存
     protected static Map<String, String> cache = new HashMap<String, String>();
