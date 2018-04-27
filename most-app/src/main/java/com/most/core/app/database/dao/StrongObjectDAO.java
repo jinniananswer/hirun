@@ -42,6 +42,13 @@ public class StrongObjectDAO extends GenericDAO {
         return objects;
     }
 
+    public <K extends GenericEntity> List<K> queryBySql(Class<K> classes, String sql, Map<String, String> parameter) throws SQLException{
+        RecordSet recordSet = this.queryBySql(sql, parameter);
+
+        List<K> objects = this.trans(classes, recordSet);
+        return objects;
+    }
+
     private <K extends GenericEntity> List<K> trans(Class<K> classes, RecordSet recordSet){
         if(recordSet == null || recordSet.size() <= 0){
             return null;
