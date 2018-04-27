@@ -30,7 +30,7 @@
                     continue;
                 }
 
-                html.push("<div class='c_list c_list-border c_list-line c_list-col-6 c_list-v c_list-pic-s'>");
+                html.push("<div class='c_list c_list-border c_list-line c_list-col-6 c_list-fixWrapSpace c_list-v c_list-pic-s'>");
                 html.push("<ul>");
                 var subMenuLength = subMenus.length;
                 for(var j=0;j<subMenuLength;j++){
@@ -40,7 +40,10 @@
                     html.push("<div class='main'>");
                     html.push("<div class='content content-row-2'>"+subMenu.get("TITLE")+"</div>");
                     html.push("</div>");
+                    html.push("</li>");
                 }
+                html.push("</ul>");
+                html.push("</div>");
             }
             $.insertHtml('beforeend',$("#menus"),html.join(""));
         }

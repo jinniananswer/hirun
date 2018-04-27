@@ -1,5 +1,4 @@
 var chart = echarts.init(document.getElementById("myPieChart"));
-alert('bb');
 var option = {
     "title": {
         "text": "饼图示例图",
