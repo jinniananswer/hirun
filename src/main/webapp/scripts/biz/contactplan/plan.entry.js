@@ -23,7 +23,7 @@ var planEntry = {
 			step:1
 		});
 		
-		window["contactNum"] = new Wade.IncreaseReduce("contactNum", {
+		window["scanHouseCounselorNum"] = new Wade.IncreaseReduce("scanHouseCounselorNum", {
 			disabled:false,
 			step:1
 		});
@@ -241,10 +241,11 @@ var planEntry = {
                     var result = $.DataMap(data);
                     var resultCode = result.get('HEAD').get('RESULT_CODE');
                     if(resultCode == 0) {
-                        alert('校验成功');
+                        // alert('校验成功');
                         checkFlag = true;
                     } else {
-                        alert('校验失败');
+                        var resultInfo = result.get('HEAD').get('RESULT_INFO');
+                        alert(resultInfo);
                         checkFlag = false;
                     }
                 },
@@ -254,7 +255,6 @@ var planEntry = {
             }
         );
 
-        alert(checkFlag);
         return checkFlag;
     }
 };

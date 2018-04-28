@@ -2,8 +2,10 @@ package com.hirun.app.biz.plan;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.plan.PlanDAO;
+import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.most.core.app.service.GenericService;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
@@ -63,6 +65,31 @@ public class PlanService extends GenericService {
         JSONObject planTarget = request.getBody().getData();
         int scanHouseCounselorNum = planTarget.getInteger("SCAN_HOUSE_COUNSELOR_NUM");
         int adviceNum = planTarget.getInteger("ADVICE_NUM");
+
+        List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();
+        for(PlanTargetLimitEntity planTargetLimitEntity : planTargetLimitEntityList) {
+            String targetCode = planTargetLimitEntity.getTargetCode();
+            int timeInterval = Integer.parseInt(planTargetLimitEntity.getTimeInterval());
+            int unit = Integer.parseInt(planTargetLimitEntity.getUnit());
+            int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
+
+            int totalNum = 0;
+
+            //获取过往累计数量
+            if("ZX".equals(targetCode)) {
+                if(limitNum - totalNum > adviceNum) {
+                    //报错
+                    response.setError("-1", "今日目标[咨询数]必须大于" + (limitNum - totalNum));
+                    break;
+                }
+            } else if("SMJRQLC".equals(targetCode)) {
+                if(limitNum - totalNum > scanHouseCounselorNum) {
+                    //报错
+                    response.setError("-1", "今日目标[扫码进入全流程数]必须大于" + (limitNum - totalNum));
+                    break;
+                }
+            }
+        }
 
         return response;
     }
