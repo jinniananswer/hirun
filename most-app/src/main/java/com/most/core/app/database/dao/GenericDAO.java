@@ -107,7 +107,7 @@ public class GenericDAO {
     }
 
 
-    public int insert(String tableName, Map<String, String> parameter) throws SQLException{
+    public int insert(String tableName, Map<String, String> parameter) throws SQLException {
         PreparedStatement stmt = producer.generateInsertSql(this.connection, tableName, parameter);
         return this.executeUpdate(stmt);
     }
@@ -160,12 +160,19 @@ public class GenericDAO {
     protected int executeUpdate(PreparedStatement stmt) throws SQLException{
         long start = System.currentTimeMillis();
         int num = stmt.executeUpdate();
+
+        ResultSet rs = stmt.getGeneratedKeys();
+        int id = 0;
+        if (rs.next()) {
+            id = (int)rs.getLong(1);
+        }
+
         long end = System.currentTimeMillis();
         if(log.isDebugEnabled()){
             log.debug("IUD操作表数据耗时"+(end-start)+"ms");
         }
         stmt.close();
-        return num;
+        return id;
     }
 
     public int[] executeUpdateBatch(PreparedStatement stmt) throws SQLException{
