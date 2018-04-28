@@ -1,9 +1,7 @@
 package com.hirun.app.dao.cust;
 
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
-import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.app.database.dao.StrongObjectDAO;
-import com.most.core.pub.tools.datastruct.ArrayTool;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -15,9 +13,9 @@ import java.util.Map;
  * @Date 2018/4/18 9:56
  * @Description:
  */
-public class CustDAO extends StrongObjectDAO {
+public class CustActionDAO extends StrongObjectDAO {
 
-    public CustDAO(String databaseName){
+    public CustActionDAO(String databaseName){
         super(databaseName);
     }
 
