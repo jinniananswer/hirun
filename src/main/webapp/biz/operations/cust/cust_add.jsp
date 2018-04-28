@@ -9,7 +9,7 @@
     <base href="<%=basePath%>"></base>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>今日计划总结</title>
+    <title>客户新增</title>
     <jsp:include page="/common.jsp"></jsp:include>
     <script src="scripts/biz/cust/cust.add.js"></script>
 </head>
@@ -38,6 +38,7 @@
                     <div class="label">客户姓名</div>
                     <div class="value">
                         <input type="text" id="CUST_NAME" name="CUST_NAME"/>
+                        <input type="text" id="CUST_ID" name="CUST_ID" style="display: none"/>
                     </div>
 				</li>
                 <li class="required">

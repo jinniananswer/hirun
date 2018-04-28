@@ -4,4 +4,11 @@
     <entity name="OrgCenter.menu.MenuService.loadMenus"  class="com.hirun.app.biz.menu.MenuService" method="loadMenus"/>
 
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
+    <entity name="CustCenter.cust.CustService.editCust"  class="com.hirun.app.biz.cust.CustService" method="editCust"/>
+    <entity name="CustCenter.cust.CustService.queryCustList"  class="com.hirun.app.biz.cust.CustService" method="queryCustList"/>
+    <entity name="CustCenter.cust.CustService.addCustByNum"  class="com.hirun.app.biz.cust.CustService" method="addCustByNum"/>
+
+    <entity name="PlanCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
+    <entity name="PlanCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
+
 </service>

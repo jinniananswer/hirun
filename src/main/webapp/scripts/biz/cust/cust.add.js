@@ -32,6 +32,7 @@ var custAdd = {
             var param = $.buildJsonData("custForm");
             $.ajaxPost('cust/addCust',param,function(data){
                 // var result = new Wade.DataMap(data);
+
             },function(){
                 alert('error');
             });

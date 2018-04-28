@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,11 +20,26 @@ import java.util.Map;
 public class CustController extends RootController{
 
     @RequestMapping(value = "/cust/addCust", method = RequestMethod.POST)
-    public void addCust(@RequestParam Map custInfo) throws Exception {
-        logger.debug("-------------新增客户开始-------------");
-
+    public String addCust(@RequestParam Map custInfo) throws Exception {
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.addCust", custInfo);
+        return response.toJsonString();
+    }
 
-        logger.debug("-------------新增客户结束-------------");
+    @RequestMapping(value = "/cust/editCust", method = RequestMethod.POST)
+    public String editCust(@RequestParam Map custInfo) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.editCust", custInfo);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/cust/queryCustList", method = RequestMethod.GET)
+    public String queryCustList() throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustList", new HashMap());
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/cust/addCustByNum", method = RequestMethod.POST)
+    public String addCustByNum(@RequestParam Map pageData) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.addCustByNum", pageData);
+        return response.toJsonString();
     }
 }

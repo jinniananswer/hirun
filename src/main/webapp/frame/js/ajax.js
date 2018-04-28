@@ -37,7 +37,6 @@
 					type:'POST',
 					dataType:'json',
 					async:true,
-					timeout:5000,
 					success:successFunc,
 					error:errFunc
 				}
