@@ -17,6 +17,13 @@ public class TimeTool {
         return now;
     }
 
+    public static String today(){
+        LocalDateTime localDateTime =  LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String today = localDateTime.format(formatter);
+        return today;
+    }
+
     public static void main(String[] args){
         System.out.println(now());
     }
