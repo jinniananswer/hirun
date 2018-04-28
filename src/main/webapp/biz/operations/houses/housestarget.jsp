@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>Always Online Office</title>
     <jsp:include page="/common.jsp"></jsp:include>
+    <script src="/frame/TouchUI/content/js/ui/component/chart/echarts.js"></script>
 </head>
 <body>
 <div class="p_index">
