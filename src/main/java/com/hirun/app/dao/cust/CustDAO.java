@@ -28,4 +28,11 @@ public class CustDAO extends StrongObjectDAO {
 
         return customerList;
     }
+
+    public CustomerEntity getCustById(String custId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CUST_ID", custId);
+
+        return this.queryByPk(CustomerEntity.class, "INS_CUSTOMER", parameter);
+    }
 }

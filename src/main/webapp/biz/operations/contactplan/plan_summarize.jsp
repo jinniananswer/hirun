@@ -26,212 +26,19 @@
 		</div>
 	</div>
 </div>
-<div class="l_edit">
-    <div class="c_header e_show-phone">
-        <div class="back" ontap="closeNav();">今日计划总结</div>
-    </div>
-    <span class="l_editMain">
-    	<div class="c_title">
-			<div class="text">2018-04-20计划总结</div>
-			<!--<div class="fn">
-				<ul>
-					<li class="link" ontap="top.$.index.openNav('biz/operations/cust/cust_add.jsp','新增客户')">
-						<span class="e_ico-add"></span>新增客户
-					</li>
-				</ul>
-			</div>-->
-		</div>
-		<div class="c_list c_list-line c_list-space">
-			<ul id="ACTION_LIST">
-				<!--<li class="link" tag="ACTION_TAG" x_tag="x-databind-template" style="display:none" id={ACTION_CODE}>
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">{ACTION_NAME}<span>
-							<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok"></span></span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content">
-							<ul>
-								<li><span>计划数：{PLAN_NUM}</span></li>
-								<li><span class="e_red">实际完成数：{REAL_NUM}</span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">填写总结</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>-->
-				<li class="link" id="JW" ontap="planSummarize.selectCust(this)">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">加微</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span tag="factCustNum"></span></li>
-								<li><span tag="factCustDetail"></span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">选择客户</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="LTZDSTS" ontap="">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">蓝图指导书推送</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span class="">实际完成数：3</span></li>
-								<li><span>实际客户：张三、王五、weixin1</span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">填写总结</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="GZHGZ" ontap="">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">公众号关注</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span class="">实际完成数：2</span></li>
-								<li><span>实际客户：张三、weixin1</span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">填写总结</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="HXJC" ontap="planSummarize.selectCust(this)">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">核心接触</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span tag="factCustNum"></span></li>
-								<li><span tag="factCustDetail"></span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">选择客户</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="SMJRQLC" ontap="">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">扫码进入全流程</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span class="">实际完成数：3</span></li>
-								<li><span>实际客户：张三、李四、王五</span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">填写总结</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="XQLTYTS" ontap="">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">需求蓝图一推送</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span class="">实际完成数：3</span></li>
-								<li><span>实际客户：张三、李四、王五</span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">填写总结</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="ZX" ontap="">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">咨询</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span class="">实际完成数：3</span></li>
-								<li><span>实际客户：张三、李四、王五</span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">填写总结</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="DKCSMW" ontap="planSummarize.selectCust(this)">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">带看城市木屋</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span tag="factCustNum"></span></li>
-								<li><span tag="factCustDetail"></span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">选择客户</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-				<li class="link" id="YJALTS" ontap="">
-					<div class="main">
-						<div class="title group">
-							<span tag="ACTION_NAME_TEXT">一键案例推送</span>
-						</div>
-						<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-							<ul>
-								<li><span>计划数：3</span></li>
-								<li><span>计划客户：张三、李四、王五</span></li>
-								<li><span class="">实际完成数：3</span></li>
-								<li><span>实际客户：张三、李四、王五</span></li>
-							</ul>
-						</div>
-					</div>
-					<div tag="ACTION_SIDE" class="side">填写总结</div>
-					<div tag="ACTION_MORE" class="more"></div>
-				</li>
-			</ul>
-		</div>
-		<!--
-		<div class="c_space"></div>
-		<div class="c_list">
-			<ul>
-				<li>
-					<div class="label">今日总结</div>
-					<div class="value">
-						<textarea class="e_textarea-row-4"></textarea>
-					</div>
-				</li>
-			</ul>
-		</div>
-		-->
-		<div class="c_space"></div>
-		<div class="c_submit c_submit-full">
-			<button class="e_button-r e_button-l e_button-green" type="button">提交</button>
-		</div>
-	</span>
-    <span class="l_editPlace"></span>
+<div class="c_header">
+	<div class="back" ontap="back();"><span id="planName"></span></div>
+</div>
+<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
+	<div class="c_space"></div>
+	<div id="finishInfoList">
+
+
+	</div>
+	<div class="c_space"></div>
+	<div class="c_submit c_submit-full">
+		<button class="e_button-r e_button-l e_button-green" type="button">提交</button>
+	</div>
 </div>
 <!-- 弹出层 开始 -->
 <div class="c_popup c_popup-half" id="selectCustPopup">
@@ -412,6 +219,25 @@
 	</div>
 </div>
 <!-- 弹出层 结束 -->
+<script type="text/template" id="ACTION_TEMPLATE">
+	<li class="link" id="{ACTION_CODE}" ontap="{TAP_FUNCTION}">
+		<div class="main">
+			<div class="title group">
+				<span tag="ACTION_NAME_TEXT">{ACTION_NAME}</span>
+			</div>
+			<div tag="ACTION_NAME_CONTENT" class="content content-auto">
+				<ul>
+					<li><span>计划数：{PLAN_CUSTNUM}</span></li>
+					<li><span>计划客户：{PLAN_CUSTNAMES}</span></li>
+					<li><span class="">实际完成数：{FINISH_CUSTNUM}</span></li>
+					<li><span>实际客户：{FINISH_CUSTNAMES}</span></li>
+				</ul>
+			</div>
+		</div>
+		<div tag="ACTION_SIDE" class="side">{SIDE_NAME}</div>
+		<div tag="ACTION_MORE" class="more"></div>
+	</li>
+</script>
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
 		<label class="group link">
@@ -436,7 +262,93 @@
 		</div>
 	</li>
 </script>
-
+<script id="finishInfoTemplate" type="text/html">
+	<div class="c_box c_box-border" id="FINISH_INFO_{{ACTION_CODE}}">
+		<div class="c_title" ontap="$(this).next().toggle();">
+			<div class="text">{{ACTION_NAME}}</div>
+			<div class="fn">
+				<ul>
+					<li><span>计划数:{{PLAN_CUSTNUM}}人 / 实际数:{{FINISH_CUSTNUM}}</span><span class="e_ico-unfold"></span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="l_padding l_padding-u" style="display: none">
+			<div class="c_list">
+				<ul>
+					<li class="link" ontap="">
+						<div class="content">
+							<div class="main">
+								<div class="title e_strong">计划客户</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="c_list c_list-v c_list-col-3">
+				<ul>
+					{{each PLAN_CUST_LIST cust idx}}
+					<li class="link" ontap="">
+						<div class="main">
+							<div class="title">{{cust.CUST_NAME}}</div>
+						</div>
+					</li>
+					{{/each}}
+				</ul>
+			</div>
+			<div class="c_line c_line-dashed"></div>
+			<div class="c_list">
+				<ul>
+					<li class="link" action_code="{{ACTION_CODE}}" ontap="{{SELECT_CUST_FUNC}}">
+						<div class="content">
+							<div class="main">
+								<div class="title e_strong">实际完成客户</div>
+							</div>
+							{{if SELECT_CUST_FUNC}}
+							<div class="side proedit">
+								选择客户
+							</div>
+							<div class="more"></div>
+							{{/if}}
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="c_list c_list-v c_list-col-3">
+				<ul tag="FINISH_CUST_LIST">
+					{{each FINISH_CUST_LIST cust idx}}
+					<li class="link" ontap="">
+						<div class="main">
+							<div class="title">{{cust.CUST_NAME}}</div>
+						</div>
+					</li>
+					{{/each}}
+				</ul>
+			</div>
+			<div class="c_list">
+				<ul>
+					<li class="" ontap="">
+						<div class="content">
+							<div class="main">
+								<div class="title e_strong">未完成客户</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="c_list c_list-v c_list-col-3">
+				<ul>
+					{{each UNFINISH_CUST_LIST cust idx}}
+					<li class="" ontap="">
+						<div class="main">
+							<div class="title" tag="UNFINISH_{{cust.CUST_ID}}">{{cust.CUST_NAME}}</div>
+						</div>
+					</li>
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+	</div>
+</script>
 
 <script type="text/javascript">
 	Wade.setRatio();

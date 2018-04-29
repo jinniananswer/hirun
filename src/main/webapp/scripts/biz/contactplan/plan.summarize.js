@@ -1,19 +1,56 @@
 var actionList = [
-	{"ACTION_CODE":"ZX","ACTION_NAME":"咨询","PLAN_NUM":"3","REAL_NUM":"2"},
-	{"ACTION_CODE":"JW","ACTION_NAME":"加微","PLAN_NUM":"5","REAL_NUM":"4"},
-	{"ACTION_CODE":"GZHGZ","ACTION_NAME":"公众号关注","PLAN_NUM":"6","REAL_NUM":"3"},
-	{"ACTION_CODE":"LTZDSTS","ACTION_NAME":"蓝图指导书推送","PLAN_NUM":"6","REAL_NUM":"3"},
-	{"ACTION_CODE":"GZJRQLC","ACTION_NAME":"关注进入全流程","PLAN_NUM":"6","REAL_NUM":"3"},
-	{"ACTION_CODE":"XQLTYTS","ACTION_NAME":"需求蓝图一推送","PLAN_NUM":"6","REAL_NUM":"3"},
-	{"ACTION_CODE":"DKCSMU","ACTION_NAME":"带看城市木屋","PLAN_NUM":"6","REAL_NUM":"3"},
-	{"ACTION_CODE":"YJALTS","ACTION_NAME":"一键案例推送","PLAN_NUM":"6","REAL_NUM":"3"},
+	{"ACTION_CODE":"JW","ACTION_NAME":"加微","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
+    {"ACTION_CODE":"LTZDSTS","ACTION_NAME":"蓝图指导书推送"},
+	{"ACTION_CODE":"GZHGZ","ACTION_NAME":"公众号关注"},
+    {"ACTION_CODE":"HXJC","ACTION_NAME":"核心接触","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
+	{"ACTION_CODE":"SMJRQLC","ACTION_NAME":"扫码进入全流程"},
+	{"ACTION_CODE":"XQLTYTS","ACTION_NAME":"需求蓝图一推送"},
+    {"ACTION_CODE":"ZX","ACTION_NAME":"咨询"},
+	{"ACTION_CODE":"DKCSMU","ACTION_NAME":"带看城市木屋","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
+	{"ACTION_CODE":"YJALTS","ACTION_NAME":"一键案例推送","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
 ];
 var planSummarize = {
+    planId : '',
+    planDate : '',
+    currentAction : '',
+    planList : $.DatasetList(),
+    finishActionList : $.DatasetList(),
+    unFinishActionList : $.DatasetList(),
     init : function() {
-        currentAction : '',
         window["selectCustPopup"] = new Wade.Popup("selectCustPopup",{
             visible:false,
             mask:true
+        });
+
+        $.ajaxRequest({
+            url : 'plan/getSummarizeInitData',
+            data : {},
+            type:'GET',
+            dataType:'json',
+            async : false,
+            success:function(data) {
+                var result = $.DataMap(data);
+                var resultCode = result.get('HEAD').get('RESULT_CODE');
+                if(resultCode == 0) {
+                    var body = result.get('BODY');
+                    planSummarize.planDate = body.get('PLAN_DATE');
+                    planSummarize.planId = body.get('PLAN_ID');
+                    planSummarize.planList = body.get('PLANLIST');
+                    planSummarize.finishActionList = body.get('FINISH_ACTION_LIST');
+                    planSummarize.unFinishActionList = body.get('UNFINISH_ACTION_LIST');
+
+                    $('#planName').html(planSummarize.planDate + '计划总结');
+
+                    planSummarize.showFinishInfo();
+                } else {
+                    var resultInfo = result.get('HEAD').get('RESULT_INFO');
+                    alert(resultInfo);
+                    // checkFlag = false;
+                }
+            },
+            error:function(status, errorMessage) {
+
+            },
         });
     },
     selectCust : function(obj) {
@@ -36,6 +73,51 @@ var planSummarize = {
         $('#' + id + ' span[tag=factCustNum]').html('实际完成数：' + factCustNum);
         $('#' + id + ' span[tag=factCustDetail]').html('实际客户：' + factCustDetail);
     },
+    showFinishInfo : function() {
+        /*
+        * ACTION_CODE/TAP_FUNCTION/ACTION_NAME/PLAN_CUSTNUM/PLAN_CUSTNAMES
+        * FINISH_CUSTNUM/FINISH_CUSTNAMES/SIDE_NAME
+        * */
+        $.each(actionList, function(idx, actionMap) {
+            var actionCode = actionMap.ACTION_CODE;
+            var selectCustFunc = actionMap.SELECT_CUST_FUNC;
+            var actionName = actionMap.ACTION_NAME;
+            var planCustNum = 0;
+            var finishCustNum = 0;
+
+            var planCustList = planSummarize.getCustListByActionCode(actionCode, planSummarize.planList);
+            var finishCustList = planSummarize.getCustListByActionCode(actionCode, planSummarize.finishActionList);
+            var unFinishCustList = planSummarize.getCustListByActionCode(actionCode, planSummarize.unFinishActionList);
+
+            planCustNum = planCustList.length;
+            finishCustNum = finishCustList.length;
+
+            //插入html
+            var data = {};
+            data.ACTION_CODE = actionCode;
+            data.ACTION_NAME = actionName;
+            data.PLAN_CUSTNUM = planCustNum;
+            data.FINISH_CUSTNUM = finishCustNum;
+            data.SELECT_CUST_FUNC = selectCustFunc ? selectCustFunc : '';
+            data.PLAN_CUST_LIST = JSON.parse(planCustList.toString());
+            data.FINISH_CUST_LIST = JSON.parse(finishCustList.toString());
+            data.UNFINISH_CUST_LIST = JSON.parse(unFinishCustList.toString());
+            var html = template('finishInfoTemplate',data);
+            $('#finishInfoList').append(html);
+        })
+    },
+    getCustListByActionCode : function (actionCode, list) {
+        var custList = $.DatasetList();
+        $.each(list, function(idx, item) {
+            var tmpActionCode = item.get('ACTION_CODE');
+            if(tmpActionCode == actionCode) {
+                custList = item.get('CUSTLIST');
+                return;
+            }
+        });
+
+        return custList;
+    }
 };
 
 var selectCust = {
@@ -54,7 +136,7 @@ var selectCust = {
             selectCust.callBack = callBack;
         }
 
-        var actionCode = $obj.attr('id');
+        var actionCode = $obj.attr('action_code');
         var param = '';
         if(actionCode == 'JW') {
             $('#ADD_CUST_BUTTON').show();

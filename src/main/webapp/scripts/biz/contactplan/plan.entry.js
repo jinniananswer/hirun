@@ -279,6 +279,7 @@ var planEntry = {
 
             if(resultCode == "0"){
                 alert('计划提交成功');
+                top.$.index.closePage('今日计划录入');
             }
         }, function() {
             alert('error');

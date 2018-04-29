@@ -4,11 +4,6 @@ import com.most.core.pub.data.GenericEntity;
 
 import java.util.Map;
 
-/**
- * @Author jinnian
- * @Date 2018/4/18 16:03
- * @Description:
- */
 public class CustActionEntity extends GenericEntity{
 
     public CustActionEntity(){
@@ -19,6 +14,14 @@ public class CustActionEntity extends GenericEntity{
         super(data);
     }
 
+    public String getActionId(){
+        return this.get("ACTION_ID");
+    }
+
+    public void setActionId(String actionId){
+        this.set("ACTION_ID", actionId);
+    }
+
     public String getCustId(){
         return this.get("CUST_ID");
     }
@@ -27,83 +30,84 @@ public class CustActionEntity extends GenericEntity{
         this.set("CUST_ID", custId);
     }
 
-    public String getIdentifyCode(){
-        return this.get("IDENTIFY_CODE");
+    public String getActionCode(){
+        return this.get("ACTION_CODE");
     }
 
-    public void setIdentifyCode(String identifyCode){
-        this.set("IDENTIFY_CODE", identifyCode);
+    public void setActionCode(String actionCode){
+        this.set("ACTION_CODE", actionCode);
     }
 
-    public String getCustName(){
-        return this.get("CUST_NAME");
+    public String getPlanId(){
+        return this.get("PLAN_ID");
     }
 
-    public void setCustName(String custName){
-        this.set("CUST_NAME", custName);
+    public void setPlanId(String planId){
+        this.set("PLAN_ID", planId);
     }
 
-    public String getSex(){
-        return this.get("SEX");
+    public String getActionStatus(){
+        return this.get("ACTION_STATUS");
     }
 
-    public void setSex(String sex){
-        this.set("SEX", sex);
+    public void setActionStatus(String actionStatus){
+        this.set("ACTION_STATUS", actionStatus);
     }
 
-    public String getWxNick(){
-        return this.get("WX_NICK");
+    public String getPlanDealDate(){
+        return this.get("PLAN_DEAL_DATE");
     }
 
-    public void setWxNick(String wxNick){
-        this.set("WX_NICK", wxNick);
+    public void setPlanDealDate(String planDealDate){
+        this.set("PLAN_DEAL_DATE", planDealDate);
     }
 
-    public String getCustStatus(){
-        return this.get("CUST_STATUS");
+    public String getFinishTime(){
+        return this.get("FINISH_TIME");
     }
 
-    public void setCustStatus(String custStatus){
-        this.set("CUST_STATUS", custStatus);
+    public void setFinishTime(String finishTime){
+        this.set("FINISH_TIME", finishTime);
     }
 
-    public String getHouseId(){
-        return this.get("HOUSE_ID");
+    public String getExecutorId(){
+        return this.get("EXECUTOR_ID");
     }
 
-    public void setHouseId(String houseId){
-        this.set("HOUSE_ID", houseId);
+    public void setExecutorId(String executorId){
+        this.set("EXECUTOR_ID", executorId);
     }
 
-    public String getMobileNo(){
-        return this.get("MOBILE_NO");
+    public String getCreateUserId(){
+        return this.get("CREATE_USER_ID");
     }
 
-    public void setMobileNo(String mobileNo){
-        this.set("MOBILE_NO", mobileNo);
+    public void setCreateUserId(String createUserId){
+        this.set("CREATE_USER_ID", createUserId);
     }
 
-    public String getHouseMode(){
-        return this.get("HOUSE_MODE");
+    public String getCreateDate(){
+        return this.get("CREATE_DATE");
     }
 
-    public void setHouseMode(String houseMode){
-        this.set("HOUSE_MODE", houseMode);
+    public void setCreateDate(String createDate){
+        this.set("CREATE_DATE", createDate);
     }
 
-    public String getHouseArea(){
-        return this.get("HOUSE_AREA");
+    public String getUpdateUserId(){
+        return this.get("UPDATE_USER_ID");
     }
 
-    public void setHouseArea(String houseArea){
-        this.set("HOUSE_AREA", houseArea);
+    public void setUpdateUserId(String updateUserId){
+        this.set("UPDATE_USER_ID", updateUserId);
     }
 
-    public String getHouseDetail(){
-        return this.get("HOUSE_DETAIL");
+    public String getUpdateTime(){
+        return this.get("UPDATE_TIME");
     }
 
-    public void setHouseDetail(String houseDetail){
-        this.set("HOUSE_DETAIL", houseDetail);
+    public void setUpdateTime(String updateTime){
+        this.set("UPDATE_TIME", updateTime);
     }
+
 }

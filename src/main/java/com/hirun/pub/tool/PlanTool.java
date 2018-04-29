@@ -24,6 +24,21 @@ public class PlanTool {
         return planDate;
     }
 
+    public static String getPlanDate4Summarize() {
+        String planDate;
+        String now = TimeTool.now();
+        int hour = Integer.parseInt(TimeTool.now("HH"));
+        if(hour < 10) {
+            planDate = TimeTool.addTime(now, TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1);
+        } else {
+            planDate = now;
+        }
+
+        planDate = planDate.substring(0, 10);
+
+        return planDate;
+    }
+
     public static void main(String[] args) {
         System.out.println(PlanTool.getPlanDate());
     }

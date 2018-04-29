@@ -2,6 +2,7 @@ package com.most.core.pub.data;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,15 @@ public class GenericEntity {
     }
 
     public JSONObject toJson(){
-        return JSONObject.parseObject(JSON.toJSONString(this.content));
+        return JSONObject.parseObject(JSON.toJSONString(this.content, SerializerFeature.DisableCircularReferenceDetect));
+    }
+
+    public JSONObject toJSON(String[] keys) {
+        JSONObject jsonObject = new JSONObject();
+        for(String key : keys) {
+            jsonObject.put(key, this.content.get(key));
+        }
+
+        return jsonObject;
     }
 }

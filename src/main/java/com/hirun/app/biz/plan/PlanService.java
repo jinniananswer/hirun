@@ -6,12 +6,18 @@ import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.dao.cust.CustActionDAO;
+import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.plan.PlanDAO;
+import com.hirun.pub.domain.entity.cust.CustActionEntity;
+import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
+import com.hirun.pub.domain.entity.plan.PlanEntity;
+import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
@@ -88,68 +94,6 @@ public class PlanService extends GenericService {
             }
         }
 
-            /*
-            //校验自身的数量限制
-            PlanTargetLimitEntity planTargetLimitEntity = PlanTargetLimitCache.getPlanTargetLimit(actionCode);
-            if(planTargetLimitEntity != null) {
-                int timeInterval = Integer.parseInt(planTargetLimitEntity.getTimeInterval());
-                int unit = Integer.parseInt(planTargetLimitEntity.getUnit());
-                int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
-
-                int totalNum = 0;
-                String startTime = "2018-04-28";
-                if("ZX".equals(actionCode)) {
-                    //获取往日数量
-                    totalNum = custActionDAO.queryFinishActionCount("123", actionCode, startTime, planDate);
-                    if(limitNum - totalNum > num) {
-                        //报错
-                        response.setError("-1", "今日目标[咨询数]必须大于" + (limitNum - totalNum));
-                        return response;
-                    }
-                } else if("SMJRQLC".equals(actionCode)) {
-                    if(limitNum - totalNum > num) {
-                        //报错
-                        response.setError("-1", "今日目标[扫码进入全流程数]必须大于" + (limitNum - totalNum));
-                        return response;
-                    }
-                }
-            }
-
-            //校验与其他动作的数量限制
-            //TODO 这段代码以后需变成公共代码
-            String errorMessage = checkPlanAction(actionCode, num, targetJSONObject);
-            if(StringUtils.isNotBlank(errorMessage)) {
-                response.setError("-1", errorMessage);
-                return response;
-            }
-        }
-
-
-        List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();
-        for(PlanTargetLimitEntity planTargetLimitEntity : planTargetLimitEntityList) {
-            String targetCode = planTargetLimitEntity.getTargetCode();
-            int timeInterval = Integer.parseInt(planTargetLimitEntity.getTimeInterval());
-            int unit = Integer.parseInt(planTargetLimitEntity.getUnit());
-            int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
-
-            int totalNum = 0;
-
-            //获取过往累计数量
-            if("ZX".equals(targetCode)) {
-                if(limitNum - totalNum > adviceNum) {
-                    //报错
-                    response.setError("-1", "今日目标[咨询数]必须大于" + (limitNum - totalNum));
-                    break;
-                }
-            } else if("SMJRQLC".equals(targetCode)) {
-                if(limitNum - totalNum > scanHouseCounselorNum) {
-                    //报错
-                    response.setError("-1", "今日目标[扫码进入全流程数]必须大于" + (limitNum - totalNum));
-                    break;
-                }
-            }
-        }*/
-
         return response;
     }
 
@@ -168,27 +112,6 @@ public class PlanService extends GenericService {
             response.setError("-1", errorMessage);
             return response;
         }
-
-        //TODO 这一段需公用
-        /*
-        PlanActionLimitEntity planActionLimitEntity = PlanActionLimitCache.getPlanActionLimit(actionCode);
-        if(planActionLimitEntity != null) {
-            String relActionCode = planActionLimitEntity.getRelActionCode();
-            int multipleNum = JSONObject.parseObject(planActionLimitEntity.getLimitParam()).getInteger("NUM");
-            for(int i = 0; i < planTargetList.size(); i++) {
-                JSONObject planTarget = planTargetList.getJSONObject(i);
-                String targetActionCode = planTarget.getString("ACTION_CODE");
-                if(relActionCode.equals(targetActionCode)) {
-                    int num = planTarget.getInteger("NUM");
-                    if(custNum < num*multipleNum) {
-                        String actionName = ActionCache.getAction(actionCode).getActionName();
-                        response.setError("-1", actionName + "数需至少" + num*multipleNum + "个");
-                        break;
-                    }
-                }
-            }
-        }
-        */
 
         return response;
     }
@@ -243,5 +166,125 @@ public class PlanService extends GenericService {
         }
 
         return "";
+    }
+
+    public ServiceResponse getPlanFinishedInfo(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String planExecutorId = "123";
+        String planDate = PlanTool.getPlanDate4Summarize();
+
+        //查询计划
+        PlanDAO planDAO = new PlanDAO("ins");
+        PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate);
+        if(planEntity == null) {
+            response.set("-1", "没有时间为" + planDate + "的计划");
+            return response;
+        }
+        String planId = planEntity.getPlanId();
+        response.set("PLAN_ID", planId);
+        response.set("PLAN_DATE", planDate);
+
+        //获取计划时间的所有客户动作，包括执行的和未执行的
+        JSONArray planList = new JSONArray();
+        JSONArray finishActionList = new JSONArray();
+        JSONArray unFinishActionList = new JSONArray();
+        CustActionDAO custActionDAO = new CustActionDAO("ins");
+        CustDAO custDAO = new CustDAO("ins");
+        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionByEidAndPlanDate(planExecutorId, planDate);
+        if(ArrayTool.isNotEmpty(custActionEntityList)) {
+            //存计划action对应的custList，格式为{actionCode, custList}，后续再遍历成list
+            JSONObject planCustActionMap = new JSONObject();
+            //存完成action对应的custList，格式为{actionCode, custList}，后续再遍历成list
+            JSONObject finishCustActionMap = new JSONObject();
+            //存未完成action对应的custList，格式为{actionCode, custList}，后续再遍历成list
+            JSONObject unFinishCustActionMap = new JSONObject();
+            //存客户信息
+            JSONObject custMap = new JSONObject();//{custId, cust}
+
+            //遍历custAction，存到planCustActionMap和finishCustActionMap中
+            for(CustActionEntity custActionEntity : custActionEntityList) {
+                String actionCode = custActionEntity.getActionCode();
+                String custId = custActionEntity.getCustId();
+                if(!custMap.containsKey(custId)) {
+                    CustomerEntity customerEntity = custDAO.getCustById(custId);
+                    if(customerEntity == null) {
+                        //TODO 如果为NULL怎么处理？？？
+                    }
+                    custMap.put(custId, customerEntity.toJSON(new String[] {"CUST_ID", "CUST_NAME"}));
+                }
+                if(StringUtils.isNotBlank(custActionEntity.getPlanId())) {//这里面也有完成的
+                    //计划中
+                    if(planCustActionMap.containsKey(actionCode)) {
+                        planCustActionMap.getJSONArray(actionCode).add(custMap.getJSONObject(custId));
+                    } else {
+                        JSONArray custList = new JSONArray();
+                        custList.add(custMap.getJSONObject(custId));
+                        planCustActionMap.put(actionCode, custList);
+                    }
+
+                    if(StringUtils.isNotBlank(custActionEntity.getFinishTime())) {
+                        //计划中且完成的
+                        if(finishCustActionMap.containsKey(actionCode)) {
+                            finishCustActionMap.getJSONArray(actionCode).add(custMap.getJSONObject(custId));
+                        } else {
+                            JSONArray custList = new JSONArray();
+                            custList.add(custMap.getJSONObject(custId));
+                            finishCustActionMap.put(actionCode, custList);
+                        }
+                    } else {
+                        //计划中未完成的
+                        if(unFinishCustActionMap.containsKey(actionCode)) {
+                            unFinishCustActionMap.getJSONArray(actionCode).add(custMap.getJSONObject(custId));
+                        } else {
+                            JSONArray custList = new JSONArray();
+                            custList.add(custMap.getJSONObject(custId));
+                            unFinishCustActionMap.put(actionCode, custList);
+                        }
+                    }
+                } else {
+                    //计划外且完成的
+                    if(finishCustActionMap.containsKey(actionCode)) {
+                        finishCustActionMap.getJSONArray(actionCode).add(custMap.getJSONObject(custId));
+                    } else {
+                        JSONArray custList = new JSONArray();
+                        custList.add(custMap.getJSONObject(custId));
+                        finishCustActionMap.put(actionCode, custList);
+                    }
+                }
+            }
+
+            //从planCustActionMap和finishCustActionMap中遍历key，变成jsonArray
+            Iterator planIter = planCustActionMap.keySet().iterator();
+            while(planIter.hasNext()) {
+                String actionCode = (String)planIter.next();
+                JSONObject plan = new JSONObject();
+                plan.put("ACTION_CODE", actionCode);
+                plan.put("CUSTLIST", planCustActionMap.getJSONArray(actionCode));
+                planList.add(plan);
+            }
+            Iterator finishIter = finishCustActionMap.keySet().iterator();
+            while(finishIter.hasNext()) {
+                String actionCode = (String)finishIter.next();
+                JSONObject finish = new JSONObject();
+                finish.put("ACTION_CODE", actionCode);
+                finish.put("CUSTLIST", finishCustActionMap.getJSONArray(actionCode));
+                finishActionList.add(finish);
+            }
+            Iterator unFinishIter = unFinishCustActionMap.keySet().iterator();
+            while(unFinishIter.hasNext()) {
+                String actionCode = (String)unFinishIter.next();
+                JSONObject unFinish = new JSONObject();
+                unFinish.put("ACTION_CODE", actionCode);
+                unFinish.put("CUSTLIST", unFinishCustActionMap.getJSONArray(actionCode));
+                unFinishActionList.add(unFinish);
+            }
+        }
+
+        response.set("PLANLIST", planList);
+        response.set("FINISH_ACTION_LIST", finishActionList);
+        response.set("UNFINISH_ACTION_LIST", unFinishActionList);
+
+        return response;
     }
 }

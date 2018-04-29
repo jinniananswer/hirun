@@ -44,4 +44,10 @@ public class PlanController {
         response.set("PLAN_DATE", PlanTool.getPlanDate());
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/getSummarizeInitData")
+    public String getSummarizeInitData(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("MarketCenter.plan.PlanService.getPlanFinishedInfo", paramter);
+        return response.toJsonString();
+    }
 }
