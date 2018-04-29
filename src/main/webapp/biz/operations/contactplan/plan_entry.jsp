@@ -32,15 +32,15 @@
     </div>
     <span class="l_editMain">
     	<div class="c_title">
-			<div class="text">2018-04-20计划</div>
+			<div class="text" id="planName"></div>
 		</div>
 		<div class="c_list c_list-line c_list-space">
 			<ul>
 				<li>
 					<span class="e_segment">
-						<span idx="0" val="0">正常上班</span>
-						<span idx="1" val="1">活动</span>
-						<span idx="2" val="2">休假</span>
+						<span idx="0" val="1">正常上班</span>
+						<span idx="1" val="2">活动</span>
+						<span idx="2" val="3">休假</span>
 						<input type="hidden" name="planStatus" id="workMode" nullable="no" desc="级别" />
 					</span>
 				</li>

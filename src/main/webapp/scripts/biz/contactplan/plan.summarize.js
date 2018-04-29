@@ -228,7 +228,7 @@ var selectCust = {
                         $('#'+param.CUST_ID + ' li[tag=MOBILE_NO]').html(param.MOBILE_NO);
                         $('#'+param.CUST_ID + ' li[tag=HOUSE_DETAIL]').html(param.HOUSE_DETAIL);
                     } else {
-                        param.CUST_ID = '666';
+                        param.CUST_ID = result.get('BODY').get('CUST_ID');
                         var template = $('#CUST_TEMPLATE').html();
                         var tpl=$.Template(template);
                         param.CHECKED = 'checked';

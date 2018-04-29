@@ -10,9 +10,12 @@ var actionList = [
 	{"ACTION_CODE":"YJALTS","ACTION_NAME":"一键案例推送"},
 ];
 var planEntry = {
-	planActionMap : $.DataMap(),
+	planActionMap : $.DataMap(),//{actionCode:custList}
+    planTargetList : $.DatasetList(),
+    currentAction : '',
+    currentActionIndex : '',
+    planDate : '',
     init : function() {
-        currentAction : '',
 		window["myPopup"] = new Wade.Popup("myPopup",{
 			visible:false,
 			mask:true
@@ -45,7 +48,7 @@ var planEntry = {
 
 		//默认值 开始
         planEntry.currentActionIndex = 0;
-        $('#workMode').val(0);
+        $('#workMode').val(1);
 
 		var actionDatasetList = $.DatasetList(actionList);
 		actionDatasetList.bind('ACTION_LIST', 'flex');
@@ -55,25 +58,50 @@ var planEntry = {
 		$("#workMode").change(function(){
 			var modeVal = this.value; // this.value 获取分段器组件当前值
 			planActionList = [];//清空已选动作
-			if(modeVal == '0') {
+            $('#ACTION_PART').hide();
+			if(modeVal == '1') {
 				$('#PLAN_TARGET_SET_PART').show();
-				$('#ACTION_PART').show();
 			} else {
 				$('#PLAN_TARGET_SET_PART').hide();
-                $('#ACTION_PART').hide();
 			}
 		});
+
+		//从后台获取初始化数据，同步方式
+        $.ajaxRequest({
+            url:'plan/getPlanInitData',
+            data: {},
+            type:'GET',
+            dataType:'json',
+            async:false,
+            success:function(data) {
+                var result = $.DataMap(data);
+                var resultCode = result.get('HEAD').get('RESULT_CODE');
+                if(resultCode == 0) {
+                    var body = result.get('BODY');
+                    planEntry.planDate = body.get('PLAN_DATE');
+                } else {
+
+                }
+            },
+            error:function(status, errorMessage) {
+
+            },
+        });
+
+        $('#planName').html(planEntry.planDate + '计划');
     },
 	afterSelectedCust : function(obj) {
-		// if(!planEntry.checkSelectedCust()) {
-		// 	return;
-		// }
+		if(!planEntry.checkSelectedCust()) {
+			return;
+		}
 		var newCustNum = ($("#newCustNum").val());
 				
 		var custName = '';
-        var actionCode = actionList[planEntry.currentActionIndex].ACTION_CODE;
 		if(newCustNum > 0) {
-			var param = "NEW_CUSTNUM=" + newCustNum;
+			var param = {
+                NEW_CUSTNUM : newCustNum,
+                CUST_NAME_PREFIX : planEntry.planDate,
+            }
             $.ajaxPost('cust/addCustByNum',param,function(data){
                 var result = new Wade.DataMap(data);
                 var resultCode = result.get("HEAD").get("RESULT_CODE");
@@ -83,12 +111,12 @@ var planEntry = {
                     var custList= body.get('custList');
                     $.each(custList, function(idx, cust){
                         custName += cust.get('CUST_NAME') + "；";
-                        planEntry.planActionMap.put(actionCode, custList);
+                        planEntry.planActionMap.put(planEntry.currentAction, custList);
 					});
                     backPopup(obj);
 
 
-                    $('#' + actionCode + ' div[tag=ACTION_NAME_CONTENT]').html(custName);
+                    $('#' + planEntry.currentAction + ' div[tag=ACTION_NAME_CONTENT]').html(custName);
 
                     //设置下一动作
 
@@ -96,11 +124,11 @@ var planEntry = {
                         planEntry.currentActionIndex = planEntry.currentActionIndex + 1;
                         planEntry.setCurrentActionOn();
                     } else {
-                        $('#' +actionCode).unbind('tap');
-                        $('#' + actionCode + ' span[tag=ACTION_NAME_TEXT]').removeClass("e_red").addClass('e_green');
-                        $('#' + actionCode + ' span[tag=ACTION_ICO_OK]').show();
-                        $('#' + actionCode + ' div[tag=ACTION_SIDE]').hide();
-                        $('#' + actionCode + ' div[tag=ACTION_MORE]').hide();
+                        $('#' +planEntry.currentAction).unbind('tap');
+                        $('#' + planEntry.currentAction + ' span[tag=ACTION_NAME_TEXT]').removeClass("e_red").addClass('e_green');
+                        $('#' + planEntry.currentAction + ' span[tag=ACTION_ICO_OK]').show();
+                        $('#' + planEntry.currentAction + ' div[tag=ACTION_SIDE]').hide();
+                        $('#' + planEntry.currentAction + ' div[tag=ACTION_MORE]').hide();
                     }
                 }
             },function(){
@@ -119,11 +147,11 @@ var planEntry = {
                 }
             }
 
-            planEntry.planActionMap.put(actionCode, custList);
+            planEntry.planActionMap.put(planEntry.currentAction, custList);
 
             backPopup(obj);
 
-            $('#' + actionCode + ' div[tag=ACTION_NAME_CONTENT]').html(custName);
+            $('#' + planEntry.currentAction + ' div[tag=ACTION_NAME_CONTENT]').html(custName);
 
             //设置下一动作
 
@@ -131,11 +159,11 @@ var planEntry = {
                 planEntry.currentActionIndex = planEntry.currentActionIndex + 1;
                 planEntry.setCurrentActionOn();
             } else {
-                $('#' +actionCode).unbind('tap');
-                $('#' + actionCode + ' span[tag=ACTION_NAME_TEXT]').removeClass("e_red").addClass('e_green');
-                $('#' + actionCode + ' span[tag=ACTION_ICO_OK]').show();
-                $('#' + actionCode + ' div[tag=ACTION_SIDE]').hide();
-                $('#' + actionCode + ' div[tag=ACTION_MORE]').hide();
+                $('#' +planEntry.currentAction).unbind('tap');
+                $('#' + planEntry.currentAction + ' span[tag=ACTION_NAME_TEXT]').removeClass("e_red").addClass('e_green');
+                $('#' + planEntry.currentAction + ' span[tag=ACTION_ICO_OK]').show();
+                $('#' + planEntry.currentAction + ' div[tag=ACTION_SIDE]').hide();
+                $('#' + planEntry.currentAction + ' div[tag=ACTION_MORE]').hide();
             }
 		}
 	},
@@ -143,6 +171,9 @@ var planEntry = {
 	    if(!planEntry.checkPlanTarget()) {
 	        return;
         }
+
+        planEntry.planTargetList.add($.DataMap({"ACTION_CODE":"ZX", "NUM" : $('#adviceNum').val()}));
+        planEntry.planTargetList.add($.DataMap({"ACTION_CODE":"SMJRQLC", "NUM" : $('#scanHouseCounselorNum').val()}));
 
 		backPopup(obj);
 		
@@ -162,14 +193,40 @@ var planEntry = {
 		planEntry.setCurrentActionOn();
 	},
 	checkSelectedCust : function() {
-		var flag = true;
+		var checkFlag = true;
+        var newCustNum = parseInt($("#newCustNum").val());
+        var custNum = parseInt(getCheckedBoxNum('selectCustBox'));
+
+        $.ajaxRequest({
+                url:'plan/checkPlanAction',
+                data: {
+                    PLAN_DATE : planEntry.planDate,
+                    ACTION_CODE : planEntry.currentAction,
+                    CUSTNUM : parseInt(newCustNum + custNum),
+                    PLAN_TARGET_LIST : planEntry.planTargetList.toString(),
+                },
+                type:'POST',
+                dataType:'json',
+                async:false,
+                success:function(data) {
+                    var result = $.DataMap(data);
+                    var resultCode = result.get('HEAD').get('RESULT_CODE');
+                    if(resultCode == 0) {
+                        // alert('校验成功');
+                        checkFlag = true;
+                    } else {
+                        var resultInfo = result.get('HEAD').get('RESULT_INFO');
+                        alert(resultInfo);
+                        checkFlag = false;
+                    }
+                },
+                error:function(status, errorMessage) {
+
+                },
+            }
+        );
 		
-		if(planEntry.getSelectedCustNum()  == 0) {
-			alert('至少选择一个客户');
-			flag = false;
-		}
-		
-		return flag;
+		return checkFlag;
 	},
 	setCurrentActionOn : function () {
 		if(planEntry.currentActionIndex > 0) {
@@ -183,6 +240,7 @@ var planEntry = {
 		
 		if(planEntry.currentActionIndex < actionList.length) {
 			var actionCode = actionList[planEntry.currentActionIndex].ACTION_CODE;
+			planEntry.currentAction = actionCode;
 			$('#' +actionCode).bind('tap', selectCust.showSelectCust);
 			$('#' + actionCode + ' span[tag=ACTION_NAME_TEXT]').addClass("e_red");
 			$('#' + actionCode + ' div[tag=ACTION_SIDE]').show();
@@ -210,7 +268,11 @@ var planEntry = {
             planList.add(actionPlan);
         });
 
-        var param = '&planInfoString=' + paramData.toString();
+        var param = {
+            PLANLIST : planList.toString(),
+            PLAN_DATE : planEntry.planDate,
+            PLAN_TYPE : $("#workMode").val(),
+        };
         $.ajaxPost("plan/addPlan.json", param, function(data){
             var result = new Wade.DataMap(data);
             var resultCode = result.get("HEAD").get("RESULT_CODE");
@@ -228,11 +290,15 @@ var planEntry = {
 
         var checkFlag = false;
 
+        var planTargetList = $.DatasetList([
+            {"ACTION_CODE":"ZX","NUM":adviceNum},
+            {"ACTION_CODE":"SMJRQLC","NUM":scanHouseCounselorNum},
+        ]);
         $.ajaxRequest({
                 url:'plan/checkPlanTarget',
                 data: {
-                    scanHouseCounselorNum : scanHouseCounselorNum,
-                    adviceNum : adviceNum,
+                    PLAN_DATE : planEntry.planDate,
+                    PLAN_TARGET_LIST : planTargetList.toString(),
                 },
                 type:'POST',
                 dataType:'json',
@@ -329,7 +395,8 @@ var selectCust = {
                         $('#'+param.CUST_ID + ' li[tag=MOBILE_NO]').html(param.MOBILE_NO);
                         $('#'+param.CUST_ID + ' li[tag=HOUSE_DETAIL]').html(param.HOUSE_DETAIL);
                     } else {
-                        param.CUST_ID = '666';
+                        param.CUST_ID = result.get('BODY').get('CUST_ID');
+                        debugger;
                         var template = $('#CUST_TEMPLATE').html();
                         var tpl=$.Template(template);
                         param.CHECKED = 'checked';

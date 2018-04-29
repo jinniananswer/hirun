@@ -8,7 +8,8 @@
     <entity name="CustCenter.cust.CustService.queryCustList"  class="com.hirun.app.biz.cust.CustService" method="queryCustList"/>
     <entity name="CustCenter.cust.CustService.addCustByNum"  class="com.hirun.app.biz.cust.CustService" method="addCustByNum"/>
 
-    <entity name="PlanCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
-    <entity name="PlanCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
+    <entity name="MarketCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
+    <entity name="MarketCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
+    <entity name="MarketCenter.plan.PlanService.checkPlanAction"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanAction"/>
 
 </service>

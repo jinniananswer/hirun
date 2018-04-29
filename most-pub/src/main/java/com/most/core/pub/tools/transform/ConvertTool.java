@@ -8,7 +8,10 @@ import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author jinnian
@@ -43,5 +46,31 @@ public class ConvertTool {
             jsonArray.add(jsonObject);
         }
         return jsonArray;
+    }
+
+    public static Map<String, String> toMap(JSONObject jsonObject) {
+        Map<String, String> result = new HashMap<String, String>();
+
+        Iterator<String> iterator = jsonObject.keySet().iterator();
+        String key = null;
+        String value = null;
+        while (iterator.hasNext())
+        {
+            key = iterator.next();
+            value = jsonObject.getString(key);
+            result.put(key, value);
+        }
+
+        return result;
+    }
+
+    public static JSONObject toJSONObject(JSONArray jsonArray, String key) {
+        JSONObject jsonObject = new JSONObject();
+        for(int i = 0, size = jsonArray.size(); i < size; i++) {
+            JSONObject target = jsonArray.getJSONObject(i);
+            jsonObject.put(target.getString(key), target);
+        }
+
+        return jsonObject;
     }
 }
