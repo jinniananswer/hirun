@@ -50,4 +50,10 @@ public class PlanController {
         ServiceResponse response = ServiceClient.call("MarketCenter.plan.PlanService.getPlanFinishedInfo", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/getCauseListByActionCode")
+    public String getCauseListByActionCode(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("MarketCenter.plan.PlanService.getCauseListByActionCode", paramter);
+        return response.toJsonString();
+    }
 }

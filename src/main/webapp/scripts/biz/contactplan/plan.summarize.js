@@ -22,6 +22,13 @@ var planSummarize = {
             mask:true
         });
 
+        window["summarizeUnFinishCustPopup"] = new Wade.Popup("summarizeUnFinishCustPopup",{
+            visible:false,
+            mask:true
+        });
+
+        new radios('cause_options');
+
         $.ajaxRequest({
             url : 'plan/getSummarizeInitData',
             data : {},
@@ -60,24 +67,31 @@ var planSummarize = {
 	},
     afterSelectedCust : function(obj, data) {
     	var $obj = $(obj);
-    	var id = $obj.attr('id');
+    	var actionCode = $obj.attr('action_code');
         var factCustNum = data.custList.length;
-        var factCustDetail = '';
-        if(factCustNum > 0) {
-			for(var i = 0; i < data.custList.length; i++) {
-				var cust = data.custList[i];
-                factCustDetail += cust.get('CUST_NAME') + ',';
-			}
-		}
 
-        $('#' + id + ' span[tag=factCustNum]').html('实际完成数：' + factCustNum);
-        $('#' + id + ' span[tag=factCustDetail]').html('实际客户：' + factCustDetail);
+        //更新实际客户
+        var templateData = {};
+        templateData.FINISH_CUST_LIST = data.custList;
+        var html = template('finishCustListTemplate',templateData);
+        $('#FINISH_INFO_' + actionCode + ' ul[tag=FINISH_CUST_LIST]').empty().append(html);
+
+        //更新未完成客户
+        //先全量覆盖，因为可能多次选客户操作，如果没这一步，那前一次删了的都就找不到了
+        templateData.ACTION_CODE = actionCode;
+        templateData.UNFINISH_CUST_LIST = JSON.parse(planSummarize.getCustListByActionCode(actionCode, planSummarize.unFinishActionList).toString());
+        html = template('unFinishCustListTemplate',templateData);
+        $('#FINISH_INFO_' + actionCode + ' ul[tag=UNFINISH_CUST_LIST]').empty().append(html);
+
+        $.each(data.custList, function(idx, cust){
+            $('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+cust.CUST_ID+']').remove();
+        });
+
+        //更新实际数
+        $('#FINISH_INFO_' + actionCode + ' span[tag=finishCustNum]').html(factCustNum);
+
     },
     showFinishInfo : function() {
-        /*
-        * ACTION_CODE/TAP_FUNCTION/ACTION_NAME/PLAN_CUSTNUM/PLAN_CUSTNAMES
-        * FINISH_CUSTNUM/FINISH_CUSTNAMES/SIDE_NAME
-        * */
         $.each(actionList, function(idx, actionMap) {
             var actionCode = actionMap.ACTION_CODE;
             var selectCustFunc = actionMap.SELECT_CUST_FUNC;
@@ -117,6 +131,12 @@ var planSummarize = {
         });
 
         return custList;
+    },
+    summarize : function(obj) {
+        var $obj = $(obj);
+        var actionCode = $obj.attr('action_code');
+        var custId = $obj.attr('cust_id');
+        summaryPopup.showSummaryPopup(actionCode, custId, planSummarize.planId);
     }
 };
 
@@ -228,7 +248,7 @@ var selectCust = {
             var custDetail = {};
             var cust = selectCust.currentCustMap.get(custIdList[i]);
             // custDetail.custId = custIdList[i];
-            custList.push(cust);
+            custList.push(JSON.parse(cust.toString()));
         }
 
         var data = {
@@ -329,5 +349,59 @@ var selectCust = {
         else{
 
         }
+    }
+}
+
+var summaryPopup = {
+    custId : '',
+    planId : '',
+    showSummaryPopup : function(actionCode, custId, planId) {
+        summaryPopup.planId = planId;
+
+        //获取客户信息
+        $.ajaxRequest({
+                url : 'cust/getCustById',
+                data : {
+                    CUST_ID : custId
+                },
+                type : 'GET',
+                dataType : 'json',
+                success : function(data) {
+                    var body = data.BODY;
+                    $('#summarize_cust_info_part div[tag=cust_name]').html(body.CUST_NAME);
+                    $('#summarize_cust_info_part span[tag=sex]').html(body.SEX);
+                    $('#summarize_cust_info_part span[tag=wx_nick]').html(body.WX_NICK);
+                    $('#summarize_cust_info_part span[tag=mobile_no]').html(body.MOBILE_NO);
+                    $('#summarize_cust_info_part span[tag=house_detail]').html(body.HOUSE_DETAIL);
+                },
+                error : function(status, errorMessage) {
+
+                }
+            }
+        )
+
+        //获取原因列表
+        $.ajaxRequest({
+                url : 'plan/getCauseListByActionCode',
+                data : {
+                    ACTION_CODE : actionCode
+                },
+                type : 'GET',
+                dataType : 'json',
+                success : function(data) {
+                    var body = data.BODY;
+                    $('#cause_options').empty().html(template('cause_option_template', body));
+                    new radios('cause_options');
+                },
+                error : function(status, errorMessage) {
+
+                }
+            }
+        )
+
+        showPopup('summarizeUnFinishCustPopup', 'summarizeUnFinishCustPopupItem')
+    },
+    afterSummarizeCust : function(obj) {
+        backPopup(obj);
     }
 }

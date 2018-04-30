@@ -298,7 +298,14 @@ tab = function(tabsId,pagesId) {
 	}
 }
 
-
+function checks(listId) {
+    var list = get(listId);
+    for (var i = 0; i < list.children.length; i++) {
+        list.children[i].addEventListener ("click",function(){
+            toggleClass(this,"checked");
+        })
+    }
+}
 
 
 

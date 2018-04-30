@@ -66,7 +66,6 @@
 							</div>
 						</div>
 						<div class="c_space"></div>
-						<!-- 客户列表 开始 -->
 						<div class="c_list c_list c_list-col-1 c_list-phone-col-1">
 							<ul id="CUST_LIST">
 								<li x_tag="x-databind-template" id={custId} style="display:none">
@@ -93,7 +92,6 @@
 								</li>
 							</ul>
 						</div>
-						<!-- 客户列表 结束 -->
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
 							<button type="button" class="e_button-l e_button-green" ontap="selectCust.confirmCusts(this)">确定</button>
@@ -218,7 +216,81 @@
 		</div>
 	</div>
 </div>
-<!-- 弹出层 结束 -->
+<div class="c_popup c_popup-half" id="summarizeUnFinishCustPopup">
+	<div class="c_popupBg" id="summarizeUnFinishCustPopup_bg"></div>
+	<div class="c_popupBox">
+		<div class="c_popupWrapper" id="summarizeUnFinishCustPopup_wrapper">
+			<div class="c_popupGroup">
+				<div class="c_popupItem" id="summarizeUnFinishCustPopupItem">
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this)">客户总结</div>
+					</div>
+					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
+						<div class="c_list c_list-border">
+							<ul>
+								<li id="summarize_cust_info_part">
+									<div class="main">
+										<div class="title" tag="cust_name"></div>
+										<div class="content content-auto">
+											<div class="c_param">
+												<ul>
+													<li>
+														<span class="label">性别：</span>
+														<span class="value" tag="sex"></span>
+													</li>
+													<li>
+														<span class="label">微信昵称：</span>
+														<span class="value" tag="wx_nick"></span>
+													</li>
+													<li>
+														<span class="label">电话号码：</span>
+														<span class="value" tag="mobile_no"></span>
+													</li>
+													<li>
+														<span class="label">楼盘信息：</span>
+														<span class="value" tag="house_detail"></span>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="c_space"></div>
+						<div class="c_list">
+							<ul>
+								<li>
+									<div class="label">原因：</div>
+									<div class="value">
+										<div class="c_list c_list-v c_list-col-3 c_list-space c_list-line c_list-s">
+											<ul id="cause_options">
+
+											</ul>
+										</div>
+										<div class="c_list" id="other_cause_part" style="display: none">
+											<ul>
+												<li>
+													<textarea class="e_textarea-row-2" ></textarea>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+
+						<div class="c_space"></div>
+						<div class="c_submit c_submit-full">
+							<button type="button" class="e_button-l e_button-green" ontap="summaryPopup.afterSummarizeCust(this)">确定</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 弹出层结束 -->
 <script type="text/template" id="ACTION_TEMPLATE">
 	<li class="link" id="{ACTION_CODE}" ontap="{TAP_FUNCTION}">
 		<div class="main">
@@ -268,7 +340,7 @@
 			<div class="text">{{ACTION_NAME}}</div>
 			<div class="fn">
 				<ul>
-					<li><span>计划数:{{PLAN_CUSTNUM}}人 / 实际数:{{FINISH_CUSTNUM}}</span><span class="e_ico-unfold"></span></li>
+					<li><span>计划数:{{PLAN_CUSTNUM}}人 / 实际数:<span tag="finishCustNum">{{FINISH_CUSTNUM}}</span></span><span class="e_ico-unfold"></span></li>
 				</ul>
 			</div>
 		</div>
@@ -336,11 +408,11 @@
 				</ul>
 			</div>
 			<div class="c_list c_list-v c_list-col-3">
-				<ul>
+				<ul tag="UNFINISH_CUST_LIST">
 					{{each UNFINISH_CUST_LIST cust idx}}
-					<li class="" ontap="">
+					<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}" action_code="{{ACTION_CODE}}" class="link" ontap="planSummarize.summarize(this)">
 						<div class="main">
-							<div class="title" tag="UNFINISH_{{cust.CUST_ID}}">{{cust.CUST_NAME}}</div>
+							<div class="title" >{{cust.CUST_NAME}}<span class="e_ico-edit"></span></div>
 						</div>
 					</li>
 					{{/each}}
@@ -349,7 +421,31 @@
 		</div>
 	</div>
 </script>
-
+<script id="finishCustListTemplate" type="text/html">
+	{{each FINISH_CUST_LIST cust idx}}
+	<li class="link" ontap="">
+		<div class="main">
+			<div class="title">{{cust.CUST_NAME}}</div>
+		</div>
+	</li>
+	{{/each}}
+</script>
+<script id="unFinishCustListTemplate" type="text/html">
+	{{each UNFINISH_CUST_LIST cust idx}}
+	<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}" action_code="{{ACTION_CODE}}" class="link" ontap="planSummarize.summarize(this)">
+		<div class="main">
+			<div class="title">{{cust.CUST_NAME}}</div>
+		</div>
+	</li>
+	{{/each}}
+</script>
+<script id="cause_option_template" rel_id = "cause_options" type="text/html">
+	{{each CAUSE_LIST cause idx}}
+	<li class="link">
+		<div class="main">{{cause.CAUSE_NAME}}</div>
+	</li>
+	{{/each}}
+</script>
 <script type="text/javascript">
 	Wade.setRatio();
     planSummarize.init();
