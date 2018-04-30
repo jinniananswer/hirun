@@ -48,6 +48,11 @@ public class ConvertTool {
         return jsonArray;
     }
 
+    /**
+     * value为空的排除
+     * @param jsonObject
+     * @return
+     */
     public static Map<String, String> toMap(JSONObject jsonObject) {
         Map<String, String> result = new HashMap<String, String>();
 
@@ -58,7 +63,9 @@ public class ConvertTool {
         {
             key = iterator.next();
             value = jsonObject.getString(key);
-            result.put(key, value);
+            if(value != null) {
+                result.put(key, value);
+            }
         }
 
         return result;

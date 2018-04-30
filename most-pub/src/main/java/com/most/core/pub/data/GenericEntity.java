@@ -30,7 +30,7 @@ public class GenericEntity {
     }
 
     public void set(String key, String value){
-        this.set(key, value);
+        this.content.put(key, value);
     }
 
     public Map<String, String> getContent(){
