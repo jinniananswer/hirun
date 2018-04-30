@@ -18,4 +18,8 @@ public class Header extends JSONData{
         this.data.putAll(data);
     }
 
+    public void putAll(JSONObject json){
+        this.data.putAll(json);
+    }
+
 }

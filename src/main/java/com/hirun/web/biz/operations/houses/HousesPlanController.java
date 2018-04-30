@@ -8,6 +8,7 @@ import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,5 +58,12 @@ public class HousesPlanController extends RootController{
 
         JSONArray counselors = response.getJSONArray("COUNSELORS");
         return counselors.toJSONString();
+    }
+
+
+    @RequestMapping("/submitHousesPlan")
+    public @ResponseBody String submitHousesPlan(@RequestParam Map submitData) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.createHousesPlan", submitData);
+        return null;
     }
 }

@@ -118,5 +118,16 @@
             $("#COUNSELOR_NAME").val(text);
             $("#COUNSELOR_ID").val(value);
         },
+
+        submit : function(){
+            if($.validate.verifyAll("submitArea")) {
+                var parameter = $.buildJsonData("submitArea");
+                $.ajaxPost('submitHousesPlan', parameter, function (data) {
+                    alert("ok");
+                }, function () {
+                    alert('error');
+                });
+            }
+        }
     }});
 })($);

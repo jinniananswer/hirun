@@ -2,12 +2,22 @@ package com.hirun.pub.domain.entity.org;
 
 import com.most.core.pub.data.GenericEntity;
 
+import java.util.Map;
+
 /**
  * @Author jinnian
  * @Date 2018/4/23 22:09
  * @Description:
  */
 public class EmployeeJobRoleEntity extends GenericEntity {
+
+    public EmployeeJobRoleEntity(Map<String, String> data){
+        super(data);
+    }
+
+    public EmployeeJobRoleEntity(){
+        super();
+    }
 
     public String getJobRoleId(){
         return this.get("JOB_ROLE_ID");

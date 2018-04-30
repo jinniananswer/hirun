@@ -34,6 +34,8 @@ public interface ISqlProducer {
 
     public PreparedStatement generateInsertSql(ConnectionWrapper conn, String tableName, Map<String, String> parameter) throws SQLException;
 
+    public PreparedStatement generateInsertAutoIncrementSql(ConnectionWrapper conn, String tableName, Map<String, String> parameter) throws SQLException;
+
     public PreparedStatement generateInsertBatchSql(ConnectionWrapper conn, String tableName, List<Map<String, String>> parameters) throws SQLException;
 
     public PreparedStatement generateUpdateSql(ConnectionWrapper conn, String tableName, Map<String, String> parameter) throws SQLException;

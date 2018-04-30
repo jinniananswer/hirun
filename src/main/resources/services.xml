@@ -3,6 +3,13 @@
     <entity name="OrgCenter.login.LoginService.login"  class="com.hirun.app.biz.login.LoginService" method="login"/>
     <entity name="OrgCenter.menu.MenuService.loadMenus"  class="com.hirun.app.biz.menu.MenuService" method="loadMenus"/>
 
+    <!--运营管理中心服务-->
+    <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>
+    <entity name="OperationCenter.house.HousesService.initArea"  class="com.hirun.app.biz.houses.HousesService" method="initArea"/>
+    <entity name="OperationCenter.house.HousesService.initCounselors"  class="com.hirun.app.biz.houses.HousesService" method="initCounselors"/>
+    <entity name="OperationCenter.house.HousesService.createHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="createHousesPlan"/>
+
+    <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
     <entity name="CustCenter.cust.CustService.editCust"  class="com.hirun.app.biz.cust.CustService" method="editCust"/>
     <entity name="CustCenter.cust.CustService.queryCustList"  class="com.hirun.app.biz.cust.CustService" method="queryCustList"/>

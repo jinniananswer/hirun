@@ -27,8 +27,7 @@
         <div id="UI-other">
             <!-- 表单 开始 -->
             <div class="c_list c_list-line c_list-border">
-                <ul>
-
+                <ul id="submitArea">
                     <li class="link required">
                         <div class="label">楼盘名称</div>
                         <div class="value"><input id="NAME" name="NAME" type="text" nullable="no" desc="楼盘名称"/></div>
@@ -75,9 +74,9 @@
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
-                    <li class="link required">
+                    <li class="link">
                         <div class="label">楼栋</div>
-                        <div class="value"><input id="BUILD_NUM" name="BUILD_NUM" datatype="text" type="text" nullable="no" desc="楼栋"/></div>
+                        <div class="value"><input id="BUILD_NUM" name="BUILD_NUM" datatype="text" type="text" nullable="yes" desc="楼栋"/></div>
                     </li>
                     <li class="link required">
                         <div class="label">户数</div>
@@ -90,11 +89,11 @@
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
-                    <li class="link required">
+                    <li class="link">
                         <div class="label">家装顾问</div>
                         <div class="value"><span class="e_mix" ontap="showPopup('UI-popup','UI-popup-query')">
-                            <input type="text" id="COUNSELOR_NAME" name="COUNSELOR_NAME" value="" />
-                            <input type="hidden" id="COUNSELOR_ID" name="COUNSELOR_ID" value="1" />
+                            <input type="text" id="COUNSELOR_NAME" name="COUNSELOR_NAME" datatype="text" nullable="yes" desc="家装顾问" value="" />
+                            <input type="hidden" id="COUNSELOR_ID" name="COUNSELOR_ID" datatype="numeric" nullable="yes" desc="家装顾问" value="" />
                             <span class="e_ico-check"></span>
 							</span></div>
                     </li>
@@ -105,7 +104,7 @@
         <div class="c_space"></div>
         <!-- 提交 开始 -->
         <div class="c_submit c_submit-full">
-            <button type="button" class="e_button-r e_button-l e_button-green" ontap="goto('../home.html')">提交</button>
+            <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.housesPlan.submit()">提交</button>
         </div>
         <!-- 提交 结束 -->
         <div class="c_space"></div>

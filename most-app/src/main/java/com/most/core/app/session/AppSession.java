@@ -2,6 +2,7 @@ package com.most.core.app.session;
 
 import com.most.core.app.database.conn.ConnectionFactory;
 import com.most.core.app.database.wrapper.ConnectionWrapper;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.MapTool;
 import com.most.core.pub.tools.time.TimeTool;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +27,8 @@ public class AppSession{
     private String createTime;
 
     private String sessionId;
+
+    private SessionEntity sessionEntity;
 
     public AppSession(){
         this.createTime = TimeTool.now();
@@ -85,5 +88,13 @@ public class AppSession{
                 log.error(e);
             }
         }
+    }
+
+    public <K extends SessionEntity> K getSessionEntity(){
+        return (K)this.sessionEntity;
+    }
+
+    public <K extends SessionEntity> void setSessionEntity(K sessionEntity){
+        this.sessionEntity = sessionEntity;
     }
 }

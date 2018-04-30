@@ -112,6 +112,11 @@ public class GenericDAO {
         return this.executeUpdate(stmt);
     }
 
+    public long insertAutoIncrement(String tableName, Map<String, String> parameter) throws SQLException{
+        PreparedStatement stmt = producer.generateInsertAutoIncrementSql(this.connection, tableName, parameter);
+        return this.executeInsertAutoIncrement(stmt);
+    }
+
     public int[] insertBatch(String tableName, List<Map<String, String>> parameters) throws SQLException{
         PreparedStatement stmt = producer.generateInsertBatchSql(this.connection, tableName, parameters);
         return this.executeUpdateBatch(stmt);
@@ -161,15 +166,26 @@ public class GenericDAO {
         long start = System.currentTimeMillis();
         int num = stmt.executeUpdate();
 
+        long end = System.currentTimeMillis();
+        if(log.isDebugEnabled()){
+            log.debug("IUD操作表数据耗时"+(end-start)+"ms");
+        }
+        stmt.close();
+        return num;
+    }
+
+    public long executeInsertAutoIncrement(PreparedStatement stmt) throws SQLException{
+        long start = System.currentTimeMillis();
+        stmt.executeUpdate();
         ResultSet rs = stmt.getGeneratedKeys();
-        int id = 0;
+        long id = 0;
         if (rs.next()) {
-            id = (int)rs.getLong(1);
+            id = rs.getLong(1);
         }
 
         long end = System.currentTimeMillis();
         if(log.isDebugEnabled()){
-            log.debug("IUD操作表数据耗时"+(end-start)+"ms");
+            log.debug("insert操作表数据耗时"+(end-start)+"ms");
         }
         stmt.close();
         return id;

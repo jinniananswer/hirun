@@ -5,6 +5,7 @@ import com.most.core.app.database.dao.StrongObjectDAO;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,5 +23,11 @@ public class OrgDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("ORG_ID", orgId);
         return this.queryByPk(OrgEntity.class, "ins_org", parameter);
+    }
+
+    public List<OrgEntity> queryOrgByCity(String city) throws SQLException{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CITY", city);
+        return this.query(OrgEntity.class, "ins_org", parameter);
     }
 }

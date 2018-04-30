@@ -26,8 +26,6 @@ public class HomeController extends RootController {
         EmployeeEntity employee = (EmployeeEntity) session.getAttribute("EMPLOYEE");
         JSONArray jobRoles = (JSONArray)session.getAttribute("JOB_ROLE");
 
-        logger.debug("==========================jobRoles========================"+jobRoles);
-
         String path = request.getContextPath();
         String basePath = request.getScheme()+"://" +request.getServerName()+":" +request.getServerPort()+path+"/" ;
 
@@ -76,7 +74,6 @@ public class HomeController extends RootController {
             rst.put("JOB_ROLE_NAME", "");
             rst.put("HEAD_IMAGE", basePath + "frame/img/male.png");
         }
-        logger.debug("=================rst==================="+rst.toJSONString());
         return rst.toJSONString();
     }
 

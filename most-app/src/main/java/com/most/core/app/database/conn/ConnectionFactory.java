@@ -23,6 +23,7 @@ public class ConnectionFactory {
         DataSource ds = ConnectionPoolsFactory.getDataSource(databaseName);
         try {
             Connection conn = ds.getConnection();
+            conn.setAutoCommit(false);
             ConnectionWrapper connectionWrapper = new ConnectionWrapper(databaseName, conn);
             return connectionWrapper;
         } catch (SQLException e) {

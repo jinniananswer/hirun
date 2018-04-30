@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.util.*;
 
@@ -123,6 +124,16 @@ public class GenericSqlProducer implements ISqlProducer {
     public PreparedStatement generateInsertSql(ConnectionWrapper conn, String tableName, Map<String, String> parameter) throws SQLException{
         String sql = generateInsertAllCols(conn, tableName);
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
+        TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
+        this.bindValue(stmt, tableMetaData.getColumns(), parameter);
+        if(log.isDebugEnabled())
+            log.debug("生成的insert语句为："+sql);
+        return stmt;
+    }
+
+    public PreparedStatement generateInsertAutoIncrementSql(ConnectionWrapper conn, String tableName, Map<String, String> parameter) throws SQLException{
+        String sql = generateInsertAllCols(conn, tableName);
+        PreparedStatement stmt = conn.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         TableMetaData tableMetaData = MetaDataFactory.getTableMetaData(conn.getDatabaseName(), tableName);
         this.bindValue(stmt, tableMetaData.getColumns(), parameter);
         if(log.isDebugEnabled())
@@ -393,7 +404,7 @@ public class GenericSqlProducer implements ISqlProducer {
     }
 
     protected String generateInsertAllCols(ConnectionWrapper conn, String tableName){
-        String cacheKey = tableName+"_INS";
+        String cacheKey = tableName.toUpperCase()+"_INS";
         if(cache.containsKey(cacheKey)){
             return cache.get(cacheKey);
         }

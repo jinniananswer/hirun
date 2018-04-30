@@ -3,9 +3,11 @@ package com.most.core.app.service.invoker;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.service.config.ServiceConfig;
 import com.most.core.app.service.config.ServiceConfigFactory;
+import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +32,10 @@ public class ServiceInvoker {
         try {
             GenericService service = classes.newInstance();
             //1,创建session
-            SessionManager.getSession();
+            AppSession session = SessionManager.getSession();
+
+            SessionEntity sessionEntity = new SessionEntity(request.getHeader().getData());
+            session.setSessionEntity(sessionEntity);
 
             //2.方法执行
             response = (ServiceResponse) method.invoke(service, request);
@@ -41,7 +46,10 @@ public class ServiceInvoker {
                 }
             }
 
-            //3.注销session
+            //3.提交事务
+            session.commit();
+
+            //4.注销session
             SessionManager.destroy();
         } catch (InstantiationException e) {
             log.error(e);
