@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -29,10 +28,11 @@ public class ServiceInvoker {
         Class<GenericService> classes = (Class<GenericService>) serviceConfig.getServiceClass();
         Method method = serviceConfig.getServiceMethod();
         ServiceResponse response = null;
+        AppSession session = null;
         try {
             GenericService service = classes.newInstance();
             //1,创建session
-            AppSession session = SessionManager.getSession();
+            session = SessionManager.getSession();
 
             SessionEntity sessionEntity = new SessionEntity(request.getHeader().getData());
             session.setSessionEntity(sessionEntity);
@@ -51,13 +51,9 @@ public class ServiceInvoker {
 
             //4.注销session
             SessionManager.destroy();
-        } catch (InstantiationException e) {
-            log.error(e);
-            throw(e);
-        } catch (IllegalAccessException e) {
-            log.error(e);
-            throw(e);
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
+            if(session != null)
+                session.rollback();
             log.error(e);
             throw(e);
         }
