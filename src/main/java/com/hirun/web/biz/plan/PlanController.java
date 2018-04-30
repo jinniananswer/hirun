@@ -1,6 +1,7 @@
 package com.hirun.web.biz.plan;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.pub.tool.PlanTool;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.web.client.ServiceClient;
 import org.springframework.stereotype.Controller;
@@ -19,17 +20,34 @@ import java.util.Map;
 public class PlanController {
 
     @RequestMapping(value = "/plan/addPlan", method = RequestMethod.POST)
-    public String addPlan(String planInfoString) throws Exception {
-        ServiceResponse response = ServiceClient.call("PlanCenter.plan.PlanService.addPlan", JSONObject.parseObject(planInfoString));
+    public String addPlan(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("MarketCenter.plan.PlanService.addPlan", paramter);
         return response.toJsonString();
     }
 
     @RequestMapping(value = "/plan/checkPlanTarget")
-    public String checkPlanTarget(String scanHouseCounselorNum, String adviceNum) throws Exception {
-        JSONObject planTarget = new JSONObject();
-        planTarget.put("SCAN_HOUSE_COUNSELOR_NUM", scanHouseCounselorNum);
-        planTarget.put("ADVICE_NUM", adviceNum);
-        ServiceResponse response = ServiceClient.call("PlanCenter.plan.PlanService.checkPlanTarget", planTarget);
+    public String checkPlanTarget(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("MarketCenter.plan.PlanService.checkPlanTarget", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/plan/checkPlanAction")
+    public String checkPlanAction(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("MarketCenter.plan.PlanService.checkPlanAction", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/plan/getPlanInitData")
+    public String getPlanInitData(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        response.setHeader("RESULT_CODE", "0");
+        response.set("PLAN_DATE", PlanTool.getPlanDate());
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/plan/getSummarizeInitData")
+    public String getSummarizeInitData(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("MarketCenter.plan.PlanService.getPlanFinishedInfo", paramter);
         return response.toJsonString();
     }
 }
