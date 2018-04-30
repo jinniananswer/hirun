@@ -159,6 +159,13 @@ public class TimeTool {
         return now("yyyy-MM-dd");
     }
 
+    public static String addMonths(String dateTime, String pattern,  int month){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDate time = LocalDate.parse(dateTime,dateTimeFormatter);
+        LocalDate nextTime = time.plus(month, ChronoUnit.MONTHS);
+        return nextTime.format(dateTimeFormatter);
+    }
+
     /**
      * localDateTime 转 自定义格式string
      *
