@@ -42,4 +42,10 @@ public class CustController extends RootController{
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.addCustByNum", pageData);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/cust/getCustById", method = RequestMethod.GET)
+    public String getCustById(@RequestParam Map map) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.getCustById", map);
+        return response.toJsonString();
+    }
 }

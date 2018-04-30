@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.most.core.app.service.GenericService;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.Body;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
@@ -27,8 +30,11 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject custInfo = request.getBody().getData();
 
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
         CustDAO dao = new CustDAO("ins");
-        custInfo.put("HOUSE_COUNSELOR_ID", "123");
+        custInfo.put("HOUSE_COUNSELOR_ID", userId);
         Map<String, String> parameter = ConvertTool.toMap(custInfo);
         int custId = dao.insert("INS_CUSTOMER", parameter);
         response.set("CUST_ID", custId);
@@ -51,8 +57,11 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("HOUSE_COUNSELOR_ID","123");
+        parameter.put("HOUSE_COUNSELOR_ID",userId);
 
         CustDAO dao = new CustDAO("ins");
         List<CustomerEntity> customerList = dao.query(CustomerEntity.class, "INS_CUSTOMER", parameter);
@@ -66,6 +75,9 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
         int newCustNew = requestData.getInteger("NEW_CUSTNUM");
         String custNamePrefix = requestData.getString("CUST_NAME_PREFIX");
         if(StringUtils.isBlank(custNamePrefix)) {
@@ -75,7 +87,7 @@ public class CustService extends GenericService{
         CustDAO dao = new CustDAO("ins");
         for(int i = 0; i < newCustNew; i++) {
             Map<String, String> cust = new HashMap<String, String>();
-            cust.put("HOUSE_COUNSELOR_ID", "123");
+            cust.put("HOUSE_COUNSELOR_ID", userId);
             cust.put("CUST_STATUS", "9");
             cust.put("CUST_NAME", custNamePrefix + "新客户");
             int custId = dao.insert("INS_CUSTOMER", cust);
@@ -87,6 +99,25 @@ public class CustService extends GenericService{
 //        dao.insertBatch("INS_CUSTOMER", listCust);
 
         response.set("custList", JSONArray.toJSON(listCust));
+
+        return response;
+    }
+
+    public ServiceResponse getCustById(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String custId = requestData.getString("CUST_ID");
+
+        CustDAO custDAO = new CustDAO("ins");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CUST_ID", custId);
+        CustomerEntity customerEntity = custDAO.queryByPk(CustomerEntity.class, "INS_CUSTOMER", parameter);
+        if(customerEntity == null) {
+            response.setError("-1", "客户资料不存在");
+            return response;
+        }
+
+        response.setBody(new Body(customerEntity.toJson()));
 
         return response;
     }

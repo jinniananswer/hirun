@@ -3,7 +3,9 @@ package com.hirun.app.dao.cust;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.most.core.app.database.dao.StrongObjectDAO;
+import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.RecordSet;
+import com.most.core.pub.data.SessionEntity;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -30,9 +32,9 @@ public class CustActionDAO extends StrongObjectDAO {
      * @return
      * @throws Exception
      */
-    public List<CustActionEntity> queryFinishActionList(String executorId, String actionCode, String startTime, String endTime) throws Exception {
+    public List<CustActionEntity> queryFinishActionList(String executorId, String actionCode, String startTime, String endTime, String houseCounSelorId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("HOUSE_COUNSELOR_ID", "123");
+        parameter.put("HOUSE_COUNSELOR_ID", houseCounSelorId);
 
         StringBuilder sql = new StringBuilder(200);
         List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, sql.toString(), parameter);

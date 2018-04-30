@@ -3,6 +3,8 @@ package com.hirun.app.dao.cust;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.app.database.dao.StrongObjectDAO;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
 import java.sql.SQLException;
@@ -21,9 +23,9 @@ public class CustDAO extends StrongObjectDAO {
         super(databaseName);
     }
 
-    public List<CustomerEntity> queryCustList() throws SQLException {
+    public List<CustomerEntity> queryCustList(String houseConuselorId) throws SQLException {
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("HOUSE_COUNSELOR_ID", "123");
+        parameter.put("HOUSE_COUNSELOR_ID", houseConuselorId);
         List<CustomerEntity> customerList = this.query(CustomerEntity.class, "INS_CUSTOMER", parameter);
 
         return customerList;

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
+import com.hirun.app.cache.PlanUnFinishCauseCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.plan.PlanDAO;
@@ -12,11 +13,14 @@ import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
+import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.service.GenericService;
+import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
@@ -37,6 +41,9 @@ public class PlanService extends GenericService {
         PlanDAO planDao = new PlanDAO("ins");
         CustActionDAO custActionDAO = new CustActionDAO("ins");
 
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
         String planDate = planInfo.getString("PLAN_DATE");
         String planType = planInfo.getString("PLAN_TYPE");
 
@@ -45,7 +52,7 @@ public class PlanService extends GenericService {
         Map<String, String> planEntityParameter = new HashMap<String, String>();
         planEntityParameter.put("PLAN_DATE", planDate);
         planEntityParameter.put("PLAN_STATUS", "0");
-        planEntityParameter.put("PLAN_EXECUTOR_ID", "123");
+        planEntityParameter.put("PLAN_EXECUTOR_ID", userId);
         planEntityParameter.put("PLAN_TYPE", planType);
         String planId = String.valueOf(planDao.insert("INS_PLAN", planEntityParameter));
 
@@ -64,7 +71,7 @@ public class PlanService extends GenericService {
                     custActionParameter.put("CUST_ID", custId);
                     custActionParameter.put("ACTION_STATUS", "0");
                     custActionParameter.put("PLAN_DEAL_DATE", planDate);
-                    custActionParameter.put("EXECUTOR_ID", "123");
+                    custActionParameter.put("EXECUTOR_ID", userId);
                     custActionList.add(custActionParameter);
                 }
             }
@@ -128,6 +135,8 @@ public class PlanService extends GenericService {
         StringBuilder errorMessage = new StringBuilder();
 
         String actionName = ActionCache.getAction(actionCode).getActionName();
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
 
         //校验自身动作数量限制
         PlanTargetLimitEntity planTargetLimitEntity = PlanTargetLimitCache.getPlanTargetLimit(actionCode);
@@ -141,7 +150,7 @@ public class PlanService extends GenericService {
             //获取往日数量
             CustActionDAO custActionDAO = new CustActionDAO("ins");
             String startTime = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
-            totalNum = custActionDAO.queryFinishActionCount("123", actionCode, startTime, planDate);
+            totalNum = custActionDAO.queryFinishActionCount(userId, actionCode, startTime, planDate);
 
             if(limitNum - totalNum > custNum) {
                 //报错
@@ -171,7 +180,11 @@ public class PlanService extends GenericService {
     public ServiceResponse getPlanFinishedInfo(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
-        String planExecutorId = "123";
+
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
+        String planExecutorId = userId;
         String planDate = PlanTool.getPlanDate4Summarize();
 
         //查询计划
@@ -284,6 +297,17 @@ public class PlanService extends GenericService {
         response.set("PLANLIST", planList);
         response.set("FINISH_ACTION_LIST", finishActionList);
         response.set("UNFINISH_ACTION_LIST", unFinishActionList);
+
+        return response;
+    }
+
+    public ServiceResponse getCauseListByActionCode(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String actionCode = requestData.getString("ACTION_CODE");
+
+        List<PlanUnfinishCauseEntity> entityList = PlanUnFinishCauseCache.getCauseListByActionCode(actionCode);
+        response.set("CAUSE_LIST", ConvertTool.toJSONArray(entityList));
 
         return response;
     }
