@@ -138,14 +138,22 @@ var planEntry = {
             var custIdList = getCheckedValues('selectCustBox').split(',');
             var custNum = getCheckedBoxNum('selectCustBox');
             var custList = $.DatasetList();
+
+            //通过搜索选择的客户
             if(custNum > 0) {
                 for(var i = 0; i < custIdList.length; i++) {
                     var cust = selectCust.currentCustMap.get(custIdList[i]);
                     custList.add(cust);
 
-                    custName += cust.get('CUST_NAME') + ",";
+                    custName += cust.get('CUST_NAME') + "；";
                 }
             }
+            //通过上一动作带过来，又保留的客户
+            var unDeletedBeforeActionCustList = selectCust.getUndeletedBeforeActionCust();
+            $.each(unDeletedBeforeActionCustList, function (idx, cust) {
+                custList.add(cust);
+                custName += cust.get('CUST_NAME') + "；";
+            })
 
             planEntry.planActionMap.put(planEntry.currentAction, custList);
 
@@ -195,14 +203,16 @@ var planEntry = {
 	checkSelectedCust : function() {
 		var checkFlag = true;
         var newCustNum = parseInt($("#newCustNum").val());
-        var custNum = parseInt(getCheckedBoxNum('selectCustBox'));
+        var checkBoxCustNum = parseInt(getCheckedBoxNum('selectCustBox'));
+        var undeletedBeforeActionCustNum = parseInt(selectCust.getUndeletedBeforeActionCustNum());
+        var custNum = newCustNum + checkBoxCustNum + undeletedBeforeActionCustNum;
 
         $.ajaxRequest({
                 url:'plan/checkPlanAction',
                 data: {
                     PLAN_DATE : planEntry.planDate,
                     ACTION_CODE : planEntry.currentAction,
-                    CUSTNUM : parseInt(newCustNum + custNum),
+                    CUSTNUM : custNum,
                     PLAN_TARGET_LIST : planEntry.planTargetList.toString(),
                 },
                 type:'POST',
@@ -323,6 +333,24 @@ var planEntry = {
         );
 
         return checkFlag;
+    },
+    getActionNameByCode : function (actionCode) {
+	    var actionName = '';
+        $.each(actionList, function(idx, action){
+            if(actionCode == action.ACTION_CODE) {
+                actionName = action.ACTION_NAME;
+                return;
+            }
+        });
+
+        return actionName;
+    },
+    getBeforeAction : function () {
+	    if(planEntry.currentActionIndex == 0) {
+	        return '';
+        } else {
+            return actionList[planEntry.currentActionIndex-1].ACTION_CODE;
+        }
     }
 };
 
@@ -359,21 +387,6 @@ var selectCust = {
         HOUSE_ID.append("保利西海岸一期","2");
         HOUSE_ID.append("四方坪一期","3");
         HOUSE_ID.append("四方坪二期","4");
-
-        // var custId = $(obj).attr('custId');
-        // if(custId) {
-            //修改已有客户
-            // var cust = selectCust.currentCustMap.get(custId);
-            // $('#custForm #CUST_NAME').val(cust.get('CUST_NAME'));
-            // $('#custForm #CUST_ID').val(custId);
-            // $('#custForm #WX_NICK').val(cust.get('WX_NICK'));
-            // $('#custForm #SEX').val(cust.get('SEX'));
-            // $('#custForm #MOBILE_NO').val(cust.get('MOBILE_NO'));
-            // $('#custForm #HOUSE_ID').val(cust.get('HOUSE_ID'));
-            // $('#custForm #HOUSE_DETAIL').val(cust.get('HOUSE_DETAIL'));
-            // $('#custForm #HOUSE_MODE').val(cust.get('HOUSE_MODE'));
-            // $('#custForm #HOUSE_AREA').val(cust.get('HOUSE_AREA'));
-        // }
 
         forwardPopup(obj,'custInfoEditPopup');
     },
@@ -418,14 +431,14 @@ var selectCust = {
         }
     },
     _queryCust : function(param, callback) {
+        //清空查询结果
+        $('#CUST_LIST').empty();
+        selectCust.setCovertGenderParam(param);
         $.ajaxGet('cust/queryCustList',param,function(data){
             var result = new Wade.DataMap(data);
             var resultCode = result.get("HEAD").get("RESULT_CODE");
 
             if(resultCode == "0"){
-                //清空表格
-                $('#CUST_LIST').empty();
-
                 var body = result.get('BODY');
                 var ds= body.get('CUSTOMERLIST')
                 if(ds) {
@@ -442,30 +455,17 @@ var selectCust = {
                 if(callback) {
                     callback();
                 }
-                // showPopup('selectCustPopup','customerSelectPopup');
             }
         },function(){
             alert('error');
         });
     },
     queryCust : function(obj) {
-        var param = '';
+        var param = $.buildJsonData("queryCustParamForm");
+        debugger;
         selectCust._queryCust(param, function() {
             backPopup(obj);
         });
-        // var ds=$.DatasetList([
-        // 	{"CUST_NAME":"张三","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 	{"CUST_NAME":"李四","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 	{"CUST_NAME":"王五","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 	{"CUST_NAME":"赵六","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 	{"CUST_NAME":"张三","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 	{"CUST_NAME":"张三2","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // ]);
-        // $.each(ds, function(idx, item) {
-        //     var template = $('#CUST_TEMPLATE').html();
-        //     var tpl=$.Template(template);
-        //     tpl.append('#CUST_LIST',item,true);
-        // });
     },
     showSelectCust : function () {
         if(planEntry.currentActionIndex == actionList.length) {
@@ -473,13 +473,33 @@ var selectCust = {
             return;
         }
 
+        $('#before_action_cust_list_part').empty();
         var currentActionCode = actionList[planEntry.currentActionIndex].ACTION_CODE;
         if(currentActionCode == 'JW') {
             $('#QUERY_CUST_PART').hide();
             $('#NEW_CUST_PART').show();
+
+            showPopup('myPopup','customerSelectPopup');
         } else {
             $('#QUERY_CUST_PART').show();
             $('#NEW_CUST_PART').hide();
+
+            var beforeActionCode = actionList[planEntry.currentActionIndex-1].ACTION_CODE;
+
+            //渲染上一动作选择客户区域
+            if(currentActionCode != 'DKCSMU' && currentActionCode != 'YJALTS') {
+                var templateData = {};
+                var beforeCustList = planEntry.planActionMap.get(beforeActionCode);
+                templateData.BEFORE_ACTION_NAME = planEntry.getActionNameByCode(beforeActionCode);
+                templateData.BEFORE_ACTION_CUSTNUM = beforeCustList.length;
+                templateData.CUST_LIST = JSON.parse(beforeCustList.toString());
+                $('#before_action_cust_list_part').html(template('before_action_cust_list_template',templateData));
+            }
+
+            var param = {};
+            selectCust._queryCust(param, function() {
+                showPopup('myPopup','customerSelectPopup');
+            });
 
             if(currentActionCode == 'ZX') {
                 $('#ADD_CUST_BUTTON').show();
@@ -489,24 +509,47 @@ var selectCust = {
         }
 
         $("#newCustNum").val("0")
-
-        // var ds=$.DatasetList([
-        // 		{"CUST_NAME":"张三","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 		{"CUST_NAME":"李四","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 		{"CUST_NAME":"王五","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 		{"CUST_NAME":"赵六","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // 		{"CUST_NAME":"张三","SERIAL_NUMBER":"13467517522","HOUSE_DETAIL":"桔园小区1栋1001"},
-        // ]);
-        // ds.bind('CUST_LIST','flex');
-        // $.each(ds, function(idx, item) {
-        //    var template = $('#CUST_TEMPLATE').html();
-        //    var tpl=$.Template(template);
-        //    tpl.append('#CUST_LIST',item,true);
-        // });
-
-        var param = '';
-        selectCust._queryCust(param, function() {
-            showPopup('myPopup','customerSelectPopup');
-        });
     },
+    getUndeletedBeforeActionCustNum : function() {
+        var num = 0;
+        $.each($('#before_action_cust_list_part').find('div[tag=cust_title]'), function(idx, item) {
+            if(!$(item).hasClass('e_delete')) {
+                num++;
+            }
+        });
+
+        return num;
+    },
+    getUndeletedBeforeActionCust : function() {
+        var custList = $.DatasetList();
+        if(planEntry.currentActionIndex == 0) {
+            return custList;
+        }
+        var beforeActionCode = actionList[planEntry.currentActionIndex-1].ACTION_CODE;
+        var beforeActionCustList = planEntry.planActionMap.get(beforeActionCode);
+        $.each($('#before_action_cust_list_part').find('div[tag=cust_title]'), function(idx, item) {
+            item = $(item)
+            if(!item.hasClass('e_delete')) {
+                var custId = item.attr('cust_id');
+                $.each(beforeActionCustList, function(idx2, beforeActionCust) {
+                    if(custId == beforeActionCust.get('CUST_ID')) {
+                        custList.add(beforeActionCust);
+                        return;
+                    }
+                })
+            }
+        });
+
+        return custList;
+    },
+    setCovertGenderParam : function(param) {
+        var actionCode = planEntry.currentAction;
+        if(actionCode == 'DKCSMU' || actionCode == 'YJALTS') {
+            param['UNEXECUTED_ACTION'] = actionCode;
+        } else if(actionCode == 'JW') {
+
+        } else {
+            param['LAST_ACTION'] = planEntry.getBeforeAction();
+        }
+    }
 };

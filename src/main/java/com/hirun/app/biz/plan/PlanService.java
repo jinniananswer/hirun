@@ -37,27 +37,25 @@ public class PlanService extends GenericService {
     public ServiceResponse addPlan(ServiceRequest request) throws Exception{
         ServiceResponse response = new ServiceResponse();
 
-        JSONObject planInfo = request.getBody().getData();
+        JSONObject requestData = request.getBody().getData();
         PlanDAO planDao = new PlanDAO("ins");
         CustActionDAO custActionDAO = new CustActionDAO("ins");
 
-        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
-        String userId = sessionEntity.getUserId();
-
-        String planDate = planInfo.getString("PLAN_DATE");
-        String planType = planInfo.getString("PLAN_TYPE");
+        String planDate = requestData.getString("PLAN_DATE");
+        String planType = requestData.getString("PLAN_TYPE");
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
 
         //TODO 需做校验
 
         Map<String, String> planEntityParameter = new HashMap<String, String>();
         planEntityParameter.put("PLAN_DATE", planDate);
         planEntityParameter.put("PLAN_STATUS", "0");
-        planEntityParameter.put("PLAN_EXECUTOR_ID", userId);
+        planEntityParameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         planEntityParameter.put("PLAN_TYPE", planType);
-        String planId = String.valueOf(planDao.insert("INS_PLAN", planEntityParameter));
+        String planId = String.valueOf(planDao.insertAutoIncrement("INS_PLAN", planEntityParameter));
 
         if("1".equals(planType)) {
-            JSONArray planList = planInfo.getJSONArray("PLANLIST");
+            JSONArray planList = requestData.getJSONArray("PLANLIST");
             List<Map<String, String>> custActionList = new ArrayList<Map<String, String>>();
             for(int i = 0, sizeI = planList.size(); i < sizeI; i++) {
                 JSONObject plan = planList.getJSONObject(i);
@@ -71,7 +69,7 @@ public class PlanService extends GenericService {
                     custActionParameter.put("CUST_ID", custId);
                     custActionParameter.put("ACTION_STATUS", "0");
                     custActionParameter.put("PLAN_DEAL_DATE", planDate);
-                    custActionParameter.put("EXECUTOR_ID", userId);
+                    custActionParameter.put("EXECUTOR_ID", planExecutorId);
                     custActionList.add(custActionParameter);
                 }
             }
@@ -87,6 +85,7 @@ public class PlanService extends GenericService {
         JSONObject requestData = request.getBody().getData();
         JSONArray targetList = requestData.getJSONArray("PLAN_TARGET_LIST");
         String planDate = requestData.getString("PLAN_DATE");
+        String executorId = requestData.getString("EXECUTOR_ID");
 
         JSONObject targetJSONObject = ConvertTool.toJSONObject(targetList, "ACTION_CODE");
         Iterator<String> iter = targetJSONObject.keySet().iterator();
@@ -94,7 +93,7 @@ public class PlanService extends GenericService {
             String actionCode = (String) iter.next();
             int num = targetJSONObject.getJSONObject(actionCode).getIntValue("NUM");
 
-            String errorMessage = this.checkPlanAction(actionCode, num, planDate, targetJSONObject);
+            String errorMessage = this.checkPlanAction(executorId, actionCode, num, planDate, targetJSONObject);
             if (StringUtils.isNotBlank(errorMessage)) {
                 response.setError("-1", errorMessage);
                 return response;
@@ -112,9 +111,11 @@ public class PlanService extends GenericService {
         int custNum = requestData.getInteger("CUSTNUM");
         JSONArray planTargetList = requestData.getJSONArray("PLAN_TARGET_LIST");
         String planDate = requestData.getString("PLAN_DATE");
+        String executorId = requestData.getString("EXECUTOR_ID");
+
         JSONObject targetJSONObject = ConvertTool.toJSONObject(planTargetList, "ACTION_CODE");
 
-        String errorMessage = this.checkPlanAction(actionCode, custNum, planDate, targetJSONObject);
+        String errorMessage = this.checkPlanAction(executorId, actionCode, custNum, planDate, targetJSONObject);
         if (StringUtils.isNotBlank(errorMessage)) {
             response.setError("-1", errorMessage);
             return response;
@@ -131,12 +132,10 @@ public class PlanService extends GenericService {
      * @return
      * @throws Exception
      */
-    private String checkPlanAction(String actionCode, int custNum, String planDate, JSONObject actionMap) throws Exception {
+    private String checkPlanAction(String executorId, String actionCode, int custNum, String planDate, JSONObject actionMap) throws Exception {
         StringBuilder errorMessage = new StringBuilder();
 
         String actionName = ActionCache.getAction(actionCode).getActionName();
-        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
-        String userId = sessionEntity.getUserId();
 
         //校验自身动作数量限制
         PlanTargetLimitEntity planTargetLimitEntity = PlanTargetLimitCache.getPlanTargetLimit(actionCode);
@@ -150,7 +149,7 @@ public class PlanService extends GenericService {
             //获取往日数量
             CustActionDAO custActionDAO = new CustActionDAO("ins");
             String startTime = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
-            totalNum = custActionDAO.queryFinishActionCount(userId, actionCode, startTime, planDate);
+            totalNum = custActionDAO.queryFinishActionCount(executorId, actionCode, startTime, planDate);
 
             if(limitNum - totalNum > custNum) {
                 //报错
@@ -181,10 +180,7 @@ public class PlanService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
-        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
-        String userId = sessionEntity.getUserId();
-
-        String planExecutorId = userId;
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
         String planDate = PlanTool.getPlanDate4Summarize();
 
         //查询计划

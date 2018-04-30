@@ -119,7 +119,13 @@
 							<div class="c_space"></div>
 						</div>
 						<!-- 新客户 结束 -->
+						<!-- 上一动作选择的客户 -->
+						<div id="before_action_cust_list_part">
+						</div>
+						<!-- 上一动作选择的客户 -->
+
 						<!-- 查询客户 开始-->
+						<div class="c_space"></div>
 						<div id="QUERY_CUST_PART" style="display: none;">
 							<div class="l_queryFn">
 								<div class="c_fn">
@@ -137,22 +143,7 @@
 							</div>
 							<div class="c_list c_list-col-1 c_list-phone-col-1">
 								<ul id="CUST_LIST">
-									<!--<li x_tag="x-databind-template" style="display:none">
-										<label class="group link">
-											<div class="content">
-												<div class="main">
-													<div class="title">{CUST_NAME}</div>
-													<div class="content">
-														<ul>
-															<li>{SERIAL_NUMBER}</li>
-															<li>{HOUSE_DETAIL}</li>
-														</ul>
-													</div>
-												</div>
-												<div class="fn"><input name="selectCustBox" value={CUST_ID} type="checkbox" /></div>
-											</div>
-										</label>
-									</li>-->
+
 								</ul>
 							</div>
 						</div>
@@ -207,18 +198,24 @@
 						<div class="back" ontap="backPopup(this)">客户查询条件</div>
 					</div>	
 					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
-						<div class="c_list c_list_form">
+						<div class="c_list c_list_form" id="queryCustParamForm">
 							<ul>
 								<li>
 									<div class="label">客户姓名</div>
 									<div class="value">
-										<input type="text" />
+										<input type="text" name="CUST_NAME"/>
 									</div>
 								</li>
 								<li>
 									<div class="label">联系电话</div>
 									<div class="value">
-										<input type="text" />
+										<input type="text" name="MOBILE_NO"/>
+									</div>
+								</li>
+								<li>
+									<div class="label">微信昵称</div>
+									<div class="value">
+										<input type="text" name="WX_NICK"/>
 									</div>
 								</li>
 								<li>
@@ -226,7 +223,7 @@
 									<div class="value">
 										<span class="e_select">
 											<span>--请选择--</span>
-											<input type="hidden" id="mySelect" value="" nullable="yes" desc="选择项目" />
+											<input type="hidden" id="mySelect" name="HOUSE_ID" value="" nullable="yes" desc="选择项目" />
 										</span>
 									</div>
 								</li>
@@ -347,6 +344,31 @@
 			</div>
 		</label>
 	</li>
+</script>
+<script id="before_action_cust_list_template" type="text/html" rel_id = "before_action_cust_list_part">
+	<div class="c_box c_box-border" id="FINISH_INFO_{{ACTION_CODE}}">
+		<div class="c_title" ontap="$(this).next().toggle();">
+			<div class="text">上一动作【{{BEFORE_ACTION_NAME}}】选择的客户</div>
+			<div class="fn">
+				<ul>
+					<li><span>人数:{{BEFORE_ACTION_CUSTNUM}}人</span><span class="e_ico-unfold"></span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="l_padding l_padding-u">
+			<div class="c_list c_list-v c_list-col-3">
+				<ul>
+					{{each CUST_LIST cust idx}}
+					<li class="link" ontap="$(this).find('div[tag=cust_title]').addClass('e_delete')">
+						<div class="main">
+							<div class="title" tag="cust_title" cust_id="{{cust.CUST_ID}}">{{cust.CUST_NAME}}<span class="e_ico-delete"></span></div>
+						</div>
+					</li>
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+	</div>
 </script>
 <script type="text/javascript">
 	Wade.setRatio();

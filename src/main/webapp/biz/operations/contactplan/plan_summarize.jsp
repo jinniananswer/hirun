@@ -291,6 +291,7 @@
 	</div>
 </div>
 <!-- 弹出层结束 -->
+<!--
 <script type="text/template" id="ACTION_TEMPLATE">
 	<li class="link" id="{ACTION_CODE}" ontap="{TAP_FUNCTION}">
 		<div class="main">
@@ -334,6 +335,7 @@
 		</div>
 	</li>
 </script>
+-->
 <script id="finishInfoTemplate" type="text/html">
 	<div class="c_box c_box-border" id="FINISH_INFO_{{ACTION_CODE}}">
 		<div class="c_title" ontap="$(this).next().toggle();">

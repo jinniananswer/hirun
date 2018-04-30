@@ -30,13 +30,9 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject custInfo = request.getBody().getData();
 
-        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
-        String userId = sessionEntity.getUserId();
-
         CustDAO dao = new CustDAO("ins");
-        custInfo.put("HOUSE_COUNSELOR_ID", userId);
         Map<String, String> parameter = ConvertTool.toMap(custInfo);
-        int custId = dao.insert("INS_CUSTOMER", parameter);
+        long custId = dao.insertAutoIncrement("INS_CUSTOMER", parameter);
         response.set("CUST_ID", custId);
 
         return response;
@@ -57,14 +53,10 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
-        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
-        String userId = sessionEntity.getUserId();
-
-        Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("HOUSE_COUNSELOR_ID",userId);
+        Map<String, String> parameter = ConvertTool.toMap(requestData);
 
         CustDAO dao = new CustDAO("ins");
-        List<CustomerEntity> customerList = dao.query(CustomerEntity.class, "INS_CUSTOMER", parameter);
+        List<CustomerEntity> customerList = dao.queryCustList(parameter);
 
         response.set("CUSTOMERLIST", ConvertTool.toJSONArray(customerList));
 
@@ -75,28 +67,26 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
-        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
-        String userId = sessionEntity.getUserId();
-
         int newCustNew = requestData.getInteger("NEW_CUSTNUM");
         String custNamePrefix = requestData.getString("CUST_NAME_PREFIX");
         if(StringUtils.isBlank(custNamePrefix)) {
             custNamePrefix = TimeTool.today();
         }
+        String houseCounselorId = requestData.getString("HOUSE_COUNSELOR_ID");
+
+        //从SESSION里取userId
+
         List<Map<String, String>> listCust = new ArrayList<Map<String, String>>();
         CustDAO dao = new CustDAO("ins");
         for(int i = 0; i < newCustNew; i++) {
             Map<String, String> cust = new HashMap<String, String>();
-            cust.put("HOUSE_COUNSELOR_ID", userId);
+            cust.put("HOUSE_COUNSELOR_ID", houseCounselorId);
             cust.put("CUST_STATUS", "9");
-            cust.put("CUST_NAME", custNamePrefix + "新客户");
-            int custId = dao.insert("INS_CUSTOMER", cust);
+            cust.put("CUST_NAME", custNamePrefix + "新客户" + (i+1));
+            long custId = dao.insertAutoIncrement("INS_CUSTOMER", cust);
             cust.put("CUST_ID", String.valueOf(custId));
             listCust.add(cust);
         }
-
-
-//        dao.insertBatch("INS_CUSTOMER", listCust);
 
         response.set("custList", JSONArray.toJSON(listCust));
 
