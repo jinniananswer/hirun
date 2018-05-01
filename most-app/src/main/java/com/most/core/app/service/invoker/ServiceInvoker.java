@@ -49,16 +49,21 @@ public class ServiceInvoker {
             //3.提交事务
             session.commit();
 
-            //4.释放连接
-            session.close();
 
-            //5.注销session
-            SessionManager.destroy();
         } catch (Exception e) {
             if(session != null)
                 session.rollback();
             log.error(e);
             throw(e);
+        }
+        finally {
+            if(session != null) {
+                //4.释放连接
+                session.close();
+
+                //5.注销session
+                SessionManager.destroy();
+            }
         }
 //        if(object == null){
 //            throw new Exception("服务"+serviceName+"调用失败");
