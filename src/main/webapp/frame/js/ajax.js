@@ -42,7 +42,34 @@
 				}
 			)
 		},
+        ajaxReq: function(setting){
+            var successFunc = function(data){
+                var resultCode = data.HEAD.RESULT_CODE;
+                if(resultCode == '0') {
+                	setting.successFunc ? setting.successFunc(data.BODY) : '';
+				} else {
+                	var resultInfo = data.HEAD.RESULT_INFO;
+                    setting.errorFunc ? setting.errorFunc(resultCode, resultInfo) : '';
+				}
+			}
 
+			var errFunc = function(){
+				alert('系统错误');
+			};
+
+            $.ajaxRequest(
+                {
+                    url:setting.url,
+                    data: setting.data,
+                    type: setting.type,
+                    dataType:setting.dataType,
+                    async:setting.async,
+                    timeout:setting._time,
+                    success:successFunc,
+                    error:errFunc
+                }
+            )
+        },
         buildJsonData: function(areaId, prefix, xss){
 			if(!areaId || !$.isString(areaId))return;
 			var data = {};
