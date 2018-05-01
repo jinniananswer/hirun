@@ -49,7 +49,10 @@ public class ServiceInvoker {
             //3.提交事务
             session.commit();
 
-            //4.注销session
+            //4.释放连接
+            session.close();
+
+            //5.注销session
             SessionManager.destroy();
         } catch (Exception e) {
             if(session != null)
