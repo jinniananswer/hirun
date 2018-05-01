@@ -3,6 +3,7 @@ package com.hirun.app.biz.houses;
 import com.alibaba.fastjson.JSON;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.houses.HouseDAO;
+import com.hirun.app.dao.houses.HousesPlanDAO;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
@@ -15,6 +16,7 @@ import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -66,23 +68,38 @@ public class HousesService extends GenericService {
     public ServiceResponse createHousesPlan(ServiceRequest request) throws Exception{
 
         Map<String, String> house = new HashMap<String, String>();
-        Map<String, String> housePlan = new HashMap<String, String>();
         AppSession session = SessionManager.getSession();
         String now = TimeTool.now();
 
         house.putAll(JSON.parseObject(request.getBody().getData().toJSONString(), Map.class));
-        house.put("DESTROY_DATE", TimeTool.addMonths(house.get("CHECK_DATE"), "yyyy-MM-dd", 24));
+        String destroyDate = TimeTool.addMonths(house.get("CHECK_DATE"), "yyyy-MM-dd", 24);
+        house.put("DESTROY_DATE", destroyDate);
         house.put("STATUS", "0");
-        String userId = SessionManager.getSession().getSessionEntity().getUserId();
+        String userId = session.getSessionEntity().getUserId();
         house.put("CREATE_USER_ID", userId);
         house.put("UPDATE_USER_ID", userId);
-        house.put("UPDATE_TIME", now);
-        house.put("CREATE_DATE", now);
+        house.put("UPDATE_TIME", session.getCreateTime());
+        house.put("CREATE_DATE", session.getCreateTime());
 
         HouseDAO dao = new HouseDAO("ins");
         long houseId = dao.insertAutoIncrement("ins_houses", house);
         String employeeId = request.getString("EMPLOYEE_ID");
-        
+        if(StringUtils.isBlank(employeeId))
+            return new ServiceResponse();
+
+        Map<String, String> housesPlan = new HashMap<String, String>();
+        housesPlan.put("HOUSES_ID", String.valueOf(houseId));
+        housesPlan.put("EMPLOYEE_ID", employeeId);
+        housesPlan.put("ORG_ID", request.getString("SHOP"));
+        housesPlan.put("START_DATE", session.getCreateTime());
+        housesPlan.put("END_DATE", destroyDate);
+        housesPlan.put("STATUS", "0");
+        housesPlan.put("CREATE_USER_ID", userId);
+        housesPlan.put("CREATE_DATE", session.getCreateTime());
+        housesPlan.put("UPDATE_USER_ID", userId);
+        housesPlan.put("UPDATE_TIME", session.getCreateTime());
+        HousesPlanDAO housesPlanDAO = new HousesPlanDAO("ins");
+        housesPlanDAO.insert("ins_houses_plan", housesPlan);
 
         return new ServiceResponse();
     }

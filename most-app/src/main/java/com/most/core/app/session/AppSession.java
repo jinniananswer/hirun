@@ -97,4 +97,8 @@ public class AppSession{
     public <K extends SessionEntity> void setSessionEntity(K sessionEntity){
         this.sessionEntity = sessionEntity;
     }
+
+    public String getCreateTime(){
+        return this.createTime;
+    }
 }

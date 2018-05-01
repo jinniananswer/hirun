@@ -115,15 +115,22 @@
 
         afterSelectCounselor : function(value, text){
             hidePopup('UI-popup','UI-popup-query');
-            $("#COUNSELOR_NAME").val(text);
-            $("#COUNSELOR_ID").val(value);
+            $("#EMPLOYEE_NAME").val(text);
+            $("#EMPLOYEE_ID").val(value);
         },
 
         submit : function(){
             if($.validate.verifyAll("submitArea")) {
                 var parameter = $.buildJsonData("submitArea");
                 $.ajaxPost('submitHousesPlan', parameter, function (data) {
-                    alert("ok");
+                    MessageBox.success("新增楼盘规划成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
+                        if("ok" == btn) {
+                            document.location.reload();
+                        }
+                        else {
+                            parent.$.index.closeCurrentPage();
+                        }
+                    },{"cancel":"取消"})
                 }, function () {
                     alert('error');
                 });

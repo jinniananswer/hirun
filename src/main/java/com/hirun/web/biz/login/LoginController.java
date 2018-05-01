@@ -42,6 +42,10 @@ public class LoginController extends RootController {
             UserEntity user = new UserEntity(JSON.parseObject(userInfo.toJSONString(), Map.class));
             EmployeeEntity employee = new EmployeeEntity(JSON.parseObject(employeeInfo.toJSONString(), Map.class));
             BizSessionEntity sessionEntity = new BizSessionEntity();
+
+            session.setAttribute("USER", user);
+            session.setAttribute("EMPLOYEE", employee);
+            session.setAttribute("JOB_ROLE", jobRoles);
             if(user != null)
                 sessionEntity.setUserId(user.getUserId());
 

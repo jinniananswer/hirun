@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: jinnian
-  Date: 2018/4/25
-  Time: 14:40
-  To change this template use File | Settings | File Templates.
---%>
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8"  %>
 <html size="s">
@@ -17,7 +10,7 @@
 </head>
 <body>
 <!-- 标题栏 开始 -->
-<div class="c_header">
+<div class="c_header e_show">
     <div class="back" ontap="back();">新增楼盘规划</div>
 </div>
 <!-- 标题栏 结束 -->
@@ -92,8 +85,8 @@
                     <li class="link">
                         <div class="label">家装顾问</div>
                         <div class="value"><span class="e_mix" ontap="showPopup('UI-popup','UI-popup-query')">
-                            <input type="text" id="COUNSELOR_NAME" name="COUNSELOR_NAME" datatype="text" nullable="yes" desc="家装顾问" value="" />
-                            <input type="hidden" id="COUNSELOR_ID" name="COUNSELOR_ID" datatype="numeric" nullable="yes" desc="家装顾问" value="" />
+                            <input type="text" id="EMPLOYEE_NAME" name="EMPLOYEE_NAME" datatype="text" nullable="yes" desc="家装顾问" value="" />
+                            <input type="hidden" id="EMPLOYEE_ID" name="EMPLOYEE_ID" datatype="numeric" nullable="yes" desc="家装顾问" value="" />
                             <span class="e_ico-check"></span>
 							</span></div>
                     </li>

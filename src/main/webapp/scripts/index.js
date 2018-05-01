@@ -169,6 +169,20 @@
 			}
 
 			event.stopPropagation();
+		},
+
+		closeCurrentPage : function(){
+            var pageTitles = $("#page_titles li");
+
+            for(var i=0;i<pageTitles.length;i++){
+                var pageTitle = $(pageTitles[i]);
+                var currentTitle = pageTitle.attr("title");
+                var currentClass = pageTitle.attr("class");
+				if(currentClass == "on"){
+					this.closePage(currentTitle);
+					break;
+				}
+            }
 		}
 	}});
 })($);
