@@ -15,9 +15,11 @@ import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
+import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.Body;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
@@ -45,6 +47,11 @@ public class PlanService extends GenericService {
         String planType = requestData.getString("PLAN_TYPE");
         String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
 
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
+        String now = TimeTool.now();
+
         //TODO 需做校验
 
         Map<String, String> planEntityParameter = new HashMap<String, String>();
@@ -52,6 +59,10 @@ public class PlanService extends GenericService {
         planEntityParameter.put("PLAN_STATUS", "0");
         planEntityParameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         planEntityParameter.put("PLAN_TYPE", planType);
+        planEntityParameter.put("CREATE_USER_ID", userId);
+        planEntityParameter.put("CREATE_DATE", now);
+        planEntityParameter.put("UPDATE_USER_ID", userId);
+        planEntityParameter.put("UPDATE_TIME", now);
         String planId = String.valueOf(planDao.insertAutoIncrement("INS_PLAN", planEntityParameter));
 
         if("1".equals(planType)) {
@@ -70,6 +81,10 @@ public class PlanService extends GenericService {
                     custActionParameter.put("ACTION_STATUS", "0");
                     custActionParameter.put("PLAN_DEAL_DATE", planDate);
                     custActionParameter.put("EXECUTOR_ID", planExecutorId);
+                    custActionParameter.put("CREATE_USER_ID", userId);
+                    custActionParameter.put("CREATE_DATE", now);
+                    custActionParameter.put("UPDATE_USER_ID", userId);
+                    custActionParameter.put("UPDATE_TIME", now);
                     custActionList.add(custActionParameter);
                 }
             }
@@ -180,19 +195,18 @@ public class PlanService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
-        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
-        String planDate = PlanTool.getPlanDate4Summarize();
+//        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+//        String planDate = requestData.getString("PLAN_DATE");
+        String planId = requestData.getString("PLAN_ID");
 
         //查询计划
         PlanDAO planDAO = new PlanDAO("ins");
-        PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate);
+
+        PlanEntity planEntity = planDAO.getPlanInfoById(planId);
         if(planEntity == null) {
-            response.set("-1", "没有时间为" + planDate + "的计划");
+            response.setError("-1", "没有找到编码为【" + planId + "】的计划");
             return response;
         }
-        String planId = planEntity.getPlanId();
-        response.set("PLAN_ID", planId);
-        response.set("PLAN_DATE", planDate);
 
         //获取计划时间的所有客户动作，包括执行的和未执行的
         JSONArray planList = new JSONArray();
@@ -200,7 +214,7 @@ public class PlanService extends GenericService {
         JSONArray unFinishActionList = new JSONArray();
         CustActionDAO custActionDAO = new CustActionDAO("ins");
         CustDAO custDAO = new CustDAO("ins");
-        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionByEidAndPlanDate(planExecutorId, planDate);
+        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionByEidAndPlanDate(planEntity.getPlanExecutorId(), planEntity.getPlanDate());
         if(ArrayTool.isNotEmpty(custActionEntityList)) {
             //存计划action对应的custList，格式为{actionCode, custList}，后续再遍历成list
             JSONObject planCustActionMap = new JSONObject();
@@ -304,6 +318,173 @@ public class PlanService extends GenericService {
 
         List<PlanUnfinishCauseEntity> entityList = PlanUnFinishCauseCache.getCauseListByActionCode(actionCode);
         response.set("CAUSE_LIST", ConvertTool.toJSONArray(entityList));
+
+        return response;
+    }
+
+    public ServiceResponse getPlanBaseInfo(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+        String planDate = requestData.getString("PLAN_DATE");
+
+        PlanDAO planDAO = new PlanDAO("ins");
+        PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate);
+        Body body = new Body(planEntity.toJson());
+        response.setBody(body);
+
+        return response;
+    }
+
+    public ServiceResponse summarizePlan(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        JSONObject requestData = request.getBody().getData();
+        String planId = requestData.getString("PLAN_ID");
+        JSONArray unFinishSummaryList = requestData.getJSONArray("UNFINISH_SUMMARY_LIST");
+        JSONArray addExtraCustActionList = requestData.getJSONArray("ADD_EXTRA_CUST_ACTION_LIST");
+
+        String userId = SessionManager.getSession().getSessionEntity().getUserId();
+
+        String sysdate = TimeTool.now();
+        CustActionDAO custActionDAO = new CustActionDAO("ins");
+        PlanDAO planDAO = new PlanDAO("ins");
+
+        Map<String, String> parameter  = new HashMap<String, String>();
+        List<PlanEntity> list = planDAO.query(PlanEntity.class, "INS_PLAN", parameter);
+        if(ArrayTool.isEmpty(list)) {
+            //TODO 报错
+            response.setError("-1","找不到计划");
+        }
+        PlanEntity planEntity = list.get(0);
+
+        if(ArrayTool.isNotEmpty(unFinishSummaryList)) {
+            for(int i = 0, size = unFinishSummaryList.size(); i < size; i++) {
+                parameter = ConvertTool.toMap(unFinishSummaryList.getJSONObject(i));
+                parameter.put("UPDATE_USER_ID", userId);
+                parameter.put("UPDATE_TIME", sysdate);
+                custActionDAO.save("INS_CUST_ACTION", parameter);
+            }
+        }
+
+        if(ArrayTool.isNotEmpty(addExtraCustActionList)) {
+            List<Map<String, String>> addExtraCustActionDbParamList = new ArrayList<Map<String, String>>();
+            for(int i = 0, size = addExtraCustActionList.size(); i < size; i++) {
+                Map<String, String> addExtraCustActionDbParam = ConvertTool.toMap(addExtraCustActionList.getJSONObject(i));
+                if(!parameter.containsKey("FINISH_TIME")) {
+                    parameter.put("FINISH_TIME", sysdate);
+                }
+                parameter.put("EXECUTOR_ID", planEntity.getPlanExecutorId());
+                parameter.put("CREATE_USER_ID", userId);
+                parameter.put("CREATE_DATE", sysdate);
+                parameter.put("UPDATE_USER_ID", userId);
+                parameter.put("UPDATE_TIME", sysdate);
+                parameter.put("ACTION_STATUS", "1");
+                addExtraCustActionDbParamList.add(parameter);
+            }
+            custActionDAO.insertBatch("INS_CUST_ACTION", addExtraCustActionDbParamList);
+        }
+
+        return response;
+    }
+
+    public ServiceResponse queryNewCustList4Summary(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        JSONObject requestData = request.getBody().getData();
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+        String planDate = requestData.getString("PLAN_DATE");
+
+        PlanDAO planDAO = new PlanDAO("ins");
+        PlanEntity entity = planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate);
+        if(entity == null) {
+            //TODO 报错
+        }
+
+        CustDAO custDAO = new CustDAO("ins");
+        CustActionDAO custActionDAO = new CustActionDAO("ins");
+
+        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionByPlanId(entity.getPlanId());
+        JSONObject rtnCustMap = new JSONObject();
+        if(ArrayTool.isNotEmpty(custActionEntityList)) {
+            Map<String, CustomerEntity> custMap = new HashMap<String, CustomerEntity>();//保存已检索的客户,value为CustomerEntity
+            for(CustActionEntity custActionEntity : custActionEntityList) {
+//                if(StringUtils.isBlank(custActionEntity.getFinishTime())) {
+//                    continue;
+//                }
+                String custId = custActionEntity.getCustId();
+                CustomerEntity customerEntity = null;
+                if(!custMap.containsKey(custId)) {
+                    customerEntity = custDAO.getCustById(custId);
+                } else {
+                    customerEntity = custMap.get(custId);
+                }
+
+                //判断是否新客户
+                if(!CustomerTool.isNewCust(customerEntity)) {
+                    continue;
+                }
+
+//                JSONObject jsonCust = custActionEntity.toJSON(new String[] {"ACTION_CODE", "FINISH_TIME"});
+//                jsonCust.put("ACTION_NAME", ActionCache.getAction(custActionEntity.getActionCode()).getActionName());
+
+                JSONObject rtnCust = null;
+                if(rtnCustMap.containsKey(custId)) {
+                    continue;
+//                    rtnCust = rtnCustMap.getJSONObject(custId);
+//                    rtnCust.getJSONArray("ACTION_LIST").add(jsonCust);
+                } else {
+                    rtnCust = new JSONObject();
+                    rtnCust.put("CUST_NAME", customerEntity.getCustName());
+                    rtnCust.put("WX_NICK", customerEntity.getWxNick());
+                    rtnCust.put("CUST_ID", custId);
+                    rtnCustMap.put(custId, rtnCust);
+
+//                    JSONArray actionList = new JSONArray();
+//                    actionList.add(jsonCust);
+//                    rtnCust.put("ACTION_LIST", jsonCust);
+                }
+            }
+        }
+
+        JSONArray custList = new JSONArray();
+        Iterator custIter = rtnCustMap.keySet().iterator();
+        while(custIter.hasNext()) {
+            String key = (String)custIter.next();
+            custList.add(rtnCustMap.getJSONObject(key));
+        }
+        response.set("CUST_LIST", custList);
+
+        return response;
+    }
+
+    //
+    public ServiceResponse getCustFinishActionList(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        Map<String, String> parameter = new HashMap<String, String>();
+        JSONArray custList = new JSONArray();
+
+        JSONObject requestData = request.getBody().getData();
+        String custId = requestData.getString("CUST_ID");
+
+        CustActionDAO custActionDAO = new CustActionDAO("ins");
+
+        parameter.put("CUST_ID", custId);
+        List<CustActionEntity> custActionEntityList = custActionDAO.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
+        if(ArrayTool.isNotEmpty(custActionEntityList)) {
+            for(CustActionEntity custActionEntity : custActionEntityList) {
+                if(StringUtils.isBlank(custActionEntity.getFinishTime())) {
+                    //只要完成的
+                    continue;
+                }
+                JSONObject custAction = custActionEntity.toJSON(new String[] {"FINISH_TIME"});
+                custAction.put("ACTION_NAME", ActionCache.getAction(custActionEntity.getActionCode()).getActionName());
+                custList.add(custAction);
+            }
+        }
+
+        response.set("CUST_FINISH_ACTION_LIST", custList);
 
         return response;
     }

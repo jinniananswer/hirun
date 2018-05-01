@@ -12,6 +12,11 @@
     <entity name="OperationCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanAction"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanAction"/>
     <entity name="OperationCenter.plan.PlanService.getPlanFinishedInfo"  class="com.hirun.app.biz.plan.PlanService" method="getPlanFinishedInfo"/>
+    <entity name="OperationCenter.plan.PlanService.getCauseListByActionCode"  class="com.hirun.app.biz.plan.PlanService" method="getCauseListByActionCode"/>
+    <entity name="OperationCenter.plan.PlanService.getPlanBaseInfo"  class="com.hirun.app.biz.plan.PlanService" method="getPlanBaseInfo"/>
+    <entity name="OperationCenter.plan.PlanService.summarizePlan"  class="com.hirun.app.biz.plan.PlanService" method="summarizePlan"/>
+    <entity name="OperationCenter.plan.PlanService.queryNewCustList4Summary"  class="com.hirun.app.biz.plan.PlanService" method="queryNewCustList4Summary"/>
+    <entity name="OperationCenter.plan.PlanService.getCustFinishActionList"  class="com.hirun.app.biz.plan.PlanService" method="getCustFinishActionList"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>

@@ -67,28 +67,68 @@ var planEntry = {
 		});
 
 		//从后台获取初始化数据，同步方式
-        $.ajaxRequest({
+        $.ajaxReq({
             url:'plan/getPlanInitData',
             data: {},
             type:'GET',
             dataType:'json',
             async:false,
-            success:function(data) {
-                var result = $.DataMap(data);
-                var resultCode = result.get('HEAD').get('RESULT_CODE');
-                if(resultCode == 0) {
-                    var body = result.get('BODY');
-                    planEntry.planDate = body.get('PLAN_DATE');
-                } else {
-
-                }
+            successFunc:function(data) {
+                planEntry.planDate = data.PLAN_DATE;
             },
-            error:function(status, errorMessage) {
-
+            errorFunc:function(resultCode, resultInfo) {
+                alert(resultInfo);
+                top.$.index.closePage("今日计划录入");
             },
         });
 
         $('#planName').html(planEntry.planDate + '计划');
+
+        //客户查询条件初始化 开始
+        $.Select.append(
+            // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
+            "queryCustParamForm_house_container",
+            // 参数设置
+            {
+                id:"queryCustParamForm_house",
+                name:"HOUSE_ID",
+            },
+            // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
+            [
+                {TEXT:"Tony Stark", VALUE:"0"},
+                {TEXT:"Steve Rogers", VALUE:"1"},
+                {TEXT:"Thor", VALUE:"2"}
+            ]
+        );
+        ////客户查询条件初始化 结束
+
+        //客户资料编辑初始化 开始
+        window["SEX"] = new Wade.Switch("SEX",{
+            switchOn:true,
+            onValue:"1",
+            offValue:"2",
+            onColor:"blue",
+            offColor:"red"
+        });
+
+        $.Select.append(
+            // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
+            "custEditForm_house_container",
+            // 参数设置
+            {
+                id:"custEditForm_house",
+                name:"HOUSE_ID",
+                nullable : "no",
+                desc : "楼盘",
+            },
+            // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
+            [
+                {TEXT:"Tony Stark", VALUE:"0"},
+                {TEXT:"Steve Rogers", VALUE:"1"},
+                {TEXT:"Thor", VALUE:"2"}
+            ]
+        );
+        //客户资料编辑初始化 结束
     },
 	afterSelectedCust : function(obj) {
 		if(!planEntry.checkSelectedCust()) {
@@ -289,6 +329,7 @@ var planEntry = {
 
             if(resultCode == "0"){
                 alert('计划提交成功');
+                // MessageBox.success("成功信息", "成功信息");
                 top.$.index.closePage('今日计划录入');
             }
         }, function() {
@@ -361,32 +402,7 @@ var selectCust = {
 
         resetArea("custForm", true);
 
-        window["SEX"] = new Wade.Switch("SEX",{
-            switchOn:true,
-            onValue:"1",
-            offValue:"2",
-            onColor:"blue",
-            offColor:"red"
-        });
-
-        window["HOUSE_ID"] = new Wade.Select(
-            "HOUSE_ID",
-            {
-                value:"",
-                inputable:false,
-                disabled:false,
-                addDefault:true,
-                selectedIndex:-1,
-                optionAlign:"left"
-            }
-        );
-
         $("#SEX").val("1");
-
-        HOUSE_ID.append("湘江世纪城一期","1");
-        HOUSE_ID.append("保利西海岸一期","2");
-        HOUSE_ID.append("四方坪一期","3");
-        HOUSE_ID.append("四方坪二期","4");
 
         forwardPopup(obj,'custInfoEditPopup');
     },
@@ -394,6 +410,7 @@ var selectCust = {
         if($.validate.verifyAll("custForm")){
             var param = $.buildJsonData("custForm");
             var url = '';
+            param.CUST_STATUS = '1';
             if(param.CUST_ID) {
                 url = 'cust/editCust';
             } else {
@@ -410,7 +427,6 @@ var selectCust = {
                         $('#'+param.CUST_ID + ' li[tag=HOUSE_DETAIL]').html(param.HOUSE_DETAIL);
                     } else {
                         param.CUST_ID = result.get('BODY').get('CUST_ID');
-                        debugger;
                         var template = $('#CUST_TEMPLATE').html();
                         var tpl=$.Template(template);
                         param.CHECKED = 'checked';
@@ -462,7 +478,6 @@ var selectCust = {
     },
     queryCust : function(obj) {
         var param = $.buildJsonData("queryCustParamForm");
-        debugger;
         selectCust._queryCust(param, function() {
             backPopup(obj);
         });
@@ -501,7 +516,7 @@ var selectCust = {
                 showPopup('myPopup','customerSelectPopup');
             });
 
-            if(currentActionCode == 'ZX') {
+            if(currentActionCode == 'ZX' || currentActionCode == 'LTZDSTS') {
                 $('#ADD_CUST_BUTTON').show();
             } else {
                 $('#ADD_CUST_BUTTON').hide();

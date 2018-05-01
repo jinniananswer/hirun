@@ -14,6 +14,7 @@
     <script src="scripts/biz/contactplan/plan.entry.js"></script>
 </head>
 <body>
+<!--
 <div id="HOUSE_ID_float" class="c_float">
 	<div class="bg"></div>
 	<div class="content">
@@ -26,6 +27,7 @@
 		</div>
 	</div>
 </div>
+-->
 <div class="l_edit">
     <div class="c_header e_show-phone">
         <div class="back" ontap="closeNav();">今日计划录入</div>
@@ -221,9 +223,9 @@
 								<li>
 									<div class="label">楼盘</div>
 									<div class="value">
-										<span class="e_select">
-											<span>--请选择--</span>
-											<input type="hidden" id="mySelect" name="HOUSE_ID" value="" nullable="yes" desc="选择项目" />
+										<span id="queryCustParamForm_house_container"></span>
+											<%--<span>--请选择--</span>--%>
+											<%--<input type="hidden" id="mySelect" name="HOUSE_ID" value="" nullable="yes" desc="选择项目" />--%>
 										</span>
 									</div>
 								</li>
@@ -247,14 +249,14 @@
 								<li class="required">
 									<div class="label">客户姓名</div>
 									<div class="value">
-										<input type="text" id="CUST_NAME" name="CUST_NAME"/>
+										<input type="text" id="CUST_NAME" name="CUST_NAME" nullable="no" desc="客户姓名"/>
 										<input type="text" id="CUST_ID" name="CUST_ID" style="display: none"/>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">微信昵称</div>
 									<div class="value">
-										<input type="text" id="WX_NICK" name="WX_NICK"/>
+										<input type="text" id="WX_NICK" name="WX_NICK" nullable="no" desc="微信昵称"/>
 									</div>
 								</li>
 								<li class="required">
@@ -263,35 +265,35 @@
 										<div class="e_switch">
 											<div class="e_switchOn">男</div>
 											<div class="e_switchOff">女</div>
-											<input type="hidden" id="SEX" name="SEX"/>
+											<input type="hidden" id="SEX" name="SEX" nullable="no" desc="性别"/>
 										</div>
 									</div>
 								</li>
 								<li>
 									<div class="label">电话号码</div>
 									<div class="value">
-										<input type="text" id="MOBILE_NO" name="MOBILE_NO"/>
+										<input type="text" id="MOBILE_NO" name="MOBILE_NO" nullable="yes" desc="电话号码"/>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">楼盘</div>
 									<div class="value">
-										<span class="e_select">
-											<span>--请选择--</span>
-											<input type="hidden" id="HOUSE_ID" name="HOUSE_ID" value="" nullable="yes" desc="楼盘" />
+										<span id="custEditForm_house_container"></span>
+											<%--<span>--请选择--</span>--%>
+											<%--<input type="hidden" id="HOUSE_ID" name="HOUSE_ID" value="" nullable="yes" desc="楼盘" />--%>
 										</span>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">楼栋号</div>
 									<div class="value">
-										<input type="text" id="HOUSE_DETAIL" name="HOUSE_DETAIL"/>
+										<input type="text" id="HOUSE_DETAIL" name="HOUSE_DETAIL" nullable="no" desc="楼栋号"/>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">户型</div>
 									<div class="value">
-										<input type="text" id="HOUSE_MODE" name="HOUSE_MODE"/>
+										<input type="text" id="HOUSE_MODE" name="HOUSE_MODE" nullable="no" desc="户型"/>
 									</div>
 								</li>
 								<li>

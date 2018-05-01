@@ -28,4 +28,15 @@ public class PlanDAO extends StrongObjectDAO {
             return null;
         }
     }
+
+    public PlanEntity getPlanInfoById(String planId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_ID", planId);
+        List<PlanEntity> list = this.query(PlanEntity.class, "INS_PLAN", parameter);
+        if(ArrayTool.isNotEmpty(list)) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
 }

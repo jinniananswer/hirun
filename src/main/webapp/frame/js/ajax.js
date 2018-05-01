@@ -61,9 +61,9 @@
                 {
                     url:setting.url,
                     data: setting.data,
-                    type: setting.type,
-                    dataType:setting.dataType,
-                    async:setting.async,
+                    type: setting.type ? setting.type : 'POST',
+                    dataType:setting.dataType ? setting.dataType : 'json',
+                    async:setting.async ? setting.async : 'true',
                     timeout:setting._time,
                     success:successFunc,
                     error:errFunc

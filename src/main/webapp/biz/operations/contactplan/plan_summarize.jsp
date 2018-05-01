@@ -14,30 +14,45 @@
 	<script src="scripts/biz/contactplan/plan.summarize.js"></script>
 </head>
 <body>
-<div id="HOUSE_ID_float" class="c_float">
-	<div class="bg"></div>
-	<div class="content">
-		<div class="c_scrollContent">
-			<div class="c_list c_list-pc-s c_list-phone-line ">
-				<ul>
-
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+<%--<div id="HOUSE_ID_float" class="c_float">--%>
+	<%--<div class="bg"></div>--%>
+	<%--<div class="content">--%>
+		<%--<div class="c_scrollContent">--%>
+			<%--<div class="c_list c_list-pc-s c_list-phone-line ">--%>
+				<%--<ul id="edit_cust_list">--%>
+<%----%>
+				<%--</ul>--%>
+			<%--</div>--%>
+		<%--</div>--%>
+	<%--</div>--%>
+<%--</div>--%>
 <div class="c_header">
 	<div class="back" ontap="back();"><span id="planName"></span></div>
 </div>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
 	<div class="c_space"></div>
-	<div id="finishInfoList">
+	<div id="edit_cust_list_part">
+		<div class="c_title">
+			<div class="text">客户资料补录</div>
+		</div>
+		<div class="c_list c_list-phone-line ">
+			<ul id="edit_cust_list">
+
+			</ul>
+		</div>
+		<div class="c_space"></div>
+		<div class="c_submit c_submit-full">
+			<button class="e_button-r e_button-l e_button-green" type="button" ontap="planSummarize.showFinishInfo();">确认补录完毕</button>
+		</div>
+	</div>
+	<div class="e_space"></div>
+	<div id="finishInfoList" style="display: none">
 
 
 	</div>
 	<div class="c_space"></div>
 	<div class="c_submit c_submit-full">
-		<button class="e_button-r e_button-l e_button-green" type="button">提交</button>
+		<button id="submitButton" class="e_button-r e_button-l e_button-green" type="button">提交</button>
 	</div>
 </div>
 <!-- 弹出层 开始 -->
@@ -58,37 +73,37 @@
 										<span class="e_ico-search"></span>
 									</button>
 								</div>
-								<div class="left" id="ADD_CUST_BUTTON">
-									<button class="" type="button" ontap="selectCust.showCustEdit(this)">
-										<span class="e_ico-add"></span>新增客户
-									</button>
-								</div>
+								<%--<div class="left" id="ADD_CUST_BUTTON">--%>
+									<%--<button class="" type="button" ontap="selectCust.showCustEdit(this)">--%>
+										<%--<span class="e_ico-add"></span>新增客户--%>
+									<%--</button>--%>
+								<%--</div>--%>
 							</div>
 						</div>
 						<div class="c_space"></div>
 						<div class="c_list c_list c_list-col-1 c_list-phone-col-1">
 							<ul id="CUST_LIST">
-								<li x_tag="x-databind-template" id={custId} style="display:none">
-									<label class="group link">
-										<div class="content">
-											<div class="fn"><input name="selectCustBox" value={CUST_ID} type="checkbox" /></div>
-											<div class="main">
-												<div class="title" tag="CUST_NAME">{CUST_NAME}</div>
-												<div class="content">
-													<ul>
-														<li tag="MOBILE_NO">{MOBILE_NO}</li>
-														<li tag="HOUSE_DETAIL">{HOUSE_DETAIL}</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</label>
-									<div class="button">
-										<button type="button" class="e_button-s e_button-blue e_button-r"
-												custId={CUST_ID} ontap="selectCust.showCustEdit(this)">
-											编辑
-										</button>
-									</div>
+								<%--<li x_tag="x-databind-template" id={custId} style="display:none">--%>
+									<%--<label class="group link">--%>
+										<%--<div class="content">--%>
+											<%--<div class="fn"><input name="selectCustBox" value={CUST_ID} type="checkbox" /></div>--%>
+											<%--<div class="main">--%>
+												<%--<div class="title" tag="CUST_NAME">{CUST_NAME}</div>--%>
+												<%--<div class="content">--%>
+													<%--<ul>--%>
+														<%--<li tag="MOBILE_NO">{MOBILE_NO}</li>--%>
+														<%--<li tag="HOUSE_DETAIL">{HOUSE_DETAIL}</li>--%>
+													<%--</ul>--%>
+												<%--</div>--%>
+											<%--</div>--%>
+										<%--</div>--%>
+									<%--</label>--%>
+									<%--<div class="button">--%>
+										<%--<button type="button" class="e_button-s e_button-blue e_button-r"--%>
+												<%--custId={CUST_ID} ontap="selectCust.showCustEdit(this)">--%>
+											<%--编辑--%>
+										<%--</button>--%>
+									<%--</div>--%>
 								</li>
 							</ul>
 						</div>
@@ -105,26 +120,32 @@
 						<div class="back" ontap="backPopup(this)">客户查询条件</div>
 					</div>
 					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
-						<div class="c_list c_list_form">
+						<div class="c_list c_list_form" id="queryCustParamForm">
 							<ul>
 								<li>
 									<div class="label">客户姓名</div>
 									<div class="value">
-										<input type="text" />
+										<input type="text" name="CUST_NAME"/>
 									</div>
 								</li>
 								<li>
 									<div class="label">联系电话</div>
 									<div class="value">
-										<input type="text" />
+										<input type="text" name="MOBILE_NO"/>
+									</div>
+								</li>
+								<li>
+									<div class="label">微信昵称</div>
+									<div class="value">
+										<input type="text" name="WX_NICK"/>
 									</div>
 								</li>
 								<li>
 									<div class="label">楼盘</div>
 									<div class="value">
-										<span class="e_select">
-											<span>--请选择--</span>
-											<input type="hidden" id="mySelect" value="" nullable="yes" desc="选择项目" />
+										<span id="queryCustParamForm_house_container"></span>
+										<%--<span>--请选择--</span>--%>
+										<%--<input type="hidden" id="mySelect" name="HOUSE_ID" value="" nullable="yes" desc="选择项目" />--%>
 										</span>
 									</div>
 								</li>
@@ -137,7 +158,16 @@
 						</div>
 					</div>
 				</div>
-				<div class="c_popupItem" id="custInfoEditPopup">
+			</div>
+		</div>
+	</div>
+</div>
+<div class="c_popup c_popup-half" id="custInfoEditPopup">
+	<div class="c_popupBg" id="custInfoEditPopup_bg"></div>
+	<div class="c_popupBox">
+		<div class="c_popupWrapper" id="custInfoEditPopup_wrapper">
+			<div class="c_popupGroup">
+				<div class="c_popupItem" id="custInfoEditPopupItem">
 					<div class="c_header">
 						<div class="back" ontap="backPopup(this)">客户信息录入</div>
 					</div>
@@ -147,14 +177,14 @@
 								<li class="required">
 									<div class="label">客户姓名</div>
 									<div class="value">
-										<input type="text" id="CUST_NAME" name="CUST_NAME"/>
+										<input type="text" id="CUST_NAME" name="CUST_NAME" nullable="no" desc="客户姓名"/>
 										<input type="text" id="CUST_ID" name="CUST_ID" style="display: none"/>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">微信昵称</div>
 									<div class="value">
-										<input type="text" id="WX_NICK" name="WX_NICK"/>
+										<input type="text" id="WX_NICK" name="WX_NICK" nullable="no" desc="微信昵称"/>
 									</div>
 								</li>
 								<li class="required">
@@ -163,7 +193,7 @@
 										<div class="e_switch">
 											<div class="e_switchOn">男</div>
 											<div class="e_switchOff">女</div>
-											<input type="hidden" id="SEX" name="SEX"/>
+											<input type="hidden" id="SEX" name="SEX" nullable="no" desc="性别"/>
 										</div>
 									</div>
 								</li>
@@ -176,22 +206,22 @@
 								<li class="required">
 									<div class="label">楼盘</div>
 									<div class="value">
-										<span class="e_select">
-											<span>--请选择--</span>
-											<input type="hidden" id="HOUSE_ID" name="HOUSE_ID" value="" nullable="yes" desc="楼盘" />
+										<span id="custEditForm_house_container"></span>
+										<%--<span>--请选择--</span>--%>
+										<%--<input type="hidden" id="HOUSE_ID" name="HOUSE_ID" value="" nullable="yes" desc="楼盘" />--%>
 										</span>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">楼栋号</div>
 									<div class="value">
-										<input type="text" id="HOUSE_DETAIL" name="HOUSE_DETAIL"/>
+										<input type="text" id="HOUSE_DETAIL" name="HOUSE_DETAIL" nullable="no" desc="楼栋号"/>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">户型</div>
 									<div class="value">
-										<input type="text" id="HOUSE_MODE" name="HOUSE_MODE"/>
+										<input type="text" id="HOUSE_MODE" name="HOUSE_MODE" nullable="no" desc="户型"/>
 									</div>
 								</li>
 								<li>
@@ -208,7 +238,7 @@
 						<!-- 客户列表 结束 -->
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
-							<button type="button" class="e_button-l e_button-green" ontap="selectCust.submitCustInfo(this)">提交</button>
+							<button type="button" class="e_button-l e_button-green" ontap="custEditPopup.submitCustInfo(this)">提交</button>
 						</div>
 					</div>
 				</div>
@@ -311,6 +341,7 @@
 		<div tag="ACTION_MORE" class="more"></div>
 	</li>
 </script>
+-->
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
 		<label class="group link">
@@ -327,15 +358,14 @@
 				</div>
 			</div>
 		</label>
-		<div class="button">
-			<button type="button" class="e_button-s e_button-blue e_button-r"
-					custId={CUST_ID} ontap="selectCust.showCustEdit(this)">
-				编辑
-			</button>
-		</div>
+		<%--<div class="button">--%>
+			<%--<button type="button" class="e_button-s e_button-blue e_button-r"--%>
+					<%--custId={CUST_ID} ontap="selectCust.showCustEdit(this)">--%>
+				<%--编辑--%>
+			<%--</button>--%>
+		<%--</div>--%>
 	</li>
 </script>
--->
 <script id="finishInfoTemplate" type="text/html">
 	<div class="c_box c_box-border" id="FINISH_INFO_{{ACTION_CODE}}">
 		<div class="c_title" ontap="$(this).next().toggle();">
@@ -445,6 +475,35 @@
 	{{each CAUSE_LIST cause idx}}
 	<li class="link">
 		<div class="main">{{cause.CAUSE_NAME}}</div>
+	</li>
+	{{/each}}
+</script>
+<script id="edit_cust_list_template" rel_id="edit_cust_list" type="text/html">
+	{{each CUST_LIST cust idx}}
+	<li class="link" ontap="planSummarize.showCustEditPopup(this)" cust_id = {{cust.CUST_ID}}>
+		<div class="main">
+			<div class="title" tag="cust_name">{{cust.CUST_NAME}}</div>
+			<div class="content content-auto">
+				<div class="c_param c_param-label-auto">
+					<ul id="edit_cust_{{cust.CUST_ID}}">
+						<li>
+							<span class="label">微信昵称：</span>
+							<span class="value" tag="wx_nick">{{cust.WX_NICK}}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+		<div class="side"><span class="e_ico-edit"></span></div>
+	</li>
+	{{/each}}
+</script>
+<script id="edit_cust_action_list_template" rel_id="" type="text/html">
+	{{each CUST_FINISH_ACTION_LIST action idx}}
+	<li>
+		<span class="label">{{action.ACTION_NAME}}：</span>
+		<span class="value">{{action.FINISH_TIME}}</span>
 	</li>
 	{{/each}}
 </script>

@@ -30,9 +30,18 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject custInfo = request.getBody().getData();
 
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
+        String now = TimeTool.now();
+
         CustDAO dao = new CustDAO("ins");
-        Map<String, String> parameter = ConvertTool.toMap(custInfo);
-        long custId = dao.insertAutoIncrement("INS_CUSTOMER", parameter);
+        Map<String, String> cust = ConvertTool.toMap(custInfo);
+        cust.put("CREATE_USER_ID", userId);
+        cust.put("CREATE_DATE", now);
+        cust.put("UPDATE_USER_ID", userId);
+        cust.put("UPDATE_TIME", now);
+        long custId = dao.insertAutoIncrement("INS_CUSTOMER", cust);
         response.set("CUST_ID", custId);
 
         return response;
@@ -42,8 +51,14 @@ public class CustService extends GenericService{
         ServiceResponse response = new ServiceResponse();
         JSONObject custInfo = request.getBody().getData();
 
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+        String sysdate = TimeTool.now();
+
         CustDAO dao = new CustDAO("ins");
         Map<String, String> parameter = ConvertTool.toMap(custInfo);
+        parameter.put("UPDATE_USER_ID",userId);
+        parameter.put("UPDATE_TIME",sysdate);
         int i = dao.save("INS_CUSTOMER", new String[] {"CUST_ID"}, parameter);
 
         return response;
@@ -68,13 +83,14 @@ public class CustService extends GenericService{
         JSONObject requestData = request.getBody().getData();
 
         int newCustNew = requestData.getInteger("NEW_CUSTNUM");
-        String custNamePrefix = requestData.getString("CUST_NAME_PREFIX");
-        if(StringUtils.isBlank(custNamePrefix)) {
-            custNamePrefix = TimeTool.today();
-        }
         String houseCounselorId = requestData.getString("HOUSE_COUNSELOR_ID");
 
         //从SESSION里取userId
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
+        //获取系统时间
+        String now = TimeTool.now();
 
         List<Map<String, String>> listCust = new ArrayList<Map<String, String>>();
         CustDAO dao = new CustDAO("ins");
@@ -82,7 +98,11 @@ public class CustService extends GenericService{
             Map<String, String> cust = new HashMap<String, String>();
             cust.put("HOUSE_COUNSELOR_ID", houseCounselorId);
             cust.put("CUST_STATUS", "9");
-            cust.put("CUST_NAME", custNamePrefix + "新客户" + (i+1));
+            cust.put("CUST_NAME", "新客户" + (i+1));
+            cust.put("CREATE_USER_ID", userId);
+            cust.put("CREATE_DATE", now);
+            cust.put("UPDATE_USER_ID", userId);
+            cust.put("UPDATE_TIME", now);
             long custId = dao.insertAutoIncrement("INS_CUSTOMER", cust);
             cust.put("CUST_ID", String.valueOf(custId));
             listCust.add(cust);

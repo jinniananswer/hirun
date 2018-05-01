@@ -49,7 +49,8 @@ public class CustDAO extends StrongObjectDAO {
         if(parameter.containsKey("UNEXECUTED_ACTION")) {
             sql.append(" AND NOT EXISTS(SELECT * FROM INS_CUST_ACTION B " +
                     " WHERE A.`CUST_ID` = B.`CUST_ID`" +
-                    " AND B.`ACTION_CODE` = :UNEXECUTED_ACTION)");
+                    " AND B.`ACTION_CODE` = :UNEXECUTED_ACTION ");
+            sql.append(" AND B.`FINISH_TIME` IS NOT NULL)");
         }
 
         List<CustomerEntity> customerList = this.queryBySql(CustomerEntity.class, sql.toString(), parameter);
