@@ -229,6 +229,8 @@ public class PlanService extends GenericService {
             for(CustActionEntity custActionEntity : custActionEntityList) {
                 String actionCode = custActionEntity.getActionCode();
                 String custId = custActionEntity.getCustId();
+
+                //保持客户信息，防止重复查询
                 if(!custMap.containsKey(custId)) {
                     CustomerEntity customerEntity = custDAO.getCustById(custId);
                     if(customerEntity == null) {
@@ -236,32 +238,36 @@ public class PlanService extends GenericService {
                     }
                     custMap.put(custId, customerEntity.toJSON(new String[] {"CUST_ID", "CUST_NAME"}));
                 }
+
+                JSONObject jsonAction = custActionEntity.toJSON(new String[] {"ACTION_ID","CUST_ID"});
+                jsonAction.putAll(custMap.getJSONObject(custId));
+
                 if(StringUtils.isNotBlank(custActionEntity.getPlanId())) {//这里面也有完成的
                     //计划中
                     if(planCustActionMap.containsKey(actionCode)) {
-                        planCustActionMap.getJSONArray(actionCode).add(custMap.getJSONObject(custId));
+                        planCustActionMap.getJSONArray(actionCode).add(jsonAction);
                     } else {
                         JSONArray custList = new JSONArray();
-                        custList.add(custMap.getJSONObject(custId));
+                        custList.add(jsonAction);
                         planCustActionMap.put(actionCode, custList);
                     }
 
                     if(StringUtils.isNotBlank(custActionEntity.getFinishTime())) {
                         //计划中且完成的
                         if(finishCustActionMap.containsKey(actionCode)) {
-                            finishCustActionMap.getJSONArray(actionCode).add(custMap.getJSONObject(custId));
+                            finishCustActionMap.getJSONArray(actionCode).add(jsonAction);
                         } else {
                             JSONArray custList = new JSONArray();
-                            custList.add(custMap.getJSONObject(custId));
+                            custList.add(jsonAction);
                             finishCustActionMap.put(actionCode, custList);
                         }
                     } else {
                         //计划中未完成的
                         if(unFinishCustActionMap.containsKey(actionCode)) {
-                            unFinishCustActionMap.getJSONArray(actionCode).add(custMap.getJSONObject(custId));
+                            unFinishCustActionMap.getJSONArray(actionCode).add(jsonAction);
                         } else {
                             JSONArray custList = new JSONArray();
-                            custList.add(custMap.getJSONObject(custId));
+                            custList.add(jsonAction);
                             unFinishCustActionMap.put(actionCode, custList);
                         }
                     }
@@ -331,7 +337,11 @@ public class PlanService extends GenericService {
 
         PlanDAO planDAO = new PlanDAO("ins");
         PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate);
-        Body body = new Body(planEntity.toJson());
+        Body body = new Body();
+        if(planEntity != null) {
+            body  = new Body(planEntity.toJson());
+        }
+
         response.setBody(body);
 
         return response;
@@ -344,6 +354,7 @@ public class PlanService extends GenericService {
         String planId = requestData.getString("PLAN_ID");
         JSONArray unFinishSummaryList = requestData.getJSONArray("UNFINISH_SUMMARY_LIST");
         JSONArray addExtraCustActionList = requestData.getJSONArray("ADD_EXTRA_CUST_ACTION_LIST");
+        JSONArray transToFinishList = requestData.getJSONArray("TRANS_TO_FINISH_LIST");
 
         String userId = SessionManager.getSession().getSessionEntity().getUserId();
 
@@ -352,6 +363,7 @@ public class PlanService extends GenericService {
         PlanDAO planDAO = new PlanDAO("ins");
 
         Map<String, String> parameter  = new HashMap<String, String>();
+        parameter.put("PLAN_ID", planId);
         List<PlanEntity> list = planDAO.query(PlanEntity.class, "INS_PLAN", parameter);
         if(ArrayTool.isEmpty(list)) {
             //TODO 报错
@@ -372,18 +384,28 @@ public class PlanService extends GenericService {
             List<Map<String, String>> addExtraCustActionDbParamList = new ArrayList<Map<String, String>>();
             for(int i = 0, size = addExtraCustActionList.size(); i < size; i++) {
                 Map<String, String> addExtraCustActionDbParam = ConvertTool.toMap(addExtraCustActionList.getJSONObject(i));
-                if(!parameter.containsKey("FINISH_TIME")) {
-                    parameter.put("FINISH_TIME", sysdate);
+                if(!addExtraCustActionDbParam.containsKey("FINISH_TIME")) {
+                    addExtraCustActionDbParam.put("FINISH_TIME", sysdate);
                 }
-                parameter.put("EXECUTOR_ID", planEntity.getPlanExecutorId());
-                parameter.put("CREATE_USER_ID", userId);
-                parameter.put("CREATE_DATE", sysdate);
-                parameter.put("UPDATE_USER_ID", userId);
-                parameter.put("UPDATE_TIME", sysdate);
-                parameter.put("ACTION_STATUS", "1");
-                addExtraCustActionDbParamList.add(parameter);
+                addExtraCustActionDbParam.put("EXECUTOR_ID", planEntity.getPlanExecutorId());
+                addExtraCustActionDbParam.put("CREATE_USER_ID", userId);
+                addExtraCustActionDbParam.put("CREATE_DATE", sysdate);
+                addExtraCustActionDbParam.put("UPDATE_USER_ID", userId);
+                addExtraCustActionDbParam.put("UPDATE_TIME", sysdate);
+                addExtraCustActionDbParam.put("ACTION_STATUS", "1");
+                addExtraCustActionDbParamList.add(addExtraCustActionDbParam);
             }
             custActionDAO.insertBatch("INS_CUST_ACTION", addExtraCustActionDbParamList);
+        }
+
+        if(ArrayTool.isNotEmpty(transToFinishList)) {
+            for(int i = 0, size = transToFinishList.size(); i < size; i++) {
+                parameter = ConvertTool.toMap(transToFinishList.getJSONObject(i));
+                parameter.put("UPDATE_USER_ID", userId);
+                parameter.put("UPDATE_TIME", sysdate);
+                parameter.put("FINISH_TIME", sysdate);
+                custActionDAO.save("INS_CUST_ACTION", parameter);
+            }
         }
 
         return response;

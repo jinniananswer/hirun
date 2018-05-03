@@ -34,6 +34,9 @@
 	<div id="edit_cust_list_part">
 		<div class="c_title">
 			<div class="text">客户资料补录</div>
+			<div class="fn">
+				<button type="button" ontap="planSummarize.showCustEditPopup(this)">新增客户</button>
+			</div>
 		</div>
 		<div class="c_list c_list-phone-line ">
 			<ul id="edit_cust_list">
@@ -52,7 +55,7 @@
 	</div>
 	<div class="c_space"></div>
 	<div class="c_submit c_submit-full">
-		<button id="submitButton" class="e_button-r e_button-l e_button-green" type="button">提交</button>
+		<button id="submitButton" class="e_button-r e_button-l e_button-green" type="button" ontap="planSummarize.submit()">提交</button>
 	</div>
 </div>
 <!-- 弹出层 开始 -->
@@ -312,7 +315,7 @@
 
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
-							<button type="button" class="e_button-l e_button-green" ontap="summaryPopup.afterSummarizeCust(this)">确定</button>
+							<button type="button" class="e_button-l e_button-green" ontap="summaryPopup.confirm(this)">确定</button>
 						</div>
 					</div>
 				</div>
@@ -420,7 +423,10 @@
 			<div class="c_list c_list-v c_list-col-3">
 				<ul tag="FINISH_CUST_LIST">
 					{{each FINISH_CUST_LIST cust idx}}
-					<li class="link" ontap="">
+					<li cust_id="{{cust.CUST_ID}}"
+						action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+						action_id="{{cust.ACTION_ID}}" li_type="finish"
+					>
 						<div class="main">
 							<div class="title">{{cust.CUST_NAME}}</div>
 						</div>
@@ -442,7 +448,12 @@
 			<div class="c_list c_list-v c_list-col-3">
 				<ul tag="UNFINISH_CUST_LIST">
 					{{each UNFINISH_CUST_LIST cust idx}}
-					<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}" action_code="{{ACTION_CODE}}" class="link" ontap="planSummarize.summarize(this)">
+					<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}"
+						action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+						action_id="{{cust.ACTION_ID}}" li_type="unFinish"
+						unfinish_cause_id="{{cust.UNFINISH_CAUSE_ID}}"
+						unfinish_cause_desc="{{cust.UNFINISH_CAUSE_DESC}}"
+						ontap="planSummarize.summarize(this)">
 						<div class="main">
 							<div class="title" >{{cust.CUST_NAME}}<span class="e_ico-edit"></span></div>
 						</div>
@@ -455,7 +466,10 @@
 </script>
 <script id="finishCustListTemplate" type="text/html">
 	{{each FINISH_CUST_LIST cust idx}}
-	<li class="link" ontap="">
+	<li cust_id="{{cust.CUST_ID}}"
+		action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+		action_id="{{cust.ACTION_ID}}" li_type="finish"
+		>
 		<div class="main">
 			<div class="title">{{cust.CUST_NAME}}</div>
 		</div>
@@ -464,16 +478,21 @@
 </script>
 <script id="unFinishCustListTemplate" type="text/html">
 	{{each UNFINISH_CUST_LIST cust idx}}
-	<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}" action_code="{{ACTION_CODE}}" class="link" ontap="planSummarize.summarize(this)">
+	<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}"
+		action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+		action_id="{{cust.ACTION_ID}}" li_type="unFinish"
+		unfinish_cause_id="{{cust.UNFINISH_CAUSE_ID}}"
+		unfinish_cause_desc="{{cust.UNFINISH_CAUSE_DESC}}"
+		ontap="planSummarize.summarize(this)">
 		<div class="main">
-			<div class="title">{{cust.CUST_NAME}}</div>
+			<div class="title">{{cust.CUST_NAME}}<span class="e_ico-edit"></span></div>
 		</div>
 	</li>
 	{{/each}}
 </script>
 <script id="cause_option_template" rel_id = "cause_options" type="text/html">
 	{{each CAUSE_LIST cause idx}}
-	<li class="link">
+	<li class="link" cause_id="{{cause.CAUSE_ID}}" cause_name="{{cause.CAUSE_NAME}}">
 		<div class="main">{{cause.CAUSE_NAME}}</div>
 	</li>
 	{{/each}}

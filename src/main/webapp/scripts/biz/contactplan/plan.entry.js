@@ -298,12 +298,6 @@ var planEntry = {
 		}
 		
 	},
-	getSelectedCustNum : function() {
-		var custNum = getCheckedBoxNum('selectCustBox');
-		var newCustNum = parseInt($("#newCustNum").val());
-		
-		return custNum + newCustNum;
-	},
 	setPlanTarget : function() {
 		showPopup('myPopup','planTargetSetPopup');
 	},
@@ -549,7 +543,7 @@ var selectCust = {
                 $.each(beforeActionCustList, function(idx2, beforeActionCust) {
                     if(custId == beforeActionCust.get('CUST_ID')) {
                         custList.add(beforeActionCust);
-                        return;
+                        return false;
                     }
                 })
             }
