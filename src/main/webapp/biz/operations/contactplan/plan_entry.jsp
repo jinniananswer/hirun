@@ -14,20 +14,6 @@
     <script src="scripts/biz/contactplan/plan.entry.js"></script>
 </head>
 <body>
-<!--
-<div id="HOUSE_ID_float" class="c_float">
-	<div class="bg"></div>
-	<div class="content">
-		<div class="c_scrollContent">
-			<div class="c_list c_list-pc-s c_list-phone-line ">
-				<ul>
-
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
--->
 <div class="l_edit">
     <div class="c_header e_show-phone">
         <div class="back" ontap="closeNav();">今日计划录入</div>
@@ -319,16 +305,6 @@
 	</div>
 </div>
 <!-- 弹出层 结束 -->
-<!--
-<script type="text/template" id="SELECTED_CUST">
-<li>
-	<div class="main">
-		<div class="title">{actionName}：{num}</div>
-		<div class="content">{custName}</div>
-	</div>
-</li>
-</script>
--->
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
 		<label class="group link ">

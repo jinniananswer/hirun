@@ -49,9 +49,6 @@ var planEntry = {
 		//默认值 开始
         planEntry.currentActionIndex = 0;
         $('#workMode').val(1);
-
-		// var actionDatasetList = $.DatasetList(actionList);
-		// actionDatasetList.bind('ACTION_LIST', 'flex');
 		
 		planEntry.setCurrentActionOn();
 		
@@ -213,21 +210,11 @@ var planEntry = {
         planEntry.planTargetList.push({"ACTION_CODE":"SMJRQLC", "NUM" : $('#scanHouseCounselorNum').val()});
 
 		backPopup(obj);
-		
-		// var ds=$.DataMap(
-		// 	{
-		// 		"scanHouseCounselorNum" : $('#scanHouseCounselorNum').val(),
-		// 		"adviceNum" : $('#adviceNum').val()
-		// 	}
-		// );
-		// ds.bind('planTarget','block');
         $('#planTarget span[tag=adviceNum]').html($('#adviceNum').val());
         $('#planTarget span[tag=scanHouseCounselorNum]').html($('#scanHouseCounselorNum').val());
 		
 		$('#ACTION_PART').show();
-		
-		// var actionDatasetList = $.DatasetList(actionList);
-		// actionDatasetList.bind('ACTION_LIST', 'flex');
+
         $('#ACTION_LIST').html(template('action_list_template', {ACTION_LIST : actionList}));
 		
 		planEntry.setCurrentActionOn();

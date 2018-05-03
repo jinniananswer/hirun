@@ -189,16 +189,6 @@ var planSummarize = {
         //更新实际数
         $('#FINISH_INFO_' + actionCode + ' span[tag=finishCustNum]').html(factCustNum);
     },
-    // isInAddExtraCustActionList : function (custId, actionCode) {
-    //     var flag = false;
-    //     $.each(planSummarize.addExtraCustActionList, function(idx, extraCustAction){
-    //         if(extraCustAction.custId == custId && extraCustAction.actionCode == actionCode) {
-    //             flag = true;
-    //             return false;
-    //         }
-    //     });
-    //     return flag;
-    // },
     showFinishInfo : function() {
         $.ajaxReq({
             url : 'plan/getPlanFinishedInfo',
@@ -277,29 +267,7 @@ var planSummarize = {
         $obj.attr('unfinish_cause_id', cause.UNFINISH_CAUSE_ID ? cause.UNFINISH_CAUSE_ID : '');
         $obj.attr('unfinish_cause_desc', cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
         $obj.attr('oper_code', '2');
-        // cause.ACTION_ID = actionId;
-
-        // planSummarize.custOperMap[custId] = cause
-
-        // var unFinishSummary = planSummarize.getUnFinishSummary(actionId);
-        // if(unFinishSummary) {
-        //     unFinishSummary = cause;
-        // } else {
-        //     planSummarize.unFinishSummaryList.push(cause);
-        // }
     },
-    // getUnFinishSummary : function (actionId) {
-    //     var unFinishSummary = null;
-    //
-    //     $(planSummarize.unFinishSummaryList, function(idx, item) {
-    //         if(item.ACTION_ID == actionId) {
-    //             unFinishSummary = item;
-    //             return false;
-    //         }
-    //     })
-    //
-    //     return unFinishSummary;
-    // },
     showCustEditPopup : function(obj) {
         var $obj = $(obj)
         var custData = {};
