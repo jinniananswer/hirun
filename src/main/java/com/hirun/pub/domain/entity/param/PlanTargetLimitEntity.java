@@ -9,12 +9,20 @@ import java.util.Map;
  */
 public class PlanTargetLimitEntity extends GenericEntity{
 
+    public PlanTargetLimitEntity(){
+        super();
+    }
+
     public PlanTargetLimitEntity(Map<String, String> data){
         super(data);
     }
 
-    public PlanTargetLimitEntity(){
-        super();
+    public String getTargetLimitId(){
+        return this.get("TARGET_LIMIT_ID");
+    }
+
+    public void setTargetLimitId(String targetLimitId){
+        this.set("TARGET_LIMIT_ID", targetLimitId);
     }
 
     public String getTargetCode(){
@@ -47,5 +55,29 @@ public class PlanTargetLimitEntity extends GenericEntity{
 
     public void setLimitNum(String limitNum){
         this.set("LIMIT_NUM", limitNum);
+    }
+
+    public String getStatus(){
+        return this.get("STATUS");
+    }
+
+    public void setStatus(String status){
+        this.set("STATUS", status);
+    }
+
+    public String getStartTime(){
+        return this.get("START_TIME");
+    }
+
+    public void setStartTime(String startTime){
+        this.set("START_TIME", startTime);
+    }
+
+    public String getEndTime(){
+        return this.get("END_TIME");
+    }
+
+    public void setEndTime(String endTime){
+        this.set("END_TIME", endTime);
     }
 }

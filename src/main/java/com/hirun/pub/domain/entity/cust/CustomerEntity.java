@@ -83,6 +83,14 @@ public class CustomerEntity extends GenericEntity{
         this.set("MOBILE_NO", mobileNo);
     }
 
+    public String getHouseDetail(){
+        return this.get("HOUSE_DETAIL");
+    }
+
+    public void setHouseDetail(String houseDetail){
+        this.set("HOUSE_DETAIL", houseDetail);
+    }
+
     public String getHouseMode(){
         return this.get("HOUSE_MODE");
     }
@@ -99,11 +107,75 @@ public class CustomerEntity extends GenericEntity{
         this.set("HOUSE_AREA", houseArea);
     }
 
-    public String getHouseDetail(){
-        return this.get("HOUSE_DETAIL");
+    public String getLastAction(){
+        return this.get("LAST_ACTION");
     }
 
-    public void setHouseDetail(String houseDetail){
-        this.set("HOUSE_DETAIL", houseDetail);
+    public void setLastAction(String lastAction){
+        this.set("LAST_ACTION", lastAction);
+    }
+
+    public String getLastActionDate(){
+        return this.get("LAST_ACTION_DATE");
+    }
+
+    public void setLastActionDate(String lastActionDate){
+        this.set("LAST_ACTION_DATE", lastActionDate);
+    }
+
+    public String getHouseCounselorId(){
+        return this.get("HOUSE_COUNSELOR_ID");
+    }
+
+    public void setHouseCounselorId(String houseCounselorId){
+        this.set("HOUSE_COUNSELOR_ID", houseCounselorId);
+    }
+
+    public String getCustAgentId(){
+        return this.get("CUST_AGENT_ID");
+    }
+
+    public void setCustAgentId(String custAgentId){
+        this.set("CUST_AGENT_ID", custAgentId);
+    }
+
+    public String getCustDesigenerId(){
+        return this.get("CUST_DESIGENER_ID");
+    }
+
+    public void setCustDesigenerId(String custDesigenerId){
+        this.set("CUST_DESIGENER_ID", custDesigenerId);
+    }
+
+    public String getCreateUserId(){
+        return this.get("CREATE_USER_ID");
+    }
+
+    public void setCreateUserId(String createUserId){
+        this.set("CREATE_USER_ID", createUserId);
+    }
+
+    public String getCreateDate(){
+        return this.get("CREATE_DATE");
+    }
+
+    public void setCreateDate(String createDate){
+        this.set("CREATE_DATE", createDate);
+    }
+
+    public String getUpdateUserId(){
+        return this.get("UPDATE_USER_ID");
+    }
+
+    public void setUpdateUserId(String updateUserId){
+        this.set("UPDATE_USER_ID", updateUserId);
+    }
+
+    public String getUpdateTime(){
+        return this.get("UPDATE_TIME");
+    }
+
+    public void setUpdateTime(String updateTime){
+        this.set("UPDATE_TIME", updateTime);
     }
 }

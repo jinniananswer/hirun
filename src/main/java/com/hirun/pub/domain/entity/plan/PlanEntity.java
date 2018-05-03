@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class PlanEntity extends GenericEntity {
 
-    public PlanEntity () {
+    public PlanEntity(){
         super();
     }
 
@@ -71,5 +71,53 @@ public class PlanEntity extends GenericEntity {
 
     public void setPlanExecutorId(String planExecutorId){
         this.set("PLAN_EXECUTOR_ID", planExecutorId);
+    }
+
+    public String getCurrPlanApperId(){
+        return this.get("CURR_PLAN_APPER_ID");
+    }
+
+    public void setCurrPlanApperId(String currPlanApperId){
+        this.set("CURR_PLAN_APPER_ID", currPlanApperId);
+    }
+
+    public String getLastApproveTime(){
+        return this.get("LAST_APPROVE_TIME");
+    }
+
+    public void setLastApproveTime(String lastApproveTime){
+        this.set("LAST_APPROVE_TIME", lastApproveTime);
+    }
+
+    public String getCreateUserId(){
+        return this.get("CREATE_USER_ID");
+    }
+
+    public void setCreateUserId(String createUserId){
+        this.set("CREATE_USER_ID", createUserId);
+    }
+
+    public String getCreateDate(){
+        return this.get("CREATE_DATE");
+    }
+
+    public void setCreateDate(String createDate){
+        this.set("CREATE_DATE", createDate);
+    }
+
+    public String getUpdateUserId(){
+        return this.get("UPDATE_USER_ID");
+    }
+
+    public void setUpdateUserId(String updateUserId){
+        this.set("UPDATE_USER_ID", updateUserId);
+    }
+
+    public String getUpdateTime(){
+        return this.get("UPDATE_TIME");
+    }
+
+    public void setUpdateTime(String updateTime){
+        this.set("UPDATE_TIME", updateTime);
     }
 }
