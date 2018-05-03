@@ -63,7 +63,7 @@
                     data: setting.data,
                     type: setting.type ? setting.type : 'POST',
                     dataType:setting.dataType ? setting.dataType : 'json',
-                    async:setting.async ? setting.async : 'true',
+                    async:setting.async,
                     timeout:setting._time,
                     success:successFunc,
                     error:errFunc

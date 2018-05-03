@@ -50,10 +50,10 @@
 					<div class="main">
 						<div class="title">今日目标设置</div>
 						<div id="planTarget">
-							<div class="content" x_tag="x-databind-template" style="display:none">
+							<div class="content">
 								<ul>
-									<li>咨询数：{adviceNum}</li>
-									<li>扫码数：{scanHouseCounselorNum}</li>
+									<li>咨询数：<span tag="adviceNum"></span></li>
+									<li>扫码数：<span tag="scanHouseCounselorNum"></span></li>
 								</ul>
 							</div>
 						</div>
@@ -372,6 +372,22 @@
 		</div>
 	</div>
 </script>
+<script id="action_list_template" type="text/html" rel_id = "ACTION_LIST">
+	{{each ACTION_LIST action idx}}
+	<li class="link" tag="ACTION_TAG" id="{{action.ACTION_CODE}}">
+		<div class="main">
+			<div class="title group">
+				<span tag="ACTION_NAME_TEXT">{{action.ACTION_NAME}}</span>
+				<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok e_ico-pic e_ico-pic-xxxs"></span></span>
+			</div>
+			<div tag="ACTION_NAME_CONTENT" class="content content-auto"></div>
+		</div>
+		<div tag="ACTION_SIDE" class="side" style="display: none;">选择客户</div>
+		<div tag="ACTION_MORE" class="more" style="display: none;"></div>
+	</li>
+	{{/each}}
+</script>
+
 <script type="text/javascript">
 	Wade.setRatio();
     planEntry.init();

@@ -76,54 +76,18 @@ var planSummarize = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
-                top.$.index.closePage("今日计划录入");
+                top.$.index.closePage("今日计划总结");
             },
         });
-
-        /*
-        $.ajaxRequest({
-            url : 'plan/getSummarizeInitData',
-            data : {},
-            type:'GET',
-            dataType:'json',
-            async : false,
-            success:function(data) {
-                var result = $.DataMap(data);
-                var resultCode = result.get('HEAD').get('RESULT_CODE');
-                if(resultCode == 0) {
-                    var body = result.get('BODY');
-                    planSummarize.planDate = body.get('PLAN_DATE');
-                    planSummarize.planId = body.get('PLAN_ID');
-                    planSummarize.planList = body.get('PLANLIST');
-                    planSummarize.finishActionList = body.get('FINISH_ACTION_LIST');
-                    planSummarize.unFinishActionList = body.get('UNFINISH_ACTION_LIST');
-
-                    $('#planName').html(planSummarize.planDate + '计划总结');
-
-                    planSummarize.showFinishInfo();
-                } else {
-                    var resultInfo = result.get('HEAD').get('RESULT_INFO');
-                    alert(resultInfo);
-
-                    top.$.index.closePage('今日总结');
-                }
-            },
-            error:function(status, errorMessage) {
-
-            },
-        });
-        */
 
         //客户查询条件初始化 开始
         $.Select.append(
-            // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
             "queryCustParamForm_house_container",
             // 参数设置
             {
                 id:"queryCustParamForm_house",
                 name:"HOUSE_ID",
             },
-            // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
             [
                 {TEXT:"Tony Stark", VALUE:"0"},
                 {TEXT:"Steve Rogers", VALUE:"1"},
@@ -142,16 +106,13 @@ var planSummarize = {
         });
 
         $.Select.append(
-            // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
             "custEditForm_house_container",
-            // 参数设置
             {
                 id:"custEditForm_house",
                 name:"HOUSE_ID",
                 nullable : "no",
                 desc : "楼盘",
             },
-            // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
             [
                 {TEXT:"Tony Stark", VALUE:"0"},
                 {TEXT:"Steve Rogers", VALUE:"1"},
@@ -517,32 +478,7 @@ var selectCust = {
 
         resetArea("custForm", true);
 
-        // window["SEX"] = new Wade.Switch("SEX",{
-        //     switchOn:true,
-        //     onValue:"1",
-        //     offValue:"2",
-        //     onColor:"blue",
-        //     offColor:"red"
-        // });
-
-        // window["HOUSE_ID"] = new Wade.Select(
-        //     "HOUSE_ID",
-        //     {
-        //         value:"",
-        //         inputable:false,
-        //         disabled:false,
-        //         addDefault:true,
-        //         selectedIndex:-1,
-        //         optionAlign:"left"
-        //     }
-        // );
-
         $("#SEX").val("1");
-
-        // HOUSE_ID.append("湘江世纪城一期","1");
-        // HOUSE_ID.append("保利西海岸一期","2");
-        // HOUSE_ID.append("四方坪一期","3");
-        // HOUSE_ID.append("四方坪二期","4");
 
         var custId = $(obj).attr('custId');
         if(custId) {
