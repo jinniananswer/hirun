@@ -175,19 +175,23 @@ var planEntry = {
                 alert('error');
             });
 		} else {
-            var custIdList = getCheckedValues('selectCustBox').split(',');
-            var custNum = getCheckedBoxNum('selectCustBox');
+            // var custIdList = getCheckedValues('selectCustBox').split(',');
+            // var custNum = getCheckedBoxNum('selectCustBox');
             var custList = $.DatasetList();
 
             //通过搜索选择的客户
-            if(custNum > 0) {
-                for(var i = 0; i < custIdList.length; i++) {
-                    var cust = selectCust.currentCustMap.get(custIdList[i]);
-                    custList.add(cust);
-
-                    custName += cust.get('CUST_NAME') + "；";
-                }
-            }
+            $.each(selectCust.selectedCustMap, function(key, cust) {
+                custList.push($.DataMap(cust));
+                custName += cust.CUST_NAME + "；";
+            })
+            // if(custNum > 0) {
+            //     for(var i = 0; i < custIdList.length; i++) {
+            //         var cust = selectCust.currentCustMap.get(custIdList[i]);
+            //         custList.add(cust);
+            //
+            //         custName += cust.get('CUST_NAME') + "；";
+            //     }
+            // }
             //通过上一动作带过来，又保留的客户
             var unDeletedBeforeActionCustList = selectCust.getUndeletedBeforeActionCust();
             $.each(unDeletedBeforeActionCustList, function (idx, cust) {
@@ -390,7 +394,8 @@ var planEntry = {
 };
 
 var selectCust = {
-    currentCustMap: $.DataMap(),
+    currentCustMap : {},
+    selectedCustMap : {},
     showCustEdit : function(obj) {
         var $obj = $(obj);
 
@@ -415,20 +420,23 @@ var selectCust = {
                 var resultCode = result.get("HEAD").get("RESULT_CODE");
 
                 if(resultCode == "0"){
-                    if(param.CUST_ID) {
-                        $('#'+param.CUST_ID + ' div[tag=CUST_NAME]').html(param.CUST_NAME);
-                        $('#'+param.CUST_ID + ' li[tag=MOBILE_NO]').html(param.MOBILE_NO);
-                        $('#'+param.CUST_ID + ' li[tag=HOUSE_DETAIL]').html(param.HOUSE_DETAIL);
-                    } else {
-                        param.CUST_ID = result.get('BODY').get('CUST_ID');
-                        var template = $('#CUST_TEMPLATE').html();
-                        var tpl=$.Template(template);
-                        param.CHECKED = 'checked';
-                        tpl.insertFirst('#CUST_LIST',param,true);
-                    }
+                    // if(param.CUST_ID) {
+                    //     $('#'+param.CUST_ID + ' div[tag=CUST_NAME]').html(param.CUST_NAME);
+                    //     $('#'+param.CUST_ID + ' li[tag=MOBILE_NO]').html(param.MOBILE_NO);
+                    //     $('#'+param.CUST_ID + ' li[tag=HOUSE_DETAIL]').html(param.HOUSE_DETAIL);
+                    // } else {
+                    param.CUST_ID = result.get('BODY').get('CUST_ID');
+                    var template = $('#CUST_TEMPLATE').html();
+                    var tpl=$.Template(template);
+                    param.CHECKED = 'checked';
+                    tpl.insertFirst('#CUST_LIST',param,true);
+
+                    selectCust.currentCustMap[param.CUST_ID] = param;
+                    selectCust.selectedCustMap[param.CUST_ID] = param;
+                    // }
 
 
-                    selectCust.currentCustMap.put(param.CUST_ID, $.DataMap(param));
+                    // selectCust.currentCustMap.put(param.CUST_ID, $.DataMap(param));
 
                     backPopup(obj);
                 }
@@ -443,18 +451,19 @@ var selectCust = {
     _queryCust : function(param, callback) {
         //清空查询结果
         $('#CUST_LIST').empty();
+        selectCust.currentCustMap = {};
         selectCust.setCovertGenderParam(param);
-        $.ajaxGet('cust/queryCustList',param,function(data){
-            var result = new Wade.DataMap(data);
-            var resultCode = result.get("HEAD").get("RESULT_CODE");
-
-            if(resultCode == "0"){
-                var body = result.get('BODY');
-                var ds= body.get('CUSTOMERLIST')
+        $.ajaxReq({
+            url : 'cust/queryCustList',
+            data : param,
+            type : 'GET',
+            dataType : 'json',
+            successFunc : function(data){
+                var ds= data.CUSTOMERLIST;
                 if(ds) {
                     $.each(ds, function(idx, item) {
-                        var custId = item.get('CUST_ID');
-                        selectCust.currentCustMap.put(custId, item);
+                        var custId = item.CUST_ID;
+                        selectCust.currentCustMap[custId] = item;
 
                         var template = $('#CUST_TEMPLATE').html();
                         var tpl=$.Template(template);
@@ -465,10 +474,20 @@ var selectCust = {
                 if(callback) {
                     callback();
                 }
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
             }
-        },function(){
-            alert('error');
         });
+    },
+    selectCustBoxClick : function(obj) {
+        $checkBox = $(obj);
+        var custId = $checkBox.val();
+        if($checkBox.attr('checked')) {
+            selectCust.selectedCustMap[custId] = selectCust.currentCustMap[custId];
+        } else {
+            delete selectCust.selectedCustMap[custId]
+        }
     },
     queryCust : function(obj) {
         var param = $.buildJsonData("queryCustParamForm");

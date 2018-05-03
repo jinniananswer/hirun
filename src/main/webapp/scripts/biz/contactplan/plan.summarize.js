@@ -424,7 +424,8 @@ var planSummarize = {
 };
 
 var selectCust = {
-    currentCustMap : $.DataMap(),
+    currentCustMap : {},
+    selectedCustMap : {},
     currentActionCode : '',
     callBack : '',
     init : function () {
@@ -442,43 +443,12 @@ var selectCust = {
         var actionCode = $obj.attr('action_code');
         selectCust.actionCode = actionCode;
 
-        if(actionCode == 'JW') {
-            $('#ADD_CUST_BUTTON').show();
-        } else {
-            $('#ADD_CUST_BUTTON').hide();
-        }
+        selectCust.selectedCustMap = {};
 
         var param = {};
         selectCust._queryCust(param, function() {
             showPopup('selectCustPopup','customerSelectPopup');
         });
-        // $.ajaxGet('cust/queryCustList',param,function(data){
-        //     var result = new Wade.DataMap(data);
-        //     var resultCode = result.get("HEAD").get("RESULT_CODE");
-        //
-        //     if(resultCode == "0"){
-        //         //清空表格
-        //         $('#CUST_LIST').empty();
-        //
-        //         var body = result.get('BODY');
-        //         var ds= body.get('CUSTOMERLIST')
-        //         if(ds) {
-        //             $.each(ds, function(idx, item) {
-        //                 var custId = item.get('CUST_ID');
-        //                 selectCust.currentCustMap.put(custId, item);
-        //
-        //                 var template = $('#CUST_TEMPLATE').html();
-        //                 var tpl=$.Template(template);
-        //                 tpl.append('#CUST_LIST',item,true);
-        //             });
-        //         }
-        //
-        //
-        //
-        //     }
-        // },function(){
-        //     alert('error');
-        // });
     },
     queryCust : function(obj) {
         var param = $.buildJsonData("queryCustParamForm");
@@ -488,19 +458,19 @@ var selectCust = {
     },
     _queryCust : function(param, callback) {
         $('#CUST_LIST').empty();
+        selectCust.currentCustMap = {};
         selectCust.setCovertGenderParam(param);
-        $.ajaxGet('cust/queryCustList',param,function(data){
-            var result = new Wade.DataMap(data);
-            var resultCode = result.get("HEAD").get("RESULT_CODE");
-
-            if(resultCode == "0"){
-                //清空表格
-                var body = result.get('BODY');
-                var ds= body.get('CUSTOMERLIST')
+        $.ajaxReq({
+            url : 'cust/queryCustList',
+            data : param,
+            type : 'GET',
+            dataType : 'json',
+            successFunc : function(data){
+                var ds= data.CUSTOMERLIST;
                 if(ds) {
                     $.each(ds, function(idx, item) {
-                        var custId = item.get('CUST_ID');
-                        selectCust.currentCustMap.put(custId, item);
+                        var custId = item.CUST_ID;
+                        selectCust.currentCustMap[custId] = item;
 
                         var template = $('#CUST_TEMPLATE').html();
                         var tpl=$.Template(template);
@@ -511,22 +481,26 @@ var selectCust = {
                 if(callback) {
                     callback();
                 }
-                // showPopup('selectCustPopup','customerSelectPopup');
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
             }
-        },function(){
-            alert('error');
         });
     },
-    confirmCusts : function(obj) {
-        var custIdList = getCheckedValues('selectCustBox').split(",");
-        var custNum = getCheckedBoxNum('selectCustBox');
-
-        var custList = [];
-        for(var i = 0; i < custNum; i++) {
-            var custDetail = {};
-            var cust = selectCust.currentCustMap.get(custIdList[i]);
-            custList.push(JSON.parse(cust.toString()));
+    selectCustBoxClick : function(obj) {
+        $checkBox = $(obj);
+        var custId = $checkBox.val();
+        if($checkBox.attr('checked')) {
+            selectCust.selectedCustMap[custId] = selectCust.currentCustMap[custId];
+        } else {
+            delete selectCust.selectedCustMap[custId]
         }
+    },
+    confirmCusts : function(obj) {
+        var custList = [];
+        $.each(selectCust.selectedCustMap, function(key, cust) {
+            custList.push(cust);
+        })
 
         var data = {
             custList: custList,

@@ -331,18 +331,18 @@
 -->
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
-		<label class="group link">
+		<label class="group link ">
 			<div class="content">
 				<div class="main">
-					<div class="title">{CUST_NAME}</div>
+					<div class="title" tag="CUST_NAME">{CUST_NAME}</div>
 					<div class="content">
 						<ul>
-							<li>{SERIAL_NUMBER}</li>
-							<li>{HOUSE_DETAIL}</li>
+							<li>微信昵称：{MOBILE_NO}</li>
 						</ul>
 					</div>
 				</div>
-				<div class="fn"><input name="selectCustBox" value={CUST_ID} type="checkbox" {CHECKED}/></div>
+				<div class="fn"><input name="selectCustBox" value={CUST_ID} {CHECKED}
+									   type="checkbox" onchange="selectCust.selectCustBoxClick(this)"/></div>
 			</div>
 		</label>
 	</li>
