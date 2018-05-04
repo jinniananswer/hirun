@@ -18,6 +18,7 @@ import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -87,19 +88,26 @@ public class HousesService extends GenericService {
         if(StringUtils.isBlank(employeeId))
             return new ServiceResponse();
 
-        Map<String, String> housesPlan = new HashMap<String, String>();
-        housesPlan.put("HOUSES_ID", String.valueOf(houseId));
-        housesPlan.put("EMPLOYEE_ID", employeeId);
-        housesPlan.put("ORG_ID", request.getString("SHOP"));
-        housesPlan.put("START_DATE", session.getCreateTime());
-        housesPlan.put("END_DATE", destroyDate);
-        housesPlan.put("STATUS", "0");
-        housesPlan.put("CREATE_USER_ID", userId);
-        housesPlan.put("CREATE_DATE", session.getCreateTime());
-        housesPlan.put("UPDATE_USER_ID", userId);
-        housesPlan.put("UPDATE_TIME", session.getCreateTime());
+        String[] employees = employeeId.split(",");
+        List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
+        for(String employee : employees){
+            Map<String, String> housesPlan = new HashMap<String, String>();
+            housesPlan.put("HOUSES_ID", String.valueOf(houseId));
+            housesPlan.put("EMPLOYEE_ID", employee);
+            housesPlan.put("ORG_ID", request.getString("SHOP"));
+            housesPlan.put("START_DATE", session.getCreateTime());
+            housesPlan.put("END_DATE", destroyDate);
+            housesPlan.put("STATUS", "0");
+            housesPlan.put("CREATE_USER_ID", userId);
+            housesPlan.put("CREATE_DATE", session.getCreateTime());
+            housesPlan.put("UPDATE_USER_ID", userId);
+            housesPlan.put("UPDATE_TIME", session.getCreateTime());
+            housesPlan.put("TOWER_NO", house.get(employee+"_TOWERNUM"));
+            parameters.add(housesPlan);
+        }
+
         HousesPlanDAO housesPlanDAO = new HousesPlanDAO("ins");
-        housesPlanDAO.insert("ins_houses_plan", housesPlan);
+        housesPlanDAO.insertBatch("ins_houses_plan", parameters);
 
         return new ServiceResponse();
     }
