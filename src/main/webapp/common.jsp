@@ -19,6 +19,7 @@
     <script src="frame/TouchUI/content/js/ui/component/base/switch.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/select.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/tabset/tabset.js"></script>
+    <script src="frame/TouchUI/content/js/ui/component/box/tipbox.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/datefield.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/calendar/calendar.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/increasereduce.js"></script>
