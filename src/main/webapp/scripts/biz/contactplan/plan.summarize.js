@@ -76,54 +76,18 @@ var planSummarize = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
-                top.$.index.closePage("今日计划录入");
+                top.$.index.closePage("今日计划总结");
             },
         });
-
-        /*
-        $.ajaxRequest({
-            url : 'plan/getSummarizeInitData',
-            data : {},
-            type:'GET',
-            dataType:'json',
-            async : false,
-            success:function(data) {
-                var result = $.DataMap(data);
-                var resultCode = result.get('HEAD').get('RESULT_CODE');
-                if(resultCode == 0) {
-                    var body = result.get('BODY');
-                    planSummarize.planDate = body.get('PLAN_DATE');
-                    planSummarize.planId = body.get('PLAN_ID');
-                    planSummarize.planList = body.get('PLANLIST');
-                    planSummarize.finishActionList = body.get('FINISH_ACTION_LIST');
-                    planSummarize.unFinishActionList = body.get('UNFINISH_ACTION_LIST');
-
-                    $('#planName').html(planSummarize.planDate + '计划总结');
-
-                    planSummarize.showFinishInfo();
-                } else {
-                    var resultInfo = result.get('HEAD').get('RESULT_INFO');
-                    alert(resultInfo);
-
-                    top.$.index.closePage('今日总结');
-                }
-            },
-            error:function(status, errorMessage) {
-
-            },
-        });
-        */
 
         //客户查询条件初始化 开始
         $.Select.append(
-            // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
             "queryCustParamForm_house_container",
             // 参数设置
             {
                 id:"queryCustParamForm_house",
                 name:"HOUSE_ID",
             },
-            // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
             [
                 {TEXT:"Tony Stark", VALUE:"0"},
                 {TEXT:"Steve Rogers", VALUE:"1"},
@@ -142,16 +106,13 @@ var planSummarize = {
         });
 
         $.Select.append(
-            // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
             "custEditForm_house_container",
-            // 参数设置
             {
                 id:"custEditForm_house",
                 name:"HOUSE_ID",
                 nullable : "no",
                 desc : "楼盘",
             },
-            // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
             [
                 {TEXT:"Tony Stark", VALUE:"0"},
                 {TEXT:"Steve Rogers", VALUE:"1"},
@@ -228,16 +189,6 @@ var planSummarize = {
         //更新实际数
         $('#FINISH_INFO_' + actionCode + ' span[tag=finishCustNum]').html(factCustNum);
     },
-    // isInAddExtraCustActionList : function (custId, actionCode) {
-    //     var flag = false;
-    //     $.each(planSummarize.addExtraCustActionList, function(idx, extraCustAction){
-    //         if(extraCustAction.custId == custId && extraCustAction.actionCode == actionCode) {
-    //             flag = true;
-    //             return false;
-    //         }
-    //     });
-    //     return flag;
-    // },
     showFinishInfo : function() {
         $.ajaxReq({
             url : 'plan/getPlanFinishedInfo',
@@ -316,29 +267,7 @@ var planSummarize = {
         $obj.attr('unfinish_cause_id', cause.UNFINISH_CAUSE_ID ? cause.UNFINISH_CAUSE_ID : '');
         $obj.attr('unfinish_cause_desc', cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
         $obj.attr('oper_code', '2');
-        // cause.ACTION_ID = actionId;
-
-        // planSummarize.custOperMap[custId] = cause
-
-        // var unFinishSummary = planSummarize.getUnFinishSummary(actionId);
-        // if(unFinishSummary) {
-        //     unFinishSummary = cause;
-        // } else {
-        //     planSummarize.unFinishSummaryList.push(cause);
-        // }
     },
-    // getUnFinishSummary : function (actionId) {
-    //     var unFinishSummary = null;
-    //
-    //     $(planSummarize.unFinishSummaryList, function(idx, item) {
-    //         if(item.ACTION_ID == actionId) {
-    //             unFinishSummary = item;
-    //             return false;
-    //         }
-    //     })
-    //
-    //     return unFinishSummary;
-    // },
     showCustEditPopup : function(obj) {
         var $obj = $(obj)
         var custData = {};
@@ -424,7 +353,8 @@ var planSummarize = {
 };
 
 var selectCust = {
-    currentCustMap : $.DataMap(),
+    currentCustMap : {},
+    selectedCustMap : {},
     currentActionCode : '',
     callBack : '',
     init : function () {
@@ -442,43 +372,12 @@ var selectCust = {
         var actionCode = $obj.attr('action_code');
         selectCust.actionCode = actionCode;
 
-        if(actionCode == 'JW') {
-            $('#ADD_CUST_BUTTON').show();
-        } else {
-            $('#ADD_CUST_BUTTON').hide();
-        }
+        selectCust.selectedCustMap = {};
 
         var param = {};
         selectCust._queryCust(param, function() {
             showPopup('selectCustPopup','customerSelectPopup');
         });
-        // $.ajaxGet('cust/queryCustList',param,function(data){
-        //     var result = new Wade.DataMap(data);
-        //     var resultCode = result.get("HEAD").get("RESULT_CODE");
-        //
-        //     if(resultCode == "0"){
-        //         //清空表格
-        //         $('#CUST_LIST').empty();
-        //
-        //         var body = result.get('BODY');
-        //         var ds= body.get('CUSTOMERLIST')
-        //         if(ds) {
-        //             $.each(ds, function(idx, item) {
-        //                 var custId = item.get('CUST_ID');
-        //                 selectCust.currentCustMap.put(custId, item);
-        //
-        //                 var template = $('#CUST_TEMPLATE').html();
-        //                 var tpl=$.Template(template);
-        //                 tpl.append('#CUST_LIST',item,true);
-        //             });
-        //         }
-        //
-        //
-        //
-        //     }
-        // },function(){
-        //     alert('error');
-        // });
     },
     queryCust : function(obj) {
         var param = $.buildJsonData("queryCustParamForm");
@@ -488,19 +387,19 @@ var selectCust = {
     },
     _queryCust : function(param, callback) {
         $('#CUST_LIST').empty();
+        selectCust.currentCustMap = {};
         selectCust.setCovertGenderParam(param);
-        $.ajaxGet('cust/queryCustList',param,function(data){
-            var result = new Wade.DataMap(data);
-            var resultCode = result.get("HEAD").get("RESULT_CODE");
-
-            if(resultCode == "0"){
-                //清空表格
-                var body = result.get('BODY');
-                var ds= body.get('CUSTOMERLIST')
+        $.ajaxReq({
+            url : 'cust/queryCustList',
+            data : param,
+            type : 'GET',
+            dataType : 'json',
+            successFunc : function(data){
+                var ds= data.CUSTOMERLIST;
                 if(ds) {
                     $.each(ds, function(idx, item) {
-                        var custId = item.get('CUST_ID');
-                        selectCust.currentCustMap.put(custId, item);
+                        var custId = item.CUST_ID;
+                        selectCust.currentCustMap[custId] = item;
 
                         var template = $('#CUST_TEMPLATE').html();
                         var tpl=$.Template(template);
@@ -511,22 +410,26 @@ var selectCust = {
                 if(callback) {
                     callback();
                 }
-                // showPopup('selectCustPopup','customerSelectPopup');
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
             }
-        },function(){
-            alert('error');
         });
     },
-    confirmCusts : function(obj) {
-        var custIdList = getCheckedValues('selectCustBox').split(",");
-        var custNum = getCheckedBoxNum('selectCustBox');
-
-        var custList = [];
-        for(var i = 0; i < custNum; i++) {
-            var custDetail = {};
-            var cust = selectCust.currentCustMap.get(custIdList[i]);
-            custList.push(JSON.parse(cust.toString()));
+    selectCustBoxClick : function(obj) {
+        $checkBox = $(obj);
+        var custId = $checkBox.val();
+        if($checkBox.attr('checked')) {
+            selectCust.selectedCustMap[custId] = selectCust.currentCustMap[custId];
+        } else {
+            delete selectCust.selectedCustMap[custId]
         }
+    },
+    confirmCusts : function(obj) {
+        var custList = [];
+        $.each(selectCust.selectedCustMap, function(key, cust) {
+            custList.push(cust);
+        })
 
         var data = {
             custList: custList,
@@ -543,32 +446,7 @@ var selectCust = {
 
         resetArea("custForm", true);
 
-        // window["SEX"] = new Wade.Switch("SEX",{
-        //     switchOn:true,
-        //     onValue:"1",
-        //     offValue:"2",
-        //     onColor:"blue",
-        //     offColor:"red"
-        // });
-
-        // window["HOUSE_ID"] = new Wade.Select(
-        //     "HOUSE_ID",
-        //     {
-        //         value:"",
-        //         inputable:false,
-        //         disabled:false,
-        //         addDefault:true,
-        //         selectedIndex:-1,
-        //         optionAlign:"left"
-        //     }
-        // );
-
         $("#SEX").val("1");
-
-        // HOUSE_ID.append("湘江世纪城一期","1");
-        // HOUSE_ID.append("保利西海岸一期","2");
-        // HOUSE_ID.append("四方坪一期","3");
-        // HOUSE_ID.append("四方坪二期","4");
 
         var custId = $(obj).attr('custId');
         if(custId) {

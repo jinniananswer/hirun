@@ -86,28 +86,7 @@
 						<div class="c_space"></div>
 						<div class="c_list c_list c_list-col-1 c_list-phone-col-1">
 							<ul id="CUST_LIST">
-								<%--<li x_tag="x-databind-template" id={custId} style="display:none">--%>
-									<%--<label class="group link">--%>
-										<%--<div class="content">--%>
-											<%--<div class="fn"><input name="selectCustBox" value={CUST_ID} type="checkbox" /></div>--%>
-											<%--<div class="main">--%>
-												<%--<div class="title" tag="CUST_NAME">{CUST_NAME}</div>--%>
-												<%--<div class="content">--%>
-													<%--<ul>--%>
-														<%--<li tag="MOBILE_NO">{MOBILE_NO}</li>--%>
-														<%--<li tag="HOUSE_DETAIL">{HOUSE_DETAIL}</li>--%>
-													<%--</ul>--%>
-												<%--</div>--%>
-											<%--</div>--%>
-										<%--</div>--%>
-									<%--</label>--%>
-									<%--<div class="button">--%>
-										<%--<button type="button" class="e_button-s e_button-blue e_button-r"--%>
-												<%--custId={CUST_ID} ontap="selectCust.showCustEdit(this)">--%>
-											<%--编辑--%>
-										<%--</button>--%>
-									<%--</div>--%>
-								</li>
+
 							</ul>
 						</div>
 						<div class="c_space"></div>
@@ -324,49 +303,22 @@
 	</div>
 </div>
 <!-- 弹出层结束 -->
-<!--
-<script type="text/template" id="ACTION_TEMPLATE">
-	<li class="link" id="{ACTION_CODE}" ontap="{TAP_FUNCTION}">
-		<div class="main">
-			<div class="title group">
-				<span tag="ACTION_NAME_TEXT">{ACTION_NAME}</span>
-			</div>
-			<div tag="ACTION_NAME_CONTENT" class="content content-auto">
-				<ul>
-					<li><span>计划数：{PLAN_CUSTNUM}</span></li>
-					<li><span>计划客户：{PLAN_CUSTNAMES}</span></li>
-					<li><span class="">实际完成数：{FINISH_CUSTNUM}</span></li>
-					<li><span>实际客户：{FINISH_CUSTNAMES}</span></li>
-				</ul>
-			</div>
-		</div>
-		<div tag="ACTION_SIDE" class="side">{SIDE_NAME}</div>
-		<div tag="ACTION_MORE" class="more"></div>
-	</li>
-</script>
--->
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
-		<label class="group link">
+		<label class="group link ">
 			<div class="content">
-				<div class="fn"><input name="selectCustBox" value={CUST_ID} {CHECKED} type="checkbox" /></div>
 				<div class="main">
 					<div class="title" tag="CUST_NAME">{CUST_NAME}</div>
 					<div class="content">
 						<ul>
-							<li tag="MOBILE_NO">{MOBILE_NO}</li>
-							<li tag="HOUSE_DETAIL">{HOUSE_DETAIL}</li>
+							<li>微信昵称：{MOBILE_NO}</li>
 						</ul>
 					</div>
 				</div>
+				<div class="fn"><input name="selectCustBox" value={CUST_ID} {CHECKED}
+									   type="checkbox" onchange="selectCust.selectCustBoxClick(this)"/></div>
 			</div>
 		</label>
-		<%--<div class="button">--%>
-			<%--<button type="button" class="e_button-s e_button-blue e_button-r"--%>
-					<%--custId={CUST_ID} ontap="selectCust.showCustEdit(this)">--%>
-				<%--编辑--%>
-			<%--</button>--%>
-		<%--</div>--%>
 	</li>
 </script>
 <script id="finishInfoTemplate" type="text/html">

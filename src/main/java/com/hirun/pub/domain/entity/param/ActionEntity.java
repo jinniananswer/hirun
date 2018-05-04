@@ -9,12 +9,12 @@ import java.util.Map;
  */
 public class ActionEntity extends GenericEntity{
 
-    public ActionEntity(Map<String, String> data){
-        super(data);
-    }
-
     public ActionEntity(){
         super();
+    }
+
+    public ActionEntity(Map<String, String> data){
+        super(data);
     }
 
     public String getActionId(){
@@ -41,11 +41,27 @@ public class ActionEntity extends GenericEntity{
         this.set("ACTION_NAME", actionName);
     }
 
+    public String getActionDesc(){
+        return this.get("ACTION_DESC");
+    }
+
+    public void setActionDesc(String actionDesc){
+        this.set("ACTION_DESC", actionDesc);
+    }
+
     public String getActionType(){
         return this.get("ACTION_TYPE");
     }
 
     public void setActionType(String actionType){
         this.set("ACTION_TYPE", actionType);
+    }
+
+    public String getStatus(){
+        return this.get("STATUS");
+    }
+
+    public void setStatus(String status){
+        this.set("STATUS", status);
     }
 }

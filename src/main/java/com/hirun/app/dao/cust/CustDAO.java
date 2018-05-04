@@ -6,6 +6,7 @@ import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -27,26 +28,26 @@ public class CustDAO extends StrongObjectDAO {
         StringBuilder sql = new StringBuilder(400);
         sql.append(" SELECT * FROM INS_CUSTOMER A");
         sql.append(" WHERE 1=1 ");
-        if(parameter.containsKey("CUST_NAME")) {
+        if(StringUtils.isNotBlank(parameter.get("CUST_NAME"))) {
             sql.append(" AND A.CUST_NAME LIKE CONCAT('%', :CUST_NAME, '%') ");
         }
-        if(parameter.containsKey("MOBILE_NO")) {
+        if(StringUtils.isNotBlank(parameter.get("MOBILE_NO"))) {
             sql.append(" AND A.MOBILE_NO LIKE CONCAT('%', :MOBILE_NO, '%') ");
         }
-        if(parameter.containsKey("WX_NICK")) {
+        if(StringUtils.isNotBlank(parameter.get("WX_NICK"))) {
             sql.append(" AND A.WX_NICK LIKE CONCAT('%', :WX_NICK, '%') ");
         }
-        if(parameter.containsKey("HOUSE_ID")) {
+        if(StringUtils.isNotBlank(parameter.get("HOUSE_ID"))) {
             sql.append(" AND A.HOUSE_ID = :HOUSE_ID ");
         }
-        if(parameter.containsKey("LAST_ACTION")) {
+        if(StringUtils.isNotBlank(parameter.get("LAST_ACTION"))) {
             sql.append(" AND A.LAST_ACTION = :LAST_ACTION ");
         }
-        if(parameter.containsKey("HOUSE_COUNSELOR_ID")) {
+        if(StringUtils.isNotBlank(parameter.get("HOUSE_COUNSELOR_ID"))) {
             sql.append(" AND A.HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
         }
         //TODO 这里以后不要去查表，考虑将客户触发过的动作放到缓存里,当然还需要一个缓存的互备表作为容灾的
-        if(parameter.containsKey("UNEXECUTED_ACTION")) {
+        if(StringUtils.isNotBlank(parameter.get("UNEXECUTED_ACTION"))) {
             sql.append(" AND NOT EXISTS(SELECT * FROM INS_CUST_ACTION B " +
                     " WHERE A.`CUST_ID` = B.`CUST_ID`" +
                     " AND B.`ACTION_CODE` = :UNEXECUTED_ACTION ");

@@ -14,20 +14,6 @@
     <script src="scripts/biz/contactplan/plan.entry.js"></script>
 </head>
 <body>
-<!--
-<div id="HOUSE_ID_float" class="c_float">
-	<div class="bg"></div>
-	<div class="content">
-		<div class="c_scrollContent">
-			<div class="c_list c_list-pc-s c_list-phone-line ">
-				<ul>
-
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
--->
 <div class="l_edit">
     <div class="c_header e_show-phone">
         <div class="back" ontap="closeNav();">今日计划录入</div>
@@ -50,10 +36,10 @@
 					<div class="main">
 						<div class="title">今日目标设置</div>
 						<div id="planTarget">
-							<div class="content" x_tag="x-databind-template" style="display:none">
+							<div class="content">
 								<ul>
-									<li>咨询数：{adviceNum}</li>
-									<li>扫码数：{scanHouseCounselorNum}</li>
+									<li>咨询数：<span tag="adviceNum"></span></li>
+									<li>扫码数：<span tag="scanHouseCounselorNum"></span></li>
 								</ul>
 							</div>
 						</div>
@@ -319,30 +305,20 @@
 	</div>
 </div>
 <!-- 弹出层 结束 -->
-<!--
-<script type="text/template" id="SELECTED_CUST">
-<li>
-	<div class="main">
-		<div class="title">{actionName}：{num}</div>
-		<div class="content">{custName}</div>
-	</div>
-</li>
-</script>
--->
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
-		<label class="group link">
+		<label class="group link ">
 			<div class="content">
 				<div class="main">
-					<div class="title">{CUST_NAME}</div>
+					<div class="title" tag="CUST_NAME">{CUST_NAME}</div>
 					<div class="content">
 						<ul>
-							<li>{SERIAL_NUMBER}</li>
-							<li>{HOUSE_DETAIL}</li>
+							<li>微信昵称：{MOBILE_NO}</li>
 						</ul>
 					</div>
 				</div>
-				<div class="fn"><input name="selectCustBox" value={CUST_ID} type="checkbox" {CHECKED}/></div>
+				<div class="fn"><input name="selectCustBox" value={CUST_ID} {CHECKED}
+									   type="checkbox" onchange="selectCust.selectCustBoxClick(this)"/></div>
 			</div>
 		</label>
 	</li>
@@ -372,6 +348,22 @@
 		</div>
 	</div>
 </script>
+<script id="action_list_template" type="text/html" rel_id = "ACTION_LIST">
+	{{each ACTION_LIST action idx}}
+	<li class="link" tag="ACTION_TAG" id="{{action.ACTION_CODE}}">
+		<div class="main">
+			<div class="title group">
+				<span tag="ACTION_NAME_TEXT">{{action.ACTION_NAME}}</span>
+				<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok e_ico-pic e_ico-pic-xxxs"></span></span>
+			</div>
+			<div tag="ACTION_NAME_CONTENT" class="content content-auto"></div>
+		</div>
+		<div tag="ACTION_SIDE" class="side" style="display: none;">选择客户</div>
+		<div tag="ACTION_MORE" class="more" style="display: none;"></div>
+	</li>
+	{{/each}}
+</script>
+
 <script type="text/javascript">
 	Wade.setRatio();
     planEntry.init();
