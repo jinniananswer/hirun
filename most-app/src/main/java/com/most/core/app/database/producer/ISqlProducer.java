@@ -53,4 +53,6 @@ public interface ISqlProducer {
     public PreparedStatement generateDeleteBatchSql(ConnectionWrapper conn, String tableName, List<Map<String, String>> parameters) throws SQLException;
 
     public PreparedStatement generateDeleteBatchSql(ConnectionWrapper conn, String tableName, String[] cols, List<Map<String, String>> parameters) throws SQLException;
+
+    public PreparedStatement generateExecuteSqlBySql(ConnectionWrapper conn, String sql, Map<String, String> parameter) throws SQLException;
 }

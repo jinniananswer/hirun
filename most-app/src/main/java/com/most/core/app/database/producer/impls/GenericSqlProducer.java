@@ -121,6 +121,18 @@ public class GenericSqlProducer implements ISqlProducer {
         return stmt;
     }
 
+    public PreparedStatement generateExecuteSqlBySql(ConnectionWrapper conn, String sql, Map<String, String> parameter) throws SQLException{
+        Object[] objects = StringTool.parseVariableText(sql, ':', "?");
+        StringBuilder sb = (StringBuilder)objects[0];
+        List<String> variables = (List<String>)objects[1];
+        if(log.isDebugEnabled())
+            log.debug("生成的execute语句为:"+sb.toString());
+
+        PreparedStatement stmt = conn.getConnection().prepareStatement(sb.toString());
+        this.bindValueWithoutColumnType(stmt, variables, parameter);
+        return stmt;
+    }
+
     public PreparedStatement generateInsertSql(ConnectionWrapper conn, String tableName, Map<String, String> parameter) throws SQLException{
         String sql = generateInsertAllCols(conn, tableName);
         PreparedStatement stmt = conn.getConnection().prepareStatement(sql);
