@@ -162,6 +162,11 @@ public class GenericDAO {
         return this.executeUpdateBatch(stmt);
     }
 
+    public int executeUpdate(String sql, Map<String, String> parameter) throws SQLException{
+        PreparedStatement stmt = producer.generateExecuteSqlBySql(this.connection, sql, parameter);
+        return this.executeUpdate(stmt);
+    }
+
     protected int executeUpdate(PreparedStatement stmt) throws SQLException{
         long start = System.currentTimeMillis();
         int num = stmt.executeUpdate();
