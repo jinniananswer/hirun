@@ -104,7 +104,7 @@
                     $("#BIZ_COUNSELORS").empty();
                     for(var i=0;i<length;i++){
                         var counselor = counselors.get(i);
-                        html.push("<li class=\"link e_center\" ontap=\"$.housesPlan.afterSelectCounselor(\'"+counselor.get("EMPLOYEE_ID")+"\',\'"+counselor.get("NAME")+"\')\"><div class=\"main\">"+counselor.get("NAME")+"</div></li>");
+                        html.push("<li class=\"link e_center\" tag=\"COUNSELOR\" selected=\"false\" employeeName=\""+counselor.get("NAME")+"\" employeeId=\""+counselor.get("EMPLOYEE_ID")+"\" ontap=\"$.housesPlan.afterSelectCounselor(\'"+counselor.get("EMPLOYEE_ID")+"\',this)\"><label class=\"group\" id=\"LABEL_"+counselor.get("EMPLOYEE_ID")+"\"><div class=\"main\">"+counselor.get("NAME")+"</div></label></li>");
                     }
                     $.insertHtml('beforeend', $("#BIZ_COUNSELORS"), html.join(""));
                 }
@@ -113,10 +113,126 @@
             });
         },
 
-        afterSelectCounselor : function(value, text){
+        afterSelectCounselor : function(value, eventObj){
+            var obj = $(eventObj);
+            var selected = obj.attr("selected");
+            if(selected == "true"){
+                //已有，表示取消动作
+                var ico = $("#COUNSELOR_"+value+"_ico");
+                ico.remove();
+                obj.attr("selected", "false");
+            }
+            else{
+                //没有，表示新添加
+                obj.attr("selected", "true");
+                var label = $("#LABEL_"+value);
+                var html=[];
+                html.push("<div class=\"side\" id=\"COUNSELOR_"+value+"_ico\"><span class=\"e_ico-ok e_ico-pic e_ico-pic-xxxs\"></span></div>");
+                $.insertHtml('beforeend', label, html.join(""));
+            }
+        },
+
+        confirmCounselor : function(isClear){
+            var employees = $("li[tag=COUNSELOR]");
+            if(employees == null || employees.length <= 0){
+                return;
+            }
+
+            var actualNum = 0;
+            var selectedEmployeeId = "";
+            var selectedEmployeeName = "";
+            for(var i=0;i<employees.length;i++){
+                var employee = $(employees[i]);
+                var counselorId = employee.attr("employeeId");
+                var selected = employee.attr("selected");
+                if(selected == "true"){
+                    actualNum++;
+                    var counselorName = employee.attr("employeeName");
+                    selectedEmployeeId += counselorId + ",";
+                    selectedEmployeeName += counselorName + ",";
+                }
+            }
+            if(actualNum <= 0){
+                hidePopup('UI-popup','UI-popup-query');
+                return;
+            }
+            selectedEmployeeId = selectedEmployeeId.substring(0, selectedEmployeeId.length-1);
+            selectedEmployeeName = selectedEmployeeName.substring(0, selectedEmployeeName.length-1);
+            var planNum = $("#PLAN_COUNSELOR_NUM").val();
+            if(planNum < actualNum){
+                if(isClear){
+                    var towers = $("li[tag=TOWERNUM]");
+                    if(towers != null && towers.length > 0){
+                        for(var i=0;i<towers.length;i++){
+                            var tower = $(towers[i]);
+                            tower.remove();
+                        }
+                    }
+                    $("#EMPLOYEE_ID").val("");
+                    $("#EMPLOYEE_NAME").val("");
+                }
+                else {
+                    $.TipBox.show(document.getElementById('CONFIRM_COUNSELOR'), "所选家装顾问数量不能多于计划分配的数量", "red");
+                }
+                return;
+            }
+
+
+            $("#EMPLOYEE_ID").val(selectedEmployeeId);
+            $("#EMPLOYEE_NAME").val(selectedEmployeeName);
             hidePopup('UI-popup','UI-popup-query');
-            $("#EMPLOYEE_NAME").val(text);
-            $("#EMPLOYEE_ID").val(value);
+
+            var towers = $("li[tag=TOWERNUM]");
+            if(towers != null && towers.length > 0){
+                for(var i=0;i<towers.length;i++){
+                    var tower = $(towers[i]);
+                    tower.remove();
+                }
+            }
+
+            if(planNum <= 1){
+                return;
+            }
+            var html=[];
+            var employeeIdArray = selectedEmployeeId.split(",");
+            var employeeNameArray = selectedEmployeeName.split(",");
+            var size = employeeIdArray.length;
+
+            for(var i=0;i<size;i++){
+                html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+employeeNameArray[i] +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"text\" desc=\""+employeeNameArray[i]+"分配楼栋\" id=\""+employeeIdArray[i]+"_TOWERNUM\" name=\""+employeeIdArray[i]+"_TOWERNUM\" /></div></li>");
+            }
+            $.insertHtml('beforeend', $("#submitArea"), html.join(""));
+        },
+
+        initCounselor : function(){
+            var counselors = $("li[tag=COUNSELOR]");
+            if(counselors == null || counselors.length <= 0){
+                return;
+            }
+
+            var employeeId = $("#EMPLOYEE_ID").val();
+
+            for(var i=0;i<counselors.length;i++){
+                var counselor = $(counselors[i]);
+                var counselorId = counselor.attr("employeeId");
+                if(employeeId.indexOf(counselorId) < 0){
+                    var ico = $("#COUNSELOR_"+counselorId+"_ico");
+                    if(ico != null){
+                        ico.remove();
+                    }
+                    counselor.attr("selected", "false");
+                }
+            }
+            showPopup('UI-popup','UI-popup-query');
+        },
+
+        checkHouseNum : function(){
+            var obj = $("#HOUSE_NUM");
+            if($.validate.verifyField(obj)){
+                var counselorNum = Math.ceil(obj.val()/500);
+                $("#PLAN_COUNSELOR_NUM").val(counselorNum);
+            }
+            this.confirmCounselor(true);
         },
 
         submit : function(){
