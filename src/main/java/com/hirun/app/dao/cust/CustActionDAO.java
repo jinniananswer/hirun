@@ -6,8 +6,10 @@ import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +72,24 @@ public class CustActionDAO extends StrongObjectDAO {
         return num;
     }
 
+    public int queryFinishActionCountByEndTime(String executorId, String actionCode, String endTime) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EXECUTOR_ID", executorId);
+        parameter.put("ACTION_CODE", actionCode);
+        parameter.put("END_TIME", endTime);
+
+        StringBuilder sql = new StringBuilder(200);
+        sql.append(" SELECT COUNT(*) NUM FROM INS_CUST_ACTION ");
+        sql.append(" WHERE EXECUTOR_ID = :EXECUTOR_ID ");
+        sql.append(" AND ACTION_CODE = :ACTION_CODE ");
+        sql.append(" AND FINISH_TIME >= :START_TIME ");
+        sql.append(" AND FINISH_TIME < :END_TIME ");
+        RecordSet recordSet = this.queryBySql(sql.toString(), parameter);
+        int num = recordSet.getInt(0, "NUM");
+
+        return num;
+    }
+
     public List<CustActionEntity> queryCustActionByEidAndPlanDate(String executorId, String planDate) throws Exception {
         StringBuilder sql = new StringBuilder(200);
         sql.append(" SELECT * FROM INS_CUST_ACTION ");
@@ -93,5 +113,21 @@ public class CustActionDAO extends StrongObjectDAO {
         parameter.put("PLAN_ID", planId);
         List<CustActionEntity> list = this.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
         return list;
+    }
+
+    public List<CustActionEntity> queryCustFinishActionByCustId(String custId) throws Exception {
+        StringBuilder sql = new StringBuilder(200);
+        sql.append(" SELECT * FROM INS_CUST_ACTION ");
+        sql.append(" WHERE CUST_ID = :CUST_ID ");
+        sql.append(" AND FINISH_TIME IS NOT NULL ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CUST_ID", custId);
+        List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, sql.toString(), parameter);
+//        if(ArrayTool.isEmpty(list)) {
+//            return new ArrayList<CustActionEntity>();
+//        } else {
+        return list;
+//        }
     }
 }

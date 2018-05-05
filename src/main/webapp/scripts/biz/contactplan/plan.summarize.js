@@ -50,6 +50,11 @@ var planSummarize = {
 
                 if(data.CUST_LIST && data.CUST_LIST.length > 0) {
                     //计划中有新客户
+                    $.each(data.CUST_LIST, function(idx, cust) {
+                        if(cust.WX_NICK) {
+                            cust.IS_MUST = "true";
+                        }
+                    });
                     $('#edit_cust_list').html(template('edit_cust_list_template', data));
                     $('#submitButton').hide();
 
@@ -76,7 +81,7 @@ var planSummarize = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
-                top.$.index.closePage("今日计划总结");
+                top.$.index.closePage("今日总结");
             },
         });
 
@@ -190,6 +195,28 @@ var planSummarize = {
         $('#FINISH_INFO_' + actionCode + ' span[tag=finishCustNum]').html(factCustNum);
     },
     showFinishInfo : function() {
+        //先判断是否都补录完了
+        var mustButUnEditCustList = [];
+        $('#edit_cust_list li[tag=li_cust_content]').each(function(idx, item) {
+            var $item = $(item);
+            if($item.attr('IS_MUST') == 'true') {
+                if($item.attr('oper_code') != '2') {
+                    //表示没改
+                    var mustButUnEditCust = {};
+                    mustButUnEditCust.CUST_NAME = $item.attr('cust_name');
+                    mustButUnEditCustList.push(mustButUnEditCust);
+                }
+            }
+        });
+        if(mustButUnEditCustList.length > 0) {
+            var errorInfo = '以下客户必须补录完资料\n';
+            $.each(mustButUnEditCustList, function(idx, mustButUnEditCust) {
+                errorInfo += mustButUnEditCust.CUST_NAME + '\n';
+            })
+            alert(errorInfo);
+            return;
+        }
+
         $.ajaxReq({
             url : 'plan/getPlanFinishedInfo',
             data : {
@@ -288,6 +315,7 @@ var planSummarize = {
             //修改已有客户
             $obj.find('div[tag=cust_name]').html(data.CUST_NAME);
             $obj.find('span[tag=wx_nick]').html(data.WX_NICK);
+            $obj.attr('oper_code', '2');
         } else {
             //新增客户
             var custList = [];
@@ -400,10 +428,9 @@ var selectCust = {
                     $.each(ds, function(idx, item) {
                         var custId = item.CUST_ID;
                         selectCust.currentCustMap[custId] = item;
-
-                        var template = $('#CUST_TEMPLATE').html();
-                        var tpl=$.Template(template);
-                        tpl.append('#CUST_LIST',item,true);
+                        // var template = $('#CUST_TEMPLATE').html();
+                        // var tpl=$.Template(template);
+                        $('#CUST_LIST').append(template('CUST_TEMPLATE', item));
                     });
                 }
 
@@ -505,6 +532,7 @@ var custEditPopup = {
                 url = 'cust/editCust';
             } else {
                 url = 'cust/addCust';
+                param.FIRST_PLAN_DATE = planSummarize.planDate;
             }
             $.ajaxReq({
                 url: url,

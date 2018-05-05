@@ -14,6 +14,20 @@
     <script src="scripts/biz/contactplan/plan.entry.js"></script>
 </head>
 <body>
+<!--
+<div id="HOUSE_ID_float" class="c_float">
+	<div class="bg"></div>
+	<div class="content">
+		<div class="c_scrollContent">
+			<div class="c_list c_list-pc-s c_list-phone-line ">
+				<ul>
+
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+-->
 <div class="l_edit">
     <div class="c_header e_show-phone">
         <div class="back" ontap="closeNav();">今日计划录入</div>
@@ -32,7 +46,7 @@
 						<input type="hidden" name="planStatus" id="workMode" nullable="no" desc="级别" />
 					</span>
 				</li>
-				<li class="link" id="PLAN_TARGET_SET_PART" ontap="planEntry.setPlanTarget()">
+				<li class="link" id="PLAN_TARGET_SET_PART">
 					<div class="main">
 						<div class="title">今日目标设置</div>
 						<div id="planTarget">
@@ -291,6 +305,12 @@
 										</span>
 									</div>
 								</li>
+								<li>
+									<div class="label">客户基本情况</div>
+									<div class="value">
+										<textarea name="CUST_DETAIL" class="e_textarea-row-3" ></textarea>
+									</div>
+								</li>
 							</ul>
 						</div>
 						<!-- 客户列表 结束 -->
@@ -305,6 +325,16 @@
 	</div>
 </div>
 <!-- 弹出层 结束 -->
+<!--
+<script type="text/template" id="SELECTED_CUST">
+<li>
+	<div class="main">
+		<div class="title">{actionName}：{num}</div>
+		<div class="content">{custName}</div>
+	</div>
+</li>
+</script>
+-->
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
 		<label class="group link ">
@@ -313,7 +343,7 @@
 					<div class="title" tag="CUST_NAME">{CUST_NAME}</div>
 					<div class="content">
 						<ul>
-							<li>微信昵称：{MOBILE_NO}</li>
+							<li>微信昵称：{WX_NICK}</li>
 						</ul>
 					</div>
 				</div>

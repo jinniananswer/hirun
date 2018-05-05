@@ -51,7 +51,7 @@ public class StrongObjectDAO extends GenericDAO {
 
     private <K extends GenericEntity> List<K> trans(Class<K> classes, RecordSet recordSet){
         if(recordSet == null || recordSet.size() <= 0){
-            return null;
+            return new ArrayList<K>();
         }
         int size = recordSet.size();
         List<K> objects = new ArrayList<K>();
