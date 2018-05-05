@@ -107,6 +107,14 @@ public class CustomerEntity extends GenericEntity{
         this.set("HOUSE_AREA", houseArea);
     }
 
+    public String getCustDetail(){
+        return this.get("CUST_DETAIL");
+    }
+
+    public void setCustDetail(String custDetail){
+        this.set("CUST_DETAIL", custDetail);
+    }
+
     public String getLastAction(){
         return this.get("LAST_ACTION");
     }

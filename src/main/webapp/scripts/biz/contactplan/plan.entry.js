@@ -122,6 +122,10 @@ var planEntry = {
             ]
         );
         //客户资料编辑初始化 结束
+
+        $('#PLAN_TARGET_SET_PART').unbind('tap').bind('tap', function() {
+            planEntry.setPlanTarget();
+        });
     },
 	afterSelectedCust : function(obj) {
 		if(!planEntry.checkSelectedCust()) {
@@ -134,6 +138,7 @@ var planEntry = {
 			var param = {
                 NEW_CUSTNUM : newCustNum,
                 CUST_NAME_PREFIX : planEntry.planDate,
+                FIRST_PLAN_DATE : planEntry.planDate,
             }
             $.ajaxReq({
                 url : 'cust/addCustByNum',
@@ -216,6 +221,7 @@ var planEntry = {
 		$('#ACTION_PART').show();
 
         $('#ACTION_LIST').html(template('action_list_template', {ACTION_LIST : actionList}));
+        $('#PLAN_TARGET_SET_PART').unbind('tap');
 		
 		planEntry.setCurrentActionOn();
 	},
@@ -240,10 +246,10 @@ var planEntry = {
                 type:'GET',
                 dataType:'json',
                 async:false,
-                success:function(data) {
+                successFunc:function(data) {
                     checkFlag = true;
                 },
-                error:function(resultCode, resultInfo) {
+                errorFunc:function(resultCode, resultInfo) {
                     alert(resultInfo);
                     checkFlag = false;
                 },
@@ -276,6 +282,8 @@ var planEntry = {
 		showPopup('myPopup','planTargetSetPopup');
 	},
     submitPlan : function() {
+        var workMode = $("#workMode").val();
+
 	    var planList = [];
         $.each(planEntry.planActionMap, function(key, item){
             var actionPlan = {};
@@ -325,7 +333,7 @@ var planEntry = {
                 successFunc:function(data) {
                     checkFlag = true;
                 },
-                errorFunc:function(status, errorMessage) {
+                errorFunc:function(resultCode, resultInfo) {
                     alert(resultInfo);
                     checkFlag = false;
                 },
@@ -374,6 +382,7 @@ var selectCust = {
                 url = 'cust/editCust';
             } else {
                 url = 'cust/addCust';
+                param.FIRST_PLAN_DATE = planEntry.planDate;
             }
             $.ajaxReq({
                 url : url,
@@ -530,7 +539,7 @@ var selectCust = {
         } else if(actionCode == 'JW') {
 
         } else {
-            param['LAST_ACTION'] = planEntry.getBeforeAction();
+            param['UNEXECUTED_ACTION'] = actionCode;
         }
     }
 };

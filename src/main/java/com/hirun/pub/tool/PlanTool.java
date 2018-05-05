@@ -10,7 +10,7 @@ import java.time.temporal.ChronoUnit;
 public class PlanTool {
 
     public static String getPlanDate() {
-        String planDate;
+        String planDate = null;
         String now = TimeTool.now();
         int hour = Integer.parseInt(TimeTool.now("HH"));
         if(hour < 12) {
@@ -25,7 +25,7 @@ public class PlanTool {
     }
 
     public static String getPlanDate4Summarize() {
-        String planDate;
+        String planDate = null;
         String now = TimeTool.now();
         int hour = Integer.parseInt(TimeTool.now("HH"));
         if(hour < 10) {

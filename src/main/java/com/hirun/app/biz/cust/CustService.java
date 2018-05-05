@@ -37,6 +37,7 @@ public class CustService extends GenericService{
 
         CustDAO dao = new CustDAO("ins");
         Map<String, String> cust = ConvertTool.toMap(custInfo);
+        cust.put("CUST_STATUS", "1");
         cust.put("CREATE_USER_ID", userId);
         cust.put("CREATE_DATE", now);
         cust.put("UPDATE_USER_ID", userId);
@@ -59,6 +60,7 @@ public class CustService extends GenericService{
         Map<String, String> parameter = ConvertTool.toMap(custInfo);
         parameter.put("UPDATE_USER_ID",userId);
         parameter.put("UPDATE_TIME",sysdate);
+        parameter.put("CUST_STATUS", "1");
         int i = dao.save("INS_CUSTOMER", new String[] {"CUST_ID"}, parameter);
 
         return response;
@@ -84,16 +86,21 @@ public class CustService extends GenericService{
 
         int newCustNew = requestData.getInteger("NEW_CUSTNUM");
         String houseCounselorId = requestData.getString("HOUSE_COUNSELOR_ID");
+        String firstPlanDate = requestData.getString("FIRST_PLAN_DATE");
 
         //从SESSION里取userId
         SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
         String userId = sessionEntity.getUserId();
 
-        //获取系统时间
-        String now = TimeTool.now();
+        String now = TimeTool.now();//获取系统时间
+        CustDAO dao = new CustDAO("ins");
+
+        //删除今天添加的新客户
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("FIRST_PLAN_DATE", firstPlanDate);
+        dao.deleteByWxNickisNullAndFirstPlanDate(houseCounselorId, firstPlanDate);
 
         List<Map<String, String>> listCust = new ArrayList<Map<String, String>>();
-        CustDAO dao = new CustDAO("ins");
         for(int i = 0; i < newCustNew; i++) {
             Map<String, String> cust = new HashMap<String, String>();
             cust.put("HOUSE_COUNSELOR_ID", houseCounselorId);
@@ -103,6 +110,7 @@ public class CustService extends GenericService{
             cust.put("CREATE_DATE", now);
             cust.put("UPDATE_USER_ID", userId);
             cust.put("UPDATE_TIME", now);
+            cust.put("FIRST_PLAN_DATE", firstPlanDate);
             long custId = dao.insertAutoIncrement("INS_CUSTOMER", cust);
             cust.put("CUST_ID", String.valueOf(custId));
             listCust.add(cust);

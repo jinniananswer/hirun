@@ -14,18 +14,6 @@
 	<script src="scripts/biz/contactplan/plan.summarize.js"></script>
 </head>
 <body>
-<%--<div id="HOUSE_ID_float" class="c_float">--%>
-	<%--<div class="bg"></div>--%>
-	<%--<div class="content">--%>
-		<%--<div class="c_scrollContent">--%>
-			<%--<div class="c_list c_list-pc-s c_list-phone-line ">--%>
-				<%--<ul id="edit_cust_list">--%>
-<%----%>
-				<%--</ul>--%>
-			<%--</div>--%>
-		<%--</div>--%>
-	<%--</div>--%>
-<%--</div>--%>
 <div class="c_header">
 	<div class="back" ontap="back();"><span id="planName"></span></div>
 </div>
@@ -215,6 +203,12 @@
 										</span>
 									</div>
 								</li>
+								<li>
+									<div class="label">客户基本情况</div>
+									<div class="value">
+										<textarea name="CUST_DETAIL" class="e_textarea-row-3" ></textarea>
+									</div>
+								</li>
 							</ul>
 						</div>
 						<!-- 客户列表 结束 -->
@@ -303,19 +297,19 @@
 	</div>
 </div>
 <!-- 弹出层结束 -->
-<script type="text/template" id="CUST_TEMPLATE">
+<script type="text/html" id="CUST_TEMPLATE">
 	<li>
 		<label class="group link ">
 			<div class="content">
 				<div class="main">
-					<div class="title" tag="CUST_NAME">{CUST_NAME}</div>
+					<div class="title" tag="CUST_NAME">{{CUST_NAME}}</div>
 					<div class="content">
 						<ul>
-							<li>微信昵称：{MOBILE_NO}</li>
+							<li>微信昵称：{{WX_NICK}}</li>
 						</ul>
 					</div>
 				</div>
-				<div class="fn"><input name="selectCustBox" value={CUST_ID} {CHECKED}
+				<div class="fn"><input name="selectCustBox" value={{CUST_ID}} {CHECKED}
 									   type="checkbox" onchange="selectCust.selectCustBoxClick(this)"/></div>
 			</div>
 		</label>
@@ -451,7 +445,9 @@
 </script>
 <script id="edit_cust_list_template" rel_id="edit_cust_list" type="text/html">
 	{{each CUST_LIST cust idx}}
-	<li class="link" ontap="planSummarize.showCustEditPopup(this)" cust_id = {{cust.CUST_ID}}>
+	<li class="link" ontap="planSummarize.showCustEditPopup(this)" cust_id = {{cust.CUST_ID}}
+		tag="li_cust_content" oper_code="0" is_must="{{cust.IS_MUST}}" cust_name="{{cust.CUST_NAME}}"
+	>
 		<div class="main">
 			<div class="title" tag="cust_name">{{cust.CUST_NAME}}</div>
 			<div class="content content-auto">

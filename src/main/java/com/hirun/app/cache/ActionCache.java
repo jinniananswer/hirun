@@ -57,7 +57,7 @@ public class ActionCache extends AbstractReadOnlyCache{
         while(iter.hasNext()) {
             String key = (String)iter.next();
             ActionEntity entity = (ActionEntity) cache.get(key);
-            if("actionType".equals(entity.getActionType())) {
+            if(actionType.equals(entity.getActionType())) {
                 list.add(entity);
             }
         }
