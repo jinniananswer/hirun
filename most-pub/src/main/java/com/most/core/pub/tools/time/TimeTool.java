@@ -231,9 +231,9 @@ public class TimeTool {
      * @param after
      * @return
      */
-    public static int getAbsDateDiffDay(LocalDate before, LocalDate after) {
+    public static long getAbsDateDiffDay(LocalDate before, LocalDate after) {
 
-        return Math.abs(Period.between(before, after).getDays());
+        return Math.abs(ChronoUnit.DAYS.between(before, after));
     }
 
     /**
