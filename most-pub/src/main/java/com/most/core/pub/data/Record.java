@@ -74,6 +74,6 @@ public class Record implements Serializable{
     }
 
     public String toString(){
-        return super.toString();
+        return data.toString();
     }
 }
