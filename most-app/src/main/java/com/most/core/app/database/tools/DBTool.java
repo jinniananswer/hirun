@@ -19,7 +19,7 @@ public class DBTool {
         while (resultSet.next()){
             Record record = new Record();
             for(int i=1;i<=colNum;i++){
-                String columnLabel = resultSet.getColumnLabel(i);
+                String columnLabel = resultSet.getColumnLabel(i).toUpperCase();
                 String value = resultSet.getString(columnLabel);
                 record.put(columnLabel, value);
             }
