@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
-import com.hirun.pub.domain.entity.session.BizSessionEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
@@ -41,19 +41,23 @@ public class LoginController extends RootController {
 
             UserEntity user = new UserEntity(JSON.parseObject(userInfo.toJSONString(), Map.class));
             EmployeeEntity employee = new EmployeeEntity(JSON.parseObject(employeeInfo.toJSONString(), Map.class));
-            BizSessionEntity sessionEntity = new BizSessionEntity();
+            SessionEntity sessionEntity = new SessionEntity();
 
             session.setAttribute("USER", user);
             session.setAttribute("EMPLOYEE", employee);
             session.setAttribute("JOB_ROLE", jobRoles);
-            if(user != null)
+            if(user != null) {
                 sessionEntity.setUserId(user.getUserId());
+                sessionEntity.setUsername(user.getUserName());
+            }
 
-            if(employee != null)
-                sessionEntity.setEmployeeId(employee.getEmployeeId());
+            if(employee != null) {
+                sessionEntity.put("EMPLOYEE_ID", employee.getEmployeeId());
+                sessionEntity.put("EMPLOYEE_NAME", employee.getName());
+            }
 
             if(ArrayTool.isNotEmpty(jobRoles))
-                sessionEntity.setJobRoles(jobRoles);
+                sessionEntity.put("JOB_ROLES", jobRoles);
 
             HttpSessionManager.putSessionEntity(session.getId(), sessionEntity);
 
