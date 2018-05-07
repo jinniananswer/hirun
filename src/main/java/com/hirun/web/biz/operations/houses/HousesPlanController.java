@@ -66,4 +66,14 @@ public class HousesPlanController extends RootController{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.createHousesPlan", submitData);
         return null;
     }
+
+    @RequestMapping("/queryHousesPlan")
+    public @ResponseBody String queryHousesPlan(@RequestParam Map condition) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHousesPlan", condition);
+        JSONArray data = response.getJSONArray("DATA");
+        if(data == null){
+            return "";
+        }
+        return data.toJSONString();
+    }
 }

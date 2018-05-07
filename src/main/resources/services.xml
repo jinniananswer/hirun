@@ -8,6 +8,7 @@
     <entity name="OperationCenter.house.HousesService.initArea"  class="com.hirun.app.biz.houses.HousesService" method="initArea"/>
     <entity name="OperationCenter.house.HousesService.initCounselors"  class="com.hirun.app.biz.houses.HousesService" method="initCounselors"/>
     <entity name="OperationCenter.house.HousesService.createHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="createHousesPlan"/>
+    <entity name="OperationCenter.house.HousesService.queryHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesPlan"/>
     <entity name="OperationCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanAction"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanAction"/>

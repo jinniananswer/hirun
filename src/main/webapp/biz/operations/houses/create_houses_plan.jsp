@@ -67,10 +67,6 @@
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
-                    <li>
-                        <div class="label">楼栋</div>
-                        <div class="value"><input id="BUILD_NUM" name="BUILD_NUM" datatype="text" type="text" nullable="yes" desc="楼栋"/></div>
-                    </li>
                     <li class="link required">
                         <div class="label">总户数</div>
                         <div class="value"><input id="HOUSE_NUM" name="HOUSE_NUM" datatype="numeric" type="text" nullable="no" desc="总户数" onblur="$.housesPlan.checkHouseNum()"/></div>
