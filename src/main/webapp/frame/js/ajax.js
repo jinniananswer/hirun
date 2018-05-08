@@ -6,7 +6,9 @@
 			}
 			
 			if(errFunc == null || typeof(errFunc) == "undefined" || typeof(errFunc) != "function"){
-				errFunc = function(){};
+                errFunc = function(data){
+                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "亲，赶紧联系管理员报告功能问题吧");
+                };
 			}
 			$.ajaxRequest(
 				{
@@ -28,7 +30,9 @@
 			}
 			
 			if(errFunc == null || typeof(errFunc) == "undefined" || typeof(errFunc) != "function"){
-				errFunc = function(){};
+				errFunc = function(data){
+                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "亲，赶紧联系管理员报告功能问题吧");
+				};
 			}
 			$.ajaxRequest(
 				{
@@ -53,9 +57,9 @@
 				}
 			}
 
-			var errFunc = function(){
-				alert('系统错误');
-			};
+            var errFunc = function(data){
+                MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "亲，赶紧联系管理员报告功能问题吧");
+            };
 
             $.ajaxRequest(
                 {
