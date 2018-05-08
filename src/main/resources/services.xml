@@ -19,6 +19,7 @@
     <entity name="OperationCenter.plan.PlanService.summarizePlan"  class="com.hirun.app.biz.plan.PlanService" method="summarizePlan"/>
     <entity name="OperationCenter.plan.PlanService.queryNewCustList4Summary"  class="com.hirun.app.biz.plan.PlanService" method="queryNewCustList4Summary"/>
     <entity name="OperationCenter.plan.PlanService.getCustFinishActionList"  class="com.hirun.app.biz.plan.PlanService" method="getCustFinishActionList"/>
+    <entity name="OperationCenter.plan.PlanService.queryEmployeeDailySheet"  class="com.hirun.app.biz.plan.PlanService" method="queryEmployeeDailySheet"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
