@@ -3,6 +3,7 @@ package com.hirun.app.biz.houses;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.housesplan.HousesPlanBean;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.houses.HouseDAO;
 import com.hirun.app.dao.houses.HousesPlanDAO;
@@ -196,6 +197,16 @@ public class HousesService extends GenericService {
         }
         ServiceResponse response = new ServiceResponse();
         response.set("DATA", housesPlans);
+        return response;
+    }
+
+    public ServiceResponse queryHousesByEmployeeId(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String employeeId = requestData.getString("EMPLOYEE_ID");
+
+        response.set("HOUSES_LIST", HousesPlanBean.queryHousesByEmployeeId(employeeId));
+
         return response;
     }
 }

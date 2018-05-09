@@ -10,6 +10,7 @@
     <entity name="OperationCenter.house.HousesService.createHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="createHousesPlan"/>
     <entity name="OperationCenter.house.HousesService.queryHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesPlan"/>
     <entity name="OperationCenter.house.HousesService.submitAudit"  class="com.hirun.app.biz.houses.HousesService" method="submitAudit"/>
+    <entity name="OperationCenter.house.HousesService.queryHousesByEmployeeId"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesByEmployeeId"/>
     <entity name="OperationCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanAction"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanAction"/>

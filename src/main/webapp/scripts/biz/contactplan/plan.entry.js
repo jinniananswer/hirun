@@ -82,19 +82,30 @@ var planEntry = {
         $('#planName').html(planEntry.planDate + '计划');
 
         //客户查询条件初始化 开始
-        $.Select.append(
-            "queryCustParamForm_house_container",
-            // 参数设置
-            {
-                id:"queryCustParamForm_house",
-                name:"HOUSE_ID",
+        $.ajaxReq({
+            url : 'queryHousesByEmployeeId',
+            data : {
+
             },
-            [
-                {TEXT:"Tony Stark", VALUE:"0"},
-                {TEXT:"Steve Rogers", VALUE:"1"},
-                {TEXT:"Thor", VALUE:"2"}
-            ]
-        );
+            successFunc : function(data) {
+                var options = [];
+                $.each(data.HOUSES_LIST, function(idx, house) {
+                    options.push({TEXT : house.NAME, VALUE : house.HOUSES_ID})
+                })
+                $.Select.append(
+                    "queryCustParamForm_house_container",
+                    // 参数设置
+                    {
+                        id:"queryCustParamForm_house",
+                        name:"HOUSE_ID",
+                    },
+                    options
+                );
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        })
         ////客户查询条件初始化 结束
 
         //客户资料编辑初始化 开始
@@ -106,21 +117,32 @@ var planEntry = {
             offColor:"red"
         });
 
-        $.Select.append(
-            "custEditForm_house_container",
-            // 参数设置
-            {
-                id:"custEditForm_house",
-                name:"HOUSE_ID",
-                nullable : "no",
-                desc : "楼盘",
+        $.ajaxReq({
+            url : 'queryHousesByEmployeeId',
+            data : {
+
             },
-            [
-                {TEXT:"Tony Stark", VALUE:"0"},
-                {TEXT:"Steve Rogers", VALUE:"1"},
-                {TEXT:"Thor", VALUE:"2"}
-            ]
-        );
+            successFunc : function(data) {
+                var options = [];
+                $.each(data.HOUSES_LIST, function(idx, house) {
+                    options.push({TEXT : house.NAME, VALUE : house.HOUSES_ID})
+                })
+                $.Select.append(
+                    "custEditForm_house_container",
+                    // 参数设置
+                    {
+                        id:"custEditForm_house",
+                        name:"HOUSE_ID",
+                        nullable : "no",
+                        desc : "楼盘",
+                    },
+                    options
+                );
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        })
         //客户资料编辑初始化 结束
 
         $('#PLAN_TARGET_SET_PART').unbind('tap').bind('tap', function() {

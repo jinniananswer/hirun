@@ -54,10 +54,10 @@ public class HousesPlanDAO extends StrongObjectDAO {
 
     public RecordSet queryHousesByEmployeeId(String employeeId) throws SQLException{
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status");
-        sb.append("FROM ins_houses a, ins_houses_plan b ");
-        sb.append("WHERE b.houses_id = a.houses_id ");
-        sb.append("AND b.employee_id = :EMPLOYEE_ID ");
+        sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status ");
+        sb.append(" FROM INS_HOUSES a, INS_HOUSES_PLAN b ");
+        sb.append(" WHERE b.houses_id = a.houses_id ");
+        sb.append(" AND b.employee_id = :EMPLOYEE_ID ");
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("EMPLOYEE_ID", employeeId);
         return this.queryBySql(sb.toString(), parameter);
