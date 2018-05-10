@@ -2,16 +2,22 @@ package com.hirun.web.biz.operations.houses;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.pub.domain.entity.session.BizSessionEntity;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
+import com.most.core.web.session.HttpSessionManager;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +37,11 @@ public class HousesPlanController extends RootController{
         JSONObject rst = new JSONObject();
         rst.put("CITYS", response.getJSONArray("CITYS"));
         rst.put("TODAY", response.getString("TODAY"));
+        String defaultCityId = response.getString("DEFAULT_CITY_ID");
+        if(StringUtils.isNotBlank(defaultCityId)){
+            rst.put("DEFAULT_CITY_ID", defaultCityId);
+            rst.put("DEFAULT_CITY_NAME", response.getString("DEFAULT_CITY_NAME"));
+        }
         return rst.toJSONString();
     }
 
@@ -46,6 +57,11 @@ public class HousesPlanController extends RootController{
         JSONObject obj = new JSONObject();
         obj.put("AREAS", areas);
         obj.put("SHOPS", shops);
+        String defaultShopId = response.getString("DEFAULT_SHOP_ID");
+        if(StringUtils.isNotBlank(defaultShopId)){
+            obj.put("DEFAULT_SHOP_ID", defaultShopId);
+            obj.put("DEFAULT_SHOP_NAME", response.getString("DEFAULT_SHOP_NAME"));
+        }
         return obj.toJSONString();
     }
 
@@ -75,5 +91,43 @@ public class HousesPlanController extends RootController{
             return "";
         }
         return data.toJSONString();
+    }
+
+    @RequestMapping("/submitAudit")
+    public @ResponseBody String submitAudit(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.submitAudit", parameter);
+        return "";
+    }
+
+    @RequestMapping("/redirectToChangeHousesPlan")
+    public String redirectChangeHousesPlan() throws Exception{
+        return "/biz/operations/houses/change_houses_plan";
+    }
+
+    @RequestMapping("/initChangeHousesPlan")
+    public @ResponseBody String initChangeHousesPlan(HttpServletRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("HOUSES_ID", request.getParameter("HOUSES_ID"));
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.initChangeHousesPlan", parameter);
+        JSONObject rst = new JSONObject();
+        rst.put("HOUSES_PLAN", response.getJSONObject("HOUSES_PLAN"));
+        rst.put("CITYS", response.getJSONArray("CITYS"));
+
+        return rst.toJSONString();
+    }
+
+    @RequestMapping("/queryHousesByEmployeeId")
+    public @ResponseBody String queryHousesByEmployeeId(@RequestParam Map condition) throws Exception{
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        condition.put("EMPLOYEE_ID", sessionEntity.getEmployeeId());
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHousesByEmployeeId", condition);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/changeHousesPlan")
+    public @ResponseBody String changeHousesPlan(@RequestParam Map submitData) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.changeHousesPlan", submitData);
+        return null;
     }
 }

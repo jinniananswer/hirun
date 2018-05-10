@@ -86,6 +86,10 @@ public class ServiceMessage {
         return map;
     }
 
+    public void remove(String key){
+        body.remove(key);
+    }
+
     public String toJsonString(){
         return JSONObject.toJSONString( this.toJSONObject(), SerializerFeature.DisableCircularReferenceDetect);
     }

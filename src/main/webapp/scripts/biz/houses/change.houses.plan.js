@@ -32,9 +32,7 @@
             $.ajaxPost('initChangeHousesPlan','&HOUSES_ID='+$("#HOUSES_ID").val(),function(data){
                 var rst = new Wade.DataMap(data);
                 var citys = rst.get("CITYS");
-                var today = rst.get("TODAY");
-                var defaultCityId = rst.get("DEFAULT_CITY_ID");
-                var defaultCityName = rst.get("DEFAULT_CITY_NAME");
+                var housePlan = rst.get("HOUSES_PLAN");
 
                 if(citys != null){
                     var length = citys.length;
@@ -44,15 +42,48 @@
                         html.push("<li class=\"link e_center\" ontap=\"$.housesPlan.afterSelectCity(\'"+city.get("CODE_VALUE")+"\',\'"+city.get("CODE_NAME")+"\')\"><div class=\"main\">"+city.get("CODE_NAME")+"</div></li>");
                     }
                     $.insertHtml('beforeend', $("#BIZ_CITY"), html.join(""));
-
-                    if(defaultCityId != null && defaultCityId != "undefined"){
-                        $.housesPlan.afterSelectCity(defaultCityId,defaultCityName);
-                    }
                 }
-                $("#CHECK_DATE").val(today);
-                $("#PLAN_IN_DATE").val(today);
-            },function(){
-                alert('error');
+
+                if(housePlan != null){
+                    $("#NAME").val(housePlan.get("NAME"));
+                    $("#NATURE").val(housePlan.get("NATURE"));
+                    $("#AREA").val(housePlan.get("AREA"));
+                    $("#AREA_TEXT").val(housePlan.get("AREA_NAME"));
+                    $("#CHECK_DATE").val(housePlan.get("CHECK_DATE"));
+                    $("#HOUSE_NUM").val(housePlan.get("HOUSE_NUM"));
+                    $("#PLAN_COUNSELOR_NUM").val(housePlan.get("PLAN_COUNSELOR_NUM"));
+                    $("#PLAN_IN_DATE").val(housePlan.get("PLAN_IN_DATE"));
+                    $("#CITY_TEXT").val(housePlan.get("CITY_NAME"));
+                    $("#CITY").val(housePlan.get("CITY"));
+                    $("#SHOP").val(housePlan.get("ORG_ID"));
+                    $("#SHOP_TEXT").val(housePlan.get("ORG_NAME"));
+
+                    var counselors = housePlan.get("COUNSELORS");
+                    var counselorNames = "";
+                    var counselorIds = "";
+                    if(counselors != null && counselors.length > 0){
+                        var length = counselors.length;
+                        var html=[];
+                        for(var i=0;i<length;i++){
+                            var counselor = counselors.get(i);
+                            html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+counselor.get("EMPLOYEE_NAME") +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+counselor.get("EMPLOYEE_NAME")+"分配楼栋\" id=\""+counselor.get("EMPLOYEE_ID")+"_TOWERNUM\" name=\""+counselor.get("EMPLOYEE_ID")+"_TOWERNUM\" value=\""+counselor.get("TOWER_NO")+"\"/></div></li>");
+                            html.push("<li tag=\"HOUSENUM\"><div class=\"label\">"+counselor.get("EMPLOYEE_NAME") +"负责的户数</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+counselor.get("EMPLOYEE_NAME")+"负责户数\" id=\""+counselor.get("EMPLOYEE_ID")+"_HOUSENUM\" name=\""+counselor.get("EMPLOYEE_ID")+"_HOUSENUM\" value=\""+counselor.get("EMPLOYEE_HOUSE_NUM")+"\"/></div></li>");
+                            if(i != length -1){
+                                counselorIds += counselor.get("EMPLOYEE_ID") + ",";
+                                counselorNames += counselor.get("EMPLOYEE_NAME") + ",";
+                            }
+                            else{
+                                counselorIds += counselor.get("EMPLOYEE_ID") + ",";
+                                counselorNames += counselor.get("EMPLOYEE_NAME");
+                            }
+                        }
+                        $.insertHtml('beforeend', $("#submitArea"), html.join(""));
+                    }
+                    $("#EMPLOYEE_NAME").val(counselorNames);
+                     $("#EMPLOYEE_ID").val(counselorIds);
+                    $("#OLD_EMPLOYEE_ID").val(counselorIds);
+                }
+                $.housesPlan.afterSelectCity($("#CITY").val(),$("#CITY_TEXT").val());
             });
         },
 
@@ -74,8 +105,6 @@
                 }
 
                 var shops = obj.get("SHOPS");
-                var defaultShopId = obj.get("DEFAULT_SHOP_ID");
-                var defaultShopName = obj.get("DEFAULT_SHOP_NAME");
                 if(shops != null){
                     var length = shops.length;
                     var html = [];
@@ -84,12 +113,8 @@
                         html.push("<li class=\"link e_center\" ontap=\"$.housesPlan.afterSelectShop(\'"+shop.get("ORG_ID")+"\',\'"+shop.get("NAME")+"\')\"><div class=\"main\">"+shop.get("NAME")+"</div></li>");
                     }
                     $.insertHtml('beforeend', $("#BIZ_SHOP"), html.join(""));
-                    if(defaultShopId != "" && defaultShopId != "undefined"){
-                        $.housesPlan.afterSelectShop(defaultShopId, defaultShopName);
-                    }
+                    $.housesPlan.afterSelectShop($("#SHOP").val(), $("#SHOP_TEXT").val());
                 }
-            },function(){
-                alert('error');
             });
         },
 
@@ -117,8 +142,6 @@
                     }
                     $.insertHtml('beforeend', $("#BIZ_COUNSELORS"), html.join(""));
                 }
-            },function(){
-                alert('error');
             });
         },
 
@@ -224,8 +247,8 @@
             var size = employeeIdArray.length;
 
             for(var i=0;i<size;i++){
-                html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+employeeNameArray[i] +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"text\" desc=\""+employeeNameArray[i]+"分配楼栋\" id=\""+employeeIdArray[i]+"_TOWERNUM\" name=\""+employeeIdArray[i]+"_TOWERNUM\" /></div></li>");
-                html.push("<li tag=\"HOUSENUM\"><div class=\"label\">"+employeeNameArray[i] +"负责的户数</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"text\" desc=\""+employeeNameArray[i]+"负责户数\" id=\""+employeeIdArray[i]+"_HOUSENUM\" name=\""+employeeIdArray[i]+"_HOUSENUM\" /></div></li>");
+                html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+employeeNameArray[i] +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+employeeNameArray[i]+"分配楼栋\" id=\""+employeeIdArray[i]+"_TOWERNUM\" name=\""+employeeIdArray[i]+"_TOWERNUM\" /></div></li>");
+                html.push("<li tag=\"HOUSENUM\"><div class=\"label\">"+employeeNameArray[i] +"负责的户数</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+employeeNameArray[i]+"负责户数\" id=\""+employeeIdArray[i]+"_HOUSENUM\" name=\""+employeeIdArray[i]+"_HOUSENUM\" /></div></li>");
             }
             $.insertHtml('beforeend', $("#submitArea"), html.join(""));
         },
@@ -273,17 +296,10 @@
         submit : function(){
             if($.validate.verifyAll("submitArea")) {
                 var parameter = $.buildJsonData("submitArea");
-                $.ajaxPost('submitHousesPlan', parameter, function (data) {
-                    MessageBox.success("新增楼盘规划成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
-                        if("ok" == btn) {
-                            document.location.reload();
-                        }
-                        else {
-                            parent.$.index.closeCurrentPage();
-                        }
+                $.ajaxPost('changeHousesPlan', parameter, function (data) {
+                    MessageBox.success("变更楼盘规划成功","点击确定关闭当前页面", function(btn){
+                        parent.$.index.closeCurrentPage();
                     },{"cancel":"取消"})
-                }, function () {
-                    alert('error');
                 });
             }
         }

@@ -113,7 +113,7 @@
                 html.push("<span style=\"width:"+data.get("CUR_PROGRESS")+"%\" class=\"e_progressProgress\">发展周期"+data.get("ALL_DAYS")+"天×"+data.get("CUR_PROGRESS")+"%</span>");
                 html.push("</span></span>");
                 html.push("</div>");
-                html.push("<div class=\"content\">"+data.get("CITY_NAME")+"/"+data.get("ORG_NAME")+"/交房时间："+data.get("CHECK_DATE")+"</div>");
+                html.push("<div class=\"content\">"+data.get("CITY_NAME")+"/"+data.get("AREA_NAME")+"/"+data.get("ORG_NAME")+"/"+data.get("CHECK_DATE")+"交房</div>");
                 html.push("</div></div></div>");
                 html.push("<div class=\"side\">");
                 if(data.get("NATURE")=="0"){

@@ -55,4 +55,8 @@ public class JSONData {
     public void set(String key, JSONArray jsonArray){
         this.data.put(key, jsonArray);
     }
+
+    public void remove(String key){
+        this.data.remove(key);
+    }
 }
