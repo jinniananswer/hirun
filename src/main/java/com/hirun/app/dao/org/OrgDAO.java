@@ -30,4 +30,11 @@ public class OrgDAO extends StrongObjectDAO {
         parameter.put("CITY", city);
         return this.query(OrgEntity.class, "ins_org", parameter);
     }
+
+    public List<OrgEntity> queryOrgByCityAndType(String city, String type) throws SQLException{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CITY", city);
+        parameter.put("TYPE", type);
+        return this.query(OrgEntity.class, "ins_org", parameter);
+    }
 }

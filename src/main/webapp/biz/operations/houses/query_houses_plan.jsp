@@ -12,7 +12,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>楼盘规划查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/houses/create.houses.plan.js"></script>
     <script src="/scripts/biz/houses/query.houses.plan.js"></script>
 </head>
 <body>
@@ -45,7 +44,7 @@
                     </div>
                     <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                         <!-- 列表 开始 -->
-                        <div class="c_list c_list-col-1 c_list-line c_list-border c_list-fixWrapSpace">
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
                             <ul id="queryArea">
                                 <li class="link">
                                     <div class="label">楼盘名称</div>
@@ -55,6 +54,14 @@
                                     <div class="label">楼盘性质</div>
                                     <div class="value">
                                         <span id="nature_select">
+
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="link">
+                                    <div class="label">审核状态</div>
+                                    <div class="value">
+                                        <span id="audit_select">
 
                                         </span>
                                     </div>
@@ -127,6 +134,43 @@
                     <div class="l_bottom">
                         <div class="c_submit c_submit-full">
                             <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.housesPlan.query();" class="e_button-l e_button-green">确定</button>
+                        </div>
+                    </div>
+                    <!-- 滚动 结束 -->
+                </div>
+                <div class="c_popupItem" id="UI-popup-audit">
+                    <div class="c_header">
+                        <div class="back" ontap="hidePopup(this)">审核楼盘信息</div>
+                    </div>
+                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                        <!-- 列表 开始 -->
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
+                            <ul id="auditArea">
+                                <li class="link">
+                                    <div class="label">审核通过</div>
+                                    <div class="value">
+                                        <div class="e_switch">
+                                            <div class="e_switchOn">是</div>
+                                            <div class="e_switchOff">否</div>
+                                            <input type="hidden" id="AUDIT_OPTION" name="AUDIT_OPTION" datatype="text" nullable="no" desc="审核通过"/>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="link">
+                                    <div class="label">审核意见</div>
+                                    <div class="value">
+                                        <input type="hidden" id="AUDIT_HOUSES_ID" name="AUDIT_HOUSES_ID" datatype="text" nullable="yes" desc="楼盘ID" value="" />
+                                        <textarea id="AUDIT_OPINION" name="AUDIT_OPINION" desc="审核意见" datatype="text" nullable="yes" class="e_textarea-row-2"></textarea>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 列表 结束 -->
+                        <div class="c_line"></div>
+                    </div>
+                    <div class="l_bottom">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" id="SUBMIT_AUDIT" name="SUBMIT_QUERY" ontap="$.housesPlan.submitAudit();" class="e_button-l e_button-green">提交审核</button>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->

@@ -25,6 +25,14 @@ public class OrgEntity extends GenericEntity {
         this.set("NAME", name);
     }
 
+    public String getType(){
+        return this.get("TYPE");
+    }
+
+    public void setType(String type){
+        this.set("TYPE", type);
+    }
+
     public String getContactNo(){
         return this.getContactNo();
     }
@@ -47,6 +55,22 @@ public class OrgEntity extends GenericEntity {
 
     public void setParentOrgId(String parentOrgId){
         this.set("PARENT_ORG_ID", parentOrgId);
+    }
+
+    public String getCity(){
+        return this.get("CITY");
+    }
+
+    public void setCity(String city){
+        this.set("CITY", city);
+    }
+
+    public String getArea(){
+        return this.get("AREA");
+    }
+
+    public void setArea(String area){
+        this.set("AREA", area);
     }
 
     public String getStatus(){

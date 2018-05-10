@@ -14,11 +14,39 @@
                     {TEXT:"责任楼盘", VALUE:"2"}
                 ]
             );
+
+            $.Select.append(
+                "audit_select",
+                {
+                    id:"STATUS",
+                    name:"STATUS"
+                },
+                [
+                    {TEXT:"未审核", VALUE:"0"},
+                    {TEXT:"已审核", VALUE:"1"},
+                    {TEXT:"不批准", VALUE:"2"}
+                ]
+            );
+
+            window["AUDIT_OPTION"] = new Wade.Switch("AUDIT_OPTION",{
+                switchOn:true,
+                onValue:"1",
+                offValue:"2"
+            });
+
+            $("#AUDIT_OPTION").change(function(){
+                if(this.value == "1"){
+                    //审核通过
+                    $("#AUDIT_OPINION").attr("nullable", "yes");
+                }
+                else if(this.value == "2"){
+                    //审核不通过
+                    $("#AUDIT_OPINION").attr("nullable", "no");
+                }
+            });
             $.ajaxPost('queryHousesPlan',null,function(data){
                 var dataset = new Wade.DatasetList(data);
                 $.housesPlan.drawHousesPlan(dataset);
-            },function(){
-                alert('error');
             });
 
             $.ajaxPost('initCreateHousesPlan',null,function(data){
@@ -73,7 +101,13 @@
                 html.push("<div class=\"group link\">");
                 html.push("<div class=\"content\">");
                 html.push("<div class=\"main\">");
-                html.push("<div class=\"title\"><div class=\"left\"><span class=\"e_strong\">"+data.get("NAME")+"</span></div><div class=\"right\"><span class=\"e_ico-select\"></span> 审核</div><div class=\"right\"><span class=\"e_ico-edit\"></span> 编辑</div></div>");
+                html.push("<div class=\"title\"><div class=\"left\"><span class=\"e_strong\">"+data.get("NAME")+"</span></div>");
+                var status = data.get("STATUS");
+                if(status == "0") {
+                    html.push("<div class=\"right\" ontap=\"$.housesPlan.initAudit(" + data.get("HOUSES_ID") + ")\"><span class=\"e_ico-select\"></span> 审核</div>");
+                }
+                html.push("<div class=\"right\" ontap=\"parent.$.index.openNav('redirectToChangeHousesPlan?HOUSES_ID="+data.get("HOUSES_ID")+"','变更楼盘规划');\"><span class=\"e_ico-edit\"></span> 编辑</div>");
+                html.push("</div>");
                 html.push("<div class=\"content\">");
                 html.push("<span class=\"e_progress\"><span class=\"e_progressBar\">");
                 html.push("<span style=\"width:"+data.get("CUR_PROGRESS")+"%\" class=\"e_progressProgress\">发展周期"+data.get("ALL_DAYS")+"天×"+data.get("CUR_PROGRESS")+"%</span>");
@@ -267,6 +301,32 @@
             $.ajaxPost('queryHousesPlan', parameter, function (data) {
                 var dataset = new Wade.DatasetList(data);
                 $.housesPlan.drawHousesPlan(dataset);
+            }, function () {
+                alert('error');
+            });
+        },
+
+        initAudit : function(housesId){
+            $("#AUDIT_HOUSES_ID").val(housesId);
+            $("#AUDIT_OPTION").val("1");
+            showPopup('UI-popup','UI-popup-audit');
+        },
+
+        submitAudit : function(){
+            if(!$.validate.verifyAll("auditArea")){
+                return;
+            }
+
+            var parameter = $.buildJsonData("auditArea");
+            $.ajaxPost('submitAudit', parameter, function (data) {
+                MessageBox.success("审核楼盘规划成功","点击确定返回当前页，点击取消关闭当前页面", function(btn){
+                    if("ok" == btn) {
+                        document.location.reload();
+                    }
+                    else {
+                        parent.$.index.closeCurrentPage();
+                    }
+                },{"cancel":"取消"})
             }, function () {
                 alert('error');
             });

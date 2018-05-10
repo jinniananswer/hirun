@@ -13,10 +13,30 @@
 
             $("#NATURE").val("0");
 
+            window["CHECK_DATE"] = new Wade.DateField(
+                "CHECK_DATE",
+                {
+                    dropDown:true,
+                    format:"yyyy-MM-dd",
+                    useTime:false,
+                }
+            );
+
+            window["PLAN_IN_DATE"] = new Wade.DateField(
+                "PLAN_IN_DATE",
+                {
+                    dropDown:true,
+                    format:"yyyy-MM-dd",
+                    useTime:false,
+                }
+            );
+
             $.ajaxPost('initCreateHousesPlan',null,function(data){
                 var rst = new Wade.DataMap(data);
                 var citys = rst.get("CITYS");
                 var today = rst.get("TODAY");
+                var defaultCityId = rst.get("DEFAULT_CITY_ID");
+                var defaultCityName = rst.get("DEFAULT_CITY_NAME");
 
                 if(citys != null){
                     var length = citys.length;
@@ -26,26 +46,12 @@
                         html.push("<li class=\"link e_center\" ontap=\"$.housesPlan.afterSelectCity(\'"+city.get("CODE_VALUE")+"\',\'"+city.get("CODE_NAME")+"\')\"><div class=\"main\">"+city.get("CODE_NAME")+"</div></li>");
                     }
                     $.insertHtml('beforeend', $("#BIZ_CITY"), html.join(""));
+
+                    if(defaultCityId != null && defaultCityId != "undefined"){
+                        $.housesPlan.afterSelectCity(defaultCityId,defaultCityName);
+                    }
                 }
-
-                window["CHECK_DATE"] = new Wade.DateField(
-                    "CHECK_DATE",
-                    {
-                        dropDown:true,
-                        format:"yyyy-MM-dd",
-                        useTime:false,
-                    }
-                );
                 $("#CHECK_DATE").val(today);
-
-                window["PLAN_IN_DATE"] = new Wade.DateField(
-                    "PLAN_IN_DATE",
-                    {
-                        dropDown:true,
-                        format:"yyyy-MM-dd",
-                        useTime:false,
-                    }
-                );
                 $("#PLAN_IN_DATE").val(today);
             },function(){
                 alert('error');
@@ -70,6 +76,8 @@
                 }
 
                 var shops = obj.get("SHOPS");
+                var defaultShopId = obj.get("DEFAULT_SHOP_ID");
+                var defaultShopName = obj.get("DEFAULT_SHOP_NAME");
                 if(shops != null){
                     var length = shops.length;
                     var html = [];
@@ -78,6 +86,9 @@
                         html.push("<li class=\"link e_center\" ontap=\"$.housesPlan.afterSelectShop(\'"+shop.get("ORG_ID")+"\',\'"+shop.get("NAME")+"\')\"><div class=\"main\">"+shop.get("NAME")+"</div></li>");
                     }
                     $.insertHtml('beforeend', $("#BIZ_SHOP"), html.join(""));
+                    if(defaultShopId != "" && defaultShopId != "undefined"){
+                        $.housesPlan.afterSelectShop(defaultShopId, defaultShopName);
+                    }
                 }
             },function(){
                 alert('error');
@@ -255,7 +266,7 @@
         checkHouseNum : function(){
             var obj = $("#HOUSE_NUM");
             if($.validate.verifyField(obj)){
-                var counselorNum = Math.ceil(obj.val()/500);
+                var counselorNum = Math.round(obj.val()/500);
                 $("#PLAN_COUNSELOR_NUM").val(counselorNum);
             }
             this.confirmCounselor(true);

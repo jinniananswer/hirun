@@ -45,6 +45,8 @@ public class HousesPlanDAO extends StrongObjectDAO {
             sb.append("AND a.PLAN_COUNSELOR_NUM > :PLAN_COUNSELOR_NUM ");
         if(StringUtils.isNotBlank(parameter.get("PLAN_IN_DATE")))
             sb.append("AND a.plan_in_date > :PLAN_IN_DATE ");
+        if(StringUtils.isNotBlank(parameter.get("STATUS")))
+            sb.append("AND a.status = :STATUS ");
         if(StringUtils.isNotBlank(parameter.get("EMPLOYEE_ID"))){
             sb.append("AND a.houses_id in (select e.houses_id from ins_houses_plan e, ins_employee f where f.employee_id = e.employee_id and f.employee_id in ("+parameter.get("EMPLOYEE_ID")+"))");
         }
