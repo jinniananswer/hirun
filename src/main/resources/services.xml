@@ -10,6 +10,7 @@
     <entity name="OperationCenter.house.HousesService.createHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="createHousesPlan"/>
     <entity name="OperationCenter.house.HousesService.queryHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesPlan"/>
     <entity name="OperationCenter.house.HousesService.submitAudit"  class="com.hirun.app.biz.houses.HousesService" method="submitAudit"/>
+    <entity name="OperationCenter.house.HousesService.queryHousesByEmployeeId"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesByEmployeeId"/>
     <entity name="OperationCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanAction"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanAction"/>
@@ -19,6 +20,7 @@
     <entity name="OperationCenter.plan.PlanService.summarizePlan"  class="com.hirun.app.biz.plan.PlanService" method="summarizePlan"/>
     <entity name="OperationCenter.plan.PlanService.queryNewCustList4Summary"  class="com.hirun.app.biz.plan.PlanService" method="queryNewCustList4Summary"/>
     <entity name="OperationCenter.plan.PlanService.getCustFinishActionList"  class="com.hirun.app.biz.plan.PlanService" method="getCustFinishActionList"/>
+    <entity name="OperationCenter.plan.PlanService.queryEmployeeDailySheet"  class="com.hirun.app.biz.plan.PlanService" method="queryEmployeeDailySheet"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>

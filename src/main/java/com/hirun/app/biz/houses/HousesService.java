@@ -3,7 +3,6 @@ package com.hirun.app.biz.houses;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.houses.HouseDAO;
 import com.hirun.app.dao.houses.HousesPlanDAO;
@@ -14,8 +13,10 @@ import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.*;
-import com.most.core.pub.tools.datastruct.ArrayTool;
+import com.most.core.pub.data.Record;
+import com.most.core.pub.data.RecordSet;
+import com.most.core.pub.data.ServiceRequest;
+import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
@@ -36,103 +37,26 @@ import java.util.Map;
 public class HousesService extends GenericService {
 
     public ServiceResponse initCreatePlan(ServiceRequest request) throws Exception{
-        AppSession session = SessionManager.getSession();
-        SessionEntity sessionEntity = session.getSessionEntity();
-        String orgId = OrgBean.getOrgId(sessionEntity);
-        boolean needAllCity = false;
-        OrgEntity org = null;
-        if(StringUtils.isNotBlank(orgId)){
-            //这段逻辑要替换成根据权限来判断
-            OrgDAO dao = new OrgDAO("ins");
-            org = dao.queryOrgById(orgId);
-            String parentOrgId = org.getParentOrgId();
-            if(StringUtils.isBlank(parentOrgId)){
-                //表示是集团公司的员工
-                needAllCity = true;
-            }
-        }
-        else{
-            needAllCity = true;
-        }
-
-        JSONArray citys = null;
-        if(needAllCity){
-            citys= ConvertTool.toJSONArray(StaticDataTool.getCodeTypeDatas("BIZ_CITY"));
-        }
-        else{
-            citys = new JSONArray();
-            JSONObject city = new JSONObject();
-            city.put("CODE_VALUE", org.getCity());
-            city.put("CODE_NAME", StaticDataTool.getCodeName("BIZ_CITY", org.getCity()));
-            citys.add(city);
-        }
+        RecordSet citys = StaticDataTool.getCodeTypeDatas("BIZ_CITY");
+        String today = TimeTool.today();
 
         ServiceResponse response = new ServiceResponse();
 
-        response.set("CITYS", citys);
-        String today = TimeTool.today();
+        response.set("CITYS", ConvertTool.toJSONArray(citys));
         response.set("TODAY", today);
-
-        if(org != null){
-            response.set("DEFAULT_CITY_ID", org.getCity());
-            response.set("DEFAULT_CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", org.getCity()));
-        }
         return response;
     }
 
     public ServiceResponse initArea(ServiceRequest request) throws Exception{
-        AppSession session = SessionManager.getSession();
-        SessionEntity sessionEntity = session.getSessionEntity();
-        String orgId = OrgBean.getOrgId(sessionEntity);
-        OrgDAO dao = new OrgDAO("ins");
-        boolean needAllShop = true;
-        OrgEntity org = null;
-        OrgEntity parentOrg = null;
-        if(StringUtils.isNotBlank(orgId)){
-            //以后要换成权限判断
-            org = dao.queryOrgById(orgId);
-            String type = org.getType();
-            if(StringUtils.equals("4", type)){
-                needAllShop = false;
-            }
-            else if(StringUtils.equals("3", type)){
-                String parentOrgId = org.getParentOrgId();
-                if(StringUtils.isNotBlank(parentOrgId)){
-                    parentOrg = dao.queryOrgById(parentOrgId);
-                    String parentType = parentOrg.getType();
-                    if(StringUtils.equals("4", parentType)){
-                        needAllShop = false;
-                    }
-                }
-            }
-        }
-
         String cityId = request.getString("CITY_ID");
         RecordSet areas = StaticDataTool.getRelCodeTypeDatas("BIZ_CITY", cityId);
-        List<OrgEntity> orgs = null;
-        if(needAllShop) {
-            //查询某城市下的门店
-            orgs = dao.queryOrgByCityAndType(cityId, "4");
-        }
-        else{
-            orgs = new ArrayList<OrgEntity>();
-            if(StringUtils.equals("4", org.getType())){
-                orgs.add(org);
-            }
-            else if(StringUtils.equals("3", org.getType())){
-                if(StringUtils.isNotBlank(org.getParentOrgId()) && StringUtils.equals("4", parentOrg.getType())){
-                    orgs.add(parentOrg);
-                }
-            }
-        }
+
+        OrgDAO dao = new OrgDAO("ins");
+        List<OrgEntity> orgs = dao.queryOrgByCity(cityId);
 
         ServiceResponse response = new ServiceResponse();
         response.set("AREAS", ConvertTool.toJSONArray(areas));
         response.set("SHOPS", ConvertTool.toJSONArray(orgs));
-        if(ArrayTool.isNotEmpty(orgs)){
-            response.set("DEFAULT_SHOP_NAME", orgs.get(0).getName());
-            response.set("DEFAULT_SHOP_ID", orgs.get(0).getOrgId());
-        }
         return response;
     }
 
@@ -186,7 +110,6 @@ public class HousesService extends GenericService {
             housesPlan.put("UPDATE_USER_ID", userId);
             housesPlan.put("UPDATE_TIME", session.getCreateTime());
             housesPlan.put("TOWER_NO", house.get(employee+"_TOWERNUM"));
-            housesPlan.put("HOUSE_NUM", house.get(employee+"_HOUSENUM"));
             parameters.add(housesPlan);
         }
 
@@ -239,7 +162,7 @@ public class HousesService extends GenericService {
                 housesPlan.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", record.get("CITY")));
                 housesPlan.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA")));
                 housesPlan.put("ORG_NAME", record.get("ORG_NAME"));
-                housesPlan.put("STATUS_NAME",StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
+                housesPlan.put("STATUS_NAME","未审核");
                 String nature = record.get("NATURE");
                 if(StringUtils.equals("0", nature)){
                     housesPlan.put("NATURE_NAME", "期");
@@ -274,32 +197,5 @@ public class HousesService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         response.set("DATA", housesPlans);
         return response;
-    }
-
-    public ServiceResponse submitAudit(ServiceRequest request) throws Exception{
-        Map<String, String> updateParameter = new HashMap<String, String>();
-        String auditStatus = request.getString("AUDIT_OPTION");
-        String housesId = request.getString("AUDIT_HOUSES_ID");
-        updateParameter.put("STATUS", auditStatus);
-        updateParameter.put("HOUSES_ID", housesId);
-
-        HouseDAO dao = new HouseDAO("ins");
-        dao.save("ins_houses", updateParameter);
-
-        Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("HOUSES_ID", housesId);
-        AppSession session = SessionManager.getSession();
-        SessionEntity sessionEntity = session.getSessionEntity();
-        String employeeId = sessionEntity.get("EMPLOYEE_ID");
-        parameter.put("EMPLOYEE_ID", employeeId);
-        parameter.put("AUDIT_STATUS", auditStatus);
-        parameter.put("AUDIT_DATE", session.getCreateTime());
-        parameter.put("AUDIT_OPINION", request.getString("AUDIT_OPINION"));
-        parameter.put("CREATE_USER_ID", sessionEntity.getUserId());
-        parameter.put("CREATE_DATE", session.getCreateTime());
-        parameter.put("UPDATE_USER_ID", sessionEntity.getUserId());
-        parameter.put("UPDATE_TIME", session.getCreateTime());
-        dao.insertAutoIncrement("ins_houses_audit", parameter);
-        return new ServiceResponse();
     }
 }

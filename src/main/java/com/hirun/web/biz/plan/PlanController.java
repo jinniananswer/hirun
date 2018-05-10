@@ -131,4 +131,15 @@ public class PlanController {
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getPlanFinishedInfo", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/queryEmployeeDailySheet")
+    public String queryEmployeeDailySheet(@RequestParam Map paramter) throws Exception{
+        String planDate = TimeTool.today();
+//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+//        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+//        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
+        paramter.put("PLAN_DATE", planDate);
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryEmployeeDailySheet", paramter);
+        return response.toJsonString();
+    }
 }
