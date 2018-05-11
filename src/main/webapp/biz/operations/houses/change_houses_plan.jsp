@@ -87,7 +87,7 @@
                     </li>
                     <li class="link">
                         <div class="label">家装顾问</div>
-                        <div class="value"><span class="e_mix" ontap="$.housesPlan.initCounselor();">
+                        <div class="value"><span class="e_mix" ontap="$.housesPlan.initCounselor();showPopup('UI-popup','UI-popup-query');">
                             <input type="text" id="EMPLOYEE_NAME" name="EMPLOYEE_NAME" datatype="text" nullable="yes" desc="家装顾问" value="" />
                             <input type="hidden" id="EMPLOYEE_ID" name="EMPLOYEE_ID" datatype="text" nullable="yes" desc="家装顾问" value="" />
                             <input type="hidden" id="OLD_EMPLOYEE_ID" name="OLD_EMPLOYEE_ID" datatype="text" nullable="yes" desc="家装顾问" value="" />

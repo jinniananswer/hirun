@@ -34,22 +34,21 @@ import java.util.*;
  */
 public class HousesService extends GenericService {
 
-    public ServiceResponse initCreatePlan(ServiceRequest request) throws Exception{
+    public ServiceResponse initCreatePlan(ServiceRequest request) throws Exception {
         AppSession session = SessionManager.getSession();
         SessionEntity sessionEntity = session.getSessionEntity();
         String orgId = OrgBean.getOrgId(sessionEntity);
         OrgEntity org = null;
-        if(StringUtils.isNotBlank(orgId)){
+        if (StringUtils.isNotBlank(orgId)) {
             OrgDAO dao = new OrgDAO("ins");
             org = dao.queryOrgById(orgId);
         }
         boolean needAllCity = AuthorityJudgement.hasAllCity();
 
         JSONArray citys = null;
-        if(needAllCity){
-            citys= ConvertTool.toJSONArray(StaticDataTool.getCodeTypeDatas("BIZ_CITY"));
-        }
-        else{
+        if (needAllCity) {
+            citys = ConvertTool.toJSONArray(StaticDataTool.getCodeTypeDatas("BIZ_CITY"));
+        } else {
             citys = new JSONArray();
             JSONObject city = new JSONObject();
             city.put("CODE_VALUE", org.getCity());
@@ -63,14 +62,14 @@ public class HousesService extends GenericService {
         String today = TimeTool.today();
         response.set("TODAY", today);
 
-        if(org != null){
+        if (org != null) {
             response.set("DEFAULT_CITY_ID", org.getCity());
             response.set("DEFAULT_CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", org.getCity()));
         }
         return response;
     }
 
-    public ServiceResponse initArea(ServiceRequest request) throws Exception{
+    public ServiceResponse initArea(ServiceRequest request) throws Exception {
         AppSession session = SessionManager.getSession();
         SessionEntity sessionEntity = session.getSessionEntity();
         String orgId = OrgBean.getOrgId(sessionEntity);
@@ -82,17 +81,15 @@ public class HousesService extends GenericService {
         String cityId = request.getString("CITY_ID");
         RecordSet areas = StaticDataTool.getRelCodeTypeDatas("BIZ_CITY", cityId);
         List<OrgEntity> orgs = null;
-        if(needAllShop) {
+        if (needAllShop) {
             //查询某城市下的门店
             orgs = dao.queryOrgByCityAndType(cityId, "4");
-        }
-        else{
+        } else {
             orgs = new ArrayList<OrgEntity>();
-            if(StringUtils.equals("4", org.getType())){
+            if (StringUtils.equals("4", org.getType())) {
                 orgs.add(org);
-            }
-            else if(StringUtils.equals("3", org.getType())){
-                if(StringUtils.isNotBlank(org.getParentOrgId()) && StringUtils.equals("4", parentOrg.getType())){
+            } else if (StringUtils.equals("3", org.getType())) {
+                if (StringUtils.isNotBlank(org.getParentOrgId()) && StringUtils.equals("4", parentOrg.getType())) {
                     orgs.add(parentOrg);
                 }
             }
@@ -101,14 +98,14 @@ public class HousesService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         response.set("AREAS", ConvertTool.toJSONArray(areas));
         response.set("SHOPS", ConvertTool.toJSONArray(orgs));
-        if(ArrayTool.isNotEmpty(orgs)){
+        if (ArrayTool.isNotEmpty(orgs)) {
             response.set("DEFAULT_SHOP_NAME", orgs.get(0).getName());
             response.set("DEFAULT_SHOP_ID", orgs.get(0).getOrgId());
         }
         return response;
     }
 
-    public ServiceResponse initCounselors(ServiceRequest request) throws Exception{
+    public ServiceResponse initCounselors(ServiceRequest request) throws Exception {
         String orgId = request.getString("ORG_ID");
 
         EmployeeDAO dao = new EmployeeDAO("ins");
@@ -120,7 +117,7 @@ public class HousesService extends GenericService {
         return response;
     }
 
-    public ServiceResponse createHousesPlan(ServiceRequest request) throws Exception{
+    public ServiceResponse createHousesPlan(ServiceRequest request) throws Exception {
 
         Map<String, String> house = new HashMap<String, String>();
         AppSession session = SessionManager.getSession();
@@ -140,12 +137,12 @@ public class HousesService extends GenericService {
         HouseDAO dao = new HouseDAO("ins");
         long houseId = dao.insertAutoIncrement("ins_houses", house);
         String employeeId = request.getString("EMPLOYEE_ID");
-        if(StringUtils.isBlank(employeeId))
+        if (StringUtils.isBlank(employeeId))
             return new ServiceResponse();
 
         String[] employees = employeeId.split(",");
         List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
-        for(String employee : employees){
+        for (String employee : employees) {
             Map<String, String> housesPlan = new HashMap<String, String>();
             housesPlan.put("HOUSES_ID", String.valueOf(houseId));
             housesPlan.put("EMPLOYEE_ID", employee);
@@ -157,8 +154,8 @@ public class HousesService extends GenericService {
             housesPlan.put("CREATE_DATE", session.getCreateTime());
             housesPlan.put("UPDATE_USER_ID", userId);
             housesPlan.put("UPDATE_TIME", session.getCreateTime());
-            housesPlan.put("TOWER_NO", house.get(employee+"_TOWERNUM"));
-            housesPlan.put("HOUSE_NUM", house.get(employee+"_HOUSENUM"));
+            housesPlan.put("TOWER_NO", house.get(employee + "_TOWERNUM"));
+            housesPlan.put("HOUSE_NUM", house.get(employee + "_HOUSENUM"));
             parameters.add(housesPlan);
         }
 
@@ -168,12 +165,12 @@ public class HousesService extends GenericService {
         return new ServiceResponse();
     }
 
-    public ServiceResponse queryHousesPlan(ServiceRequest request) throws Exception{
+    public ServiceResponse queryHousesPlan(ServiceRequest request) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.putAll(JSON.parseObject(request.getBody().getData().toJSONString(), Map.class));
         HousesPlanDAO dao = new HousesPlanDAO("ins");
         RecordSet recordset = dao.queryHousesPlan(parameter);
-        if(recordset == null || recordset.size() <= 0){
+        if (recordset == null || recordset.size() <= 0) {
             return new ServiceResponse();
         }
 
@@ -182,11 +179,11 @@ public class HousesService extends GenericService {
         int size = recordset.size();
         JSONArray housesPlans = new JSONArray();
         Map<String, JSONObject> cache = new HashMap<String, JSONObject>();
-        for(int i=0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             Record record = recordset.get(i);
             JSONObject housesPlan = cache.get(record.get("HOUSES_ID"));
             JSONArray employees = null;
-            if(housesPlan == null){
+            if (housesPlan == null) {
                 housesPlan = new JSONObject();
                 housesPlan.put("NAME", record.get("NAME"));
                 housesPlan.put("HOUSES_ID", record.get("HOUSES_ID"));
@@ -196,31 +193,29 @@ public class HousesService extends GenericService {
                 housesPlan.put("HOUSE_NUM", record.get("HOUSE_NUM"));
                 housesPlan.put("PLAN_IN_DATE", record.get("PLAN_IN_DATE"));
                 housesPlan.put("DESTROY_DATE", record.get("DESTROY_DATE"));
-                housesPlan.put("PLAN_COUNSELOR_NUM",record.get("PLAN_COUNSELOR_NUM"));
+                housesPlan.put("PLAN_COUNSELOR_NUM", record.get("PLAN_COUNSELOR_NUM"));
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate planInDate = LocalDate.parse(record.get("PLAN_IN_DATE"),dateTimeFormatter);
+                LocalDate planInDate = LocalDate.parse(record.get("PLAN_IN_DATE"), dateTimeFormatter);
                 LocalDate destroyDate = LocalDate.parse(record.get("DESTROY_DATE"), dateTimeFormatter);
                 LocalDate now = LocalDate.now();
                 long destroyMinusPlanInDate = TimeTool.getAbsDateDiffDay(destroyDate, planInDate);
                 long planMinusNow = TimeTool.getAbsDateDiffDay(now, planInDate);
                 DecimalFormat df = new DecimalFormat("0.00");
-                double minus = Double.parseDouble(df.format((double)planMinusNow/(double)destroyMinusPlanInDate));
-                double percent = Math.rint(minus*100);
-                housesPlan.put("CUR_PROGRESS", percent+"");
+                double minus = Double.parseDouble(df.format((double) planMinusNow / (double) destroyMinusPlanInDate));
+                double percent = Math.rint(minus * 100);
+                housesPlan.put("CUR_PROGRESS", percent + "");
                 housesPlan.put("ALL_DAYS", destroyMinusPlanInDate);
                 housesPlan.put("STATUS", record.get("STATUS"));
                 housesPlan.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", record.get("CITY")));
                 housesPlan.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA")));
                 housesPlan.put("ORG_NAME", record.get("ORG_NAME"));
-                housesPlan.put("STATUS_NAME",StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
+                housesPlan.put("STATUS_NAME", StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
                 String nature = record.get("NATURE");
-                if(StringUtils.equals("0", nature)){
+                if (StringUtils.equals("0", nature)) {
                     housesPlan.put("NATURE_NAME", "期");
-                }
-                else if(StringUtils.equals("1", nature)){
+                } else if (StringUtils.equals("1", nature)) {
                     housesPlan.put("NATURE_NAME", "现");
-                }
-                else if(StringUtils.equals("2", nature)){
+                } else if (StringUtils.equals("2", nature)) {
                     housesPlan.put("NATURE_NAME", "责");
                 }
                 housesPlan.put("NATURE", record.get("NATURE"));
@@ -229,11 +224,10 @@ public class HousesService extends GenericService {
                 cache.put(record.get("HOUSES_ID"), housesPlan);
                 housesPlans.add(housesPlan);
                 String employeeId = record.get("EMPLOYEE_ID");
-                if(StringUtils.isBlank(employeeId)){
+                if (StringUtils.isBlank(employeeId)) {
                     continue;
                 }
-            }
-            else{
+            } else {
                 employees = housesPlan.getJSONArray("COUNSELORS");
             }
             JSONObject employee = new JSONObject();
@@ -291,17 +285,17 @@ public class HousesService extends GenericService {
         parameter.putAll(JSON.parseObject(request.getBody().getData().toJSONString(), Map.class));
         HousesPlanDAO dao = new HousesPlanDAO("ins");
         RecordSet recordset = dao.queryHousesPlan(parameter);
-        if(recordset == null || recordset.size() <= 0){
+        if (recordset == null || recordset.size() <= 0) {
             return new ServiceResponse();
         }
 
         //一次性查询出来后合并数据,避免多次连数据库的效率问题
         int size = recordset.size();
         JSONObject housesPlan = null;
-        for(int i=0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             Record record = recordset.get(i);
             JSONArray employees = null;
-            if(housesPlan == null){
+            if (housesPlan == null) {
                 housesPlan = new JSONObject();
                 housesPlan.put("NAME", record.get("NAME"));
                 housesPlan.put("HOUSES_ID", record.get("HOUSES_ID"));
@@ -317,16 +311,16 @@ public class HousesService extends GenericService {
                 housesPlan.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA")));
                 housesPlan.put("ORG_ID", record.get("ORG_ID"));
                 housesPlan.put("ORG_NAME", record.get("ORG_NAME"));
-                housesPlan.put("STATUS_NAME",StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
+                housesPlan.put("STATUS_NAME", StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
                 housesPlan.put("NATURE", record.get("NATURE"));
+                housesPlan.put("NATURE_NAME", StaticDataTool.getCodeName("HOUSE_NATURE", record.get("NATURE")));
                 employees = new JSONArray();
                 housesPlan.put("COUNSELORS", employees);
                 String employeeId = record.get("EMPLOYEE_ID");
-                if(StringUtils.isBlank(employeeId)){
+                if (StringUtils.isBlank(employeeId)) {
                     continue;
                 }
-            }
-            else{
+            } else {
                 employees = housesPlan.getJSONArray("COUNSELORS");
             }
             JSONObject employee = new JSONObject();
@@ -339,15 +333,14 @@ public class HousesService extends GenericService {
             employees.add(employee);
         }
 
-        if(housesPlan != null){
+        if (housesPlan != null) {
             ServiceResponse response = new ServiceResponse();
             boolean needAllCity = AuthorityJudgement.hasAllCity();
 
             JSONArray citys = null;
-            if(needAllCity){
-                citys= ConvertTool.toJSONArray(StaticDataTool.getCodeTypeDatas("BIZ_CITY"));
-            }
-            else{
+            if (needAllCity) {
+                citys = ConvertTool.toJSONArray(StaticDataTool.getCodeTypeDatas("BIZ_CITY"));
+            } else {
                 citys = new JSONArray();
                 JSONObject city = new JSONObject();
                 city.put("CODE_VALUE", housesPlan.getString("CITY"));
@@ -357,13 +350,12 @@ public class HousesService extends GenericService {
             response.set("HOUSES_PLAN", housesPlan);
             response.set("CITYS", citys);
             return response;
-        }
-        else{
+        } else {
             return new ServiceResponse();
         }
     }
 
-    public ServiceResponse changeHousePlan(ServiceRequest request) throws Exception{
+    public ServiceResponse changeHousePlan(ServiceRequest request) throws Exception {
         Map<String, String> house = new HashMap<String, String>();
         AppSession session = SessionManager.getSession();
         String now = TimeTool.now();
@@ -383,50 +375,50 @@ public class HousesService extends GenericService {
         String employeeId = request.getString("EMPLOYEE_ID");
         String oldEmployeeId = request.getString("OLD_EMPLOYEE_ID");
 
-        if(StringUtils.isBlank(employeeId) && StringUtils.isBlank(oldEmployeeId)){
+        if (StringUtils.isBlank(employeeId) && StringUtils.isBlank(oldEmployeeId)) {
             return new ServiceResponse();
         }
-        List<String> cancelEmployees = new ArrayList<String>();;
-        List<String> addEmployees = new ArrayList<String>();;
-        List<String> updateEmployees = new ArrayList<String>();;
-        if(StringUtils.isBlank(employeeId) && StringUtils.isNotBlank(oldEmployeeId)){
+        List<String> cancelEmployees = new ArrayList<String>();
+        ;
+        List<String> addEmployees = new ArrayList<String>();
+        ;
+        List<String> updateEmployees = new ArrayList<String>();
+        ;
+        if (StringUtils.isBlank(employeeId) && StringUtils.isNotBlank(oldEmployeeId)) {
             cancelEmployees = Arrays.asList(oldEmployeeId.split(","));
-        }
-        else if(StringUtils.isNotBlank(employeeId) && StringUtils.isBlank(oldEmployeeId)){
+        } else if (StringUtils.isNotBlank(employeeId) && StringUtils.isBlank(oldEmployeeId)) {
             addEmployees = Arrays.asList(employeeId.split(","));
-        }
-        else{
+        } else {
             String[] employees = employeeId.split(",");
             String[] oldEmployees = oldEmployeeId.split(",");
 
-            for(String oldEmployee : oldEmployees){
+            for (String oldEmployee : oldEmployees) {
                 boolean find = false;
-                for(String employee : employees){
-                    if(StringUtils.equals(oldEmployee, employee)) {
+                for (String employee : employees) {
+                    if (StringUtils.equals(oldEmployee, employee)) {
                         find = true;
                         break;
                     }
                 }
-                if(find){
+                if (find) {
                     //新老都有，表示修改
                     updateEmployees.add(oldEmployee);
-                }
-                else{
+                } else {
                     //老有，新无，表示取消
                     cancelEmployees.add(oldEmployee);
                 }
             }
 
-            for(String employee : employees){
+            for (String employee : employees) {
                 boolean find = false;
-                for(String oldEmployee : oldEmployees){
-                    if(StringUtils.equals(employee, oldEmployee)){
+                for (String oldEmployee : oldEmployees) {
+                    if (StringUtils.equals(employee, oldEmployee)) {
                         find = true;
                         break;
                     }
                 }
 
-                if(!find){
+                if (!find) {
                     //新有，老无，表示新增
                     addEmployees.add(employee);
                 }
@@ -434,7 +426,7 @@ public class HousesService extends GenericService {
         }
 
         HousesPlanDAO housesPlanDAO = new HousesPlanDAO("ins");
-        if(ArrayTool.isNotEmpty(addEmployees)) {
+        if (ArrayTool.isNotEmpty(addEmployees)) {
             List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
             for (String employee : addEmployees) {
                 Map<String, String> housesPlan = new HashMap<String, String>();
@@ -455,7 +447,7 @@ public class HousesService extends GenericService {
             housesPlanDAO.insertBatch("ins_houses_plan", parameters);
         }
 
-        if(ArrayTool.isNotEmpty(updateEmployees)){
+        if (ArrayTool.isNotEmpty(updateEmployees)) {
             for (String employee : updateEmployees) {
                 Map<String, String> housesPlan = new HashMap<String, String>();
                 housesPlan.put("HOUSES_ID", houseId);
@@ -469,7 +461,7 @@ public class HousesService extends GenericService {
             }
         }
 
-        if(ArrayTool.isNotEmpty(cancelEmployees)){
+        if (ArrayTool.isNotEmpty(cancelEmployees)) {
             for (String employee : cancelEmployees) {
                 Map<String, String> housesPlan = new HashMap<String, String>();
                 housesPlan.put("HOUSES_ID", houseId);
@@ -481,5 +473,9 @@ public class HousesService extends GenericService {
             }
         }
         return new ServiceResponse();
+    }
+
+    public ServiceResponse showHouseDetail(ServiceRequest request) throws Exception {
+        return this.initChangeHousesPlan(request);
     }
 }

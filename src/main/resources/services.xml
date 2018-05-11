@@ -12,6 +12,7 @@
     <entity name="OperationCenter.house.HousesService.submitAudit"  class="com.hirun.app.biz.houses.HousesService" method="submitAudit"/>
     <entity name="OperationCenter.house.HousesService.initChangeHousesPlan"  class="com.hirun.app.biz.houses.HousesService" method="initChangeHousesPlan"/>
     <entity name="OperationCenter.house.HousesService.changeHousePlan"  class="com.hirun.app.biz.houses.HousesService" method="changeHousePlan"/>
+    <entity name="OperationCenter.house.HousesService.showHouseDetail"  class="com.hirun.app.biz.houses.HousesService" method="showHouseDetail"/>
     <entity name="OperationCenter.house.HousesService.queryHousesByEmployeeId"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesByEmployeeId"/>
     <entity name="OperationCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>

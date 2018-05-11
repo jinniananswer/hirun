@@ -60,6 +60,11 @@
 
         afterSelectCity : function(value, text){
             hidePopup('UI-popup','UI-CITY');
+            if(value != $("#CITY").val()){
+                this.clearArea();
+                this.clearShop();
+                this.clearCounselors();
+            }
             $("#CITY_TEXT").val(text);
             $("#CITY").val(value);
             $.ajaxPost('initArea','&CITY_ID='+value,function(data){
@@ -103,6 +108,9 @@
 
         afterSelectShop : function(value, text){
             hidePopup('UI-popup','UI-SHOP');
+            if(value != $("#SHOP").val()){
+                this.clearCounselors();
+            }
             $("#SHOP_TEXT").val(text);
             $("#SHOP").val(value);
 
@@ -141,6 +149,36 @@
                 html.push("<div class=\"side\" id=\"COUNSELOR_"+value+"_ico\"><span class=\"e_ico-ok e_ico-pic e_ico-pic-xxxs\"></span></div>");
                 $.insertHtml('beforeend', label, html.join(""));
             }
+        },
+
+        clearArea : function(){
+            $("#AREA").val("");
+            $("#AREA_TEXT").val("");
+        },
+
+        clearShop : function(){
+          $("#SHOP").val("");
+          $("#SHOP_TEXT").val("");
+        },
+
+        clearCounselors : function(){
+            var towers = $("li[tag=TOWERNUM]");
+            if(towers != null && towers.length > 0){
+                for(var i=0;i<towers.length;i++){
+                    var tower = $(towers[i]);
+                    tower.remove();
+                }
+            }
+
+            var personalHouses = $("li[tag=HOUSENUM]");
+            if(personalHouses != null && personalHouses.length > 0){
+                for(var i=0;i<personalHouses.length;i++){
+                    var personalHouse = $(personalHouses[i]);
+                    personalHouse.remove();
+                }
+            }
+            $("#EMPLOYEE_ID").val("");
+            $("#EMPLOYEE_NAME").val("");
         },
 
         confirmCounselor : function(isClear){
@@ -226,7 +264,7 @@
             var size = employeeIdArray.length;
 
             for(var i=0;i<size;i++){
-                html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+employeeNameArray[i] +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+employeeNameArray[i]+"分配楼栋\" id=\""+employeeIdArray[i]+"_TOWERNUM\" name=\""+employeeIdArray[i]+"_TOWERNUM\" /></div></li>");
+                html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+employeeNameArray[i] +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"text\" desc=\""+employeeNameArray[i]+"分配楼栋\" id=\""+employeeIdArray[i]+"_TOWERNUM\" name=\""+employeeIdArray[i]+"_TOWERNUM\" /></div></li>");
                 html.push("<li tag=\"HOUSENUM\"><div class=\"label\">"+employeeNameArray[i] +"负责的户数</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+employeeNameArray[i]+"负责户数\" id=\""+employeeIdArray[i]+"_HOUSENUM\" name=\""+employeeIdArray[i]+"_HOUSENUM\" /></div></li>");
             }
             $.insertHtml('beforeend', $("#submitArea"), html.join(""));

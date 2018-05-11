@@ -127,7 +127,22 @@ public class HousesPlanController extends RootController{
 
     @RequestMapping("/changeHousesPlan")
     public @ResponseBody String changeHousesPlan(@RequestParam Map submitData) throws Exception{
-        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.changeHousesPlan", submitData);
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.changeHousePlan", submitData);
         return null;
+    }
+
+    @RequestMapping("/redirectToDetail")
+    public String redirectToDetail() throws Exception{
+        return "/biz/operations/houses/house_detail";
+    }
+
+    @RequestMapping("/showHouseDetail")
+    public @ResponseBody String showHouseDetail(HttpServletRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("HOUSES_ID", request.getParameter("HOUSES_ID"));
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.showHouseDetail", parameter);
+        JSONObject rst = new JSONObject();
+        rst.put("HOUSES_PLAN", response.getJSONObject("HOUSES_PLAN"));
+        return rst.toJSONString();
     }
 }

@@ -39,3 +39,8 @@
 .s_phone .p_login > .pannel .c_float > .content { position:static !important; border:0 none; box-shadow:none; padding-top:2em;}
 .s_phone .p_login > .pannel .c_float .c_list { text-align:center;}
 .s_phone .p_login .copyright { display:none;}
+
+.e_pic-img-r img{ border-radius:50%; max-width:70%;}
+.e_pic-img-r {  display:inline-block; margin:0.7em -1em 0 0.7em;}
+
+.c_title .text{ color:#494471;}

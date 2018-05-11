@@ -96,7 +96,7 @@
             var size = dataset.length;
             for(var i=0;i<size;i++){
                 var data = dataset.get(i);
-                html.push("<li class=\"link\">");
+                html.push("<li class=\"link\" ontap=\"parent.$.index.openNav('redirectToDetail?HOUSES_ID="+data.get("HOUSES_ID")+"','"+data.get("NAME")+"规划详情');\">");
                 html.push("<div class=\"content\">");
                 html.push("<div class=\"group link\">");
                 html.push("<div class=\"content\">");
@@ -310,6 +310,7 @@
             $("#AUDIT_HOUSES_ID").val(housesId);
             $("#AUDIT_OPTION").val("1");
             showPopup('UI-popup','UI-popup-audit');
+            event.stopPropagation();
         },
 
         submitAudit : function(){
