@@ -96,17 +96,17 @@
             var size = dataset.length;
             for(var i=0;i<size;i++){
                 var data = dataset.get(i);
-                html.push("<li class=\"link\" ontap=\"parent.$.index.openNav('redirectToDetail?HOUSES_ID="+data.get("HOUSES_ID")+"','"+data.get("NAME")+"规划详情');\">");
+                html.push("<li>");
                 html.push("<div class=\"content\">");
-                html.push("<div class=\"group link\">");
+                html.push("<div class=\"group\">");
                 html.push("<div class=\"content\">");
                 html.push("<div class=\"main\">");
-                html.push("<div class=\"title\"><div class=\"left\"><span class=\"e_strong\">"+data.get("NAME")+"</span></div>");
+                html.push("<div class=\"title\"><div class=\"left link\" ontap=\"parent.$.index.openNav('redirectToDetail?HOUSES_ID="+data.get("HOUSES_ID")+"','"+data.get("NAME")+"规划详情');\"><span class=\"e_strong\">"+data.get("NAME")+"</span></div>");
                 var status = data.get("STATUS");
                 if(status == "0") {
-                    html.push("<div class=\"right\" ontap=\"$.housesPlan.initAudit(" + data.get("HOUSES_ID") + ")\"><span class=\"e_ico-select\"></span> 审核</div>");
+                    html.push("<div class=\"right link\" ontap=\"$.housesPlan.initAudit(" + data.get("HOUSES_ID") + ")\"><span class=\"e_ico-select\"></span> 审核</div>");
                 }
-                html.push("<div class=\"right\" ontap=\"parent.$.index.openNav('redirectToChangeHousesPlan?HOUSES_ID="+data.get("HOUSES_ID")+"','变更楼盘规划');\"><span class=\"e_ico-edit\"></span> 编辑</div>");
+                html.push("<div class=\"right link\" ontap=\"parent.$.index.openNav('redirectToChangeHousesPlan?HOUSES_ID="+data.get("HOUSES_ID")+"','变更楼盘规划');\"><span class=\"e_ico-edit\"></span> 编辑</div>");
                 html.push("</div>");
                 html.push("<div class=\"content\">");
                 html.push("<span class=\"e_progress\"><span class=\"e_progressBar\">");
