@@ -69,7 +69,7 @@
     <div class="c_box c_box-border l_padding l_padding-u">
         <!-- 标题 开始 -->
         <div class="c_title">
-            <div class="text">指标与实际完成情况（当前周期：前三个月）</div>
+            <div class="text">指标与实际完成情况（当前周期：交房前三个月）</div>
         </div>
         <!-- 标题 结束 -->
         <div class="c_table c_table-hasGrid c_table-lite c_table-border">
