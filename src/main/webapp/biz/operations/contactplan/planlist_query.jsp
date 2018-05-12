@@ -15,7 +15,7 @@
 </head>
 <body>
 <div class="c_header">
-	<div class="back" ontap="back();"><span>计划审核</span></div>
+	<div class="back" ontap="back();"><span>家装顾问日报表</span></div>
 </div>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
 	<div class="c_space"></div>
