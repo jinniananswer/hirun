@@ -1,7 +1,7 @@
 package com.hirun.web.biz.cust;
 
-import com.hirun.pub.domain.entity.session.BizSessionEntity;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
 import com.most.core.web.session.HttpSessionManager;
@@ -14,7 +14,6 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,9 +26,9 @@ public class CustController extends RootController{
     @RequestMapping(value = "/cust/addCust", method = RequestMethod.POST)
     public String addCust(@RequestParam Map pageData) throws Exception {
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
         //TODO 后续优化
-        pageData.put("HOUSE_COUNSELOR_ID", sessionEntity.getEmployeeId());
+        pageData.put("HOUSE_COUNSELOR_ID", sessionEntity.get("EMPLOYEE_ID"));
 
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.addCust", pageData);
         return response.toJsonString();
@@ -44,8 +43,8 @@ public class CustController extends RootController{
     @RequestMapping(value = "/cust/queryCustList", method = RequestMethod.GET)
     public String queryCustList(@RequestParam Map pageData) throws Exception {
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        pageData.put("HOUSE_COUNSELOR_ID", sessionEntity.getEmployeeId());
+        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        pageData.put("HOUSE_COUNSELOR_ID", sessionEntity.get("EMPLOYEE_ID"));
 
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustList", pageData);
         return response.toJsonString();
@@ -54,9 +53,9 @@ public class CustController extends RootController{
     @RequestMapping(value = "/cust/addCustByNum", method = RequestMethod.POST)
     public String addCustByNum(@RequestParam Map pageData) throws Exception {
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
         //TODO 后续优化
-        pageData.put("HOUSE_COUNSELOR_ID", sessionEntity.getEmployeeId());
+        pageData.put("HOUSE_COUNSELOR_ID", sessionEntity.get("EMPLOYEE_ID"));
 
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.addCustByNum", pageData);
         return response.toJsonString();

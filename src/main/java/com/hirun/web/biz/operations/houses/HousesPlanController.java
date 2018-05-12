@@ -2,9 +2,9 @@ package com.hirun.web.biz.operations.houses;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hirun.pub.domain.entity.session.BizSessionEntity;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
 import com.most.core.web.session.HttpSessionManager;
@@ -119,8 +119,8 @@ public class HousesPlanController extends RootController{
     @RequestMapping("/queryHousesByEmployeeId")
     public @ResponseBody String queryHousesByEmployeeId(@RequestParam Map condition) throws Exception{
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        condition.put("EMPLOYEE_ID", sessionEntity.getEmployeeId());
+        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        condition.put("EMPLOYEE_ID", sessionEntity.get("EMPLOYEE_ID"));
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHousesByEmployeeId", condition);
         return response.toJsonString();
     }
