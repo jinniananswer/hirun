@@ -204,8 +204,10 @@ var planEntry = {
             //通过上一动作带过来，又保留的客户
             var unDeletedBeforeActionCustList = selectCust.getUndeletedBeforeActionCust();
             $.each(unDeletedBeforeActionCustList, function (idx, cust) {
-                custList.push(cust);
-                custName += cust.CUST_NAME + "；";
+                if(!planEntry.isInCustList(custList, cust)) {
+                    custList.push(cust);
+                    custName += cust.CUST_NAME + "；";
+                }
             })
 
             planEntry.planActionMap[planEntry.currentAction] = custList;
@@ -228,6 +230,18 @@ var planEntry = {
             }
 		}
 	},
+	isInCustList : function(custList, cust) {
+	    var found = false;
+        $.each(custList, function(idx, item) {
+            var custId = item.CUST_ID;
+            if(custId == cust.CUST_ID) {
+                found = true;
+                return false;
+            }
+        })
+
+        return found;
+    },
 	afterPlanTargetSet : function(obj) {
 	    if(!planEntry.checkPlanTarget()) {
 	        return;
@@ -298,7 +312,6 @@ var planEntry = {
 			$('#' + actionCode + ' div[tag=ACTION_SIDE]').show();
 			$('#' + actionCode + ' div[tag=ACTION_MORE]').show();
 		}
-		
 	},
 	setPlanTarget : function() {
 		showPopup('myPopup','planTargetSetPopup');
