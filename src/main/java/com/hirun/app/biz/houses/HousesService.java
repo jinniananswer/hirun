@@ -86,6 +86,9 @@ public class HousesService extends GenericService {
             orgs = dao.queryOrgByCityAndType(cityId, "4");
         } else {
             orgs = new ArrayList<OrgEntity>();
+            if(StringUtils.isNotBlank(org.getParentOrgId())){
+                parentOrg = dao.queryOrgById(org.getParentOrgId());
+            }
             if (StringUtils.equals("4", org.getType())) {
                 orgs.add(org);
             } else if (StringUtils.equals("3", org.getType())) {
