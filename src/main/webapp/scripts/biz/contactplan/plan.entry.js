@@ -325,8 +325,14 @@ var planEntry = {
             type : 'POST',
             dataType : 'json',
             successFunc : function(data) {
-                alert('计划提交成功');
-                top.$.index.closePage('今日计划录入');
+                MessageBox.success("新增计划成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
+                    if("ok" == btn) {
+                        document.location.reload();
+                    }
+                    else {
+                        parent.$.index.closeCurrentPage();
+                    }
+                },{"cancel":"取消"})
             },
             errorFunc : function(resultCode, resultInfo) {
                 alert('计划提交失败:' + resultInfo);
@@ -513,7 +519,7 @@ var selectCust = {
                 showPopup('myPopup','customerSelectPopup');
             });
 
-            if(currentActionCode == 'ZX' || currentActionCode == 'LTZDSTS') {
+            if(currentActionCode == 'ZX') {
                 $('#ADD_CUST_BUTTON').show();
             } else {
                 $('#ADD_CUST_BUTTON').hide();
