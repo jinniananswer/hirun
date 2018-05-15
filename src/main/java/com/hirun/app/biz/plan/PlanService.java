@@ -383,6 +383,11 @@ public class PlanService extends GenericService {
             response.setError("-1","找不到计划");
         }
         PlanEntity planEntity = list.get(0);
+        parameter.put("PLAN_ID", planEntity.getPlanId());
+        parameter.put("PLAN_STATUS", "2");
+        parameter.put("UPDATE_USER_ID", userId);
+        parameter.put("UPDATE_TIME", sysdate);
+        planDAO.save("INS_PLAN", parameter);
 
         if(ArrayTool.isNotEmpty(unFinishSummaryList)) {
             for(int i = 0, size = unFinishSummaryList.size(); i < size; i++) {
@@ -406,6 +411,8 @@ public class PlanService extends GenericService {
                 addExtraCustActionDbParam.put("UPDATE_USER_ID", userId);
                 addExtraCustActionDbParam.put("UPDATE_TIME", sysdate);
                 addExtraCustActionDbParam.put("ACTION_STATUS", "1");
+                addExtraCustActionDbParam.put("PLAN_ID",planEntity.getPlanId());
+                addExtraCustActionDbParam.put("PLAN_DEAL_DATE",planEntity.getPlanDate());
                 addExtraCustActionDbParamList.add(addExtraCustActionDbParam);
 
                 String custId = addExtraCustActionDbParam.get("CUST_ID");
@@ -429,7 +436,7 @@ public class PlanService extends GenericService {
             }
         }
 
-        //更新INS_CYCLE_PLAN_FINISH_INFO
+        //更新INS_PLAN_CYCLE_FINISH_INFO
         JSONObject finishTargetLimitMap = new JSONObject();
         PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = new PlanCycleFinishInfoDAO("ins");
         List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();
@@ -437,27 +444,67 @@ public class PlanService extends GenericService {
             String targetCode = planTargetLimitEntity.getTargetCode();
             int timeInterval = Integer.parseInt(planTargetLimitEntity.getTimeInterval());
             int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
-
             PlanCycleFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planEntity.getPlanExecutorId(), targetCode);
             int preTotalUnfinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getUnfinishNum());
+            int currCycleFinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getCurrCycleFinishNum());
+            int currCycleImproperDays = Integer.parseInt(cyclePlanFinishInfoEntity.getCurrCycleImproperDays());
             String preCycleEndDate = cyclePlanFinishInfoEntity.getPreCycleEndDate();
+            String logId = cyclePlanFinishInfoEntity.getLogId();
+            String planType = planEntity.getPlanType();
+
+            int finishNum = custActionDAO.queryFinishActionCountByPlanId(planId, targetCode);
+            currCycleFinishNum = currCycleFinishNum + finishNum;
+            if(!"1".equals(planType)) {
+                currCycleImproperDays++;
+            }
+
+            parameter.clear();
+            parameter.put("LOG_ID", logId);
+
             int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(preCycleEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     LocalDate.parse(planEntity.getPlanDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            String startTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
-            String endTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
-            if(interval == timeInterval) {
-                int totalFinishNum = custActionDAO.queryFinishActionCount(planEntity.getPlanExecutorId(), targetCode, startTime, endTime);
-
-                parameter.clear();
-                parameter.put("LOG_ID", cyclePlanFinishInfoEntity.getLogId());
+            if(!"1".equals(planType) && interval == 1) {
+                //如果总结的计划不是正常上班，且离上一个周期仅一天，则上一周期时间顺延一天
+                //这一天完成的任务算到上一周期
                 parameter.put("PRE_CYCLE_END_DATE", planEntity.getPlanDate());
-                if(totalFinishNum > preTotalUnfinishNum + limitNum) {
-                    parameter.put("UNFINISH_NUM", "0");
-                } else {
-                    parameter.put("UNFINISH_NUM", String.valueOf(preTotalUnfinishNum + limitNum - totalFinishNum));
-                }
-                cyclePlanFinishInfoDAO.save("INS_CYCLE_PLAN_FINISH_INFO", parameter);
+                int unFinishNum = preTotalUnfinishNum - currCycleFinishNum > 0 ? preTotalUnfinishNum - currCycleFinishNum : 0;
+                parameter.put("UNFINISH_NUM", String.valueOf(unFinishNum));
+                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+
+                continue;
             }
+
+            if(interval >= timeInterval + currCycleImproperDays){
+                //周期的最后一天
+                parameter.put("PRE_CYCLE_END_DATE", planEntity.getPlanDate());
+                int unFinishNum = preTotalUnfinishNum + limitNum - currCycleFinishNum > 0 ? preTotalUnfinishNum + limitNum - currCycleFinishNum : 0;
+                parameter.put("UNFINISH_NUM", String.valueOf(unFinishNum));
+                parameter.put("CURR_CYCLE_FINISH_NUM", "0");//清0
+                parameter.put("CURR_CYCLE_IMPROPER_DAYS", "0");//清0
+                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+
+                continue;
+            }
+
+            //非当前周期的最后一天
+            if(!"1".equals(planType)) {
+                //其他非正常上班情况，则本周期非正常上班天数+1
+                parameter.put("CURR_CYCLE_IMPROPER_DAYS", String.valueOf(currCycleImproperDays));
+            }
+            parameter.put("CURR_CYCLE_FINISH_NUM", String.valueOf(currCycleFinishNum));
+            cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+
+//            String startTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
+//            String endTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
+//            if(interval == timeInterval) {
+//                int totalFinishNum = custActionDAO.queryFinishActionCount(planEntity.getPlanExecutorId(), targetCode, startTime, endTime);
+//                if(totalFinishNum > preTotalUnfinishNum + limitNum) {
+//                    parameter.put("UNFINISH_NUM", "0");
+//                } else {
+//                    parameter.put("UNFINISH_NUM", String.valueOf(preTotalUnfinishNum + limitNum - totalFinishNum));
+//                }
+//                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+//            }
         }
 
         //更新客户的LAST_ACTION、LAST_ACTION_DATE

@@ -15,7 +15,7 @@ public class PlanActionNumDAO extends StrongObjectDAO{
         super(databaseName);
     }
 
-    public int getPlanActionNumBetweenStartAndEnd(String planExecutorId, String actionCode, String startDate, String endDate) throws Exception {
+    public int getPlanActionFinishNumBetweenStartAndEnd(String planExecutorId, String actionCode, String startDate, String endDate) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         parameter.put("START_DATE", startDate);

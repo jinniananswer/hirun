@@ -520,9 +520,9 @@ var selectCust = {
     },
     setCovertGenderParam : function(param) {
         var actionCode = selectCust.actionCode;
-        if(actionCode == 'DKCSMU' || actionCode == 'YJALTS' || actionCode == 'JW') {
+        // if(actionCode == 'DKCSMU' || actionCode == 'YJALTS' || actionCode == 'JW') {
             param['UNEXECUTED_ACTION'] = actionCode;
-        }
+        // }
     }
 }
 

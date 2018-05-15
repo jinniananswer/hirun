@@ -130,4 +130,20 @@ public class CustActionDAO extends StrongObjectDAO {
         return list;
 //        }
     }
+
+    public int queryFinishActionCountByPlanId(String planId, String actionCode) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_ID", planId);
+        parameter.put("ACTION_CODE", actionCode);
+
+        StringBuilder sql = new StringBuilder(200);
+        sql.append(" SELECT COUNT(*) NUM FROM INS_CUST_ACTION ");
+        sql.append(" WHERE PLAN_ID = :PLAN_ID ");
+        sql.append(" AND ACTION_CODE = :ACTION_CODE ");
+        sql.append(" AND FINISH_TIME IS NOT NULL ");
+        RecordSet recordSet = this.queryBySql(sql.toString(), parameter);
+        int num = recordSet.getInt(0, "NUM");
+
+        return num;
+    }
 }

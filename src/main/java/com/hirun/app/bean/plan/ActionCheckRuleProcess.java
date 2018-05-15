@@ -39,6 +39,7 @@ public class ActionCheckRuleProcess {
             PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = new PlanCycleFinishInfoDAO("ins");
             PlanCycleFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(executorId, actionCode);
             int preTotalUnfinishNum = 0;
+            int currCycleFinishNum = 0;
             String preCycleEndDate = null;
             int interval = 1;
             if(cyclePlanFinishInfoEntity == null) {
@@ -49,27 +50,30 @@ public class ActionCheckRuleProcess {
                 newEntityMap.put("ACTION_CODE", actionCode);
                 newEntityMap.put("PRE_CYCLE_END_DATE", preCycleEndDate);
                 newEntityMap.put("UNFINISH_NUM", "0");
-                cyclePlanFinishInfoDAO.insert("INS_CYCLE_PLAN_FINISH_INFO", newEntityMap);
+                newEntityMap.put("CURR_CYCLE_FINISH_NUM", "0");
+                newEntityMap.put("CURR_CYCLE_IMPROPER_DAYS", "0");
+                cyclePlanFinishInfoDAO.insert("INS_PLAN_CYCLE_FINISH_INFO", newEntityMap);
             } else  {
                 preTotalUnfinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getUnfinishNum());
                 preCycleEndDate = cyclePlanFinishInfoEntity.getPreCycleEndDate();
+                currCycleFinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getCurrCycleFinishNum());
                 interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(preCycleEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         LocalDate.parse(planDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             }
 
             int totalLimitNum = 0;
-            if(interval == timeInterval) {
-                totalLimitNum = preTotalUnfinishNum + limitNum;
-                String startTime = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
-                PlanActionNumDAO planActionNumDAO = new PlanActionNumDAO("ins");
-                int currentCycleTotalNum = planActionNumDAO.getPlanActionNumBetweenStartAndEnd(executorId,actionCode,startTime,planDate);
-                if(totalLimitNum - currentCycleTotalNum > custNum) {
-                    errorMessage.append(actionName + "数需至少" + (totalLimitNum - currentCycleTotalNum) + "个");
-                    return errorMessage.toString();
-                }
-            } else {
-                totalLimitNum = preTotalUnfinishNum;
+//            if(interval == timeInterval) {
+            totalLimitNum = preTotalUnfinishNum + limitNum;
+            String startTime = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
+            PlanActionNumDAO planActionNumDAO = new PlanActionNumDAO("ins");
+//            int currentCycleTotalNum = planActionNumDAO.getPlanActionFinishNumBetweenStartAndEnd(executorId,actionCode,startTime,planDate);
+            if(totalLimitNum - currCycleFinishNum > custNum) {
+                errorMessage.append(actionName + "数需至少" + (totalLimitNum - currCycleFinishNum) + "个");
+                return errorMessage.toString();
             }
+//            } else {
+//                totalLimitNum = preTotalUnfinishNum;
+//            }
 
             if(totalLimitNum > 0) {
 

@@ -17,6 +17,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,6 +72,20 @@ public class PlanController {
         ServiceResponse planInfoResponse = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
         if(StringUtils.isNotBlank(planInfoResponse.getString("PLAN_ID"))) {
             response.setError("-1", "您已经录过【" + PlanTool.getPlanDate() + "】的计划了");
+            return response.toJsonString();
+        }
+        String yesterdayPlanDate = TimeTool.addTime(PlanTool.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+        paramter.clear();
+        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
+        paramter.put("PLAN_DATE", yesterdayPlanDate);
+        ServiceResponse yesterdayPlanInfoResponse = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
+        if(StringUtils.isNotBlank(yesterdayPlanInfoResponse.getString("PLAN_ID"))) {
+            String yesterdayPlanStatus = yesterdayPlanInfoResponse.getString("PLAN_STATUS");
+            if(!"2".equals(yesterdayPlanStatus)) {
+                response.setError("-1", yesterdayPlanDate + "的计划您还没有总结，请先总结");
+            }
+        } else {
+            response.setError("-1", yesterdayPlanDate + "的计划您还没有录，请先补录");
         }
 
         return response.toJsonString();
@@ -85,11 +100,19 @@ public class PlanController {
 
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
         if(StringUtils.isNotBlank(response.getString("PLAN_ID"))) {
-            ServiceResponse newCustListResponse = ServiceClient.call("OperationCenter.plan.PlanService.queryNewCustList4Summary", paramter);
-            response.set("CUST_LIST", newCustListResponse.getJSONArray("CUST_LIST"));
+            String planStatus = response.getString("PLAN_STATUS");
+            String planDate = response.getString("PLAN_DATE");
+            if("2".equals(planStatus)) {
+                response.setError("-1", planDate + "的计划已经总结过了，不能再次总结");
+            }
         } else {
             response.setError("-1", "没有【" + PlanTool.getPlanDate4Summarize() + "】的计划");
+            return response.toJsonString();
         }
+
+        ServiceResponse newCustListResponse = ServiceClient.call("OperationCenter.plan.PlanService.queryNewCustList4Summary", paramter);
+        response.set("CUST_LIST", newCustListResponse.getJSONArray("CUST_LIST"));
+
         return response.toJsonString();
     }
 
