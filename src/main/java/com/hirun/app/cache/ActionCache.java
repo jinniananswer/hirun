@@ -19,7 +19,11 @@ public class ActionCache extends AbstractReadOnlyCache{
         Map<String, String> parameter = new HashMap<String, String>();
 
         parameter.put("STATUS", "1");
-        List<ActionEntity> list = dao.query(ActionEntity.class, "SYS_ACTION", parameter);
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * FROM SYS_ACTION ");
+        sql.append(" WHERE STATUS = :STATUS ");
+        sql.append(" ORDER BY ORDER_NO ");
+        List<ActionEntity> list = dao.queryBySql(ActionEntity.class, sql.toString(), parameter);
         for(ActionEntity actionEntity : list) {
             cacheMap.put(actionEntity.getActionCode(), actionEntity);
         }
@@ -61,6 +65,14 @@ public class ActionCache extends AbstractReadOnlyCache{
                 list.add(entity);
             }
         }
+
+        Collections.sort(list, new Comparator<ActionEntity>() {
+            @Override
+            public int compare(ActionEntity o1, ActionEntity o2) {
+                int i = Integer.parseInt(o1.getOrderNo()) - Integer.parseInt(o2.getOrderNo());
+                return i;
+            }
+        });
 
         return list;
     }

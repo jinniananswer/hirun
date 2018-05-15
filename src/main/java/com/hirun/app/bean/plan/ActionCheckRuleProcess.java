@@ -1,15 +1,15 @@
-package com.hirun.app.biz.plan;
+package com.hirun.app.bean.plan;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
-import com.hirun.app.dao.plan.CyclePlanFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
+import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
-import com.hirun.pub.domain.entity.plan.CyclePlanFinishInfoEntity;
+import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.most.core.pub.tools.time.TimeTool;
 
 import java.time.LocalDate;
@@ -36,8 +36,8 @@ public class ActionCheckRuleProcess {
             int unit = Integer.parseInt(planTargetLimitEntity.getUnit());
             int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
 
-            CyclePlanFinishInfoDAO cyclePlanFinishInfoDAO = new CyclePlanFinishInfoDAO("ins");
-            CyclePlanFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(executorId, actionCode);
+            PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = new PlanCycleFinishInfoDAO("ins");
+            PlanCycleFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(executorId, actionCode);
             int preTotalUnfinishNum = 0;
             String preCycleEndDate = null;
             int interval = 1;

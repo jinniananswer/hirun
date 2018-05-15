@@ -2,7 +2,7 @@ var actionList = [
     {"ACTION_CODE":"JW","ACTION_NAME":"加微"},
     {"ACTION_CODE":"LTZDSTS","ACTION_NAME":"蓝图指导书推送"},
     {"ACTION_CODE":"GZHGZ","ACTION_NAME":"公众号关注"},
-    {"ACTION_CODE":"HXJC","ACTION_NAME":"核心接触"},
+    // {"ACTION_CODE":"HXJC","ACTION_NAME":"核心接触"},
     {"ACTION_CODE":"SMJRQLC","ACTION_NAME":"扫码进入全流程"},
     {"ACTION_CODE":"XQLTYTS","ACTION_NAME":"需求蓝图一推送"},
 	{"ACTION_CODE":"ZX","ACTION_NAME":"咨询"},
@@ -12,6 +12,7 @@ var actionList = [
 var planEntry = {
 	planActionMap : {},//{actionCode:custList}
     planTargetList : [],
+    newCustList : [],
     currentAction : '',
     currentActionIndex : '',
     planDate : '',
@@ -30,6 +31,11 @@ var planEntry = {
 			disabled:false,
 			step:1
 		});
+
+        window["addWxNum"] = new Wade.IncreaseReduce("addWxNum", {
+            disabled:false,
+            step:1
+        });
 		
 		window["adviceNum"] = new Wade.IncreaseReduce("adviceNum", {
 			disabled:false,
@@ -247,20 +253,76 @@ var planEntry = {
 	        return;
         }
 
-        planEntry.planTargetList.push({"ACTION_CODE":"ZX", "NUM" : $('#adviceNum').val()});
-        planEntry.planTargetList.push({"ACTION_CODE":"SMJRQLC", "NUM" : $('#scanHouseCounselorNum').val()});
+        //按JW数量新增客户 start
+        planEntry.addCustByNum();
+	    //按JW数量新增客户 end
 
-		backPopup(obj);
+        planEntry.planTargetList.push({"ACTION_CODE":"ZX", "NUM" : $('#adviceNum').val()});
+        planEntry.planTargetList.push({"ACTION_CODE":"HXJC", "NUM" : $('#scanHouseCounselorNum').val()});
+        planEntry.planTargetList.push({"ACTION_CODE":"JW", "NUM" : $('#addWxNUm').val()});
+
         $('#planTarget span[tag=adviceNum]').html($('#adviceNum').val());
         $('#planTarget span[tag=scanHouseCounselorNum]').html($('#scanHouseCounselorNum').val());
-		
-		$('#ACTION_PART').show();
+        $('#planTarget span[tag=addWxNum]').html($('#addWxNum').val());
 
-        $('#ACTION_LIST').html(template('action_list_template', {ACTION_LIST : actionList}));
-        $('#PLAN_TARGET_SET_PART').unbind('tap');
-		
-		planEntry.setCurrentActionOn();
+        planEntry.showPlanActionAndCustList(obj);
+
+
+        // $('#PLAN_TARGET_SET_PART').unbind('tap');
+        //
+        // planEntry.setCurrentActionOn();
 	},
+	addCustByNum : function() {
+        var param = {
+            NEW_CUSTNUM : $('#addWxNum').val(),
+            // CUST_NAME_PREFIX : planEntry.planDate,
+            FIRST_PLAN_DATE : planEntry.planDate,
+        }
+        $.ajaxReq({
+            url : 'cust/addCustByNum',
+            data : param,
+            type : 'POST',
+            async : false,
+            dataType : 'json',
+            successFunc : function(data) {
+                var custList= data['custList'];
+                planEntry.newCustList = custList;
+                // $.each(custList, function(idx, cust){
+                //     custName += cust.CUST_NAME + "；";
+                //     planEntry.planActionMap[planEntry.currentAction] = custList;
+                // });
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        });
+    },
+    showPlanActionAndCustList : function(obj) {
+        $.ajaxReq({
+            url : 'plan/getPlanActionAndCustList',
+            data : {
+                PLAN_DATE : planEntry.planDate
+            },
+            type : 'POST',
+            async : false,
+            dataType : 'json',
+            successFunc : function(data) {
+                var actionList = data.ACTION_LIST;
+                $('#ACTION_PART').show();
+
+                $.each(actionList, function(idx, action) {
+                    action.NEW_CUST_LIST = planEntry.newCustList;
+                });
+
+                $('#ACTION_LIST').html(template('action_list_template', {ACTION_LIST : actionList}));
+
+                backPopup(obj);
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        });
+    },
 	checkSelectedCust : function() {
 		var checkFlag = true;
         var newCustNum = parseInt($("#newCustNum").val());
@@ -320,12 +382,24 @@ var planEntry = {
         var workMode = $("#workMode").val();
 
 	    var planList = [];
-        $.each(planEntry.planActionMap, function(key, item){
+	    $('#ACTION_LIST div[tag=PLAN_ACTION]').each(function(idx, item) {
+	        var $item = $(item);
             var actionPlan = {};
-            actionPlan.ACTION_CODE = key;
-            actionPlan.CUSTLIST = item;
+            actionPlan.ACTION_CODE = $item.attr('action_code');
+            var custList = [];
+            $item.find('li[li_type=cust]').each(function(idx2, cust) {
+                custList.push({CUST_ID : $(cust).attr('cust_id')});
+            });
+            actionPlan.CUSTLIST = custList;
+
             planList.push(actionPlan);
-        });
+        })
+        // $.each(planEntry.planActionMap, function(key, item){
+        //     var actionPlan = {};
+        //     actionPlan.ACTION_CODE = key;
+        //     actionPlan.CUSTLIST = item;
+        //     planList.push(actionPlan);
+        // });
 
         var param = {
             PLANLIST : JSON.stringify(planList),
@@ -355,12 +429,14 @@ var planEntry = {
     checkPlanTarget : function() {
         var scanHouseCounselorNum =  $('#scanHouseCounselorNum').val();
         var adviceNum = $('#adviceNum').val();
+        var addWxNum = $('#addWxNum').val();
 
         var checkFlag = false;
 
         var planTargetList = [
             {"ACTION_CODE":"ZX","NUM":adviceNum},
-            {"ACTION_CODE":"SMJRQLC","NUM":scanHouseCounselorNum},
+            {"ACTION_CODE":"HXJC","NUM":scanHouseCounselorNum},
+            {"ACTION_CODE":"JW","NUM":addWxNum},
         ];
         $.ajaxReq({
                 url:'plan/checkPlanTarget',

@@ -1,5 +1,6 @@
 package com.hirun.web.biz.plan;
 
+import com.hirun.pub.domain.entity.session.BizSessionEntity;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
@@ -136,6 +137,15 @@ public class PlanController {
 //        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
         paramter.put("PLAN_DATE", planDate);
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryEmployeeDailySheet", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/plan/getPlanActionAndCustList")
+    public String getPlanActionAndCustList(@RequestParam Map paramter) throws Exception{
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getPlanActionAndCustList", paramter);
         return response.toJsonString();
     }
 }

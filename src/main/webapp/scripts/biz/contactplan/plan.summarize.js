@@ -186,6 +186,7 @@ var planSummarize = {
             ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').attr('unfinish_cause_id', summary.UNFINISH_CAUSE_ID));
             ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').attr('unfinish_cause_desc', summary.UNFINISH_CAUSE_DESC));
             ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').attr('oper_code', '2'));
+            ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').find('span[tag=unfinish_cause_desc]').html(summary.UNFINISH_CAUSE_DESC));
         })
         //结束
 
@@ -317,6 +318,8 @@ var planSummarize = {
         $obj.attr('unfinish_cause_id', cause.UNFINISH_CAUSE_ID ? cause.UNFINISH_CAUSE_ID : '');
         $obj.attr('unfinish_cause_desc', cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
         $obj.attr('oper_code', '2');
+
+        $obj.find('span[tag=unfinish_cause_desc]').html(cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
     },
     showCustEditPopup : function(obj) {
         var $obj = $(obj)
@@ -357,7 +360,7 @@ var planSummarize = {
                 var $finishCust = $(finishCust);
                 if($finishCust.attr('oper_code') == '2') {
                     var actionId = $finishCust.attr('action_id');
-                    if(actionId) {
+                    if(actionId) {$
                         var transToFinish = {};
                         transToFinish.ACTION_ID = actionId;
                         transToFinishList.push(transToFinish)
@@ -394,7 +397,7 @@ var planSummarize = {
             dataType : 'json',
             successFunc : function(data) {
                 alert('提交总结成功');
-                top.$.index.closePage("今日计划录入");
+                top.$.index.closeCurrentPage();
             },
             errorFunc : function (resultCode, resultInfo) {
 

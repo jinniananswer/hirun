@@ -4,13 +4,13 @@ import com.most.core.pub.data.GenericEntity;
 
 import java.util.Map;
 
-public class CyclePlanFinishInfoEntity extends GenericEntity{
+public class PlanCycleFinishInfoEntity extends GenericEntity{
 
-	public CyclePlanFinishInfoEntity(){
+	public PlanCycleFinishInfoEntity(){
 		super();
 	}
 
-	public CyclePlanFinishInfoEntity(Map<String, String> data){
+	public PlanCycleFinishInfoEntity(Map<String, String> data){
 		super(data);
 	}
 	
@@ -30,6 +30,14 @@ public class CyclePlanFinishInfoEntity extends GenericEntity{
 		this.set("EMPLOYEE_ID", employeeId);
 	}
 	
+	public String getActionCode(){
+		return this.get("ACTION_CODE");
+	}
+
+	public void setActionCode(String actionCode){
+		this.set("ACTION_CODE", actionCode);
+	}
+	
 	public String getPreCycleEndDate(){
 		return this.get("PRE_CYCLE_END_DATE");
 	}
@@ -45,13 +53,21 @@ public class CyclePlanFinishInfoEntity extends GenericEntity{
 	public void setUnfinishNum(String unfinishNum){
 		this.set("UNFINISH_NUM", unfinishNum);
 	}
-
-	public String getActionCode(){
-		return this.get("ACTION_CODE");
+	
+	public String getCurrCycleFinishNum(){
+		return this.get("CURR_CYCLE_FINISH_NUM");
 	}
 
-	public void setActionCode(String actionCode){
-		this.set("ACTION_CODE", actionCode);
+	public void setCurrCycleFinishNum(String currCycleFinishNum){
+		this.set("CURR_CYCLE_FINISH_NUM", currCycleFinishNum);
+	}
+	
+	public String getCurrCycleImproperDays(){
+		return this.get("CURR_CYCLE_IMPROPER_DAYS");
+	}
+
+	public void setCurrCycleImproperDays(String currCycleImproperDays){
+		this.set("CURR_CYCLE_IMPROPER_DAYS", currCycleImproperDays);
 	}
 	
 }

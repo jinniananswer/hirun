@@ -2,14 +2,15 @@ package com.hirun.app.biz.plan;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.cache.PlanUnFinishCauseCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
-import com.hirun.app.dao.plan.CyclePlanFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
+import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
@@ -17,16 +18,13 @@ import com.hirun.pub.domain.entity.param.ActionEntity;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
-import com.hirun.pub.domain.entity.plan.CyclePlanFinishInfoEntity;
+import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.Body;
-import com.most.core.pub.data.ServiceRequest;
-import com.most.core.pub.data.ServiceResponse;
-import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.data.*;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
@@ -168,6 +166,7 @@ public class PlanService extends GenericService {
         while(iter.hasNext()) {
             String actionCode = (String) iter.next();
             int num = targetJSONObject.getIntValue(actionCode);
+//                String errorMessage = null;
                 String errorMessage = ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, num, planDate, targetJSONObject);
                 if (StringUtils.isNotBlank(errorMessage)) {
                     response.setError("-1", errorMessage);
@@ -432,14 +431,14 @@ public class PlanService extends GenericService {
 
         //更新INS_CYCLE_PLAN_FINISH_INFO
         JSONObject finishTargetLimitMap = new JSONObject();
-        CyclePlanFinishInfoDAO cyclePlanFinishInfoDAO = new CyclePlanFinishInfoDAO("ins");
+        PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = new PlanCycleFinishInfoDAO("ins");
         List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();
         for(PlanTargetLimitEntity planTargetLimitEntity : planTargetLimitEntityList) {
             String targetCode = planTargetLimitEntity.getTargetCode();
             int timeInterval = Integer.parseInt(planTargetLimitEntity.getTimeInterval());
             int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
 
-            CyclePlanFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planEntity.getPlanExecutorId(), targetCode);
+            PlanCycleFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planEntity.getPlanExecutorId(), targetCode);
             int preTotalUnfinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getUnfinishNum());
             String preCycleEndDate = cyclePlanFinishInfoEntity.getPreCycleEndDate();
             int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(preCycleEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
@@ -667,6 +666,40 @@ public class PlanService extends GenericService {
         }
 
         response.set("ACTION_COUNT_LIST", actionCountList);
+
+        return response;
+    }
+
+    public ServiceResponse getPlanActionAndCustList(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String planDate = requestData.getString("PLAN_DATE");
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+
+        CustDAO custDAO = new CustDAO("ins");
+        Map<String, String> dbParam = new HashMap<String, String>();
+        JSONArray jsonActionAndCustList = new JSONArray();
+
+        List<ActionEntity> actionEntityList = ActionCache.getActionListByType("1");
+        for(ActionEntity actionEntity : actionEntityList) {
+            JSONObject jsonAction = new JSONObject();
+            jsonAction.put("ACTION_CODE", actionEntity.getActionCode());
+            jsonAction.put("ACTION_NAME", actionEntity.getActionName());
+
+            if("JW".equals(actionEntity.getActionCode())) {
+                jsonAction.put("CUST_LIST", new JSONArray());
+            } else {
+                dbParam.clear();
+                dbParam.put("UNEXECUTED_ACTION", actionEntity.getActionCode());
+                dbParam.put("HOUSE_COUNSELOR_ID", planExecutorId);
+                List<CustomerEntity> customerEntityList = custDAO.queryCustList(dbParam);
+                jsonAction.put("CUST_LIST", ConvertTool.toJSONArray(customerEntityList));
+            }
+
+            jsonActionAndCustList.add(jsonAction);
+        }
+
+        response.set("ACTION_LIST", jsonActionAndCustList);
 
         return response;
     }

@@ -380,6 +380,7 @@
 					{{/each}}
 				</ul>
 			</div>
+			<div class="c_line c_line-dashed"></div>
 			<div class="c_list">
 				<ul>
 					<li class="" ontap="">
@@ -402,6 +403,7 @@
 						ontap="planSummarize.summarize(this)">
 						<div class="main">
 							<div class="title" >{{cust.CUST_NAME}}<span class="e_ico-edit"></span></div>
+							<div class="content"><span class="e_red" tag="unfinish_cause_desc">{{cust.UNFINISH_CAUSE_DESC}}</span></div>
 						</div>
 					</li>
 					{{/each}}
@@ -432,6 +434,7 @@
 		ontap="planSummarize.summarize(this)">
 		<div class="main">
 			<div class="title">{{cust.CUST_NAME}}<span class="e_ico-edit"></span></div>
+			<div class="content"><span class="e_red" tag="unfinish_cause_desc"></span></div>
 		</div>
 	</li>
 	{{/each}}
