@@ -51,7 +51,8 @@
                 html.push("<div class=\"main\"><div class=\"title\">");
                 html.push(counselor.get("EMPLOYEE_NAME"));
                 html.push("</div><div class=\"content\">");
-                html.push("负责楼栋："+counselor.get("TOWER_NO")+"; 负责户数："+counselor.get("EMPLOYEE_HOUSE_NUM"));
+                if(planCounselorNum > 1)
+                    html.push("负责楼栋："+counselor.get("TOWER_NO")+"; 负责户数："+counselor.get("EMPLOYEE_HOUSE_NUM"));
                 html.push("</div></div></div></div>");
                 html.push("</li>");
             }
