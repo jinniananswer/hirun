@@ -617,6 +617,18 @@ public class TimeTool {
         return (start.isBefore(now) && end.isAfter(now)) || start.isEqual(now) || end.isEqual(now);
     }
 
+    /**
+     * 字符串转时间撮,必须是年月日，时分秒
+     * @param date
+     * @return
+     * @throws Exception
+     */
+    public static long strToTime4DateTime(String date, String pattern) throws Exception {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(pattern);
+        LocalDateTime ldtStart = LocalDateTime.parse(date,dateTimeFormatter);
+        return ldtStart.toEpochSecond(ZoneOffset.of("+8"));
+    }
+
     public static void main(String[] args){
         System.out.println(now());
     }

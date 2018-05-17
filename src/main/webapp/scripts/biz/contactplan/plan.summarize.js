@@ -147,6 +147,31 @@ var planSummarize = {
             }
         })
 
+        $.ajaxReq({
+            url : 'common/getCodeTypeDatas',
+            data : {
+                CODE_TYPE : 'HOUSE_MODE'
+            },
+            successFunc : function(data) {
+                var options = [];
+                $.each(data.STATICDATA_LIST, function(idx, staticData) {
+                    options.push({TEXT : staticData.CODE_NAME, VALUE : staticData.CODE_VALUE})
+                })
+                $.Select.append(
+                    "custEditForm_houseMode_container",
+                    // 参数设置
+                    {
+                        id:"custEditForm_houseMode",
+                        name:"HOUSE_MODE",
+                    },
+                    options
+                );
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        })
+
         //客户资料编辑初始化 结束
     },
     selectCust : function(obj) {
@@ -186,6 +211,7 @@ var planSummarize = {
             ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').attr('unfinish_cause_id', summary.UNFINISH_CAUSE_ID));
             ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').attr('unfinish_cause_desc', summary.UNFINISH_CAUSE_DESC));
             ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').attr('oper_code', '2'));
+            ($('#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_'+summary.CUST_ID+']').find('span[tag=unfinish_cause_desc]').html(summary.UNFINISH_CAUSE_DESC));
         })
         //结束
 
@@ -317,6 +343,8 @@ var planSummarize = {
         $obj.attr('unfinish_cause_id', cause.UNFINISH_CAUSE_ID ? cause.UNFINISH_CAUSE_ID : '');
         $obj.attr('unfinish_cause_desc', cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
         $obj.attr('oper_code', '2');
+
+        $obj.find('span[tag=unfinish_cause_desc]').html(cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
     },
     showCustEditPopup : function(obj) {
         var $obj = $(obj)
@@ -347,6 +375,12 @@ var planSummarize = {
         }
     },
     submit : function() {
+        var errorMessage = planSummarize.checkBeforeSubmit();
+        if(errorMessage && errorMessage != '') {
+            alert(errorMessage);
+            return;
+        }
+
         var param = {};
         var unfinishSummaryList = [];
         var addExtraCustActionList = [];
@@ -357,7 +391,7 @@ var planSummarize = {
                 var $finishCust = $(finishCust);
                 if($finishCust.attr('oper_code') == '2') {
                     var actionId = $finishCust.attr('action_id');
-                    if(actionId) {
+                    if(actionId) {$
                         var transToFinish = {};
                         transToFinish.ACTION_ID = actionId;
                         transToFinishList.push(transToFinish)
@@ -394,13 +428,36 @@ var planSummarize = {
             dataType : 'json',
             successFunc : function(data) {
                 alert('提交总结成功');
-                top.$.index.closePage("今日计划录入");
+                top.$.index.closeCurrentPage();
             },
             errorFunc : function (resultCode, resultInfo) {
 
             }
         })
     },
+    checkBeforeSubmit : function() {
+        var hasUnSummaryCust = false;
+        var errorMessage = '';
+        $.each(actionList, function(idx, action){
+            var actionCode = action.ACTION_CODE;
+            $('#FINISH_INFO_' + actionCode + ' ul[tag=UNFINISH_CUST_LIST]').find('li[li_type=unFinish]').each(function(idx, unFinishCust) {
+                var $unFinishCust = $(unFinishCust);
+                if('2' != $unFinishCust.attr('oper_code')) {
+                    hasUnSummaryCust = true;
+                    return false;
+                }
+            })
+            if(hasUnSummaryCust) {
+                return false;
+            }
+        });
+
+        if(hasUnSummaryCust) {
+            errorMessage = '还有未完成客户没有填写原因，请先填写未完成原因';
+        }
+
+        return errorMessage;
+    }
 };
 
 var selectCust = {
@@ -517,9 +574,9 @@ var selectCust = {
     },
     setCovertGenderParam : function(param) {
         var actionCode = selectCust.actionCode;
-        if(actionCode == 'DKCSMU' || actionCode == 'YJALTS' || actionCode == 'JW') {
+        // if(actionCode == 'DKCSMU' || actionCode == 'YJALTS' || actionCode == 'JW') {
             param['UNEXECUTED_ACTION'] = actionCode;
-        }
+        // }
     }
 }
 

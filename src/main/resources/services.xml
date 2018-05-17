@@ -24,6 +24,8 @@
     <entity name="OperationCenter.plan.PlanService.queryNewCustList4Summary"  class="com.hirun.app.biz.plan.PlanService" method="queryNewCustList4Summary"/>
     <entity name="OperationCenter.plan.PlanService.getCustFinishActionList"  class="com.hirun.app.biz.plan.PlanService" method="getCustFinishActionList"/>
     <entity name="OperationCenter.plan.PlanService.queryEmployeeDailySheet"  class="com.hirun.app.biz.plan.PlanService" method="queryEmployeeDailySheet"/>
+    <entity name="OperationCenter.plan.PlanService.getPlanActionAndCustList"  class="com.hirun.app.biz.plan.PlanService" method="getPlanActionAndCustList"/>
+    <entity name="OperationCenter.plan.PlanService.getTargetLowerLimit"  class="com.hirun.app.biz.plan.PlanService" method="getTargetLowerLimit"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
@@ -31,4 +33,7 @@
     <entity name="CustCenter.cust.CustService.queryCustList"  class="com.hirun.app.biz.cust.CustService" method="queryCustList"/>
     <entity name="CustCenter.cust.CustService.addCustByNum"  class="com.hirun.app.biz.cust.CustService" method="addCustByNum"/>
     <entity name="CustCenter.cust.CustService.getCustById"  class="com.hirun.app.biz.cust.CustService" method="getCustById"/>
+
+    <!--公共-->
+    <entity name="Common.static.StaticDataService.getCodeTypeDatas"  class="com.hirun.app.biz.common.StaticDataService" method="getCodeTypeDatas"/>
 </service>

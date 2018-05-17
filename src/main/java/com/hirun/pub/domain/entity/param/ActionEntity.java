@@ -64,4 +64,12 @@ public class ActionEntity extends GenericEntity{
     public void setStatus(String status){
         this.set("STATUS", status);
     }
+
+    public String getOrderNo(){
+        return this.get("ORDER_NO");
+    }
+
+    public void setOrderNo(String orderNo){
+        this.set("ORDER_NO", orderNo);
+    }
 }

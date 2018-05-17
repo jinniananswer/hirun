@@ -12,6 +12,7 @@ var actionList = [
 var planEntry = {
 	planActionMap : {},//{actionCode:custList}
     planTargetList : [],
+    newCustList : [],
     currentAction : '',
     currentActionIndex : '',
     planDate : '',
@@ -30,6 +31,11 @@ var planEntry = {
 			disabled:false,
 			step:1
 		});
+
+        window["addWxNum"] = new Wade.IncreaseReduce("addWxNum", {
+            disabled:false,
+            step:1
+        });
 		
 		window["adviceNum"] = new Wade.IncreaseReduce("adviceNum", {
 			disabled:false,
@@ -56,10 +62,28 @@ var planEntry = {
 			var modeVal = this.value; // this.value 获取分段器组件当前值
 			planActionList = [];//清空已选动作
             $('#ACTION_PART').hide();
+            $('#ACTION_LIST').empty();//清空动作计划
 			if(modeVal == '1') {
-				$('#PLAN_TARGET_SET_PART').show();
+				// $('#PLAN_TARGET_SET_PART').show();
 			} else {
-				$('#PLAN_TARGET_SET_PART').hide();
+			    var message = '今日您';
+			    if(modeVal == '2') {
+                    message += '<span class="e_red e_strong">参加活动</span>';
+                } else {
+                    message += '<span class="e_red e_strong">休假</span>';
+                }
+                message += '，可以不设定具体计划。点击【确定】不设定具体计划并提交，点击【继续】继续设定计划<br/>';
+                message += '<span class="e_red">温馨提示：如您选择继续设定计划，则必须填写总结！</span>';
+                MessageBox.alert("提示信息",message, function(btn){
+                    if("ok" == btn) {
+                        // document.location.reload();
+                        planEntry.submitPlan();
+                    }
+                    else {
+                        // parent.$.index.closeCurrentPage();
+                    }
+                },{"cancel":"继续"})
+				// $('#PLAN_TARGET_SET_PART').hide();
 			}
 		});
 
@@ -247,20 +271,86 @@ var planEntry = {
 	        return;
         }
 
-        planEntry.planTargetList.push({"ACTION_CODE":"ZX", "NUM" : $('#adviceNum').val()});
-        planEntry.planTargetList.push({"ACTION_CODE":"SMJRQLC", "NUM" : $('#scanHouseCounselorNum').val()});
+        //按JW数量新增客户 start
+        planEntry.addCustByNum();
+	    //按JW数量新增客户 end
 
-		backPopup(obj);
+        planEntry.planTargetList.push({"ACTION_CODE":"ZX", "NUM" : $('#adviceNum').val()});
+        planEntry.planTargetList.push({"ACTION_CODE":"HXJC", "NUM" : $('#scanHouseCounselorNum').val()});
+        planEntry.planTargetList.push({"ACTION_CODE":"JW", "NUM" : $('#addWxNUm').val()});
+
         $('#planTarget span[tag=adviceNum]').html($('#adviceNum').val());
         $('#planTarget span[tag=scanHouseCounselorNum]').html($('#scanHouseCounselorNum').val());
-		
-		$('#ACTION_PART').show();
+        $('#planTarget span[tag=addWxNum]').html($('#addWxNum').val());
 
-        $('#ACTION_LIST').html(template('action_list_template', {ACTION_LIST : actionList}));
-        $('#PLAN_TARGET_SET_PART').unbind('tap');
-		
-		planEntry.setCurrentActionOn();
+        planEntry.showPlanActionAndCustList(obj);
+
+
+        // $('#PLAN_TARGET_SET_PART').unbind('tap');
+        //
+        // planEntry.setCurrentActionOn();
 	},
+	addCustByNum : function() {
+        var param = {
+            NEW_CUSTNUM : $('#addWxNum').val(),
+            // CUST_NAME_PREFIX : planEntry.planDate,
+            FIRST_PLAN_DATE : planEntry.planDate,
+        }
+        $.ajaxReq({
+            url : 'cust/addCustByNum',
+            data : param,
+            type : 'POST',
+            async : false,
+            dataType : 'json',
+            successFunc : function(data) {
+                var custList= data['custList'];
+                planEntry.newCustList = custList;
+                // $.each(custList, function(idx, cust){
+                //     custName += cust.CUST_NAME + "；";
+                //     planEntry.planActionMap[planEntry.currentAction] = custList;
+                // });
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        });
+    },
+    showPlanActionAndCustList : function(obj) {
+	    var workMode = $('#workMode').val();
+        $.ajaxReq({
+            url : 'plan/getPlanActionAndCustList',
+            data : {
+                PLAN_DATE : planEntry.planDate
+            },
+            type : 'POST',
+            async : false,
+            dataType : 'json',
+            successFunc : function(data) {
+                var actionList = data.ACTION_LIST;
+                $('#ACTION_PART').show();
+
+                $.each(actionList, function(idx, action) {
+                    action.NEW_CUST_LIST = planEntry.newCustList;
+                    if("1" != workMode) {
+                        action.CAN_DELETE = true;
+                        action.CAN_DELETE_NEWCUST = true;
+                    } else {
+                        if("XQLTYTS" == action.ACTION_CODE || "ZX" == action.ACTION_CODE) {
+                            action.CAN_DELETE_NEWCUST = true;
+                        }
+                    }
+
+                });
+
+                $('#ACTION_LIST').html(template('action_list_template', {ACTION_LIST : actionList}));
+
+                backPopup(obj);
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        });
+    },
 	checkSelectedCust : function() {
 		var checkFlag = true;
         var newCustNum = parseInt($("#newCustNum").val());
@@ -314,18 +404,62 @@ var planEntry = {
 		}
 	},
 	setPlanTarget : function() {
-		showPopup('myPopup','planTargetSetPopup');
+	    var workMode = $('#workMode').val();
+	    if(workMode == '1') {
+            var targetList = [
+                {"ACTION_CODE" : 'ZX'},
+                {"ACTION_CODE" : 'HXJC'},
+            ]
+            $.ajaxReq({
+                url : 'plan/getTargetLowerLimit',
+                data : {
+                    TARGET_LIST : JSON.stringify(targetList)
+                },
+                successFunc : function(data) {
+                    $.each(data.TARGET_LIST, function(idx, target) {
+                        var actionCode = target.ACTION_CODE;
+                        if(actionCode == 'ZX') {
+                            $('#adviceNum').val(target.LOWER_LIMIT);
+                        } else if(actionCode == 'HXJC') {
+                            $('#scanHouseCounselorNum').val(target.LOWER_LIMIT);
+                        }
+                    })
+                    showPopup('myPopup','planTargetSetPopup');
+                } ,
+                errorFunc : function(errorCode, errorInfo) {
+
+                }
+            })
+        } else {
+            showPopup('myPopup','planTargetSetPopup');
+        }
 	},
     submitPlan : function() {
         var workMode = $("#workMode").val();
 
 	    var planList = [];
-        $.each(planEntry.planActionMap, function(key, item){
+	    $('#ACTION_LIST div[tag=PLAN_ACTION]').each(function(idx, item) {
+	        var $item = $(item);
             var actionPlan = {};
-            actionPlan.ACTION_CODE = key;
-            actionPlan.CUSTLIST = item;
+            actionPlan.ACTION_CODE = $item.attr('action_code');
+            var custList = [];
+            $item.find('li[li_type=cust]').each(function(idx2, cust) {
+                var operCode = $(cust).attr('oper_code');
+                if(operCode == '1') {
+                    return true;
+                }
+                custList.push({CUST_ID : $(cust).attr('cust_id')});
+            });
+            actionPlan.CUSTLIST = custList;
+
             planList.push(actionPlan);
-        });
+        })
+        // $.each(planEntry.planActionMap, function(key, item){
+        //     var actionPlan = {};
+        //     actionPlan.ACTION_CODE = key;
+        //     actionPlan.CUSTLIST = item;
+        //     planList.push(actionPlan);
+        // });
 
         var param = {
             PLANLIST : JSON.stringify(planList),
@@ -355,12 +489,20 @@ var planEntry = {
     checkPlanTarget : function() {
         var scanHouseCounselorNum =  $('#scanHouseCounselorNum').val();
         var adviceNum = $('#adviceNum').val();
+        var addWxNum = $('#addWxNum').val();
+        var workMode = $('#workMode').val();
+
+        if(workMode != '1') {
+            //非正常工作，不校验
+            return true;
+        }
 
         var checkFlag = false;
 
         var planTargetList = [
             {"ACTION_CODE":"ZX","NUM":adviceNum},
-            {"ACTION_CODE":"SMJRQLC","NUM":scanHouseCounselorNum},
+            {"ACTION_CODE":"HXJC","NUM":scanHouseCounselorNum},
+            {"ACTION_CODE":"JW","NUM":addWxNum},
         ];
         $.ajaxReq({
                 url:'plan/checkPlanTarget',
@@ -398,6 +540,23 @@ var planEntry = {
 	        return '';
         } else {
             return actionList[planEntry.currentActionIndex-1].ACTION_CODE;
+        }
+    },
+    operCust : function(obj) {
+        var $obj = $(obj);
+        var operCode = $obj.attr('oper_code');
+        if('1' == operCode) {
+            //已删除的情况
+            $obj.attr('oper_code', '0');
+            $obj.find('span[tag=text]').removeClass('e_delete');
+            $obj.find('span[tag=ico]').removeClass('e_ico-add').removeClass('e_red');
+            $obj.find('span[tag=ico]').addClass('e_ico-delete').addClass('e_blue');
+        } else {
+            //未删除的情况
+            $obj.attr('oper_code', '1');
+            $obj.find('span[tag=text]').addClass('e_delete');
+            $obj.find('span[tag=ico]').removeClass('e_ico-delete').removeClass('e_blue');
+            $obj.find('span[tag=ico]').addClass('e_ico-add').addClass('e_red');
         }
     }
 };

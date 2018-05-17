@@ -2,14 +2,16 @@ package com.hirun.app.biz.plan;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.plan.ActionCheckRuleProcess;
+import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.cache.PlanUnFinishCauseCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
-import com.hirun.app.dao.plan.CyclePlanFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
+import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
@@ -17,16 +19,13 @@ import com.hirun.pub.domain.entity.param.ActionEntity;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
-import com.hirun.pub.domain.entity.plan.CyclePlanFinishInfoEntity;
+import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.Body;
-import com.most.core.pub.data.ServiceRequest;
-import com.most.core.pub.data.ServiceResponse;
-import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.data.*;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
@@ -83,7 +82,12 @@ public class PlanService extends GenericService {
 
         Map<String, String> planEntityParameter = new HashMap<String, String>();
         planEntityParameter.put("PLAN_DATE", planDate);
-        planEntityParameter.put("PLAN_STATUS", "0");
+        if(!"1".equals(planType) && planList.size() == 0) {
+            //如果非正常活动,且没有具体计划内容，则直接为已总结
+            planEntityParameter.put("PLAN_STATUS", "2");
+        } else {
+            planEntityParameter.put("PLAN_STATUS", "0");
+        }
         planEntityParameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         planEntityParameter.put("PLAN_TYPE", planType);
         planEntityParameter.put("CREATE_USER_ID", userId);
@@ -93,6 +97,7 @@ public class PlanService extends GenericService {
         String planId = String.valueOf(planDao.insertAutoIncrement("INS_PLAN", planEntityParameter));
 
         //将今天的计划动作数记到INS_PLAN_ACTION_NUM
+        /*
         for(ActionEntity actionEntity : actionEntityList) {
             int num = 0;
             String actionCode = actionEntity.getActionCode();
@@ -117,36 +122,37 @@ public class PlanService extends GenericService {
             parameter.put("PLAN_EXECUTOR_ID", planExecutorId);
             planActionNumDAO.insert("INS_PLAN_ACTION_NUM", parameter);
         }
+        */
 
-        if("1".equals(planType)) {
-            List<Map<String, String>> custActionList = new ArrayList<Map<String, String>>();
-            for(int i = 0, sizeI = planList.size(); i < sizeI; i++) {
-                JSONObject plan = planList.getJSONObject(i);
-                String actionCode = plan.getString("ACTION_CODE");
-                JSONArray custList = plan.getJSONArray("CUSTLIST");
-                if(custList == null) {
-                    custList = new JSONArray();
-                }
-                for(int j = 0, sizeJ = custList.size(); j < sizeJ; j++) {
-                    String custId = custList.getJSONObject(j).getString("CUST_ID");
-                    Map<String, String> custActionParameter = new HashMap<String, String>();
-                    custActionParameter.put("PLAN_ID", planId);
-                    custActionParameter.put("ACTION_CODE", actionCode);
-                    custActionParameter.put("CUST_ID", custId);
-                    custActionParameter.put("ACTION_STATUS", "0");
-                    custActionParameter.put("PLAN_DEAL_DATE", planDate);
-                    custActionParameter.put("EXECUTOR_ID", planExecutorId);
-                    custActionParameter.put("CREATE_USER_ID", userId);
-                    custActionParameter.put("CREATE_DATE", now);
-                    custActionParameter.put("UPDATE_USER_ID", userId);
-                    custActionParameter.put("UPDATE_TIME", now);
-                    custActionList.add(custActionParameter);
-                }
+//        if("1".equals(planType)) {
+        List<Map<String, String>> custActionList = new ArrayList<Map<String, String>>();
+        for(int i = 0, sizeI = planList.size(); i < sizeI; i++) {
+            JSONObject plan = planList.getJSONObject(i);
+            String actionCode = plan.getString("ACTION_CODE");
+            JSONArray custList = plan.getJSONArray("CUSTLIST");
+            if(custList == null) {
+                custList = new JSONArray();
             }
-            if(ArrayTool.isNotEmpty(custActionList)) {
-                custActionDAO.insertBatch("INS_CUST_ACTION", custActionList);
+            for(int j = 0, sizeJ = custList.size(); j < sizeJ; j++) {
+                String custId = custList.getJSONObject(j).getString("CUST_ID");
+                Map<String, String> custActionParameter = new HashMap<String, String>();
+                custActionParameter.put("PLAN_ID", planId);
+                custActionParameter.put("ACTION_CODE", actionCode);
+                custActionParameter.put("CUST_ID", custId);
+                custActionParameter.put("ACTION_STATUS", "0");
+                custActionParameter.put("PLAN_DEAL_DATE", planDate);
+                custActionParameter.put("EXECUTOR_ID", planExecutorId);
+                custActionParameter.put("CREATE_USER_ID", userId);
+                custActionParameter.put("CREATE_DATE", now);
+                custActionParameter.put("UPDATE_USER_ID", userId);
+                custActionParameter.put("UPDATE_TIME", now);
+                custActionList.add(custActionParameter);
             }
         }
+        if(ArrayTool.isNotEmpty(custActionList)) {
+            custActionDAO.insertBatch("INS_CUST_ACTION", custActionList);
+        }
+//        }
 
         return response;
     }
@@ -168,6 +174,7 @@ public class PlanService extends GenericService {
         while(iter.hasNext()) {
             String actionCode = (String) iter.next();
             int num = targetJSONObject.getIntValue(actionCode);
+//                String errorMessage = null;
                 String errorMessage = ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, num, planDate, targetJSONObject);
                 if (StringUtils.isNotBlank(errorMessage)) {
                     response.setError("-1", errorMessage);
@@ -384,6 +391,11 @@ public class PlanService extends GenericService {
             response.setError("-1","找不到计划");
         }
         PlanEntity planEntity = list.get(0);
+        parameter.put("PLAN_ID", planEntity.getPlanId());
+        parameter.put("PLAN_STATUS", "2");
+        parameter.put("UPDATE_USER_ID", userId);
+        parameter.put("UPDATE_TIME", sysdate);
+        planDAO.save("INS_PLAN", parameter);
 
         if(ArrayTool.isNotEmpty(unFinishSummaryList)) {
             for(int i = 0, size = unFinishSummaryList.size(); i < size; i++) {
@@ -407,6 +419,8 @@ public class PlanService extends GenericService {
                 addExtraCustActionDbParam.put("UPDATE_USER_ID", userId);
                 addExtraCustActionDbParam.put("UPDATE_TIME", sysdate);
                 addExtraCustActionDbParam.put("ACTION_STATUS", "1");
+                addExtraCustActionDbParam.put("PLAN_ID",planEntity.getPlanId());
+                addExtraCustActionDbParam.put("PLAN_DEAL_DATE",planEntity.getPlanDate());
                 addExtraCustActionDbParamList.add(addExtraCustActionDbParam);
 
                 String custId = addExtraCustActionDbParam.get("CUST_ID");
@@ -430,35 +444,75 @@ public class PlanService extends GenericService {
             }
         }
 
-        //更新INS_CYCLE_PLAN_FINISH_INFO
+        //更新INS_PLAN_CYCLE_FINISH_INFO
         JSONObject finishTargetLimitMap = new JSONObject();
-        CyclePlanFinishInfoDAO cyclePlanFinishInfoDAO = new CyclePlanFinishInfoDAO("ins");
+        PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = new PlanCycleFinishInfoDAO("ins");
         List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();
         for(PlanTargetLimitEntity planTargetLimitEntity : planTargetLimitEntityList) {
             String targetCode = planTargetLimitEntity.getTargetCode();
             int timeInterval = Integer.parseInt(planTargetLimitEntity.getTimeInterval());
             int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
-
-            CyclePlanFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planEntity.getPlanExecutorId(), targetCode);
+            PlanCycleFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planEntity.getPlanExecutorId(), targetCode);
             int preTotalUnfinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getUnfinishNum());
+            int currCycleFinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getCurrCycleFinishNum());
+            int currCycleImproperDays = Integer.parseInt(cyclePlanFinishInfoEntity.getCurrCycleImproperDays());
             String preCycleEndDate = cyclePlanFinishInfoEntity.getPreCycleEndDate();
+            String logId = cyclePlanFinishInfoEntity.getLogId();
+            String planType = planEntity.getPlanType();
+
+            int finishNum = custActionDAO.queryFinishActionCountByPlanId(planId, targetCode);
+            currCycleFinishNum = currCycleFinishNum + finishNum;
+            if(!"1".equals(planType)) {
+                currCycleImproperDays++;
+            }
+
+            parameter.clear();
+            parameter.put("LOG_ID", logId);
+
             int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(preCycleEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     LocalDate.parse(planEntity.getPlanDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            String startTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
-            String endTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
-            if(interval == timeInterval) {
-                int totalFinishNum = custActionDAO.queryFinishActionCount(planEntity.getPlanExecutorId(), targetCode, startTime, endTime);
-
-                parameter.clear();
-                parameter.put("LOG_ID", cyclePlanFinishInfoEntity.getLogId());
+            if(!"1".equals(planType) && interval == 1) {
+                //如果总结的计划不是正常上班，且离上一个周期仅一天，则上一周期时间顺延一天
+                //这一天完成的任务算到上一周期
                 parameter.put("PRE_CYCLE_END_DATE", planEntity.getPlanDate());
-                if(totalFinishNum > preTotalUnfinishNum + limitNum) {
-                    parameter.put("UNFINISH_NUM", "0");
-                } else {
-                    parameter.put("UNFINISH_NUM", String.valueOf(preTotalUnfinishNum + limitNum - totalFinishNum));
-                }
-                cyclePlanFinishInfoDAO.save("INS_CYCLE_PLAN_FINISH_INFO", parameter);
+                int unFinishNum = preTotalUnfinishNum - currCycleFinishNum > 0 ? preTotalUnfinishNum - currCycleFinishNum : 0;
+                parameter.put("UNFINISH_NUM", String.valueOf(unFinishNum));
+                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+
+                continue;
             }
+
+            if(interval >= timeInterval + currCycleImproperDays){
+                //周期的最后一天
+                parameter.put("PRE_CYCLE_END_DATE", planEntity.getPlanDate());
+                int unFinishNum = preTotalUnfinishNum + limitNum - currCycleFinishNum > 0 ? preTotalUnfinishNum + limitNum - currCycleFinishNum : 0;
+                parameter.put("UNFINISH_NUM", String.valueOf(unFinishNum));
+                parameter.put("CURR_CYCLE_FINISH_NUM", "0");//清0
+                parameter.put("CURR_CYCLE_IMPROPER_DAYS", "0");//清0
+                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+
+                continue;
+            }
+
+            //非当前周期的最后一天
+            if(!"1".equals(planType)) {
+                //其他非正常上班情况，则本周期非正常上班天数+1
+                parameter.put("CURR_CYCLE_IMPROPER_DAYS", String.valueOf(currCycleImproperDays));
+            }
+            parameter.put("CURR_CYCLE_FINISH_NUM", String.valueOf(currCycleFinishNum));
+            cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+
+//            String startTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, (-timeInterval+1)).substring(0,10);
+//            String endTime = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
+//            if(interval == timeInterval) {
+//                int totalFinishNum = custActionDAO.queryFinishActionCount(planEntity.getPlanExecutorId(), targetCode, startTime, endTime);
+//                if(totalFinishNum > preTotalUnfinishNum + limitNum) {
+//                    parameter.put("UNFINISH_NUM", "0");
+//                } else {
+//                    parameter.put("UNFINISH_NUM", String.valueOf(preTotalUnfinishNum + limitNum - totalFinishNum));
+//                }
+//                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+//            }
         }
 
         //更新客户的LAST_ACTION、LAST_ACTION_DATE
@@ -668,6 +722,59 @@ public class PlanService extends GenericService {
 
         response.set("ACTION_COUNT_LIST", actionCountList);
 
+        return response;
+    }
+
+    public ServiceResponse getPlanActionAndCustList(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String planDate = requestData.getString("PLAN_DATE");
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+
+        CustDAO custDAO = new CustDAO("ins");
+        Map<String, String> dbParam = new HashMap<String, String>();
+        JSONArray jsonActionAndCustList = new JSONArray();
+
+        List<ActionEntity> actionEntityList = ActionCache.getActionListByType("1");
+        for(ActionEntity actionEntity : actionEntityList) {
+            JSONObject jsonAction = new JSONObject();
+            jsonAction.put("ACTION_CODE", actionEntity.getActionCode());
+            jsonAction.put("ACTION_NAME", actionEntity.getActionName());
+
+            if("JW".equals(actionEntity.getActionCode())) {
+                jsonAction.put("CUST_LIST", new JSONArray());
+            } else {
+                dbParam.clear();
+                dbParam.put("UNEXECUTED_ACTION", actionEntity.getActionCode());
+                dbParam.put("HOUSE_COUNSELOR_ID", planExecutorId);
+                List<CustomerEntity> customerEntityList = custDAO.queryCustList(dbParam);
+                jsonAction.put("CUST_LIST", ConvertTool.toJSONArray(customerEntityList));
+            }
+
+            jsonActionAndCustList.add(jsonAction);
+        }
+
+        response.set("ACTION_LIST", jsonActionAndCustList);
+
+        return response;
+    }
+
+    public ServiceResponse getTargetLowerLimit(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        JSONObject requestData = request.getBody().getData();
+        JSONArray jsonTargetList = requestData.getJSONArray("TARGET_LIST");
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+        jsonTargetList = jsonTargetList != null ? jsonTargetList : new JSONArray();
+
+        for(int i = 0, size = jsonTargetList.size(); i < size; i++) {
+            JSONObject jsonTarget = jsonTargetList.getJSONObject(i);
+            String actionCode = jsonTarget.getString("ACTION_CODE");
+            int actionLowerLimit = PlanBean.getTargetLowerLimit(planExecutorId, actionCode);
+            jsonTarget.put("LOWER_LIMIT", String.valueOf(actionLowerLimit));
+        }
+
+        response.set("TARGET_LIST", jsonTargetList);
         return response;
     }
 }

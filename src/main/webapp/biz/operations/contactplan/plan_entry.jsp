@@ -14,85 +14,72 @@
     <script src="scripts/biz/contactplan/plan.entry.js"></script>
 </head>
 <body>
-<!--
-<div id="HOUSE_ID_float" class="c_float">
-	<div class="bg"></div>
-	<div class="content">
-		<div class="c_scrollContent">
-			<div class="c_list c_list-pc-s c_list-phone-line ">
-				<ul>
-
-				</ul>
-			</div>
-		</div>
-	</div>
+<%--<div class="l_edit">--%>
+<div class="c_header">
+	<div class="back" ontap="back();"><span id="planName"></span></div>
 </div>
--->
-<div class="l_edit">
-    <div class="c_header e_show-phone">
-        <div class="back" ontap="closeNav();">今日计划录入</div>
-    </div>
-    <span class="l_editMain">
-    	<div class="c_title">
-			<div class="text" id="planName"></div>
-		</div>
-		<div class="c_list c_list-line c_list-space">
-			<ul>
-				<li>
+<div class="c_scroll c_scroll-float c_scroll-header">
+	<div class="c_list c_list-line c_list-space">
+		<ul>
+			<li>
 					<span class="e_segment">
 						<span idx="0" val="1">正常上班</span>
 						<span idx="1" val="2">活动</span>
 						<span idx="2" val="3">休假</span>
 						<input type="hidden" name="planStatus" id="workMode" nullable="no" desc="级别" />
 					</span>
-				</li>
-				<li class="link" id="PLAN_TARGET_SET_PART">
-					<div class="main">
-						<div class="title">今日目标设置</div>
-						<div id="planTarget">
-							<div class="content">
-								<ul>
-									<li>咨询数：<span tag="adviceNum"></span></li>
-									<li>扫码数：<span tag="scanHouseCounselorNum"></span></li>
-								</ul>
-							</div>
+			</li>
+			<li class="link" id="PLAN_TARGET_SET_PART">
+				<div class="main">
+					<div class="title">今日目标设置</div>
+					<div id="planTarget">
+						<div class="content">
+							<ul>
+								<li>咨询数：<span tag="adviceNum"></span></li>
+								<li>核心接触数：<span tag="scanHouseCounselorNum"></span></li>
+								<li>加微数：<span tag="addWxNum"></span></li>
+							</ul>
 						</div>
 					</div>
-					<div class="more"></div>
-				</li>
+				</div>
+				<div class="more"></div>
+			</li>
+		</ul>
+	</div>
+	<div id="ACTION_PART" style="display: none;">
+		<div class="c_space"></div>
+		<%--<div class="c_title">--%>
+			<%--<div class="text">设定动作及客户</div>--%>
+		<%--</div>--%>
+		<div class="c_list c_list-line c_list-space">
+			<div class="c_space"></div>
+			<ul id="ACTION_LIST">
+				<%--<li class="link" tag="ACTION_TAG" x_tag="x-databind-template" style="display:none" id={ACTION_CODE}>--%>
+					<%--<div class="main">--%>
+						<%--<div class="title group">--%>
+							<%--<span tag="ACTION_NAME_TEXT">{ACTION_NAME}</span>--%>
+							<%--<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok e_ico-pic e_ico-pic-xxxs"></span></span>--%>
+						<%--</div>--%>
+						<%--<div tag="ACTION_NAME_CONTENT" class="content content-auto"></div>--%>
+					<%--</div>--%>
+					<%--<div tag="ACTION_SIDE" class="side" style="display: none;">选择客户</div>--%>
+					<%--<div tag="ACTION_MORE" class="more" style="display: none;"></div>--%>
+				<%--</li>--%>
 			</ul>
 		</div>
-		<div id="ACTION_PART" style="display: none;">
-			<div class="c_space"></div>
-			<div class="c_title">
-				<div class="text">设定动作及客户</div>
-			</div>
-			<div class="c_list c_list-line c_list-space">
-				<div class="c_space"></div>
-				<ul id="ACTION_LIST">
-					<li class="link" tag="ACTION_TAG" x_tag="x-databind-template" style="display:none" id={ACTION_CODE}>
-						<div class="main">
-							<div class="title group">
-								<span tag="ACTION_NAME_TEXT">{ACTION_NAME}</span>
-								<span tag="ACTION_ICO_OK" class="fn" style="display: none;"><span class="e_ico-ok e_ico-pic e_ico-pic-xxxs"></span></span>
-							</div>
-							<div tag="ACTION_NAME_CONTENT" class="content content-auto"></div>
-						</div>
-						<div tag="ACTION_SIDE" class="side" style="display: none;">选择客户</div>
-						<div tag="ACTION_MORE" class="more" style="display: none;"></div>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<div class="c_space"></div>
-		<div class="c_submit c_submit-full">
-			<button class="e_button-r e_button-l e_button-green" type="button" ontap="planEntry.submitPlan()">提交</button>
-		</div>
-	</span>
-    <span class="l_editPlace"></span>
+	</div>
+	<div class="c_space"></div>
+	<div class="c_submit c_submit-full">
+		<button class="e_button-r e_button-l e_button-green" type="button" ontap="planEntry.submitPlan()">提交</button>
+	</div>
 </div>
+    <%--<span class="l_editMain">--%>
+
+	<%--</span>--%>
+    <%--<span class="l_editPlace"></span>--%>
+<%--</div>--%>
 <!-- 弹出层 开始 -->
-<div class="c_popup c_popup-half" id="myPopup">
+<div class="c_popup" id="myPopup">
 	<div class="c_popupBg" id="myPopup_bg"></div>
 	<div class="c_popupBox">
 		<div class="c_popupWrapper" id="myPopup_wrapper">
@@ -100,7 +87,7 @@
 				<div class="c_popupItem" id="customerSelectPopup">
 					<div class="c_header">
 						<div class="back" ontap="backPopup(this)">选择客户</div>
-					</div>	
+					</div>
 					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
 						<!-- 新客户 开始 -->
 						<div id="NEW_CUST_PART" style="display: none;">
@@ -160,26 +147,36 @@
 				<div class="c_popupItem" id="planTargetSetPopup">
 					<div class="c_header">
 						<div class="back" ontap="backPopup(this)">目标设置</div>
-					</div>	
+					</div>
 					<div class="l_padding">
-						<div class="c_list">
+						<div class="c_list c_form-label-5">
 							<ul>
 								<li>
 									<div class="label">咨询数</div>
 									<div class="value">
 										<div class="e_mix">
 											<span class="e_ico-reduce"></span>
-											<input type="text" class="e_center" id="adviceNum" maxlength="10" value="0" desc="咨询数"/>
+											<input type="text" class="e_center" id="adviceNum" maxlength="100" value="0" desc="咨询数"/>
 											<span class="e_ico-add"></span>
 										</div>
 									</div>
 								</li>
 								<li>
-									<div class="label">扫码数</div>
+									<div class="label">核心接触数</div>
 									<div class="value">
 										<div class="e_mix">
 											<span class="e_ico-reduce"></span>
-											<input type="text" class="e_center" id="scanHouseCounselorNum" maxlength="10" value="0" desc="扫码数"/>
+											<input type="text" class="e_center" id="scanHouseCounselorNum" maxlength="100" value="0" desc="核心接触数"/>
+											<span class="e_ico-add"></span>
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="label">加微数</div>
+									<div class="value">
+										<div class="e_mix">
+											<span class="e_ico-reduce"></span>
+											<input type="text" class="e_center" id="addWxNum" maxlength="10" value="1" desc="扫码数"/>
 											<span class="e_ico-add"></span>
 										</div>
 									</div>
@@ -198,7 +195,7 @@
 				<div class="c_popupItem" id="customerSelectPopup2">
 					<div class="c_header">
 						<div class="back" ontap="backPopup(this)">客户查询条件</div>
-					</div>	
+					</div>
 					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
 						<div class="c_list c_list_form" id="queryCustParamForm">
 							<ul>
@@ -324,17 +321,6 @@
 		</div>
 	</div>
 </div>
-<!-- 弹出层 结束 -->
-<!--
-<script type="text/template" id="SELECTED_CUST">
-<li>
-	<div class="main">
-		<div class="title">{actionName}：{num}</div>
-		<div class="content">{custName}</div>
-	</div>
-</li>
-</script>
--->
 <script type="text/template" id="CUST_TEMPLATE">
 	<li>
 		<label class="group link ">
@@ -378,7 +364,96 @@
 		</div>
 	</div>
 </script>
-<script id="action_list_template" type="text/html" rel_id = "ACTION_LIST">
+<script id="action_list_template" type="text/html" rel_id="ACTION_LIST">
+	{{each ACTION_LIST action idx}}
+	<div class="c_box c_box-border" id="FINISH_INFO_{{action.ACTION_CODE}}" tag="PLAN_ACTION" action_code="{{action.ACTION_CODE}}">
+		<div class="c_title" ontap="$(this).next().toggle();">
+			<div class="text e_strong e_blue">{{action.ACTION_NAME}}</div>
+			<div class="fn">
+				<ul>
+					<%--<li><span>计划数:{{PLAN_CUSTNUM}}人 / 实际数:<span tag="finishCustNum">{{FINISH_CUSTNUM}}</span></span><span class="e_ico-unfold"></span></li>--%>
+						<li><span class="e_ico-unfold"></span></li>
+				</ul>
+			</div>
+		</div>
+		<div class="l_padding l_padding-u">
+			{{if action.NEW_CUST_LIST && action.NEW_CUST_LIST.length > 0}}
+			<div class="c_list">
+				<ul>
+					<li class="link" ontap="">
+						<div class="content">
+							<div class="main">
+								<div class="title e_strong">新客户</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="c_list c_list-v c_list-col-3">
+				<ul>
+					{{each action.NEW_CUST_LIST cust idx}}
+					<li cust_id="{{cust.CUST_ID}}"
+						action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+						li_type="cust"
+						{{if action.CAN_DELETE_NEWCUST}}
+						ontap="planEntry.operCust(this)"
+						{{/if}}
+					>
+						<div class="main">
+							<div class="title">
+								<span tag="text">{{cust.CUST_NAME}}</span>
+								{{if action.CAN_DELETE_NEWCUST}}
+								<span tag="ico" class="e_ico-delete e_blue"></span>
+								{{/if}}
+							</div>
+						</div>
+					</li>
+					{{/each}}
+				</ul>
+			</div>
+			{{/if}}
+			{{if action.CUST_LIST && action.CUST_LIST.length > 0}}
+			<div class="c_line c_line-dashed"></div>
+			<div class="c_list">
+				<ul>
+					<li class="link" action_code="{{ACTION_CODE}}" ontap="{{SELECT_CUST_FUNC}}">
+						<div class="content">
+							<div class="main">
+								<div class="title e_strong">未完成客户</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="c_list c_list-v c_list-col-3">
+				<ul tag="CUST_LIST">
+					{{each action.CUST_LIST cust idx}}
+					<li cust_id="{{cust.CUST_ID}}"
+						action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+						li_type="cust"
+						{{if action.CAN_DELETE}}
+						ontap="planEntry.operCust(this)"
+						{{/if}}
+					>
+						<div class="main">
+							<div class="title">
+								<span tag="text">{{cust.CUST_NAME}}</span>
+								{{if action.CAN_DELETE}}
+								<span tag="ico" class="e_ico-delete e_blue"></span>
+								{{/if}}
+							</div>
+
+						</div>
+					</li>
+					{{/each}}
+				</ul>
+			</div>
+			{{/if}}
+		</div>
+	</div>
+	{{/each}}
+</script>
+<script id="action_list_template1" type="text/html" rel_id = "ACTION_LIST">
 	{{each ACTION_LIST action idx}}
 	<li class="link" tag="ACTION_TAG" id="{{action.ACTION_CODE}}">
 		<div class="main">
