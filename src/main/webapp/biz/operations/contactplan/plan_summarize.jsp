@@ -221,7 +221,7 @@
 		</div>
 	</div>
 </div>
-<div class="c_popup c_popup-half" id="summarizeUnFinishCustPopup">
+<div class="c_popup" id="summarizeUnFinishCustPopup">
 	<div class="c_popupBg" id="summarizeUnFinishCustPopup_bg"></div>
 	<div class="c_popupBox">
 		<div class="c_popupWrapper" id="summarizeUnFinishCustPopup_wrapper">

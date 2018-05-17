@@ -1,13 +1,9 @@
 package com.hirun.pub.domain.entity.plan;
 
 import com.most.core.pub.data.GenericEntity;
-
 import java.util.Map;
 
-/**
- * Created by pc on 2018-04-28.
- */
-public class PlanEntity extends GenericEntity {
+public class PlanEntity extends GenericEntity{
 
     public PlanEntity(){
         super();
@@ -105,6 +101,22 @@ public class PlanEntity extends GenericEntity {
         this.set("CREATE_DATE", createDate);
     }
 
+    public String getSummarizeUserId(){
+        return this.get("SUMMARIZE_USER_ID");
+    }
+
+    public void setSummarizeUserId(String summarizeUserId){
+        this.set("SUMMARIZE_USER_ID", summarizeUserId);
+    }
+
+    public String getSummarizeDate(){
+        return this.get("SUMMARIZE_DATE");
+    }
+
+    public void setSummarizeDate(String summarizeDate){
+        this.set("SUMMARIZE_DATE", summarizeDate);
+    }
+
     public String getUpdateUserId(){
         return this.get("UPDATE_USER_ID");
     }
@@ -120,4 +132,5 @@ public class PlanEntity extends GenericEntity {
     public void setUpdateTime(String updateTime){
         this.set("UPDATE_TIME", updateTime);
     }
+
 }

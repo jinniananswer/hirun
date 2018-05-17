@@ -85,6 +85,8 @@ public class PlanService extends GenericService {
         if(!"1".equals(planType) && planList.size() == 0) {
             //如果非正常活动,且没有具体计划内容，则直接为已总结
             planEntityParameter.put("PLAN_STATUS", "2");
+            planEntityParameter.put("SUMMARIZE_USER_ID", userId);
+            planEntityParameter.put("SUMMARIZE_DATE", now);
         } else {
             planEntityParameter.put("PLAN_STATUS", "0");
         }
@@ -395,6 +397,8 @@ public class PlanService extends GenericService {
         parameter.put("PLAN_STATUS", "2");
         parameter.put("UPDATE_USER_ID", userId);
         parameter.put("UPDATE_TIME", sysdate);
+        parameter.put("SUMMARIZE_USER_ID", userId);
+        parameter.put("SUMMARIZE_DATE", sysdate);
         planDAO.save("INS_PLAN", parameter);
 
         if(ArrayTool.isNotEmpty(unFinishSummaryList)) {
