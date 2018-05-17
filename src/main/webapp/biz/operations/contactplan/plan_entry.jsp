@@ -156,7 +156,7 @@
 									<div class="value">
 										<div class="e_mix">
 											<span class="e_ico-reduce"></span>
-											<input type="text" class="e_center" id="adviceNum" maxlength="10" value="0" desc="咨询数"/>
+											<input type="text" class="e_center" id="adviceNum" maxlength="100" value="0" desc="咨询数"/>
 											<span class="e_ico-add"></span>
 										</div>
 									</div>
@@ -166,7 +166,7 @@
 									<div class="value">
 										<div class="e_mix">
 											<span class="e_ico-reduce"></span>
-											<input type="text" class="e_center" id="scanHouseCounselorNum" maxlength="10" value="0" desc="扫码数"/>
+											<input type="text" class="e_center" id="scanHouseCounselorNum" maxlength="100" value="0" desc="核心接触数"/>
 											<span class="e_ico-add"></span>
 										</div>
 									</div>
@@ -176,7 +176,7 @@
 									<div class="value">
 										<div class="e_mix">
 											<span class="e_ico-reduce"></span>
-											<input type="text" class="e_center" id="addWxNum" maxlength="10" value="0" desc="扫码数"/>
+											<input type="text" class="e_center" id="addWxNum" maxlength="10" value="1" desc="扫码数"/>
 											<span class="e_ico-add"></span>
 										</div>
 									</div>
@@ -395,9 +395,17 @@
 					<li cust_id="{{cust.CUST_ID}}"
 						action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
 						li_type="cust"
+						{{if action.CAN_DELETE_NEWCUST}}
+						ontap="planEntry.operCust(this)"
+						{{/if}}
 					>
 						<div class="main">
-							<div class="title">{{cust.CUST_NAME}}</div>
+							<div class="title">
+								<span tag="text">{{cust.CUST_NAME}}</span>
+								{{if action.CAN_DELETE_NEWCUST}}
+								<span tag="ico" class="e_ico-delete e_blue"></span>
+								{{/if}}
+							</div>
 						</div>
 					</li>
 					{{/each}}
@@ -423,9 +431,18 @@
 					<li cust_id="{{cust.CUST_ID}}"
 						action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
 						li_type="cust"
+						{{if action.CAN_DELETE}}
+						ontap="planEntry.operCust(this)"
+						{{/if}}
 					>
 						<div class="main">
-							<div class="title">{{cust.CUST_NAME}}</div>
+							<div class="title">
+								<span tag="text">{{cust.CUST_NAME}}</span>
+								{{if action.CAN_DELETE}}
+								<span tag="ico" class="e_ico-delete e_blue"></span>
+								{{/if}}
+							</div>
+
 						</div>
 					</li>
 					{{/each}}

@@ -147,6 +147,31 @@ var planSummarize = {
             }
         })
 
+        $.ajaxReq({
+            url : 'common/getCodeTypeDatas',
+            data : {
+                CODE_TYPE : 'HOUSE_MODE'
+            },
+            successFunc : function(data) {
+                var options = [];
+                $.each(data.STATICDATA_LIST, function(idx, staticData) {
+                    options.push({TEXT : staticData.CODE_NAME, VALUE : staticData.CODE_VALUE})
+                })
+                $.Select.append(
+                    "custEditForm_houseMode_container",
+                    // 参数设置
+                    {
+                        id:"custEditForm_houseMode",
+                        name:"HOUSE_MODE",
+                    },
+                    options
+                );
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        })
+
         //客户资料编辑初始化 结束
     },
     selectCust : function(obj) {
@@ -350,6 +375,12 @@ var planSummarize = {
         }
     },
     submit : function() {
+        var errorMessage = planSummarize.checkBeforeSubmit();
+        if(errorMessage && errorMessage != '') {
+            alert(errorMessage);
+            return;
+        }
+
         var param = {};
         var unfinishSummaryList = [];
         var addExtraCustActionList = [];
@@ -404,6 +435,29 @@ var planSummarize = {
             }
         })
     },
+    checkBeforeSubmit : function() {
+        var hasUnSummaryCust = false;
+        var errorMessage = '';
+        $.each(actionList, function(idx, action){
+            var actionCode = action.ACTION_CODE;
+            $('#FINISH_INFO_' + actionCode + ' ul[tag=UNFINISH_CUST_LIST]').find('li[li_type=unFinish]').each(function(idx, unFinishCust) {
+                var $unFinishCust = $(unFinishCust);
+                if('2' != $unFinishCust.attr('oper_code')) {
+                    hasUnSummaryCust = true;
+                    return false;
+                }
+            })
+            if(hasUnSummaryCust) {
+                return false;
+            }
+        });
+
+        if(hasUnSummaryCust) {
+            errorMessage = '还有未完成客户没有填写原因，请先填写未完成原因';
+        }
+
+        return errorMessage;
+    }
 };
 
 var selectCust = {

@@ -3,6 +3,7 @@ package com.hirun.app.biz.plan;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
+import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
@@ -81,7 +82,12 @@ public class PlanService extends GenericService {
 
         Map<String, String> planEntityParameter = new HashMap<String, String>();
         planEntityParameter.put("PLAN_DATE", planDate);
-        planEntityParameter.put("PLAN_STATUS", "0");
+        if(!"1".equals(planType) && planList.size() == 0) {
+            //如果非正常活动,且没有具体计划内容，则直接为已总结
+            planEntityParameter.put("PLAN_STATUS", "2");
+        } else {
+            planEntityParameter.put("PLAN_STATUS", "0");
+        }
         planEntityParameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         planEntityParameter.put("PLAN_TYPE", planType);
         planEntityParameter.put("CREATE_USER_ID", userId);
@@ -91,6 +97,7 @@ public class PlanService extends GenericService {
         String planId = String.valueOf(planDao.insertAutoIncrement("INS_PLAN", planEntityParameter));
 
         //将今天的计划动作数记到INS_PLAN_ACTION_NUM
+        /*
         for(ActionEntity actionEntity : actionEntityList) {
             int num = 0;
             String actionCode = actionEntity.getActionCode();
@@ -115,36 +122,37 @@ public class PlanService extends GenericService {
             parameter.put("PLAN_EXECUTOR_ID", planExecutorId);
             planActionNumDAO.insert("INS_PLAN_ACTION_NUM", parameter);
         }
+        */
 
-        if("1".equals(planType)) {
-            List<Map<String, String>> custActionList = new ArrayList<Map<String, String>>();
-            for(int i = 0, sizeI = planList.size(); i < sizeI; i++) {
-                JSONObject plan = planList.getJSONObject(i);
-                String actionCode = plan.getString("ACTION_CODE");
-                JSONArray custList = plan.getJSONArray("CUSTLIST");
-                if(custList == null) {
-                    custList = new JSONArray();
-                }
-                for(int j = 0, sizeJ = custList.size(); j < sizeJ; j++) {
-                    String custId = custList.getJSONObject(j).getString("CUST_ID");
-                    Map<String, String> custActionParameter = new HashMap<String, String>();
-                    custActionParameter.put("PLAN_ID", planId);
-                    custActionParameter.put("ACTION_CODE", actionCode);
-                    custActionParameter.put("CUST_ID", custId);
-                    custActionParameter.put("ACTION_STATUS", "0");
-                    custActionParameter.put("PLAN_DEAL_DATE", planDate);
-                    custActionParameter.put("EXECUTOR_ID", planExecutorId);
-                    custActionParameter.put("CREATE_USER_ID", userId);
-                    custActionParameter.put("CREATE_DATE", now);
-                    custActionParameter.put("UPDATE_USER_ID", userId);
-                    custActionParameter.put("UPDATE_TIME", now);
-                    custActionList.add(custActionParameter);
-                }
+//        if("1".equals(planType)) {
+        List<Map<String, String>> custActionList = new ArrayList<Map<String, String>>();
+        for(int i = 0, sizeI = planList.size(); i < sizeI; i++) {
+            JSONObject plan = planList.getJSONObject(i);
+            String actionCode = plan.getString("ACTION_CODE");
+            JSONArray custList = plan.getJSONArray("CUSTLIST");
+            if(custList == null) {
+                custList = new JSONArray();
             }
-            if(ArrayTool.isNotEmpty(custActionList)) {
-                custActionDAO.insertBatch("INS_CUST_ACTION", custActionList);
+            for(int j = 0, sizeJ = custList.size(); j < sizeJ; j++) {
+                String custId = custList.getJSONObject(j).getString("CUST_ID");
+                Map<String, String> custActionParameter = new HashMap<String, String>();
+                custActionParameter.put("PLAN_ID", planId);
+                custActionParameter.put("ACTION_CODE", actionCode);
+                custActionParameter.put("CUST_ID", custId);
+                custActionParameter.put("ACTION_STATUS", "0");
+                custActionParameter.put("PLAN_DEAL_DATE", planDate);
+                custActionParameter.put("EXECUTOR_ID", planExecutorId);
+                custActionParameter.put("CREATE_USER_ID", userId);
+                custActionParameter.put("CREATE_DATE", now);
+                custActionParameter.put("UPDATE_USER_ID", userId);
+                custActionParameter.put("UPDATE_TIME", now);
+                custActionList.add(custActionParameter);
             }
         }
+        if(ArrayTool.isNotEmpty(custActionList)) {
+            custActionDAO.insertBatch("INS_CUST_ACTION", custActionList);
+        }
+//        }
 
         return response;
     }
@@ -748,6 +756,25 @@ public class PlanService extends GenericService {
 
         response.set("ACTION_LIST", jsonActionAndCustList);
 
+        return response;
+    }
+
+    public ServiceResponse getTargetLowerLimit(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        JSONObject requestData = request.getBody().getData();
+        JSONArray jsonTargetList = requestData.getJSONArray("TARGET_LIST");
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+        jsonTargetList = jsonTargetList != null ? jsonTargetList : new JSONArray();
+
+        for(int i = 0, size = jsonTargetList.size(); i < size; i++) {
+            JSONObject jsonTarget = jsonTargetList.getJSONObject(i);
+            String actionCode = jsonTarget.getString("ACTION_CODE");
+            int actionLowerLimit = PlanBean.getTargetLowerLimit(planExecutorId, actionCode);
+            jsonTarget.put("LOWER_LIMIT", String.valueOf(actionLowerLimit));
+        }
+
+        response.set("TARGET_LIST", jsonTargetList);
         return response;
     }
 }

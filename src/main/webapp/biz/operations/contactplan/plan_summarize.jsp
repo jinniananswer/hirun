@@ -179,7 +179,6 @@
 										<span id="custEditForm_house_container"></span>
 										<%--<span>--请选择--</span>--%>
 										<%--<input type="hidden" id="HOUSE_ID" name="HOUSE_ID" value="" nullable="yes" desc="楼盘" />--%>
-										</span>
 									</div>
 								</li>
 								<li class="required">
@@ -191,14 +190,14 @@
 								<li class="required">
 									<div class="label">户型</div>
 									<div class="value">
-										<input type="text" id="HOUSE_MODE" name="HOUSE_MODE" nullable="no" desc="户型"/>
+										<span id="custEditForm_houseMode_container"></span>
 									</div>
 								</li>
 								<li class="required">
 									<div class="label">面积</div>
 									<div class="value">
 										<span class="e_mix">
-											<input type="text" id="HOUSE_AREA" name="HOUSE_AREA" nullable="no" desc="户型"/>
+											<input type="text" id="HOUSE_AREA" name="HOUSE_AREA" nullable="no" desc="面积"/>
 											<span class="e_label"><span>平方</span></span>
 										</span>
 									</div>
@@ -402,7 +401,7 @@
 						unfinish_cause_desc="{{cust.UNFINISH_CAUSE_DESC}}"
 						ontap="planSummarize.summarize(this)">
 						<div class="main">
-							<div class="title" >
+							<div class="title">
 								<span class="e_red">{{cust.CUST_NAME}}</span>
 								<span class="e_ico-edit"></span>
 							</div>
@@ -438,8 +437,13 @@
 		unfinish_cause_desc="{{cust.UNFINISH_CAUSE_DESC}}"
 		ontap="planSummarize.summarize(this)">
 		<div class="main">
-			<div class="title">{{cust.CUST_NAME}}<span class="e_ico-edit"></span></div>
-			<div class="content"><span class="e_red" tag="unfinish_cause_desc"></span></div>
+			<div class="title">
+				<span class="e_red">{{cust.CUST_NAME}}</span>
+				<span class="e_ico-edit"></span>
+			</div>
+			<div class="content">
+				<span class="e_tag e_tag-s e_tag-red" tag="unfinish_cause_desc">{{cust.UNFINISH_CAUSE_DESC}}</span>
+			</div>
 		</div>
 	</li>
 	{{/each}}

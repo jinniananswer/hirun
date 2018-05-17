@@ -171,4 +171,13 @@ public class PlanController {
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getPlanActionAndCustList", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/getTargetLowerLimit")
+    public String getTargetLowerLimit(@RequestParam Map paramter) throws Exception{
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getTargetLowerLimit", paramter);
+        return response.toJsonString();
+    }
 }
