@@ -29,7 +29,7 @@
             <!-- 列表 开始 -->
             <div class="c_list c_list-s">
                 <ul>
-                    <li class="link" title="密码变更" ontap="">
+                    <li class="link" title="密码变更" ontap="$.index.openNav('/biz/organization/personnel/change_password.jsp','密码变更');">
                         <div class="main">密码变更</div>
                         <div class="more"></div>
                     </li>

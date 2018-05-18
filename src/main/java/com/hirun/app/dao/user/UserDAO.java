@@ -28,4 +28,11 @@ public class UserDAO extends StrongObjectDAO {
             return null;
         return users.get(0);
     }
+
+    public UserEntity queryUserByPk(String userId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("USER_ID", userId);
+        UserEntity user = this.queryByPk(UserEntity.class, "ins_user", parameter);
+        return user;
+    }
 }
