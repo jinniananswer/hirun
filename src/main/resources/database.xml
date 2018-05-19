@@ -26,4 +26,17 @@
         maxIdle="5"
         maxWait="1000"
     />
+    <connect
+            name="ins"
+            type="dbcp"
+            databaseType="MySql"
+            driver="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://139.129.29.141:3316/out?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull"
+            userName="out"
+            password="1q1w1e1r"
+            initialSize="1"
+            maxActive="10"
+            maxIdle="5"
+            maxWait="1000"
+    />
 </database>
