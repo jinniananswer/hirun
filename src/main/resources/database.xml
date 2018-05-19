@@ -27,7 +27,7 @@
         maxWait="1000"
     />
     <connect
-            name="ins"
+            name="out"
             type="dbcp"
             databaseType="MySql"
             driver="com.mysql.jdbc.Driver"

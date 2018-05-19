@@ -28,25 +28,6 @@ public class CustActionDAO extends StrongObjectDAO {
     }
 
     /**
-     * 获取某一个时间段，员工动作的完成情况
-     * @param executorId
-     * @param actionCode
-     * @param startTime
-     * @param endTime
-     * @return
-     * @throws Exception
-     */
-    public List<CustActionEntity> queryFinishActionList(String executorId, String actionCode, String startTime, String endTime, String houseCounSelorId) throws Exception {
-        Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("HOUSE_COUNSELOR_ID", houseCounSelorId);
-
-        StringBuilder sql = new StringBuilder(200);
-        List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, sql.toString(), parameter);
-
-        return list;
-    }
-
-    /**
      * 获取某一个时间段，员工动作的完成数
      * @param executorId
      * @param actionCode
@@ -92,28 +73,10 @@ public class CustActionDAO extends StrongObjectDAO {
         return num;
     }
 
-    public List<CustActionEntity> queryCustActionByEidAndPlanDate(String executorId, String planDate) throws Exception {
-        StringBuilder sql = new StringBuilder(200);
-        sql.append(" SELECT * FROM INS_CUST_ACTION ");
-        sql.append(" WHERE EXECUTOR_ID = :EXECUTOR_ID ");
-        sql.append(" AND (DATE_FORMAT(FINISH_TIME, '%Y-%m-%d') = :PLAN_DATE OR PLAN_DEAL_DATE = :PLAN_DATE) ");
-
-        Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("EXECUTOR_ID", executorId);
-        parameter.put("PLAN_DATE", planDate);
-        List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, sql.toString(), parameter);
-        return list;
-    }
-
-    public List<CustActionEntity> queryCustActionByPlanId(String planId) throws Exception {
-//        StringBuilder sql = new StringBuilder(200);
-//        sql.append(" SELECT * FROM INS_CUST_ACTION ");
-//        sql.append(" WHERE EXECUTOR_ID = :EXECUTOR_ID ");
-//        sql.append(" AND (DATE_FORMAT(FINISH_TIME, '%Y-%m-%d') = :PLAN_DATE OR PLAN_DEAL_DATE = :PLAN_DATE) ");
-
+    public List<CustActionEntity> queryCustActionListByPlanId(String planId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PLAN_ID", planId);
-        List<CustActionEntity> list = this.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
+        List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, "INS_CUST_ACTION", parameter);
         return list;
     }
 
@@ -139,11 +102,7 @@ public class CustActionDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("CUST_ID", custId);
         List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, sql.toString(), parameter);
-//        if(ArrayTool.isEmpty(list)) {
-//            return new ArrayList<CustActionEntity>();
-//        } else {
         return list;
-//        }
     }
 
     public int queryFinishActionCountByPlanId(String planId, String actionCode) throws Exception {

@@ -25,12 +25,13 @@ public class PlanTaskService extends GenericService {
     public ServiceResponse transOriginalDataToAction(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         String today = TimeTool.today();
-        GenericDAO dao = new GenericDAO("ins");
+        String now = TimeTool.now();
+        GenericDAO dao = new GenericDAO("out");
 
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(ADD_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM OUT_HIRUNPLUS_PROJECTS ");
-        sql.append(" WHERE IS_DEAL = '0' ");
+        sql.append(" WHERE DEAL_TAG = '0' ");
         sql.append(" ORDER BY ADD_TIME ");
         JSONArray jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
@@ -50,14 +51,14 @@ public class PlanTaskService extends GenericService {
                 //归到昨日计划里
                 String yesterday = TimeTool.addTime(today + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
                 PlanBean.actionBindPlan(nickName, openId, "LTZDSTS", yesterday, staffId, addTime);
-                signToDone(id);
+                signToDone(id, now);
                 continue;
             }
 
             if(ActionCheckRuleProcess.isActionBindTodayPlan(addTime, today, staffId)) {
                 //归到今日计划里
                 PlanBean.actionBindPlan(nickName, openId, "LTZDSTS", today, staffId, addTime);
-                signToDone(id);
+                signToDone(id,now);
                 continue;
             }
 
@@ -65,7 +66,7 @@ public class PlanTaskService extends GenericService {
                 //归到明日计划里
                 String tomorrow = TimeTool.addTime(today + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
                 PlanBean.actionBindPlan(nickName, openId, "LTZDSTS", tomorrow, staffId, addTime);
-                signToDone(id);
+                signToDone(id,now);
                 continue;
             }
 
@@ -76,13 +77,15 @@ public class PlanTaskService extends GenericService {
         return response;
     }
 
-    private void signToDone(String id) throws Exception {
+    private void signToDone(String id, String dealTime) throws Exception {
         GenericDAO dao = new GenericDAO("ins");
         Map<String, String> dbParam = new HashMap<String, String>();
         dbParam.put("ID", id);
+        dbParam.put("DEAL_TIME", dealTime);
+
         StringBuilder sql = new StringBuilder();
         sql.append(" UPDATE OUT_HIRUNPLUS_PROJECTS ");
-        sql.append(" SET IS_DEAL = '1' ");
+        sql.append(" SET DEAL_TAG = '1',DEAL_TIME = :DEAL_TIME ");
         sql.append(" WHERE ID = :ID ");
         dao.executeUpdate(sql.toString(), dbParam);
     }

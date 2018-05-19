@@ -17,9 +17,9 @@ public class PlanCycleFinishInfoDAO extends StrongObjectDAO{
         super(databaseName);
     }
 
-    public PlanCycleFinishInfoEntity getCyclePlanFinishInfoEntity(String employeeId, String actionCode) throws Exception {
+    public PlanCycleFinishInfoEntity getCyclePlanFinishInfoEntity(String executorId, String actionCode) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("EMPLOYEE_ID", employeeId);
+        parameter.put("EXECUTOR_ID", executorId);
         parameter.put("ACTION_CODE", actionCode);
         List<PlanCycleFinishInfoEntity> cyclePlanFinishInfoEntityList = this.query(PlanCycleFinishInfoEntity.class, "INS_PLAN_CYCLE_FINISH_INFO", parameter);
         if(ArrayTool.isNotEmpty(cyclePlanFinishInfoEntityList)) {

@@ -74,7 +74,7 @@ var planEntry = {
                 }
                 message += '，可以不设定具体计划。点击【确定】不设定具体计划并提交，点击【继续】继续设定计划<br/>';
                 message += '<span class="e_red">温馨提示：如您选择继续设定计划，则必须填写总结！</span>';
-                MessageBox.alert("提示信息",message, function(btn){
+                MessageBox.success("提示信息",message, function(btn){
                     if("ok" == btn) {
                         // document.location.reload();
                         planEntry.submitPlan();
@@ -106,30 +106,29 @@ var planEntry = {
         $('#planName').html(planEntry.planDate + '计划');
 
         //客户查询条件初始化 开始
-        $.ajaxReq({
-            url : 'queryHousesByEmployeeId',
-            data : {
-
-            },
-            successFunc : function(data) {
-                var options = [];
-                $.each(data.HOUSES_LIST, function(idx, house) {
-                    options.push({TEXT : house.NAME, VALUE : house.HOUSES_ID})
-                })
-                $.Select.append(
-                    "queryCustParamForm_house_container",
-                    // 参数设置
-                    {
-                        id:"queryCustParamForm_house",
-                        name:"HOUSE_ID",
-                    },
-                    options
-                );
-            },
-            errorFunc : function(resultCode, resultInfo) {
-
-            }
-        })
+        // $.ajaxReq({
+        //     url : 'queryHousesByEmployeeId',
+        //     data : {
+        //
+        //     },
+        //     successFunc : function(data) {
+        //         var options = [];
+        //         $.each(data.HOUSES_LIST, function(idx, house) {
+        //             options.push({TEXT : house.NAME, VALUE : house.HOUSES_ID})
+        //         })
+        //         $.Select.append(
+        //             "queryCustParamForm_house_container",
+        //             {
+        //                 id:"queryCustParamForm_house",
+        //                 name:"HOUSE_ID",
+        //             },
+        //             options
+        //         );
+        //     },
+        //     errorFunc : function(resultCode, resultInfo) {
+        //
+        //     }
+        // })
         ////客户查询条件初始化 结束
 
         //客户资料编辑初始化 开始
@@ -141,32 +140,32 @@ var planEntry = {
             offColor:"red"
         });
 
-        $.ajaxReq({
-            url : 'queryHousesByEmployeeId',
-            data : {
-
-            },
-            successFunc : function(data) {
-                var options = [];
-                $.each(data.HOUSES_LIST, function(idx, house) {
-                    options.push({TEXT : house.NAME, VALUE : house.HOUSES_ID})
-                })
-                $.Select.append(
-                    "custEditForm_house_container",
-                    // 参数设置
-                    {
-                        id:"custEditForm_house",
-                        name:"HOUSE_ID",
-                        nullable : "no",
-                        desc : "楼盘",
-                    },
-                    options
-                );
-            },
-            errorFunc : function(resultCode, resultInfo) {
-
-            }
-        })
+        // $.ajaxReq({
+        //     url : 'queryHousesByEmployeeId',
+        //     data : {
+        //
+        //     },
+        //     successFunc : function(data) {
+        //         var options = [];
+        //         $.each(data.HOUSES_LIST, function(idx, house) {
+        //             options.push({TEXT : house.NAME, VALUE : house.HOUSES_ID})
+        //         })
+        //         $.Select.append(
+        //             "custEditForm_house_container",
+        //             参数设置
+                    // {
+                    //     id:"custEditForm_house",
+                    //     name:"HOUSE_ID",
+                    //     nullable : "no",
+                    //     desc : "楼盘",
+                    // },
+                    // options
+                // );
+            // },
+            // errorFunc : function(resultCode, resultInfo) {
+            //
+            // }
+        // })
         //客户资料编辑初始化 结束
 
         $('#PLAN_TARGET_SET_PART').unbind('tap').bind('tap', function() {

@@ -22,6 +22,7 @@ import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
+import com.hirun.pub.domain.enums.plan.ActionStatus;
 import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -238,7 +239,7 @@ public class PlanService extends GenericService {
         JSONArray unFinishActionList = new JSONArray();
         CustActionDAO custActionDAO = new CustActionDAO("ins");
         CustDAO custDAO = new CustDAO("ins");
-        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionByEidAndPlanDate(planEntity.getPlanExecutorId(), planEntity.getPlanDate());
+        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionListByPlanId(planId);
         if(ArrayTool.isNotEmpty(custActionEntityList)) {
             //存计划action对应的custList，格式为{actionCode, custList}，后续再遍历成list
             JSONObject planCustActionMap = new JSONObject();
@@ -266,7 +267,7 @@ public class PlanService extends GenericService {
                 JSONObject jsonAction = custActionEntity.toJSON(new String[] {"ACTION_ID","CUST_ID"});
                 jsonAction.putAll(custMap.getJSONObject(custId));
 
-                if(StringUtils.isNotBlank(custActionEntity.getPlanId())) {//这里面也有完成的
+                if(ActionStatus.innerPlan.getValue().equals(custActionEntity.getActionStatus())) {//这里面也有完成的
                     //计划中
                     if(planCustActionMap.containsKey(actionCode)) {
                         planCustActionMap.getJSONArray(actionCode).add(jsonAction);
@@ -661,11 +662,11 @@ public class PlanService extends GenericService {
         List<CustActionEntity> yesterdayCustActionEntityList = new ArrayList<CustActionEntity>();
         PlanEntity todayPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate);
         if(todayPlanEntity != null) {
-            todayCustActionEntityList = custActionDAO.queryCustActionByPlanId(todayPlanEntity.getPlanId());
+            todayCustActionEntityList = custActionDAO.queryCustActionListByPlanId(todayPlanEntity.getPlanId());
         }
         PlanEntity yesterdayPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, yesterdayPlanDate);
         if(yesterdayPlanEntity != null) {
-            yesterdayCustActionEntityList = custActionDAO.queryCustActionByPlanId(yesterdayPlanEntity.getPlanId());
+            yesterdayCustActionEntityList = custActionDAO.queryCustActionListByPlanId(yesterdayPlanEntity.getPlanId());
         }
 
         Map<String, Integer> mapTodayActionPlanNum = new HashMap<String, Integer>();

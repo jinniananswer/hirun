@@ -22,12 +22,12 @@ public class PlanCycleFinishInfoEntity extends GenericEntity{
 		this.set("LOG_ID", logId);
 	}
 	
-	public String getEmployeeId(){
-		return this.get("EMPLOYEE_ID");
+	public String getExecutorId(){
+		return this.get("EXECUTOR_ID");
 	}
 
-	public void setEmployeeId(String employeeId){
-		this.set("EMPLOYEE_ID", employeeId);
+	public void setExecutorId(String executorId){
+		this.set("EXECUTOR_ID", executorId);
 	}
 	
 	public String getActionCode(){
