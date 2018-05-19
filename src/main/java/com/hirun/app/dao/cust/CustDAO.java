@@ -2,6 +2,7 @@ package com.hirun.app.dao.cust;
 
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
+import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.SessionEntity;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @Date 2018/4/18 9:56
  * @Description:
  */
+@DatabaseName("ins")
 public class CustDAO extends StrongObjectDAO {
 
     public CustDAO(String databaseName){
@@ -81,12 +83,6 @@ public class CustDAO extends StrongObjectDAO {
     }
 
     public List<CustomerEntity> queryNewCustListByPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
-        /*
-        *   SELECT * FROM INS_CUSTOMER
-  WHERE CUST_STATUS = '9'
-  AND HOUSE_COUNSELOR_ID = 123
-  AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = '2018-05-04');
-        * */
         StringBuilder sql = new StringBuilder(200);
         sql.append(" SELECT * FROM INS_CUSTOMER ");
         sql.append(" WHERE CUST_STATUS = '9' ");
@@ -98,5 +94,42 @@ public class CustDAO extends StrongObjectDAO {
         parameter.put("HOUSE_COUNSELOR_ID", houseCounselorId);
         List<CustomerEntity> list = this.queryBySql(CustomerEntity.class, sql.toString(), parameter);
         return list;
+    }
+
+    public List<CustomerEntity> queryNewVirtualCustListByPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
+        StringBuilder sql = new StringBuilder(200);
+        sql.append(" SELECT * FROM INS_CUSTOMER ");
+        sql.append(" WHERE CUST_STATUS = '9' ");
+        sql.append(" AND WX_NICK IS NULL ");
+        sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
+        sql.append(" AND FIRST_PLAN_DATE = :FIRST_PLAN_DATE ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("FIRST_PLAN_DATE", firstPlanDate);
+        parameter.put("HOUSE_COUNSELOR_ID", houseCounselorId);
+        List<CustomerEntity> list = this.queryBySql(CustomerEntity.class, sql.toString(), parameter);
+        return list;
+    }
+
+    public CustomerEntity getCustomerEntityByIdentifyCode(String identifyCode) throws Exception {
+        Map<String, String > parameter = new HashMap<String, String>();
+        parameter.put("IDENTIFY_CODE", identifyCode);
+        List<CustomerEntity> customerEntityList = this.query(CustomerEntity.class, "INS_CUSTOMER", parameter);
+        if(ArrayTool.isNotEmpty(customerEntityList)) {
+            return customerEntityList.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public CustomerEntity getCustomerEntityByWxNick(String wxNick) throws Exception {
+        Map<String, String > parameter = new HashMap<String, String>();
+            parameter.put("WX_NICK", wxNick);
+        List<CustomerEntity> customerEntityList = this.query(CustomerEntity.class, "INS_CUSTOMER", parameter);
+        if(ArrayTool.isNotEmpty(customerEntityList)) {
+            return customerEntityList.get(0);
+        } else {
+            return null;
+        }
     }
 }

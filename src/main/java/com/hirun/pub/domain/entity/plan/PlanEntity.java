@@ -69,6 +69,12 @@ public class PlanEntity extends GenericEntity{
         this.set("PLAN_EXECUTOR_ID", planExecutorId);
     }
 
+    public String getHasDetail() {
+        return this.get("HAS_DETAIL");
+    }
+
+    public void setHasDetail(String hasDetail) { this.set("HAS_DETAIL", hasDetail);}
+
     public String getCurrPlanApperId(){
         return this.get("CURR_PLAN_APPER_ID");
     }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
+import com.hirun.app.bean.plan.PlanRuleProcess;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
@@ -23,6 +24,7 @@ import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
+import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.*;
@@ -779,6 +781,19 @@ public class PlanService extends GenericService {
         }
 
         response.set("TARGET_LIST", jsonTargetList);
+        return response;
+    }
+
+    public ServiceResponse planEntryInitCheck(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String executorId = requestData.getString("PLAN_EXECUTOR_ID");
+        String planDate = requestData.getString("PLAN_DATE");
+        String errorMessage = PlanRuleProcess.planEntryInitCheck(executorId, planDate);
+        if(StringUtils.isNotBlank(errorMessage)) {
+            response.setError("-1", errorMessage);
+        }
+
         return response;
     }
 }

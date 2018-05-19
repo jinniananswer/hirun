@@ -60,33 +60,39 @@ public class PlanController {
 
     @RequestMapping(value = "/plan/getPlanInitData")
     public String getPlanInitData(@RequestParam Map pageData) throws Exception {
-        ServiceResponse response = new ServiceResponse();
-        response.setHeader("RESULT_CODE", "0");
-        response.set("PLAN_DATE", PlanTool.getPlanDate());
+//        ServiceResponse response = new ServiceResponse();
+//        response.setHeader("RESULT_CODE", "0");
+//        response.set("PLAN_DATE", PlanTool.getPlanDate());
+        String planDate = PlanTool.getPlanDate();
 
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
         SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
         Map<String, String> paramter = new HashMap<String, String>();
         paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
-        paramter.put("PLAN_DATE", PlanTool.getPlanDate());
-        ServiceResponse planInfoResponse = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
-        if(StringUtils.isNotBlank(planInfoResponse.getString("PLAN_ID"))) {
-            response.setError("-1", "您已经录过【" + PlanTool.getPlanDate() + "】的计划了");
-            return response.toJsonString();
-        }
-        String yesterdayPlanDate = TimeTool.addTime(PlanTool.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
-        paramter.clear();
-        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
-        paramter.put("PLAN_DATE", yesterdayPlanDate);
-        ServiceResponse yesterdayPlanInfoResponse = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
-        if(StringUtils.isNotBlank(yesterdayPlanInfoResponse.getString("PLAN_ID"))) {
-            String yesterdayPlanStatus = yesterdayPlanInfoResponse.getString("PLAN_STATUS");
-            if(!"2".equals(yesterdayPlanStatus)) {
-                response.setError("-1", yesterdayPlanDate + "的计划您还没有总结，请先总结");
-            }
-        } else {
-            response.setError("-1", yesterdayPlanDate + "的计划您还没有录，请先补录");
-        }
+        paramter.put("PLAN_DATE", planDate);
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.planEntryInitCheck", paramter);
+        response.set("PLAN_DATE", planDate);
+        //TODO 测试代码，需删除
+        //测试代码开始
+        response.setHeader("RESULT_CODE", "0");
+        //测试代码结束
+//        if(StringUtils.isNotBlank(planInfoResponse.getString("PLAN_ID"))) {
+//            response.setError("-1", "您已经录过【" + PlanTool.getPlanDate() + "】的计划了");
+//            return response.toJsonString();
+//        }
+//        String yesterdayPlanDate = TimeTool.addTime(PlanTool.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+//        paramter.clear();
+//        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
+//        paramter.put("PLAN_DATE", yesterdayPlanDate);
+//        ServiceResponse yesterdayPlanInfoResponse = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
+//        if(StringUtils.isNotBlank(yesterdayPlanInfoResponse.getString("PLAN_ID"))) {
+//            String yesterdayPlanStatus = yesterdayPlanInfoResponse.getString("PLAN_STATUS");
+//            if(!"2".equals(yesterdayPlanStatus)) {
+//                response.setError("-1", yesterdayPlanDate + "的计划您还没有总结，请先总结");
+//            }
+//        } else {
+//            response.setError("-1", yesterdayPlanDate + "的计划您还没有录，请先补录");
+//        }
 
         return response.toJsonString();
     }

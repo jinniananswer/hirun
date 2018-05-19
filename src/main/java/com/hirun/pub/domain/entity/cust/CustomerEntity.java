@@ -4,11 +4,6 @@ import com.most.core.pub.data.GenericEntity;
 
 import java.util.Map;
 
-/**
- * @Author jinnian
- * @Date 2018/4/18 16:03
- * @Description:
- */
 public class CustomerEntity extends GenericEntity{
 
     public CustomerEntity(){
@@ -131,6 +126,14 @@ public class CustomerEntity extends GenericEntity{
         this.set("LAST_ACTION_DATE", lastActionDate);
     }
 
+    public String getFirstPlanDate(){
+        return this.get("FIRST_PLAN_DATE");
+    }
+
+    public void setFirstPlanDate(String firstPlanDate){
+        this.set("FIRST_PLAN_DATE", firstPlanDate);
+    }
+
     public String getHouseCounselorId(){
         return this.get("HOUSE_COUNSELOR_ID");
     }
@@ -186,4 +189,5 @@ public class CustomerEntity extends GenericEntity{
     public void setUpdateTime(String updateTime){
         this.set("UPDATE_TIME", updateTime);
     }
+
 }
