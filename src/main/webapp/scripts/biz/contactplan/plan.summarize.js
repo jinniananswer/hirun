@@ -421,17 +421,19 @@ var planSummarize = {
         param.ADD_EXTRA_CUST_ACTION_LIST = JSON.stringify(addExtraCustActionList);
         param.TRANS_TO_FINISH_LIST = JSON.stringify(transToFinishList);
 
+        $.beginPageLoading("提交总结中。。。");
         $.ajaxReq({
             url : 'plan/summarizePlan',
             data : param,
             type : 'POST',
             dataType : 'json',
             successFunc : function(data) {
+                $.endPageLoading();
                 alert('提交总结成功');
                 top.$.index.closeCurrentPage();
             },
             errorFunc : function (resultCode, resultInfo) {
-
+                $.endPageLoading();
             }
         })
     },
@@ -614,12 +616,14 @@ var custEditPopup = {
                 url = 'cust/addCust';
                 param.FIRST_PLAN_DATE = planSummarize.planDate;
             }
+            $.beginPageLoading("客户资料补录中。。。");
             $.ajaxReq({
                 url: url,
                 data: param,
                 type: 'POST',
                 dataType: 'json',
                 successFunc: function (data) {
+                    $.endPageLoading();
                     if(!param.CUST_ID) {
                         param.CUST_ID = data.CUST_ID;
                     }
@@ -629,7 +633,7 @@ var custEditPopup = {
                     backPopup(obj);
                 },
                 errorFunc: function (resultCode, resultInfo) {
-
+                    $.endPageLoading();
                 }
             });
         }

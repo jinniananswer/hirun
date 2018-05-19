@@ -76,7 +76,7 @@ public class CustActionDAO extends StrongObjectDAO {
     public List<CustActionEntity> queryCustActionListByPlanId(String planId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PLAN_ID", planId);
-        List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, "INS_CUST_ACTION", parameter);
+        List<CustActionEntity> list = this.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
         return list;
     }
 

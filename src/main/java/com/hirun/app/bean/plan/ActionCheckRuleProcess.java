@@ -50,7 +50,7 @@ public class ActionCheckRuleProcess {
                 preCycleEndDate = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
                 interval = 1;
                 Map<String, String> newEntityMap = new HashMap<String, String>();
-                newEntityMap.put("EMPLOYEE_ID", executorId);
+                newEntityMap.put("EXECUTOR_ID", executorId);
                 newEntityMap.put("ACTION_CODE", actionCode);
                 newEntityMap.put("PRE_CYCLE_END_DATE", preCycleEndDate);
                 newEntityMap.put("UNFINISH_NUM", "0");

@@ -465,22 +465,22 @@ var planEntry = {
             PLAN_DATE : planEntry.planDate,
             PLAN_TYPE : $("#workMode").val(),
         };
+        $.beginPageLoading("计划录入中。。。");
         $.ajaxReq({
             url : "plan/addPlan",
             data : param,
             type : 'POST',
             dataType : 'json',
             successFunc : function(data) {
-                MessageBox.success("新增计划成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
+                $.endPageLoading();
+                MessageBox.success("新增计划成功","点击【确定】关闭当前页面", function(btn){
                     if("ok" == btn) {
-                        document.location.reload();
-                    }
-                    else {
                         parent.$.index.closeCurrentPage();
                     }
-                },{"cancel":"取消"})
+                });
             },
             errorFunc : function(resultCode, resultInfo) {
+                $.endPageLoading();
                 alert('计划提交失败:' + resultInfo);
             }
         });
