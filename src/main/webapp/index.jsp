@@ -15,7 +15,7 @@
             <div class="c_list c_list-v">
                 <ul>
                     <li>
-                        <div class="pic"><img id="HEAD_IMAGE" name="HEAD_IMAGE" class="e_pic-r" src="frame/img/staff.jpg" alt="" /></div>
+                        <div class="pic"><img id="HEAD_IMAGE" name="HEAD_IMAGE" class="e_pic-r" src="frame/img/male.png" alt="" /></div>
                         <div class="main">
                             <div class="title" id="USER_NAME" name="USER_NAME"></div>
                             <div class="content" id="ORG_NAME" name="ORG_NAME"></div>
