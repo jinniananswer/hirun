@@ -10,7 +10,11 @@ import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
+import com.hirun.pub.domain.entity.plan.PlanEntity;
+import com.hirun.pub.tool.PlanTool;
+import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.pub.tools.time.TimeTool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -97,5 +101,68 @@ public class ActionCheckRuleProcess {
         }
 
         return "";
+    }
+
+    public static boolean isActionBindYesterdayPlan(String actionTime, String today, String executorId) throws Exception {
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+        if(TimeTool.compareTwoTime(actionTime,today + " 09:00:00") <= 0) {
+            //先取昨天计划处理
+            String yesterday = TimeTool.addTime(today + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+            PlanEntity yesterdayPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId,yesterday);
+
+            return isCommonActionBindPlan(yesterdayPlanEntity, actionTime);
+//            String yesterdaySummarizeDate = yesterdayPlanEntity.getSummarizeDate();
+//            if(StringUtils.isBlank(yesterdaySummarizeDate)
+//                    || TimeTool.compareTwoTime(yesterdaySummarizeDate, actionTime) >= 0) {
+//                boolean hasDetail = "1".equals(yesterdayPlanEntity.getHasDetail()) ? true : false;
+//                if(!PlanTool.isNormalWork(yesterdayPlanEntity)
+//                        && !hasDetail) {
+//                    return false;
+//                } else {
+//                    return true;
+//                }
+//            } else {
+//                return false;
+//            }
+
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isActionBindTodayPlan(String actionTime, String today, String executorId) throws Exception {
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+        PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, today);
+
+        return isCommonActionBindPlan(planEntity, actionTime);
+    }
+
+    public static boolean isActionBindTomorrowPlan(String actionTime, String today, String executorId) throws Exception {
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+        String tomorrow = TimeTool.addTime(today + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
+        PlanEntity tomorrowPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId,tomorrow);
+
+        return isCommonActionBindPlan(tomorrowPlanEntity, actionTime);
+    }
+
+    private static boolean isCommonActionBindPlan(PlanEntity planEntity, String actionTime) {
+        if(planEntity == null) {
+            return false;
+        }
+
+        String summarizeDate = planEntity.getSummarizeDate();
+
+        if(StringUtils.isNotBlank(summarizeDate)
+                && TimeTool.compareTwoTime(summarizeDate, actionTime) <= 0) {
+            return false;
+        }
+
+        boolean hasDetail = "1".equals(planEntity.getHasDetail()) ? true : false;
+        if(!PlanTool.isNormalWork(planEntity)
+                && !hasDetail) {
+            return false;
+        }
+
+        return true;
     }
 }

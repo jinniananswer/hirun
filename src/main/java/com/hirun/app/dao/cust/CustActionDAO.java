@@ -2,6 +2,7 @@ package com.hirun.app.dao.cust;
 
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.RecordSet;
@@ -19,6 +20,7 @@ import java.util.Map;
  * @Date 2018/4/18 9:56
  * @Description:
  */
+@DatabaseName("ins")
 public class CustActionDAO extends StrongObjectDAO {
 
     public CustActionDAO(String databaseName){
@@ -113,6 +115,19 @@ public class CustActionDAO extends StrongObjectDAO {
         parameter.put("PLAN_ID", planId);
         List<CustActionEntity> list = this.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
         return list;
+    }
+
+    public CustActionEntity queryCustActionByCustIdAndActionCodeAndPlanId(String custId, String actionCode, String planId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CUST_ID", custId);
+        parameter.put("ACTION_CODE", actionCode);
+        parameter.put("PLAN_ID", planId);
+        List<CustActionEntity> list = this.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
+        if(ArrayTool.isNotEmpty(list)) {
+            return list.get(0);
+        }
+
+        return null;
     }
 
     public List<CustActionEntity> queryCustFinishActionByCustId(String custId) throws Exception {

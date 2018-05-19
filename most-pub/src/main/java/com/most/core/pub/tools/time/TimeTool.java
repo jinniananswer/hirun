@@ -57,14 +57,6 @@ public class TimeTool {
      */
     public static final String TIME_PATTERN_LONG2 = "dd/MM/yyyy:HH:mm:ss +0900";
     /**
-     * date format YYYY-MM-DD HH24:MI:SS
-     */
-    public static final String DB_TIME_PATTERN = "YYYY-MM-DD HH24:MI:SS";
-    /**
-     * date format YYYYMMDDHH24MISS
-     */
-    public static final String DB_TIME_PATTERN_1 = "YYYYMMDDHH24MISS";
-    /**
      * date format dd/MM/yy HH:mm:ss
      */
     public static final String TIME_PATTERN_SHORT = "dd/MM/yy HH:mm:ss";
@@ -551,6 +543,25 @@ public class TimeTool {
         if (time1.isAfter(time2)) {
             return 1;
         } else if (time1.isBefore(time2)) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * 比较两个时间LocalDateTime大小
+     *
+     * @param time1
+     * @param time2
+     * @return 1:第一个比第二个大；0：第一个与第二个相同；-1：第一个比第二个小
+     */
+    public static int compareTwoTime(String date1, String date2) {
+        LocalDateTime localDateTime1 = stringToLocalDateTime(date1, TimeTool.TIME_PATTERN);
+        LocalDateTime localDateTime2 = stringToLocalDateTime(date2, TimeTool.TIME_PATTERN);
+        if (localDateTime1.isAfter(localDateTime2)) {
+            return 1;
+        } else if (localDateTime1.isBefore(localDateTime2)) {
             return -1;
         } else {
             return 0;
