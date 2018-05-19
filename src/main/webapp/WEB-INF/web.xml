@@ -39,7 +39,7 @@
         不需要进行拦截的 url 的正则表达式，即：如果当前请求的 url 的 servletPath 能匹配该正则表达式，则直接放行（即使未登录系统）。
       </description>
       <param-name>excepUrlRegex</param-name>
-      <param-value>/(login|register|loginPost|login.jsp|register.jsp|common.jsp)</param-value>
+      <param-value>/(login|register|loginPost|login.jsp|register.jsp|common.jsp|refreshCache)</param-value>
     </init-param>
     <init-param>
       <description>
@@ -80,5 +80,15 @@
   <servlet-mapping>
     <servlet-name>hirun</servlet-name>
     <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>refreshCache</servlet-name>
+    <servlet-class>com.most.core.app.cache.localcache.RefreshCacheServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>refreshCache</servlet-name>
+    <url-pattern>/refreshCache</url-pattern>
   </servlet-mapping>
 </web-app>
