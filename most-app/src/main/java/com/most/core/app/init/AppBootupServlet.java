@@ -2,6 +2,7 @@ package com.most.core.app.init;
 
 import com.most.core.app.database.conn.ConnectionFactory;
 import com.most.core.app.service.register.ServiceRegister;
+import com.most.core.pub.backgroundtask.BackgroundTaskFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,6 +34,9 @@ public class AppBootupServlet extends GenericServlet{
 
         //2.完成所有服务注册
         ServiceRegister.register();
+
+        //3.启后台任务
+        BackgroundTaskFactory.start();
     }
 
 
