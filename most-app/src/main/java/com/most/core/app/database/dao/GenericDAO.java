@@ -8,6 +8,7 @@ import com.most.core.app.database.wrapper.ResultSetWrapper;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -118,6 +119,9 @@ public class GenericDAO {
     }
 
     public int[] insertBatch(String tableName, List<Map<String, String>> parameters) throws SQLException{
+        if(ArrayTool.isEmpty(parameters)) {
+            return null;
+        }
         PreparedStatement stmt = producer.generateInsertBatchSql(this.connection, tableName, parameters);
         return this.executeUpdateBatch(stmt);
     }

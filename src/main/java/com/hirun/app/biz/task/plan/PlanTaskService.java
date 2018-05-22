@@ -35,7 +35,7 @@ public class PlanTaskService extends GenericService {
         sql.append(" ORDER BY ADD_TIME ");
         JSONArray jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
-        for(int i = 0, size = 1; i < size; i++) {
+        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String nickName = jsonProject.getString("NICKNAME");
             String addTime = jsonProject.getString("ADD_TIME");
@@ -89,4 +89,6 @@ public class PlanTaskService extends GenericService {
         sql.append(" WHERE ID = :ID ");
         dao.executeUpdate(sql.toString(), dbParam);
     }
+
+
 }

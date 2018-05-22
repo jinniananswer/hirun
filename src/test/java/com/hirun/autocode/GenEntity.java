@@ -25,12 +25,12 @@ public class GenEntity
 {
 	@Test
 	public void genFile() throws Exception{
-		String packageName = "com.hirun.pub.domain.entity.param";
+		String packageName = "com.hirun.pub.domain.entity.out";
 		Connection conn = null;
 		String dirPath = "D:/file/";
-		String tableName = "INS_PLAN";
+		String tableName = "OUT_DATA_GET_INFO";
 		try{
-			conn = ConnectionFactory.getConnection();
+			conn = ConnectionFactory.getConnection("out");
 			Configuration cfg = new Configuration();
 			String fileName = this.getFileName(tableName);
 

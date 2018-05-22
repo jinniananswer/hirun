@@ -1,0 +1,59 @@
+http://www.hi-run.net/api/modes
+获取计划
+	uid:用户ID
+	start：开始时间戳（秒）
+	end：结束时间戳（秒）
+	PageNo：当前页
+	PageSize：每页数量
+
+http://www.hi-run.net/api/projects?staff_id=283&start=1510371113&end=1510371114  包含
+获取《需求蓝图指导书》有效推送
+	staff_id:员工ID
+	start：开始时间戳（秒）包含开始时间
+	end：结束时间戳（秒）包含结束时间
+	isin：是否订阅
+	staus：状态
+	PageNo：当前页
+	PageSize：每页数量
+
+http://www.hi-run.net/api/reg?staff_id=283&start=1510371113&end=1514719744  包含
+获取公众号注册（关注）
+	staff_id:员工ID
+	start：开始时间戳（秒）
+	end：结束时间戳（秒）
+	isin：是否订阅
+	staus：状态
+	PageNo：当前页
+	PageSize：每页数量
+
+http://www.hi-run.net/api/scans?staff_id=514&start=1511057242&end=1511057242 包含
+扫员工码
+	staff_id:员工ID
+	start：开始时间戳（秒）
+	end：结束时间戳（秒）
+	PageNo：当前页
+	PageSize：每页数量
+
+http://www.hi-run.net/api/commends?start=1521340354&end=1521340354 不包含
+《需求蓝图一》推送
+	staff_id:员工ID
+	start：开始时间戳（秒）
+	end：结束时间戳（秒）
+	PageNo：当前页
+	PageSize：每页数量
+
+http://www.hi-run.net/api/members
+客户
+	subscribe:是否订阅 0否 ，1是，2 全部
+	start：开始时间戳（秒）
+	end：结束时间戳（秒）
+	PageNo：当前页
+	PageSize：每页数量
+
+http://www.hi-run.net/api/staffs
+员工
+	role_id:角色
+	cid:部门
+	PageNo：当前页
+	PageSize：每页数量
+

@@ -12,12 +12,12 @@ import java.sql.DriverManager;
  */
 public class ConnectionFactory
 {
-	public static Connection getConnection()
+	public static Connection getConnection(String databaseName)
 	{
 		Connection conn=null;
 		try{
 			Class.forName("com.mysql.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://192.168.10.128:3306/ins","system","123");
+			conn = DriverManager.getConnection("jdbc:mysql://192.168.10.128:3306/"+databaseName,"system","123");
 		}catch(Exception e)
 		{
 			e.printStackTrace();
