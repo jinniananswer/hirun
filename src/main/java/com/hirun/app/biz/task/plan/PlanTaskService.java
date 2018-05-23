@@ -43,7 +43,7 @@ public class PlanTaskService extends GenericService {
             String openId = jsonProject.getString("OPENID");
             String id = jsonProject.getString("ID");
 
-            if(StringUtils.isBlank(staffId)) {
+            if(StringUtils.isBlank(staffId) || "0".equals(staffId)) {
                 continue;
             }
 
