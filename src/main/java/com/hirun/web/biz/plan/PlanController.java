@@ -186,4 +186,11 @@ public class PlanController {
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getTargetLowerLimit", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/queryEmployeeDailySheetDetail")
+    public String queryEmployeeDailySheetDetail(@RequestParam Map parameter) throws Exception{
+        parameter.put("PLAN_DATE", TimeTool.today());
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryEmployeeDailySheetDetail", parameter);
+        return response.toJsonString();
+    }
 }

@@ -25,7 +25,7 @@ public class CustBean {
             return result;
         }
 
-        customerEntity = custDAO.getCustomerEntityByWxNick(identifyCode);
+        customerEntity = custDAO.getCustomerEntityByWxNick(wxNick);
         if(customerEntity != null) {
             result.put("DO_CUST", "no");
             result.put("CUST_ID", customerEntity.getCustId());

@@ -105,6 +105,19 @@ public class CustActionDAO extends StrongObjectDAO {
         return list;
     }
 
+    public List<CustActionEntity> queryCustFinishActionByCustIdAndActionCode(String custId, String actionCode) throws Exception {
+        StringBuilder sql = new StringBuilder(200);
+        sql.append(" SELECT * FROM INS_CUST_ACTION ");
+        sql.append(" WHERE CUST_ID = :CUST_ID ");
+        sql.append(" AND ACTION_CODE = :ACTION_CODE ");
+        sql.append(" AND FINISH_TIME IS NOT NULL ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CUST_ID", custId);
+        List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, sql.toString(), parameter);
+        return list;
+    }
+
     public int queryFinishActionCountByPlanId(String planId, String actionCode) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PLAN_ID", planId);
@@ -119,5 +132,13 @@ public class CustActionDAO extends StrongObjectDAO {
         int num = recordSet.getInt(0, "NUM");
 
         return num;
+    }
+
+    public List<CustActionEntity> queryCustActionListByPlanIdAndActionCode(String planId, String actionCode) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_ID", planId);
+        parameter.put("ACTION_CODE", actionCode);
+        List<CustActionEntity> list = this.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
+        return list;
     }
 }

@@ -17,8 +17,10 @@ import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -91,31 +93,77 @@ public class PlanBean {
         }
 
         //TODO 这里应该判一下该客户之前是否已经触发过该动作，如果有，则不应该重复触发
-        //update or insert cust_action
-        PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
-        CustActionEntity custActionEntity = custActionDAO.queryCustActionByCustIdAndActionCodeAndPlanId(custId, actionCode, planEntity.getPlanId());
-        if(custActionEntity != null) {
-            //update
-            String actionId = custActionEntity.getActionId();
-            custActionEntity.setFinishTime(finishTime);
-            custActionEntity.setUpdateUserId("0");
-            custActionEntity.setUpdateTime(TimeTool.now());
-            custActionDAO.update("INS_CUST_ACTION", custActionEntity.getContent());
-        } else {
-            //insert
-            custActionEntity = new CustActionEntity();
-            custActionEntity.setCustId(custId);
-            custActionEntity.setActionCode(actionCode);
-            custActionEntity.setPlanId(planEntity.getPlanId());
-            custActionEntity.setActionStatus(ActionStatus.outerPlan.getValue());
-            custActionEntity.setPlanDealDate(planEntity.getPlanDate());
-            custActionEntity.setFinishTime(finishTime);
-            custActionEntity.setExecutorId(executorId);
-            custActionEntity.setCreateDate(TimeTool.now());
-            custActionEntity.setCreateUserId("0");
-            custActionEntity.setUpdateTime(TimeTool.now());
-            custActionEntity.setUpdateUserId("0");
-            custActionDAO.insertAutoIncrement("INS_CUST_ACTION", custActionEntity.getContent());
+        if(ArrayTool.isEmpty(custActionDAO.queryCustFinishActionByCustIdAndActionCode(custId, actionCode))) {
+            //update or insert cust_action
+            PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
+            CustActionEntity custActionEntity = custActionDAO.queryCustActionByCustIdAndActionCodeAndPlanId(custId, actionCode, planEntity.getPlanId());
+            if(custActionEntity != null) {
+                //update
+                String actionId = custActionEntity.getActionId();
+                custActionEntity.setFinishTime(finishTime);
+                custActionEntity.setUpdateUserId("0");
+                custActionEntity.setUpdateTime(TimeTool.now());
+                custActionDAO.update("INS_CUST_ACTION", custActionEntity.getContent());
+            } else {
+                //insert
+                custActionEntity = new CustActionEntity();
+                custActionEntity.setCustId(custId);
+                custActionEntity.setActionCode(actionCode);
+                custActionEntity.setPlanId(planEntity.getPlanId());
+                custActionEntity.setActionStatus(ActionStatus.outerPlan.getValue());
+                custActionEntity.setPlanDealDate(planEntity.getPlanDate());
+                custActionEntity.setFinishTime(finishTime);
+                custActionEntity.setExecutorId(executorId);
+                custActionEntity.setCreateDate(TimeTool.now());
+                custActionEntity.setCreateUserId("0");
+                custActionEntity.setUpdateTime(TimeTool.now());
+                custActionEntity.setUpdateUserId("0");
+                custActionDAO.insertAutoIncrement("INS_CUST_ACTION", custActionEntity.getContent());
+            }
         }
+    }
+
+    /**
+     * 原始数据转换为需求蓝图指导书
+     */
+    public static boolean transOriginalDataToAction(JSONObject originalData, String date, String actionCode) throws Exception {
+        String nickName = originalData.getString("NICKNAME");
+        String addTime = originalData.getString("ADD_TIME");
+        String staffId = originalData.getString("STAFF_ID");
+        String openId = originalData.getString("OPENID");
+        String id = originalData.getString("ID");
+
+        if(StringUtils.isBlank(staffId) || "0".equals(staffId)) {
+            return false;
+        }
+
+        //TODO 家网的STAFF_ID需转成我们的STAFF_ID
+        String houseCounselorId = staffId;
+
+        if(ActionCheckRuleProcess.isActionBindYesterdayPlan(addTime, date, houseCounselorId)) {
+            //归到昨日计划里
+            String yesterday = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+            PlanBean.actionBindPlan(nickName, openId, actionCode, yesterday, houseCounselorId, addTime);
+//            signToDone(id, now);
+            return true;
+        }
+
+        if(ActionCheckRuleProcess.isActionBindTodayPlan(addTime, date, houseCounselorId)) {
+            //归到今日计划里
+            PlanBean.actionBindPlan(nickName, openId, actionCode, date, houseCounselorId, addTime);
+//            signToDone(id,now);
+            return true;
+        }
+
+        if(ActionCheckRuleProcess.isActionBindTomorrowPlan(addTime, date, houseCounselorId)) {
+            //归到明日计划里
+            String tomorrow = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
+            PlanBean.actionBindPlan(nickName, openId, actionCode, tomorrow, houseCounselorId, addTime);
+//            signToDone(id,now);
+            return true;
+        }
+
+        //无法归到任意计划里时，跳过
+        return false;
     }
 }

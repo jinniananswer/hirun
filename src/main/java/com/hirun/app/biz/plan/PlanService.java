@@ -797,4 +797,98 @@ public class PlanService extends GenericService {
 
         return response;
     }
+
+    public ServiceResponse queryEmployeeDailySheetDetail(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String executorId = requestData.getString("EXECUTOR_ID");
+        String planDate = requestData.getString("PLAN_DATE");
+        String yesterdayPlanDate = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+        CustActionDAO custActionDAO = DAOFactory.createDAO(CustActionDAO.class);
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        Map<String, String> custMap = new HashMap<String, String>();//key:custId;value:custName
+
+        JSONArray datalist = new JSONArray();
+        List<ActionEntity> actionEntityList = ActionCache.getActionListByType("1");
+
+        for(ActionEntity actionEntity : actionEntityList) {
+            //先给个初始值
+            JSONObject jsonActionMap = new JSONObject();
+            String actionCode = actionEntity.getActionCode();
+            JSONArray yesterdayPlanCustList = new JSONArray();
+            JSONArray yesterdayPlanFinishCustList = new JSONArray();
+            JSONArray yesterdayPlanUnFinishCustList = new JSONArray();
+            JSONArray planCustList = new JSONArray();
+
+            //查昨天的
+            PlanEntity yesterdayPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, yesterdayPlanDate);
+            if(yesterdayPlanEntity == null) {
+
+            } else {
+                String yesterdayPlanId = yesterdayPlanEntity.getPlanId();
+                List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionListByPlanIdAndActionCode(yesterdayPlanId, actionCode);
+                for(CustActionEntity custActionEntity : custActionEntityList) {
+                    String custId = custActionEntity.getCustId();
+                    String finishTime = custActionEntity.getFinishTime();
+                    String unFinishCauseDesc = custActionEntity.getUnfinishCauseDesc();
+                    if(!custMap.containsKey(custId)) {
+                        CustomerEntity customerEntity = custDAO.getCustById(custId);
+                        custMap.put(custId, customerEntity.getCustName());
+                    }
+                    String custName = custMap.get(custId);
+
+                    JSONObject yesterdayPlanCust = new JSONObject();
+                    yesterdayPlanCust.put("CUST_NAME", custName);
+                    yesterdayPlanCustList.add(yesterdayPlanCust);
+
+                    if(StringUtils.isNotBlank(finishTime)) {
+                        //完成的
+                        JSONObject yesterdayPlanFinishCust = new JSONObject();
+                        yesterdayPlanFinishCust.put("CUST_NAME", custName);
+                        yesterdayPlanFinishCust.put("FINISH_TIME", finishTime);
+                        yesterdayPlanFinishCustList.add(yesterdayPlanFinishCust);
+                    } else {
+                        JSONObject yesterdayPlanUnFinishCust = new JSONObject();
+                        yesterdayPlanUnFinishCust.put("CUST_NAME", custName);
+                        yesterdayPlanUnFinishCust.put("UNFINISH_CAUSE_DESC", unFinishCauseDesc);
+                        yesterdayPlanUnFinishCustList.add(yesterdayPlanUnFinishCust);
+                    }
+
+                }
+            }
+
+            //查今天的
+            PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
+            if(planEntity == null) {
+
+            } else {
+                String planId = planEntity.getPlanId();
+                List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionListByPlanIdAndActionCode(planId, actionCode);
+                for(CustActionEntity custActionEntity : custActionEntityList) {
+                    String custId = custActionEntity.getCustId();
+                    if(!custMap.containsKey(custId)) {
+                        CustomerEntity customerEntity = custDAO.getCustById(custId);
+                        custMap.put(custId, customerEntity.getCustName());
+                    }
+                    String custName = custMap.get(custId);
+                    JSONObject planCust = new JSONObject();
+                    planCust.put("CUST_NAME", custName);
+                    planCustList.add(planCust);
+                }
+            }
+
+            jsonActionMap.put("YESTERDAY_PLAN_CUST_LIST", yesterdayPlanCustList);
+            jsonActionMap.put("YESTERDAY_PLAN_FINISH_CUST_LIST", yesterdayPlanFinishCustList);
+            jsonActionMap.put("YESTERDAY_PLAN_UNFINISH_CUST_LIST", yesterdayPlanUnFinishCustList);
+            jsonActionMap.put("PLAN_CUST_LIST", planCustList);
+            jsonActionMap.put("ACTION_NAME",actionEntity.getActionName());
+            datalist.add(jsonActionMap);
+        }
+
+        response.set("DATA_LIST", datalist);
+
+        return response;
+    }
 }

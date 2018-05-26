@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
+import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
@@ -28,6 +30,7 @@ public class PlanTaskService extends GenericService {
         String now = TimeTool.now();
         GenericDAO dao = new GenericDAO("out");
 
+        //蓝图指导书推送
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(ADD_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM OUT_HIRUNPLUS_PROJECTS ");
@@ -37,58 +40,104 @@ public class PlanTaskService extends GenericService {
 
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
-            String nickName = jsonProject.getString("NICKNAME");
-            String addTime = jsonProject.getString("ADD_TIME");
-            String staffId = jsonProject.getString("STAFF_ID");
-            String openId = jsonProject.getString("OPENID");
             String id = jsonProject.getString("ID");
-
-            if(StringUtils.isBlank(staffId) || "0".equals(staffId)) {
-                continue;
+            boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "LTZDSTS");
+            if(isTrans) {
+                signToDone(id, now, "OUT_HIRUNPLUS_PROJECTS", "OUT_HIS_HIRUNPLUS_PROJECTS");
             }
+        }
 
-            if(ActionCheckRuleProcess.isActionBindYesterdayPlan(addTime, today, staffId)) {
-                //归到昨日计划里
-                String yesterday = TimeTool.addTime(today + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
-                PlanBean.actionBindPlan(nickName, openId, "LTZDSTS", yesterday, staffId, addTime);
-                signToDone(id, now);
-                continue;
+        //关注公众号
+        sql = new StringBuilder();
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(SUBSCRIBE_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
+        sql.append(" FROM out_hirunplus_reg ");
+        sql.append(" WHERE DEAL_TAG = '0' ");
+        sql.append(" ORDER BY ADD_TIME ");
+        jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
+
+        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+            JSONObject jsonProject = jsonProjectList.getJSONObject(i);
+            String id = jsonProject.getString("ID");
+            boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "GZHGZ");
+            if(isTrans) {
+                signToDone(id, now, "out_hirunplus_reg", "out_his_hirunplus_reg");
             }
+        }
 
-            if(ActionCheckRuleProcess.isActionBindTodayPlan(addTime, today, staffId)) {
-                //归到今日计划里
-                PlanBean.actionBindPlan(nickName, openId, "LTZDSTS", today, staffId, addTime);
-                signToDone(id,now);
-                continue;
+        //扫码
+        sql = new StringBuilder();
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(ADD_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID,ROLE_ID ");
+        sql.append(" FROM out_hirunplus_scan ");
+        sql.append(" WHERE DEAL_TAG = '0' ");
+        sql.append(" ORDER BY ADD_TIME ");
+        jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
+
+        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+            JSONObject jsonProject = jsonProjectList.getJSONObject(i);
+            String id = jsonProject.getString("ID");
+            String openId = jsonProject.getString("OPENID");
+            String roleId = jsonProject.getString("ROLE_ID");//11:客户代表；19:家装顾问
+            boolean isTrans = false;
+            if("19".equals(roleId)) {
+                //扫码
+                isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
+            } else if("11".equals(roleId)) {
+                //需要处理
+                CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+                CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
+                //TODO 暂时不根据WX_NICK查了
+                if(customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
+                    jsonProject.put("STAFF_ID", customerEntity.getHouseCounselorId());
+                    isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
+                } else {
+                    continue;
+                }
+
             }
-
-            if(ActionCheckRuleProcess.isActionBindTomorrowPlan(addTime, today, staffId)) {
-                //归到明日计划里
-                String tomorrow = TimeTool.addTime(today + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
-                PlanBean.actionBindPlan(nickName, openId, "LTZDSTS", tomorrow, staffId, addTime);
-                signToDone(id,now);
-                continue;
+            if(isTrans) {
+                signToDone(id, now, "out_hirunplus_scan", "out_his_hirunplus_scan");
             }
+        }
 
-            //无法归到任意计划里时，跳过
-            continue;
+        //需求蓝图一推送
+        sql = new StringBuilder();
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
+        sql.append(" FROM out_hirunplus_commends ");
+        sql.append(" WHERE DEAL_TAG = '0' ");
+        sql.append(" ORDER BY ADD_TIME ");
+        jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
+
+        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+            JSONObject jsonProject = jsonProjectList.getJSONObject(i);
+            String id = jsonProject.getString("ID");
+            boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
         }
 
         return response;
     }
 
-    private void signToDone(String id, String dealTime) throws Exception {
+    private void signToDone(String id, String dealTime, String tableName, String hisTableName) throws Exception {
         GenericDAO dao = new GenericDAO("ins");
         Map<String, String> dbParam = new HashMap<String, String>();
         dbParam.put("ID", id);
         dbParam.put("DEAL_TIME", dealTime);
 
         StringBuilder sql = new StringBuilder();
-        sql.append(" UPDATE OUT_HIRUNPLUS_PROJECTS ");
+        sql.append(" UPDATE ").append(tableName).append(" ");
         sql.append(" SET DEAL_TAG = '1',DEAL_TIME = :DEAL_TIME ");
         sql.append(" WHERE ID = :ID ");
         dao.executeUpdate(sql.toString(), dbParam);
+
+        //移历史表
+        sql = new StringBuilder();
+        sql.append(" INSERT INTO ").append(hisTableName).append(" ");
+        sql.append(" SELECT * FROM ").append(tableName).append(" WHERE ID = :ID");
+        dao.executeUpdate(sql.toString(), dbParam);
+
+        //删除在线表
+        sql = new StringBuilder();
+        sql.append(" DELETE FROM ").append(tableName).append(" ");
+        sql.append(" WHERE ID = :ID");
+        dao.executeUpdate(sql.toString(), dbParam);
     }
-
-
 }

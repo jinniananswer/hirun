@@ -78,6 +78,22 @@ public class CustActionEntity extends GenericEntity{
         this.set("EXECUTOR_ID", executorId);
     }
 
+    public String getUnfinishCauseId(){
+        return this.get("UNFINISH_CAUSE_ID");
+    }
+
+    public void setUnfinishCauseId(String unfinishCauseId){
+        this.set("UNFINISH_CAUSE_ID", unfinishCauseId);
+    }
+
+    public String getUnfinishCauseDesc(){
+        return this.get("UNFINISH_CAUSE_DESC");
+    }
+
+    public void setUnfinishCauseDesc(String unfinishCauseDesc){
+        this.set("UNFINISH_CAUSE_DESC", unfinishCauseDesc);
+    }
+
     public String getCreateUserId(){
         return this.get("CREATE_USER_ID");
     }

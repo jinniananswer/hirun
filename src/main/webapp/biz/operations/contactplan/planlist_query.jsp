@@ -32,6 +32,7 @@
 			<div class="fn">
 				<ul>
 					<li><span class="e_ico-unfold"></span></li>
+					<li><span class="text" employee_id="{{employee.EMPLOYEE_ID}}" ontap="planListQuery.queryDetail(this)">查看详情</span></li>
 				</ul>
 			</div>
 		</div>

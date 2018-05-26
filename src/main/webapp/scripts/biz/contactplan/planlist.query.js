@@ -1,28 +1,41 @@
 var planListQuery = {
-	init : function() {
+    stopPropagation : false,
+    init : function() {
         planListQuery.queryEmployeeList();
     },
     queryEmployeeList : function() {
-	    var data = {};
-	    data.EMPLOYEE_LIST = [];
-        data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '123'})
+        var data = {};
+        data.EMPLOYEE_LIST = [];
+        data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '252'})
         $('#employee_list').html(template("employee_template", data));
 
         planListQuery.getEmployeeDailySheet();
     },
     getEmployeeDailySheet : function() {
-	    $('#employee_list div[tag=employee_box]').each(function(idx, item) {
-	        var $item = $(item);
-	        var employeeId = $item.attr('employee_id');
+        $('#employee_list div[tag=employee_box]').each(function(idx, item) {
+            var $item = $(item);
+            var employeeId = $item.attr('employee_id');
 
         })
     },
-    clickEmployee: function(obj) {
-	    $obj = $(obj);
-        $obj.next().toggle();
-	    var isQuery = $obj.next().attr('is_query');
+    queryDetail : function(obj) {
+        planListQuery.stopPropagation = true;
 
-	    if(isQuery == 'false') {
+        var $obj = $(obj)
+        var employeeId = $obj.attr('employee_id');
+        top.$.index.openNav("biz/operations/contactplan/employee_dailysheet_detail_query.jsp?EXECUTOR_ID="+employeeId,"家装顾问日报表详情");
+    },
+    clickEmployee: function(obj) {
+        if(planListQuery.stopPropagation) {
+            planListQuery.stopPropagation = false;
+            return;
+        }
+
+        $obj = $(obj);
+        $obj.next().toggle();
+        var isQuery = $obj.next().attr('is_query');
+
+        if(isQuery == 'false') {
             $obj.next().attr('is_query', "true");
             var employeeId = $obj.attr('employee_id');
 
@@ -63,7 +76,7 @@ var planListQuery = {
                             "xAxis": [
                                 {
                                     "type": "value",
-                                    minInterval : 5
+                                    minInterval : 5,
                                 }
                             ],
                             "yAxis": [
@@ -95,8 +108,8 @@ var planListQuery = {
                                             }
                                             return newParamsName;
                                         }
-
-                                    }
+                                    },
+                                    triggerEvent : true
                                 }
                             ],
                             "tooltip": {
@@ -169,6 +182,12 @@ var planListQuery = {
                     if( option && option.baseOption.series ){
                         chart.setOption(option);
                     }
+
+                    chart.on('click', function (params) {
+                        alert(params.targetType);
+                        console.log(params);
+                    });
+
                     chart = null;
                 },
                 errorFunc : function (resultCode, resultInfo) {
