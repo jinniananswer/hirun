@@ -24,7 +24,7 @@ public class MySqlProducer extends GenericSqlProducer {
             DataFieldType type = col.getType();
             String colName = col.getName();
             if(type == DataFieldType.DATE)
-                sb.append("date_format("+colName+", '%Y-%m-%d %H:%I:%S') "+colName);
+                sb.append("date_format("+colName+", '%Y-%m-%d %H:%i:%S') "+colName);
             else
                 sb.append(colName);
 
