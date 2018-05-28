@@ -32,10 +32,10 @@ public class PlanTaskService extends GenericService {
 
         //蓝图指导书推送
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(ADD_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(COMM_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM OUT_HIRUNPLUS_PROJECTS ");
         sql.append(" WHERE DEAL_TAG = '0' ");
-        sql.append(" ORDER BY ADD_TIME ");
+        sql.append(" ORDER BY COMM_TIME ");
         JSONArray jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
@@ -49,7 +49,7 @@ public class PlanTaskService extends GenericService {
 
         //关注公众号
         sql = new StringBuilder();
-        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(SUBSCRIBE_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(SUBSCRIBE_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM out_hirunplus_reg ");
         sql.append(" WHERE DEAL_TAG = '0' ");
         sql.append(" ORDER BY ADD_TIME ");
@@ -66,7 +66,7 @@ public class PlanTaskService extends GenericService {
 
         //扫码
         sql = new StringBuilder();
-        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(ADD_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID,ROLE_ID ");
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(ADD_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID,ROLE_ID ");
         sql.append(" FROM out_hirunplus_scan ");
         sql.append(" WHERE DEAL_TAG = '0' ");
         sql.append(" ORDER BY ADD_TIME ");
@@ -101,7 +101,7 @@ public class PlanTaskService extends GenericService {
 
         //需求蓝图一推送
         sql = new StringBuilder();
-        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM out_hirunplus_commends ");
         sql.append(" WHERE DEAL_TAG = '0' ");
         sql.append(" ORDER BY ADD_TIME ");

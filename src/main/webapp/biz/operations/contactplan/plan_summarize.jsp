@@ -231,9 +231,9 @@
 						<div class="back" ontap="backPopup(this)">客户总结</div>
 					</div>
 					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
-						<div class="c_list c_list-border">
+						<div id="summarize_cust_info_part" class="c_list c_list-border">
 							<ul>
-								<li id="summarize_cust_info_part">
+								<li>
 									<div class="main">
 										<div class="title" tag="cust_name"></div>
 										<div class="content content-auto">
@@ -287,6 +287,7 @@
 
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
+							<button type="button" class="e_button-l e_button-red" ontap="summaryPopup.cancel(this)">取消</button>
 							<button type="button" class="e_button-l e_button-green" ontap="summaryPopup.confirm(this)">确定</button>
 						</div>
 					</div>
@@ -381,11 +382,24 @@
 			</div>
 			<div class="c_line c_line-dashed"></div>
 			<div class="c_list">
-				<ul>
+				<ul tag="UNFINISH_TITLE">
 					<li class="" ontap="">
 						<div class="content">
 							<div class="main">
 								<div class="title e_strong">未完成客户</div>
+							</div>
+							<div class="side link" action_code="{{ACTION_CODE}}" ontap="planSummarize.batchOperTextOnClick(this)" tag="singleOper">
+								<span class="text">批量操作</span>
+							</div>
+							<div class="side link" tag="batchOper" action_code="{{ACTION_CODE}}"
+								 ontap="planSummarize.batchSummarize(this)"
+								 style="display: none">
+								<span class="text">填写原因</span>
+							</div>
+							<div class="side link" tag="batchOper"
+								 action_code="{{ACTION_CODE}}" ontap="planSummarize.cancelBatchOper($(this).attr('action_code'))"
+								 style="display: none">
+								<span class="text">取消</span>
 							</div>
 						</div>
 					</li>
@@ -395,16 +409,25 @@
 				<ul tag="UNFINISH_CUST_LIST">
 					{{each UNFINISH_CUST_LIST cust idx}}
 					<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}"
-						action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+						action_code="{{ACTION_CODE}}" oper_code="{{OPER_CODE}}"
 						action_id="{{cust.ACTION_ID}}" li_type="unFinish"
 						unfinish_cause_id="{{cust.UNFINISH_CAUSE_ID}}"
 						unfinish_cause_desc="{{cust.UNFINISH_CAUSE_DESC}}"
-						ontap="planSummarize.summarize(this)">
+						<%--class="link"--%>
+						<%--ontap="planSummarize.summarize(this)"--%>
+					>
 						<div class="main">
-							<div class="title">
+							<div class="title link" tag="singleOper"
+								 action_code="{{ACTION_CODE}}"
+								 cust_id="{{cust.CUST_ID}}"
+								 ontap="planSummarize.summarize(this)">
 								<span class="e_red">{{cust.CUST_NAME}}</span>
 								<span class="e_ico-edit"></span>
 							</div>
+							<label class="title group link" style="display: none" tag="batchOper">
+								<span class="e_red">{{cust.CUST_NAME}}</span>
+								<input type="checkbox" name="{{ACTION_CODE}}_custCheckBox" value="{{cust.CUST_ID}}">
+							</label>
 							<div class="content">
 								<span class="e_tag e_tag-s e_tag-red" tag="unfinish_cause_desc">{{cust.UNFINISH_CAUSE_DESC}}</span>
 							</div>
@@ -431,16 +454,22 @@
 <script id="unFinishCustListTemplate" type="text/html">
 	{{each UNFINISH_CUST_LIST cust idx}}
 	<li tag="UNFINISH_{{cust.CUST_ID}}" cust_id="{{cust.CUST_ID}}"
-		action_code="{{ACTION_CODE}}" class="link" oper_code="{{OPER_CODE}}"
+		action_code="{{ACTION_CODE}}" oper_code="{{OPER_CODE}}"
 		action_id="{{cust.ACTION_ID}}" li_type="unFinish"
 		unfinish_cause_id="{{cust.UNFINISH_CAUSE_ID}}"
 		unfinish_cause_desc="{{cust.UNFINISH_CAUSE_DESC}}"
-		ontap="planSummarize.summarize(this)">
+		<%--class="link"--%>
+		<%--ontap="planSummarize.summarize(this)">--%>
+	>
 		<div class="main">
-			<div class="title">
+			<div class="title link" tag="singleOper" ontap="planSummarize.summarize(this)">
 				<span class="e_red">{{cust.CUST_NAME}}</span>
 				<span class="e_ico-edit"></span>
 			</div>
+			<label class="title group link" style="display: none" tag="batchOper">
+				<span class="e_red">{{cust.CUST_NAME}}</span>
+				<input type="checkbox" name="{{ACTION_CODE}}_custCheckBox" value="{{cust.CUST_ID}}">
+			</label>
 			<div class="content">
 				<span class="e_tag e_tag-s e_tag-red" tag="unfinish_cause_desc">{{cust.UNFINISH_CAUSE_DESC}}</span>
 			</div>

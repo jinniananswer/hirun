@@ -42,10 +42,10 @@ public class DataImportTaskService extends GenericService {
             start = TimeTool.addTime(indbTime, TimeTool.TIME_PATTERN, ChronoUnit.SECONDS, 1);
         }
 
-//        GZGZHDataImport.dataImport(start, now);
-//        SCANDataImport.dataImport(start, now);
+        GZGZHDataImport.dataImport(start, now);
+        SCANDataImport.dataImport(start, now);
         LTZDSTSDataImport.dataImport(start, now);
-//        XQLTYTSDataImport.dataImport(start, now);
+        XQLTYTSDataImport.dataImport(start, now);
 
         if(dataGetTimeEntity == null) {
             dataGetTimeEntity = new DataGetTimeEntity();
