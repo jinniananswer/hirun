@@ -32,10 +32,10 @@ public class PlanTaskService extends GenericService {
 
         //蓝图指导书推送
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(ADD_TIME), '%Y-%m-%d %H:%i:%s') ADD_TIME,STAFF_ID,OPENID ");
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(COMM_TIME), '%Y-%m-%d %H:%i:%s') COMM_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM OUT_HIRUNPLUS_PROJECTS ");
         sql.append(" WHERE DEAL_TAG = '0' ");
-        sql.append(" ORDER BY ADD_TIME ");
+        sql.append(" ORDER BY COMM_TIME ");
         JSONArray jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {

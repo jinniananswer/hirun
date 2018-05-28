@@ -242,6 +242,8 @@ var planSummarize = {
 
         //更新实际数
         $('#FINISH_INFO_' + actionCode + ' span[tag=finishCustNum]').html(factCustNum);
+
+        planSummarize.showSingleOper(actionCode);
     },
     showFinishInfo : function() {
         //先判断是否都补录完了
@@ -305,6 +307,8 @@ var planSummarize = {
                     var html = template('finishInfoTemplate',data);
                     $('#finishInfoList').append(html);
 
+                    //绑定未完成客户li上的编辑事件
+
                     $('#edit_cust_list_part').hide();
                     $('#finishInfoList').show();
                     $('#submitButton').show();
@@ -332,19 +336,54 @@ var planSummarize = {
         var $obj = $(obj);
         var actionCode = $obj.attr('action_code');
         var custId = $obj.attr('cust_id');
-        summaryPopup.showSummaryPopup(actionCode, custId, planSummarize.planId, function(cause) {
+        summaryPopup.showSummaryPopup(actionCode, "singleOper", custId, planSummarize.planId, function(cause) {
             planSummarize.afterSummarizeCust(obj, cause);
+        });
+    },
+    batchSummarize : function(obj) {
+        var $obj = $(obj);
+        var actionCode = $obj.attr('action_code');
+
+        if(getCheckedBoxNum(actionCode + "_custCheckBox") == 0) {
+            alert('请先选择客户');
+            return;
+        }
+
+        var custList = getCheckedValues(actionCode + "_custCheckBox").split(',');
+        summaryPopup.showSummaryPopup(actionCode, "batchOper", null, planSummarize.planId, function(cause) {
+            planSummarize.afterBatchSummarizeCust(actionCode, custList, cause);
+        }, function() {
+            planSummarize.cancelBatchOper(actionCode);
         });
     },
     afterSummarizeCust : function(obj, cause) {
         var $obj = $(obj);
-        var actionId = $obj.attr('action_id');
+        var actionCode = $obj.attr('action_code');
         var custId = $obj.attr('cust_id');
-        $obj.attr('unfinish_cause_id', cause.UNFINISH_CAUSE_ID ? cause.UNFINISH_CAUSE_ID : '');
-        $obj.attr('unfinish_cause_desc', cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
-        $obj.attr('oper_code', '2');
 
-        $obj.find('span[tag=unfinish_cause_desc]').html(cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
+        var selectorStr = '#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_' + custId + ']';
+
+        var $liObj = $(selectorStr);
+
+        $liObj.attr('unfinish_cause_id', cause.UNFINISH_CAUSE_ID ? cause.UNFINISH_CAUSE_ID : '');
+        $liObj.attr('unfinish_cause_desc', cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
+        $liObj.attr('oper_code', '2');
+
+        $liObj.find('span[tag=unfinish_cause_desc]').html(cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
+    },
+    afterBatchSummarizeCust : function(actionCode, custList, cause) {
+        for(var i = 0, size = custList.length; i < size; i++) {
+            var custId = custList[i];
+            var selectorStr = '#FINISH_INFO_' + actionCode + ' li[tag=UNFINISH_' + custId + ']';
+            var unfinishCustObj = $(selectorStr);
+            unfinishCustObj.attr('unfinish_cause_id', cause.UNFINISH_CAUSE_ID ? cause.UNFINISH_CAUSE_ID : '');
+            unfinishCustObj.attr('unfinish_cause_desc', cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
+            unfinishCustObj.attr('oper_code', '2');
+
+            unfinishCustObj.find('span[tag=unfinish_cause_desc]').html(cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
+        }
+
+        planSummarize.showSingleOper(actionCode);
     },
     showCustEditPopup : function(obj) {
         var $obj = $(obj)
@@ -459,6 +498,29 @@ var planSummarize = {
         }
 
         return errorMessage;
+    },
+    batchOperTextOnClick : function(obj) {
+        var $obj = $(obj);
+        var actionCode = $obj.attr('action_code');
+        planSummarize.showBatchOper(actionCode);
+        //UNFINISH_CUST_LIST
+        //FINISH_INFO_{{ACTION_CODE}}
+        //UNFINISH_TITLE
+    },
+    cancelBatchOper : function(actionCode) {
+        planSummarize.showSingleOper(actionCode);
+    },
+    showBatchOper : function(actionCode) {
+        $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").hide();
+        $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").show();
+    },
+    showSingleOper : function(actionCode) {
+        $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").show();
+        $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").hide();
+
+        $('[name=' + actionCode + '_custCheckBox]').each(function(idx, item) {
+            $(item).removeAttr('checked');
+        });
     }
 };
 
@@ -645,30 +707,37 @@ var summaryPopup = {
     custId : '',
     planId : '',
     callback : '',
-    showSummaryPopup : function(actionCode, custId, planId, callback) {
+    cancelCallback : '',
+    showSummaryPopup : function(actionCode, operType, custId, planId, callback, cancelCallback) {
         summaryPopup.planId = planId;
 
         //获取客户信息
-        $.ajaxRequest({
-                url : 'cust/getCustById',
-                data : {
-                    CUST_ID : custId
-                },
-                type : 'GET',
-                dataType : 'json',
-                success : function(data) {
-                    var body = data.BODY;
-                    $('#summarize_cust_info_part div[tag=cust_name]').html(body.CUST_NAME);
-                    $('#summarize_cust_info_part span[tag=sex]').html(body.SEX);
-                    $('#summarize_cust_info_part span[tag=wx_nick]').html(body.WX_NICK);
-                    $('#summarize_cust_info_part span[tag=mobile_no]').html(body.MOBILE_NO);
-                    $('#summarize_cust_info_part span[tag=house_detail]').html(body.HOUSE_DETAIL);
-                },
-                error : function(status, errorMessage) {
+        if(operType=="singleOper") {
+            $('#summarize_cust_info_part').show();
+            $.ajaxRequest({
+                    url : 'cust/getCustById',
+                    data : {
+                        CUST_ID : custId
+                    },
+                    type : 'GET',
+                    dataType : 'json',
+                    success : function(data) {
+                        var body = data.BODY;
+                        $('#summarize_cust_info_part div[tag=cust_name]').html(body.CUST_NAME);
+                        $('#summarize_cust_info_part span[tag=sex]').html(body.SEX ? body.SEX : '');
+                        $('#summarize_cust_info_part span[tag=wx_nick]').html(body.WX_NICK ? body.WX_NICK : '');
+                        $('#summarize_cust_info_part span[tag=mobile_no]').html(body.MOBILE_NO ? body.MOBILE_NO : '');
+                        $('#summarize_cust_info_part span[tag=house_detail]').html(body.HOUSE_DETAIL ? body.HOUSE_DETAIL : '');
+                    },
+                    error : function(status, errorMessage) {
 
+                    }
                 }
-            }
-        )
+            )
+        } else if(operType=="batchOper") {
+            $('#summarize_cust_info_part').hide();
+        }
+
 
         //获取原因列表
         $.ajaxRequest({
@@ -691,6 +760,10 @@ var summaryPopup = {
 
         if(callback) {
             summaryPopup.callback = callback;
+        }
+
+        if(cancelCallback) {
+            summaryPopup.cancelCallback = cancelCallback;
         }
 
         showPopup('summarizeUnFinishCustPopup', 'summarizeUnFinishCustPopupItem');
@@ -716,6 +789,12 @@ var summaryPopup = {
 
         if(summaryPopup.callback) {
             summaryPopup.callback(cause);
+        }
+        backPopup(obj);
+    },
+    cancel : function(obj) {
+        if(summaryPopup.cancelCallback) {
+            summaryPopup.cancelCallback();
         }
         backPopup(obj);
     }
