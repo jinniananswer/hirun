@@ -327,6 +327,13 @@
             var obj = $("#HOUSE_NUM");
             if($.validate.verifyField(obj)){
                 var counselorNum = Math.round(obj.val()/500);
+                if(counselorNum == 0 && obj.val() != 0){
+                    counselorNum = 1;
+                }
+
+                if(counselorNum == $("#PLAN_COUNSELOR_NUM").val()){
+                    return;
+                }
                 $("#PLAN_COUNSELOR_NUM").val(counselorNum);
             }
             this.confirmCounselor(true);

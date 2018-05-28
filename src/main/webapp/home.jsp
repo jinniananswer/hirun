@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="page">
-                    <div class="content" title="首页">
+                    <div class="content" title="功能列表">
                         <!-- 分列 开始 -->
                         <div class="l_col l_col-space-1">
 

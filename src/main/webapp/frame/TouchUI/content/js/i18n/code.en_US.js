@@ -2,6 +2,12 @@
 	if(!$) return;
 	$.lang.extend({
 		"ui.page.loading": "Loading...",
+		"ui.page.excep.show-detail": "Show Detail",
+		"ui.page.excep.hide-detail": "Hide Detail",
+		"ui.page.excep.btntext.close": "Close",
+		"ui.page.excep.report.loading": "Reporting",
+		"ui.page.excep.report.success": "Report Error Success",
+		"ui.page.excep.report.error": "Report Error Faild",
 
 		"ui.nav.notnull": " parameter cannot be null and must be string.",
 		"ui.nav.navobj": "Feature Navigator adapter object must be a JSON Object.",
@@ -41,20 +47,20 @@
 		"ui.validate.int3": " must be an integer less than 0!",
 		"ui.validate.int4": " must be digit!",
 		"ui.validate.int5": " must be an integer greater than or equal to 0!",
-		"ui.validate.date1": "{1}:date is illegal or invalid formatter {2}!",
+		"ui.validate.date1": "{1}:date is illegal or invalid format {2}!",
 		"ui.validate.date2": "{1} cannot be less than {2}.",
 		"ui.validate.date3": "{1} cannot be greater than {2}.",
 		"ui.validate.number9": "{1} cannot be less than {2}.",
 		"ui.validate.number10": "{1} cannot be greater than {2}.",
-		"ui.validate.email": " must be the Email address formatter!",
+		"ui.validate.email": " must be the Email address format!",
 		"ui.validate.filetype": "{1} must be of specified file type of {2}!",
-		"ui.validate.phone": " must be the mobile phone number formatter!",
-		"ui.validate.ip": " must be the IP address formatter!",
+		"ui.validate.phone": " must be the mobile phone number format!",
+		"ui.validate.ip": " must be the IP address format!",
 		"ui.validate.numchar1": " must be combination of digits and letters!",
 		"ui.validate.numchar2": " must be combination of digits and capitalized letters!",
 		"ui.validate.numchar3": " must be combination of digits and lowercase letters!",
 		"ui.validate.numchar4": " cannot contain comma, quote and other special punctuation.",
-		"ui.validate.money": "must be the money formatter",
+		"ui.validate.money": "must be the money format",
 		"ui.validate.choose": "Please select the target record!",
 
 		"ui.public.printArea.label.fontresize": "Font Resize",
@@ -66,13 +72,25 @@
 		"ui.component.messagebox.buttontext.ext0": "ExtButton0",
 		"ui.component.messagebox.buttontext.ext1": "ExtButton1",
 		"ui.component.messagebox.buttontext.ext2": "ExtButton2",
-		"ui.component.messagebox.buttontext.report": "Report Error",   
+		"ui.component.messagebox.buttontext.report": "Report Error", 
+		"ui.component.messagebox.buttontext.show-detail": "Show Detail", 
+		"ui.component.messagebox.buttontext.hide-detail": "Hide Detail",    
 		"ui.component.messagebox.buttontext.select-all": "Select All", 
+		"ui.component.messagebox.buttontext.copy-all": "Copy All",
 		"ui.component.messagebox.report.errorid-label": "ErrorID",
 		"ui.component.messagebox.report.loading": "Reporting",
 		"ui.component.messagebox.report.success": "Report Error Success",
 		"ui.component.messagebox.report.error": "Report Error Faild",
-
+		"ui.component.messagebox.tiptext.copy-succss": "Copy Success",
+		
+		"ui.component.textfield.default-placeholder": "Please Input",
+		
+		"ui.component.moneyfield.default-placeholder": "Please Input",
+		
+		"ui.component.textarea.default-placeholder": "Please Input",
+		
+		"ui.component.datefield.default-placeholder": "Please Select",
+		
 		"ui.component.calendar.janurary-text": "Janurary",
 		"ui.component.calendar.february-text": "February",
 		"ui.component.calendar.march-text": "March",
@@ -109,6 +127,7 @@
 		"ui.component.calendar.quicksel-btn-nytday-text" : "Next Year Today",
 		"ui.component.calendar.quicksel-btn-2050day-text" : "2050",
 
+		"ui.component.select.textinput-placeholder": "Please Enter Keyword Or Select",
 		"ui.component.select.default-text": "--Please select--",
 		"ui.component.select.textinput-placeholder": "Please Enter Keyword Or Select",
 		"ui.component.select.tip.nonematch": "None Match Item",
@@ -207,8 +226,13 @@
 		"ui.component.upload.tip.upload-faild-status": "Upload Fiald, Status:{1}",
 		"ui.component.upload.tip.upload-faild-info": "Upload Fiald:{1}",
 		
-		"ui.component.suggest.tip.msg-title": "Sggest Component",
+		"ui.component.suggest.default-placeholder": "Please Enter And Search",
+		"ui.component.suggest.tip.msg-title": "Suggest Component",
+		"ui.component.suggest.tip.helpmsg-title": "Please Enter And Search",
+		"ui.component.suggest.tip.helpmsg-content": "Support pinyin first letter search",
 		"ui.component.suggest.tip.invalid-parameter": "None value in the \"{1}\" Suggest component parameters \"clazz、method、listener and component\"",
+		
+		"ui.component.swfobject.tip.flashplayer-not-installed": "FlashPlayer is not installed!",
 		
 		"default": "undefined code"
 	});

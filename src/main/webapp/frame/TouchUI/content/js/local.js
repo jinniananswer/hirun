@@ -1,7 +1,8 @@
 /*----------------------- 公共方法 -----------------------*/
 var isVirtualPhone;
+var buttonNum = 0;
 function setVP (){
-	if(document.body.offsetWidth < document.body.offsetHeight) {
+	if(top.document.body.offsetWidth < top.document.body.offsetHeight) {
 		isVirtualPhone = true;
 	} else {
 		isVirtualPhone = false;
@@ -10,32 +11,93 @@ function setVP (){
 }
 setTimeout(function(){setVP();},100)
 window["onresize"] = function(){ setVP();}
+window["onload"] = function(){
+	var node = document.createElement("input");
+	node.id = "urlGetter";
+	node.type = "text";
+	node.style.position = "absolute";
+	node.style.left = "-1000em";
+	node.style.top = "-1000em";
+	node.style.opacity = "0";
+	document.body.appendChild(node);
+	$("#urlGetter").val(window.location.pathname.substring(1));
+	$("body").bind("dblclick",function(e){
+		$("#urlGetter").select();
+	})
+}
 // 外框业务部分显/隐
 function openNav(url) {
-	if(url){
-		get('UI-frameMain').children[0].src = url;
-	}
-	setTimeout(function(){addClass(get('UI-frameMain'),'m_main-show');},200)
+	top.document.getElementById("mainFrame").style.display = "none";
+	top.document.getElementById("loading").style.display = "";
+	top.showPopup("popup","popup-main");
+	setTimeout(function(){
+		top.document.getElementById("mainFrame").src = url;
+		top.document.getElementById("mainFrame").onload = function(){
+			top.document.getElementById("loading").style.display = "none";
+			top.document.getElementById("mainFrame").style.display = "";
+		}
+	},400)
 }
 function closeNav() {
-	removeClass(get('UI-frameMain'),'m_main-show');
+	top.hidePopup("popup");
 }
-// 外框信息部分显/隐
-var frameInfoGroup = [];
-window.onload = function () {
-	frameInfoGroup.push(get("UI-frameCust"));
-	frameInfoGroup.push(get("UI-frameCart"));
-	frameInfoGroup.push(get("UI-frameStaff"));
+function showFloatTip(id,timer) {
+	var tip = get(id);
+	$(tip).show();
+	setTimeout(
+		function(){
+			$(tip).fadeout(1);
+		},timer*1000
+	)
 }
-function hideFrameInfo() {
-	for (var i = 0; i < frameInfoGroup.length; i++) {
-		removeClass(frameInfoGroup[i],"m_main-show");
+
+$.fn.extend (
+	{
+		// 在页面底部显示一个悬浮提示
+		fadeout: function(timer){
+			$(this).css("transition",("opacity " + timer + "s ease-out"));
+			$(this).css("opacity","0");
+			setTimeout(
+				function(){
+					$(this).css("display","none");
+				}, timer * 1000
+			)
+		},
+		// 倒计时
+		countDown: function(initNum,callback){
+			var that = $(this);
+			$(this).html(initNum);
+			var x = setInterval(
+				function(){
+					initNum -= 1;
+					that.html(initNum);
+					if(initNum == 0) {
+						clearInterval(x);
+						callback();
+					}
+				},1000
+			)
+		}
 	}
-}
-function showFrameInfo(id) {
-	hideFrameInfo();
-	addClass(get(id),"m_main-show");
-}
+)
+// 外框信息部分显/隐
+// var frameInfoGroup = [];
+// window.onload = function () {
+// 	frameInfoGroup.push(get("UI-frameCust"));
+// 	frameInfoGroup.push(get("UI-frameCart"));
+// 	frameInfoGroup.push(get("UI-frameStaff"));
+// }
+// function hideFrameInfo() {
+// 	for (var i = 0; i < frameInfoGroup.length; i++) {
+// 		removeClass(frameInfoGroup[i],"m_main-show");
+// 	}
+// }
+// function showFrameInfo(id) {
+// 	hideFrameInfo();
+// 	addClass(get(id),"m_main-show");
+// 	get(id).style.zIndex = top.z + 1;
+// 	top.z = top.z + 1;
+// }
 // 跨帧获取对象
 function get(id) {
 	if (document.getElementById(id)){ 
@@ -50,6 +112,9 @@ function get(id) {
 }
 function goto(url) {
 	window.location.href = url;
+}
+function back() {
+	window.history.go(-1);
 }
 function getNext(node) {
 	if(node.nextSibling.nodeType == 3) {
@@ -75,19 +140,19 @@ function show(el,str) {
 }
 function hide(el) {
 	var o;
-	typeof el == "object" ? o = el : o = document.getElementById(el);
+	typeof el == "object" ? o = el : o = get(el);
 	o.style.display = "none";
 }
-function toggle(els,display) {
+function toggle(els) {
 	for (var i = 0; i < arguments.length; i++) {
 		var o;
 		var el = arguments[i];
 		typeof el == "string" ? o = get(el) : o = el;
-		if(!display) {
+		// if(!display) {
 			o.style.display == "none" ? o.style.display = "" : o.style.display = "none";
-		} else {
-			o.offsetHeight == 0 ? o.style.display = display : o.style.display = "none";
-		}
+		// } else {
+		// 	o.offsetHeight == 0 ? o.style.display = display : o.style.display = "none";
+		// }
 	};
 }
 function getDisTop(targetEl,scrollEl) {
@@ -158,6 +223,14 @@ function radios(listId) {
 				removeClass(list.children[j],"checked")
 			};
 			addClass(this,"checked");
+		})
+	}
+}
+function checks(listId) {
+	var list = get(listId);
+	for (var i = 0; i < list.children.length; i++) {
+		list.children[i].addEventListener ("click",function(){
+			toggleClass(this,"checked");
 		})
 	}
 }
@@ -243,30 +316,39 @@ function showData(msgId,loadingId) {
 		loading.style.display = "none";
 	},1500)
 }
+function queryUser(o,callback) {
+	$(o).attr("class","e_ico-loading");
+	setTimeout(
+		function(){
+			$('#queryUserBox').hide();
+			$('#queryUserResult').show();
+			$(o).attr("class","e_ico-search");
+			if(top.get("login").offsetHeight > 0) {
+				top.toggle('info','cust','login','logoutButton','creatUserButton');
+			}
+			if(callback){
+				callback();
+			}
+		},500
+	)
+}
+function cancelUser(o,callback) {
+	$("#queryUserBox").show();
+	$("#queryUserResult").hide();
+	$("#queryUserBox input").select();
+	if(top.get("login").offsetHeight == 0) {
+		top.toggle('info','cust','login','logoutButton','creatUserButton');
+	}
+	if(callback){
+		callback();
+	}
+}
 function getIndexForArray(arr, value) {
 	for (var i = 0; i < arr.length; i++){
 		if (arr[i] == value) return i;
 	}
 	return -1;
 }
-// function showFloatLayer(id) {
-// 	var layer = get(id);
-// 	var button = event.target;
-// 	if(layer.offsetHeight == 0) { 
-// 		addClass(layer,"c_float-show");
-// 	} else {
-// 		addClass(layer,"c_float-show");
-// 	}
-// 	document.body.addEventListener("click",function() {
-// 		var tempNode = event.target;
-// 		while(tempNode != document.body && tempNode != layer && tempNode != button) {
-// 			tempNode = tempNode.parentNode;
-// 		}
-// 		if(tempNode == document.body) {
-// 			removeClass(layer,"c_float-show");
-// 		}
-// 	})
-// }
 tab = function(tabsId,pagesId) {
 	var that = this;
 	that.tabs = document.getElementById(tabsId).children;
@@ -297,24 +379,35 @@ tab = function(tabsId,pagesId) {
 		})
 	}
 }
-
-function checks(listId) {
-    var list = get(listId);
-    for (var i = 0; i < list.children.length; i++) {
-        list.children[i].addEventListener ("click",function(){
-            toggleClass(this,"checked");
-        })
-    }
+// 获取 url 的参数
+function getUrlParam(name) {
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
 }
-
-
-
-
-
-
-
-
-
-
-
-
+function setFloatLayer(o, id, align, width) {
+	var floatEl = $("#" + id);
+	floatEl.css("top",$(o).offset().top + $(o).height() - 1 + "px");
+	if(width) {
+		if(typeof width == "number") {
+			floatEl.css("width", width + "em");
+		} else if(typeof width == "string") {
+			floatEl.css("width", $("#" + width).width() + "px");
+		}
+	} else {
+		floatEl.css("width",$(o).width() + "px");
+	}
+	if(!align || align == "left") {
+		floatEl.css("left",$(o).offset().left + "px");
+	} else {
+		floatEl.css("left",$(o).offset().left - floatEl.width() + $(o).width() + "px");
+	}
+	while ( o.tagName != "BODY") {
+		if($(o).hasClass("c_scroll")) {
+			$(o).bind("scroll",function(){
+				hideFloatLayer(id);
+			})
+		}
+		o = o.parentNode;
+	}
+}

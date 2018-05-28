@@ -2,6 +2,12 @@
 	if(!$) return;
 	$.lang.extend({
 		"ui.page.loading": "载入中...",
+		"ui.page.excep.show-detail": "显示详细信息",
+		"ui.page.excep.hide-detail": "隐藏详细信息",
+		"ui.page.excep.btntext.close": "关闭",
+		"ui.page.excep.report.loading": "正在提交辅助信息",
+		"ui.page.excep.report.success": "提交辅助信息成功",
+		"ui.page.excep.report.error": "提交辅助信息失败",
 
 		"ui.nav.notnull": "参数不能为空且必须是字符串",
 		"ui.nav.navobj": "功能导航适配器对象必须是一个JSON Object对象",
@@ -61,18 +67,30 @@
 		"ui.public.printArea.label.fontresize": "字体调节",
 		"ui.public.printArea.button.close": "关闭",
 		"ui.public.printArea.button.print": "打印",
-
+			
 		"ui.component.messagebox.buttontext.ok": "确定",
 		"ui.component.messagebox.buttontext.cancel": "取消",
 		"ui.component.messagebox.buttontext.ext0": "扩展按钮0",
 		"ui.component.messagebox.buttontext.ext1": "扩展按钮1",
 		"ui.component.messagebox.buttontext.ext2": "扩展按钮2", 
-		"ui.component.messagebox.buttontext.report": "提交辅助信息",  
+		"ui.component.messagebox.buttontext.report": "提交辅助信息",
+		"ui.component.messagebox.buttontext.show-detail": "显示详细信息", 
+		"ui.component.messagebox.buttontext.hide-detail": "隐藏详细信息",   
 		"ui.component.messagebox.buttontext.select-all": "全选",
+		"ui.component.messagebox.buttontext.copy-all": "复制",
 		"ui.component.messagebox.report.errorid-label": "辅助信息唯一标识",
 		"ui.component.messagebox.report.loading": "正在提交辅助信息",
 		"ui.component.messagebox.report.success": "提交辅助信息成功",
 		"ui.component.messagebox.report.error": "提交辅助信息失败",
+		"ui.component.messagebox.tiptext.copy-succss": "复制成功",
+		
+		"ui.component.textfield.default-placeholder": "请填写",
+		
+		"ui.component.moneyfield.default-placeholder": "请填写",
+		
+		"ui.component.textarea.default-placeholder": "请填写",
+				
+		"ui.component.datefield.default-placeholder": "请选择",
 		
 		"ui.component.calendar.janurary-text": "1月",
 		"ui.component.calendar.february-text": "2月",
@@ -110,6 +128,7 @@
 		"ui.component.calendar.quicksel-btn-nytday-text" : "明年今日",
 		"ui.component.calendar.quicksel-btn-2050day-text" : "2050",
 		
+		"ui.component.select.textinput-placeholder": "请输入关键字或选择",
 		"ui.component.select.default-text": "--请选择--",
 		"ui.component.select.textinput-placeholder": "请输入关键字或选择",
 		"ui.component.select.tip.nonematch": "无匹配项",
@@ -208,8 +227,13 @@
 		"ui.component.upload.tip.upload-faild-status": "上传失败，状态：{1}",
 		"ui.component.upload.tip.upload-faild-info": "上传失败：{1}",
 		
+		"ui.component.suggest.default-placeholder": "请输入并搜索",
 		"ui.component.suggest.tip.msg-title": "Suggest组件",
+		"ui.component.suggest.tip.helpmsg-title": "请输入查询条件",
+		"ui.component.suggest.tip.helpmsg-content": "支持拼音首字母搜索",
 		"ui.component.suggest.tip.invalid-parameter": "Suggest组件\"{1}\"的clazz、method、listener和component参数不能同时为空！",
+		
+		"ui.component.swfobject.tip.flashplayer-not-installed": "FlashPlayer未安装！",
 		
 		"default": "未定义的编码"
 	});

@@ -101,7 +101,7 @@
                 html.push("<div class=\"group\">");
                 html.push("<div class=\"content\">");
                 html.push("<div class=\"main\">");
-                html.push("<div class=\"title\"><div class=\"left link\" ontap=\"parent.$.index.openNav('redirectToDetail?HOUSES_ID="+data.get("HOUSES_ID")+"','"+data.get("NAME")+"规划详情');\"><span class=\"e_strong\">"+data.get("NAME")+"</span></div>");
+                html.push("<div class=\"title\"><div class=\"left link\" ontap=\"$.redirect.open('redirectToDetail?HOUSES_ID="+data.get("HOUSES_ID")+"','"+data.get("NAME")+"规划详情');\"><span class=\"e_strong\">"+data.get("NAME")+"</span></div>");
                 var status = data.get("STATUS");
                 if(status == "0") {
                     html.push("<div class=\"right link\" ontap=\"$.housesPlan.initAudit(" + data.get("HOUSES_ID") + ")\"><span class=\"e_ico-select\"></span> 审核</div>");
@@ -133,11 +133,11 @@
                 if(employees != null && employees.length > 0) {
                     for(var j=0;j<employees.length;j++) {
                         var employee = employees.get(j);
-                        html.push("<div class=\"side\"><span class=\"e_tag e_tag-green\">"+employee.get("EMPLOYEE_NAME"));
-                        var towerNo = employee.get("TOWER_NO");
-                        if(towerNo != null && towerNo != "undefined" && typeof(towerNo) != "undefined"){
-                            html.push("(楼栋："+towerNo+")");
-                        }
+                        html.push("<div class=\"side content content-row-2\"><span class=\"e_tag e_tag-green\">"+employee.get("EMPLOYEE_NAME"));
+                        // var towerNo = employee.get("TOWER_NO");
+                        // if(towerNo != null && towerNo != "undefined" && typeof(towerNo) != "undefined"){
+                        //     html.push("(楼栋："+towerNo+")");
+                        // }
                         html.push("</span></div>");
                     }
                 }

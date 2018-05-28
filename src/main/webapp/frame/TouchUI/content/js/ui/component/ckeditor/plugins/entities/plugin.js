@@ -169,7 +169,7 @@
  * * `&lt;`
  * * `&amp;`
  *
- * **Note:** This option should not be changed unless when outputting a non-HTML data formatter like BBCode.
+ * **Note:** This option should not be changed unless when outputting a non-HTML data format like BBCode.
  *
  *		config.basicEntities = false;
  *
@@ -216,7 +216,7 @@ CKEDITOR.config.entities_greek = true;
 /**
  * Whether to convert all remaining characters not included in the ASCII
  * character table to their relative decimal numeric representation of HTML entity.
- * When set to `force`, it will convert all entities into this formatter.
+ * When set to `force`, it will convert all entities into this format.
  *
  * For example the phrase: `'This is Chinese: 汉语.'` would be output
  * as: `'This is Chinese: &#27721;&#35821;.'`

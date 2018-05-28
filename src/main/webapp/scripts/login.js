@@ -8,7 +8,12 @@
                     var resultCode = result.get("HEAD").get("RESULT_CODE");
 
                     if(resultCode == "0"){
-                        window.location.href = "/";
+                        if($.os.phone){
+                            window.location.href = "/phone_index";
+                        }
+                        else {
+                            window.location.href = "/";
+                        }
                         return;
                     }
                     if(resultCode == "HIRUN_LOGIN_000001")

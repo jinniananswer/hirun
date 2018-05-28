@@ -15,30 +15,29 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class AuthorityJudgement {
 
-    public static boolean hasAllCity() throws Exception{
+    public static boolean hasAllCity() throws Exception {
         AppSession session = SessionManager.getSession();
         SessionEntity sessionEntity = session.getSessionEntity();
         String orgId = OrgBean.getOrgId(sessionEntity);
         boolean allCity = false;
         OrgEntity org = null;
-        if(StringUtils.isNotBlank(orgId)){
+        if (StringUtils.isNotBlank(orgId)) {
             //这段逻辑要替换成根据权限来判断
             OrgDAO dao = new OrgDAO("ins");
             org = dao.queryOrgById(orgId);
             String parentOrgId = org.getParentOrgId();
-            if(StringUtils.isBlank(parentOrgId)){
+            if (StringUtils.isBlank(parentOrgId)) {
                 //表示是集团公司的员工
                 allCity = true;
             }
-        }
-        else{
+        } else {
             allCity = true;
         }
 
         return allCity;
     }
 
-    public static boolean hasAllShop() throws Exception{
+    public static boolean hasAllShop() throws Exception {
         AppSession session = SessionManager.getSession();
         SessionEntity sessionEntity = session.getSessionEntity();
         String orgId = OrgBean.getOrgId(sessionEntity);
@@ -46,19 +45,18 @@ public class AuthorityJudgement {
         boolean needAllShop = true;
         OrgEntity org = null;
         OrgEntity parentOrg = null;
-        if(StringUtils.isNotBlank(orgId)){
+        if (StringUtils.isNotBlank(orgId)) {
             //以后要换成权限判断
             org = dao.queryOrgById(orgId);
             String type = org.getType();
-            if(StringUtils.equals("4", type)){
+            if (StringUtils.equals("4", type)) {
                 needAllShop = false;
-            }
-            else if(StringUtils.equals("3", type)){
+            } else if (StringUtils.equals("3", type)) {
                 String parentOrgId = org.getParentOrgId();
-                if(StringUtils.isNotBlank(parentOrgId)){
+                if (StringUtils.isNotBlank(parentOrgId)) {
                     parentOrg = dao.queryOrgById(parentOrgId);
                     String parentType = parentOrg.getType();
-                    if(StringUtils.equals("4", parentType)){
+                    if (StringUtils.equals("4", parentType)) {
                         needAllShop = false;
                     }
                 }

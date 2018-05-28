@@ -9,6 +9,7 @@ import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.web.RootController;
+import com.most.core.web.agent.UserAgentUtil;
 import com.most.core.web.client.ServiceClient;
 import com.most.core.web.session.HttpSessionManager;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -24,8 +27,17 @@ import java.util.Map;
 public class LoginController extends RootController {
 
     @RequestMapping(value="/login")
-    public String loginAccess(){
-        return "login";
+    public String loginAccess(HttpServletRequest request){
+
+        String userAgent = request.getHeader("User-Agent");
+        UserAgentUtil agentUtil = new UserAgentUtil(userAgent);
+
+        if(agentUtil.phone()){
+            return "phone/login";
+        }
+        else {
+            return "login";
+        }
     }
 
     @RequestMapping(value = "/loginPost", method = RequestMethod.POST)
@@ -64,5 +76,10 @@ public class LoginController extends RootController {
             session.setAttribute("USER", user);
         }
         return response.toJsonString();
+    }
+
+    @RequestMapping("/phone_index")
+    public String phoneLogin() throws Exception{
+        return "/phone/phone_index";
     }
 }

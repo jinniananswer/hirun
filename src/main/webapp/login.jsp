@@ -6,9 +6,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>hi-run</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<style>
-		.c_tooltip { z-index:99999 !important; }
-	</style>
 	<script src="scripts/login.js"></script>
 </head>
 <body>
@@ -39,13 +36,13 @@
 									<li>
 										<div class="label">用户名：</div>
 										<div class="value">
-											<input type="text" id="username" name="username" datatype="text" nullable="no" desc="用户名" />
+											<input type="text" id="username" name="username" placeholder="请输入手机号码" datatype="text" nullable="no" desc="用户名" />
 										</div>
 									</li>
 									<li>
 										<div class="label">密　码：</div>
 										<div class="value">
-											<input type="password" id="password" name="password" datatype="text" nullable="no" desc="密码" />
+											<input type="password" id="password" name="password" placeholder="请输入密码" datatype="text" nullable="no" desc="密码" />
 										</div>
 									</li>
 								</ul>

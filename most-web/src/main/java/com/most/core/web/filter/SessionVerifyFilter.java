@@ -42,7 +42,7 @@ public class SessionVerifyFilter implements Filter{
         String servletPath = request.getServletPath();
         String uri = request.getRequestURI();
 
-        if (excepUrlPattern.matcher(servletPath).matches() || uri.contains(".css") || uri.contains(".js") || uri.contains(".png") || uri.contains(".jpg")) {
+        if (excepUrlPattern.matcher(servletPath).matches() || uri.contains(".css") || uri.contains(".js") || uri.contains(".png") || uri.contains(".jpg") || uri.contains("gif") || uri.contains("ttf")) {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
