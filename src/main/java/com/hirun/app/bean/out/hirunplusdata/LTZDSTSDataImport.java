@@ -50,6 +50,8 @@ public class LTZDSTSDataImport {
             dbParam.put("UID", jsonData.getString("uid"));
             dbParam.put("NICKNAME", jsonData.getString("nickname"));
             dbParam.put("HEADIMGURL", jsonData.getString("headimgurl"));
+            dbParam.put("COMM_TIME", jsonData.getString("comm_time"));
+            dbParam.put("ISCOMMEND", jsonData.getString("iscommend"));
             dbParam.put("ADD_TIME", jsonData.getString("add_time"));
             dbParam.put("STAT", jsonData.getString("stat"));
             dbParam.put("MSG", jsonData.getString("msg"));
