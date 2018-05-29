@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.enums.cust.Sex;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.Body;
@@ -135,7 +136,10 @@ public class CustService extends GenericService{
             return response;
         }
 
-        response.setBody(new Body(customerEntity.toJson()));
+        JSONObject jsonCust = customerEntity.toJson();
+        jsonCust.put("SEX_DESC", Sex.getNameByValue(jsonCust.getString("SEX")));
+
+        response.setBody(new Body(jsonCust));
 
         return response;
     }

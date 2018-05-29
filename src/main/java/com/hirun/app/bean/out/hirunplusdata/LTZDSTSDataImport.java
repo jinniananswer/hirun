@@ -82,8 +82,8 @@ public class LTZDSTSDataImport {
 
         String api = "http://" + host + path;
         JSONObject reqestData = new JSONObject();
-        reqestData.put("start", start);
-        reqestData.put("end", end);
+        reqestData.put("start", String.valueOf(TimeTool.strToTime4DateTime(start, TimeTool.TIME_PATTERN)));
+        reqestData.put("end", String.valueOf(TimeTool.strToTime4DateTime(end, TimeTool.TIME_PATTERN)));
         OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end);
     }
 

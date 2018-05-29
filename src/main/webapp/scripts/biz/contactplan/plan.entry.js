@@ -16,6 +16,7 @@ var planEntry = {
     currentAction : '',
     currentActionIndex : '',
     planDate : '',
+    executorId : '',
     init : function() {
 		window["myPopup"] = new Wade.Popup("myPopup",{
 			visible:false,
@@ -88,18 +89,26 @@ var planEntry = {
 		});
 
 		//从后台获取初始化数据，同步方式
+        var planDate = $.params.get('PLAN_DATE');
+        var executorId = $.params.get('EXECUTOR_ID');
+        var param = {};
+        if(planDate && executorId) {
+            param.PLAN_DATE = planDate;
+            param.EXECUTOR_ID = executorId;
+        }
         $.ajaxReq({
             url:'plan/getPlanInitData',
-            data: {},
+            data: param,
             type:'GET',
             dataType:'json',
             async:false,
             successFunc:function(data) {
                 planEntry.planDate = data.PLAN_DATE;
+                planEntry.executorId = data.EXECUTOR_ID;
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
-                top.$.index.closePage("今日计划录入");
+                top.$.index.closeCurrentPage();
             },
         });
 
@@ -184,6 +193,7 @@ var planEntry = {
                 NEW_CUSTNUM : newCustNum,
                 CUST_NAME_PREFIX : planEntry.planDate,
                 FIRST_PLAN_DATE : planEntry.planDate,
+                HOUSE_COUNSELOR_ID : planEntry.executorId,
             }
             $.ajaxReq({
                 url : 'cust/addCustByNum',
@@ -294,6 +304,7 @@ var planEntry = {
             NEW_CUSTNUM : $('#addWxNum').val(),
             // CUST_NAME_PREFIX : planEntry.planDate,
             FIRST_PLAN_DATE : planEntry.planDate,
+            HOUSE_COUNSELOR_ID : planEntry.executorId,
         }
         $.ajaxReq({
             url : 'cust/addCustByNum',
@@ -319,7 +330,8 @@ var planEntry = {
         $.ajaxReq({
             url : 'plan/getPlanActionAndCustList',
             data : {
-                PLAN_DATE : planEntry.planDate
+                PLAN_DATE : planEntry.planDate,
+                PLAN_EXECUTOR_ID : planEntry.executorId
             },
             type : 'POST',
             async : false,
@@ -363,6 +375,7 @@ var planEntry = {
         $.ajaxReq({
                 url:'plan/checkPlanAction',
                 data: {
+                    EXECUTOR_ID : planEntry.executorId,
                     PLAN_DATE : planEntry.planDate,
                     ACTION_CODE : planEntry.currentAction,
                     CUSTNUM : custNum,
@@ -412,7 +425,8 @@ var planEntry = {
             $.ajaxReq({
                 url : 'plan/getTargetLowerLimit',
                 data : {
-                    TARGET_LIST : JSON.stringify(targetList)
+                    TARGET_LIST : JSON.stringify(targetList),
+                    PLAN_EXECUTOR_ID : planEntry.executorId,
                 },
                 successFunc : function(data) {
                     $.each(data.TARGET_LIST, function(idx, target) {
@@ -463,6 +477,7 @@ var planEntry = {
         var param = {
             PLANLIST : JSON.stringify(planList),
             PLAN_DATE : planEntry.planDate,
+            PLAN_EXECUTOR_ID : planEntry.executorId,
             PLAN_TYPE : $("#workMode").val(),
         };
         $.beginPageLoading("计划录入中。。。");
@@ -508,6 +523,7 @@ var planEntry = {
                 data: {
                     PLAN_DATE : planEntry.planDate,
                     PLAN_TARGET_LIST : JSON.stringify(planTargetList),
+                    EXECUTOR_ID : planEntry.executorId
                 },
                 type:'POST',
                 dataType:'json',
@@ -582,6 +598,7 @@ var selectCust = {
             } else {
                 url = 'cust/addCust';
                 param.FIRST_PLAN_DATE = planEntry.planDate;
+                param.HOUSE_COUNSELOR_ID = planEntry.executorId;
             }
             $.ajaxReq({
                 url : url,
@@ -733,6 +750,7 @@ var selectCust = {
     },
     setCovertGenderParam : function(param) {
         var actionCode = planEntry.currentAction;
+        param.HOUSE_COUNSELOR_ID = planEntry.executorId;
         if(actionCode == 'DKCSMU' || actionCode == 'YJALTS') {
             param['UNEXECUTED_ACTION'] = actionCode;
         } else if(actionCode == 'JW') {

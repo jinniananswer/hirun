@@ -118,9 +118,14 @@ public class HousesPlanController extends RootController{
 
     @RequestMapping("/queryHousesByEmployeeId")
     public @ResponseBody String queryHousesByEmployeeId(@RequestParam Map condition) throws Exception{
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        condition.put("EMPLOYEE_ID", sessionEntity.get("EMPLOYEE_ID"));
+        String employeeId = (String)condition.get("EMPLOYEE_ID");
+        if(StringUtils.isBlank(employeeId)) {
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            employeeId = sessionEntity.get("EMPLOYEE_ID");
+        }
+
+        condition.put("EMPLOYEE_ID", employeeId);
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHousesByEmployeeId", condition);
         return response.toJsonString();
     }

@@ -19,6 +19,7 @@ var planSummarize = {
     unFinishSummaryList : [],//未完成动作总结的结果集
     addExtraCustActionList : [],//计划外触发的客户动作（在总结时选择的）的结果集
     custOperMap : {},
+    executorId : '',
     init : function() {
         window["selectCustPopup"] = new Wade.Popup("selectCustPopup",{
             visible:false,
@@ -37,15 +38,23 @@ var planSummarize = {
 
         new radios('cause_options');
 
+        var planDate = $.params.get('PLAN_DATE');
+        var executorId = $.params.get('EXECUTOR_ID');
+        var param = {};
+        if(planDate && executorId) {
+            param.PLAN_DATE = planDate;
+            param.EXECUTOR_ID = executorId;
+        }
         $.ajaxReq({
             url:'plan/getSummarizeInitData',
-            data: {},
+            data: param,
             type:'GET',
             dataType:'json',
             async:false,
             successFunc:function(data) {
                 planSummarize.planDate = data.PLAN_DATE;
                 planSummarize.planId = data.PLAN_ID;
+                planSummarize.executorId = data.PLAN_EXECUTOR_ID;
                 $('#planName').html(planSummarize.planDate + '计划总结');
 
                 if(data.CUST_LIST && data.CUST_LIST.length > 0) {
@@ -81,7 +90,7 @@ var planSummarize = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
-                top.$.index.closePage("今日总结");
+                top.$.index.closeCurrentPage();
             },
         });
 
@@ -89,7 +98,7 @@ var planSummarize = {
         $.ajaxReq({
             url : 'queryHousesByEmployeeId',
             data : {
-
+                EMPLOYEE_ID : planSummarize.executorId,
             },
             successFunc : function(data) {
                 var options = [];
@@ -124,7 +133,7 @@ var planSummarize = {
         $.ajaxReq({
             url : 'queryHousesByEmployeeId',
             data : {
-
+                EMPLOYEE_ID : planSummarize.executorId,
             },
             successFunc : function(data) {
                 var options = [];
@@ -640,6 +649,7 @@ var selectCust = {
         var actionCode = selectCust.actionCode;
         // if(actionCode == 'DKCSMU' || actionCode == 'YJALTS' || actionCode == 'JW') {
             param['UNEXECUTED_ACTION'] = actionCode;
+            param.HOUSE_COUNSELOR_ID = planSummarize.executorId;
         // }
     }
 }
@@ -677,6 +687,7 @@ var custEditPopup = {
             } else {
                 url = 'cust/addCust';
                 param.FIRST_PLAN_DATE = planSummarize.planDate;
+                param.HOUSE_COUNSELOR_ID = planSummarize.executorId;
             }
             $.beginPageLoading("客户资料补录中。。。");
             $.ajaxReq({
@@ -724,7 +735,7 @@ var summaryPopup = {
                     success : function(data) {
                         var body = data.BODY;
                         $('#summarize_cust_info_part div[tag=cust_name]').html(body.CUST_NAME);
-                        $('#summarize_cust_info_part span[tag=sex]').html(body.SEX ? body.SEX : '');
+                        $('#summarize_cust_info_part span[tag=sex]').html(body.SEX_DESC ? body.SEX_DESC : '');
                         $('#summarize_cust_info_part span[tag=wx_nick]').html(body.WX_NICK ? body.WX_NICK : '');
                         $('#summarize_cust_info_part span[tag=mobile_no]').html(body.MOBILE_NO ? body.MOBILE_NO : '');
                         $('#summarize_cust_info_part span[tag=house_detail]').html(body.HOUSE_DETAIL ? body.HOUSE_DETAIL : '');
