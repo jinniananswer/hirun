@@ -2,10 +2,7 @@ package com.hirun.app.biz.task.out;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hirun.app.bean.out.hirunplusdata.GZGZHDataImport;
-import com.hirun.app.bean.out.hirunplusdata.LTZDSTSDataImport;
-import com.hirun.app.bean.out.hirunplusdata.SCANDataImport;
-import com.hirun.app.bean.out.hirunplusdata.XQLTYTSDataImport;
+import com.hirun.app.bean.out.hirunplusdata.*;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.dao.out.DataGetTimeDAO;
@@ -57,6 +54,13 @@ public class DataImportTaskService extends GenericService {
             dataGetTimeDAO.update("OUT_DATA_GET_TIME", dataGetTimeEntity.getContent());
         }
 
+        return response;
+    }
+
+    public ServiceResponse hirunplusStaffDataImport(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        StaffDataImport.dataImport();
         return response;
     }
 }

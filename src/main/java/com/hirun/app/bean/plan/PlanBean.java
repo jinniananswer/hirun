@@ -2,7 +2,9 @@ package com.hirun.app.bean.plan;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.cust.CustBean;
+import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.cache.ActionCache;
+import com.hirun.app.cache.HirunPlusStaffDataCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
@@ -11,6 +13,7 @@ import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
@@ -137,7 +140,6 @@ public class PlanBean {
             return false;
         }
 
-        //TODO 家网的STAFF_ID需转成我们的STAFF_ID
         String houseCounselorId = staffId;
 
         if(ActionCheckRuleProcess.isActionBindYesterdayPlan(operTime, date, houseCounselorId)) {
@@ -165,5 +167,21 @@ public class PlanBean {
 
         //无法归到任意计划里时，跳过
         return false;
+    }
+
+    public static String getEmployeeIdByHirunPlusStaffId(String staffId) throws Exception {
+        if(StringUtils.isBlank(staffId) || "0".equals(staffId)) {
+            return null;
+        }
+        String mobileNo = HirunPlusStaffDataCache.getMobileByStaffId(staffId);
+        if(StringUtils.isBlank(mobileNo)) {
+            return null;
+        }
+        EmployeeEntity employeeEntity = EmployeeBean.getEmployeeByMobileNo(mobileNo);
+        if(employeeEntity == null) {
+            return null;
+        }
+
+        return employeeEntity.getEmployeeId();
     }
 }

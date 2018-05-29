@@ -1,6 +1,7 @@
 package com.hirun.app.dao.employee;
 
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
@@ -13,6 +14,7 @@ import java.util.Map;
  * @Date 2018/4/19 20:24
  * @Description:
  */
+@DatabaseName("ins")
 public class EmployeeDAO extends StrongObjectDAO{
 
     public EmployeeDAO(String databaseName){
