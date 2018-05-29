@@ -27,7 +27,7 @@ import java.util.Map;
 public class GZGZHDataImport {
 
     private static String host = "www.hi-run.net";
-    private static String path = "/api/reg";
+    private static String path = "/api/subscribe";
     private static String pageSize = "100";
 
     public static void dataImport(String start, String end) throws Exception {
@@ -61,25 +61,6 @@ public class GZGZHDataImport {
             dbParam.put("EDIT_UID", jsonData.getString("edit_uid"));
             dbParam.put("EDIT_TIME", jsonData.getString("edit_time"));
             dbParam.put("LAST_UPDATE", jsonData.getString("last_update"));
-            dbParam.put("ADD_TIME", jsonData.getString("add_time"));
-            dbParam.put("STAT", jsonData.getString("stat"));
-            dbParam.put("MSG", jsonData.getString("msg"));
-            dbParam.put("NAME", jsonData.getString("name"));
-            dbParam.put("PHONE", jsonData.getString("phone"));
-            dbParam.put("ADDRESS", jsonData.getString("address"));
-            dbParam.put("ISHIDE", jsonData.getString("ishide"));
-            dbParam.put("MODE_ID", jsonData.getString("mode_id"));
-            dbParam.put("MODE_TIME", jsonData.getString("mode_time"));
-            dbParam.put("LOUPAN", jsonData.getString("loupan"));
-            dbParam.put("LNUMBER", jsonData.getString("lnumber"));
-            dbParam.put("CUS_FROM", jsonData.getString("cus_from"));
-            dbParam.put("STAFF_ID", jsonData.getString("staff_id"));
-            dbParam.put("IS_INPROCESS", jsonData.getString("is_inprocess"));
-            dbParam.put("IN_TIME", jsonData.getString("in_time"));
-            dbParam.put("METHOD", jsonData.getString("method"));
-            dbParam.put("ISCCMW", jsonData.getString("isccmw"));
-            dbParam.put("ISZJGD", jsonData.getString("iszjgd"));
-            dbParam.put("TMPINT", jsonData.getString("tmpint"));
             dbParam.put("OPENID", jsonData.getString("openid"));
             dbParam.put("INDB_TIME", end);
             dbParam.put("DEAL_TAG", "0");
@@ -91,8 +72,8 @@ public class GZGZHDataImport {
 
         String api = "http://" + host + path;
         JSONObject reqestData = new JSONObject();
-        reqestData.put("start", start);
-        reqestData.put("end", end);
+        reqestData.put("start", String.valueOf(TimeTool.strToTime4DateTime(start, TimeTool.TIME_PATTERN)));
+        reqestData.put("end", String.valueOf(TimeTool.strToTime4DateTime(end, TimeTool.TIME_PATTERN)));
         OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end);
     }
 

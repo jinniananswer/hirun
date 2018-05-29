@@ -52,7 +52,7 @@ public class PlanTaskService extends GenericService {
         sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(SUBSCRIBE_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM out_hirunplus_reg ");
         sql.append(" WHERE DEAL_TAG = '0' ");
-        sql.append(" ORDER BY ADD_TIME ");
+        sql.append(" ORDER BY SUBSCRIBE_TIME ");
         jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
@@ -104,7 +104,7 @@ public class PlanTaskService extends GenericService {
         sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM out_hirunplus_commends ");
         sql.append(" WHERE DEAL_TAG = '0' ");
-        sql.append(" ORDER BY ADD_TIME ");
+        sql.append(" ORDER BY MODE_TIME ");
         jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {

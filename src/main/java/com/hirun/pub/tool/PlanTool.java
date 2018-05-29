@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit;
 public class PlanTool {
 
     public static String getPlanDate() {
-        String planDate = null;
+        String planDate = "";
         String now = TimeTool.now();
         int hour = Integer.parseInt(TimeTool.now("HH"));
         if(hour <= 9) {
@@ -27,16 +27,16 @@ public class PlanTool {
     }
 
     public static String getPlanDate4Summarize() {
-        String planDate = "2018-05-19";
-//        String now = TimeTool.now();
-//        int hour = Integer.parseInt(TimeTool.now("HH"));
-//        if(hour <= 9) {
-//            planDate = TimeTool.addTime(now, TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1);
-//        } else {
-//            planDate = now;
-//        }
-//
-//        planDate = planDate.substring(0, 10);
+        String planDate = "";
+        String now = TimeTool.now();
+        int hour = Integer.parseInt(TimeTool.now("HH"));
+        if(hour <= 9) {
+            planDate = TimeTool.addTime(now, TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1);
+        } else {
+            planDate = now;
+        }
+
+        planDate = planDate.substring(0, 10);
 
         return planDate;
     }

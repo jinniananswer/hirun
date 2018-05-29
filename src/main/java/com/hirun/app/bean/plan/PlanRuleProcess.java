@@ -17,7 +17,7 @@ public class PlanRuleProcess {
         StringBuilder errorMessage = new StringBuilder();
         PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
 
-        int planNum = planDAO.getBeforePlanNumByPlanDate(executorId, planDate);
+        int planNum = planDAO.getBeforePlanNumByEid(executorId);
         if(planNum == 0) {
             //第一次录计划
             return "";
@@ -31,7 +31,7 @@ public class PlanRuleProcess {
 
         //获取昨天
         String yesterday = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0, 10);
-        PlanEntity yesterdayPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
+        PlanEntity yesterdayPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, yesterday);
         if(yesterdayPlanEntity == null) {
             errorMessage.append(yesterday + "的计划您还没有录，请先补录");
             return errorMessage.toString();

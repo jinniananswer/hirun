@@ -43,15 +43,15 @@ public class PlanDAO extends StrongObjectDAO {
         }
     }
 
-    public int getBeforePlanNumByPlanDate(String planExecutorId, String planDate) throws Exception {
+    public int getBeforePlanNumByEid(String planExecutorId) throws Exception {
         StringBuilder sql = new StringBuilder();
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("PLAN_DATE", planDate);
+//        parameter.put("PLAN_DATE", planDate);
         parameter.put("PLAN_EXECUTOR_ID", planExecutorId);
 
         sql.append(" SELECT COUNT(*) NUM FROM INS_PLAN ");
         sql.append(" WHERE PLAN_EXECUTOR_ID = :PLAN_EXECUTOR_ID ");
-        sql.append(" AND PLAN_DATE < :PLAN_DATE ");
+//        sql.append(" AND PLAN_DATE < :PLAN_DATE ");
         RecordSet recordSet = this.queryBySql(sql.toString(), parameter);
         int num = recordSet.getInt(0, "NUM");
 

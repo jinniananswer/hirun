@@ -128,7 +128,7 @@ public class PlanBean {
      */
     public static boolean transOriginalDataToAction(JSONObject originalData, String date, String actionCode) throws Exception {
         String nickName = originalData.getString("NICKNAME");
-        String addTime = originalData.getString("ADD_TIME");
+        String operTime = originalData.getString("OPER_TIME");
         String staffId = originalData.getString("STAFF_ID");
         String openId = originalData.getString("OPENID");
         String id = originalData.getString("ID");
@@ -140,25 +140,25 @@ public class PlanBean {
         //TODO 家网的STAFF_ID需转成我们的STAFF_ID
         String houseCounselorId = staffId;
 
-        if(ActionCheckRuleProcess.isActionBindYesterdayPlan(addTime, date, houseCounselorId)) {
+        if(ActionCheckRuleProcess.isActionBindYesterdayPlan(operTime, date, houseCounselorId)) {
             //归到昨日计划里
             String yesterday = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
-            PlanBean.actionBindPlan(nickName, openId, actionCode, yesterday, houseCounselorId, addTime);
+            PlanBean.actionBindPlan(nickName, openId, actionCode, yesterday, houseCounselorId, operTime);
 //            signToDone(id, now);
             return true;
         }
 
-        if(ActionCheckRuleProcess.isActionBindTodayPlan(addTime, date, houseCounselorId)) {
+        if(ActionCheckRuleProcess.isActionBindTodayPlan(operTime, date, houseCounselorId)) {
             //归到今日计划里
-            PlanBean.actionBindPlan(nickName, openId, actionCode, date, houseCounselorId, addTime);
+            PlanBean.actionBindPlan(nickName, openId, actionCode, date, houseCounselorId, operTime);
 //            signToDone(id,now);
             return true;
         }
 
-        if(ActionCheckRuleProcess.isActionBindTomorrowPlan(addTime, date, houseCounselorId)) {
+        if(ActionCheckRuleProcess.isActionBindTomorrowPlan(operTime, date, houseCounselorId)) {
             //归到明日计划里
             String tomorrow = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
-            PlanBean.actionBindPlan(nickName, openId, actionCode, tomorrow, houseCounselorId, addTime);
+            PlanBean.actionBindPlan(nickName, openId, actionCode, tomorrow, houseCounselorId, operTime);
 //            signToDone(id,now);
             return true;
         }

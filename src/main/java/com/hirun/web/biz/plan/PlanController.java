@@ -30,9 +30,9 @@ public class PlanController {
 
     @RequestMapping(value = "/plan/addPlan", method = RequestMethod.POST)
     public String addPlan(@RequestParam Map paramter) throws Exception {
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
+//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+//        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+//        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
 
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.addPlan", paramter);
         return response.toJsonString();
@@ -40,9 +40,9 @@ public class PlanController {
 
     @RequestMapping(value = "/plan/checkPlanTarget")
     public String checkPlanTarget(@RequestParam Map paramter) throws Exception {
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        paramter.put("EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
+//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+//        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+//        paramter.put("EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
 
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.checkPlanTarget", paramter);
         return response.toJsonString();
@@ -50,9 +50,9 @@ public class PlanController {
 
     @RequestMapping(value = "/plan/checkPlanAction")
     public String checkPlanAction(@RequestParam Map paramter) throws Exception {
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        paramter.put("EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
+//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+//        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+//        paramter.put("EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
 
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.checkPlanAction", paramter);
         return response.toJsonString();
@@ -60,49 +60,46 @@ public class PlanController {
 
     @RequestMapping(value = "/plan/getPlanInitData")
     public String getPlanInitData(@RequestParam Map pageData) throws Exception {
-//        ServiceResponse response = new ServiceResponse();
-//        response.setHeader("RESULT_CODE", "0");
-//        response.set("PLAN_DATE", PlanTool.getPlanDate());
-        String planDate = PlanTool.getPlanDate();
-
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
         Map<String, String> paramter = new HashMap<String, String>();
-        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
+        String planDate = (String)pageData.get("PLAN_DATE");
+        if(StringUtils.isBlank(planDate)) {
+            planDate = PlanTool.getPlanDate();
+        }
+
+        String executorId = (String)pageData.get("EXECUTOR_ID");
+        if(StringUtils.isBlank(executorId)) {
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            executorId = sessionEntity.get("EMPLOYEE_ID");
+        }
+
+        paramter.put("PLAN_EXECUTOR_ID", executorId);
         paramter.put("PLAN_DATE", planDate);
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.planEntryInitCheck", paramter);
-        response.set("PLAN_DATE", planDate);
-        //TODO 测试代码，需删除
-        //测试代码开始
-        response.setHeader("RESULT_CODE", "0");
-        //测试代码结束
-//        if(StringUtils.isNotBlank(planInfoResponse.getString("PLAN_ID"))) {
-//            response.setError("-1", "您已经录过【" + PlanTool.getPlanDate() + "】的计划了");
-//            return response.toJsonString();
-//        }
-//        String yesterdayPlanDate = TimeTool.addTime(PlanTool.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
-//        paramter.clear();
-//        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
-//        paramter.put("PLAN_DATE", yesterdayPlanDate);
-//        ServiceResponse yesterdayPlanInfoResponse = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
-//        if(StringUtils.isNotBlank(yesterdayPlanInfoResponse.getString("PLAN_ID"))) {
-//            String yesterdayPlanStatus = yesterdayPlanInfoResponse.getString("PLAN_STATUS");
-//            if(!"2".equals(yesterdayPlanStatus)) {
-//                response.setError("-1", yesterdayPlanDate + "的计划您还没有总结，请先总结");
-//            }
-//        } else {
-//            response.setError("-1", yesterdayPlanDate + "的计划您还没有录，请先补录");
-//        }
-
+        if("0".equals(response.getResultCode())) {
+            response.set("PLAN_DATE", planDate);
+            response.set("EXECUTOR_ID", executorId);
+        }
         return response.toJsonString();
     }
 
     @RequestMapping(value = "/plan/getSummarizeInitData")
     public String getSummarizeInitData(@RequestParam Map paramter) throws Exception {
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
-        paramter.put("PLAN_DATE", PlanTool.getPlanDate4Summarize());
+        String summarizePlanDate = (String)paramter.get("PLAN_DATE");
+        String planExecutorId = (String)paramter.get("PLAN_EXECUTOR_ID");
+
+        if(StringUtils.isBlank(summarizePlanDate)) {
+            summarizePlanDate = PlanTool.getPlanDate4Summarize();
+        }
+        if(StringUtils.isBlank(planExecutorId)) {
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            planExecutorId = sessionEntity.get("EMPLOYEE_ID");
+        }
+
+
+        paramter.put("PLAN_EXECUTOR_ID", planExecutorId);
+        paramter.put("PLAN_DATE", summarizePlanDate);
 
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getPlanBaseInfo", paramter);
         if(StringUtils.isNotBlank(response.getString("PLAN_ID"))) {
@@ -112,7 +109,7 @@ public class PlanController {
                 response.setError("-1", planDate + "的计划已经总结过了，不能再次总结");
             }
         } else {
-            response.setError("-1", "没有【" + PlanTool.getPlanDate4Summarize() + "】的计划");
+            response.setError("-1", "没有【" + summarizePlanDate + "】的计划");
             return response.toJsonString();
         }
 
@@ -131,17 +128,6 @@ public class PlanController {
     @RequestMapping(value = "/plan/summarizePlan")
     public String summarizePlan(@RequestParam Map paramter) throws Exception {
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.summarizePlan", paramter);
-        return response.toJsonString();
-    }
-
-    @RequestMapping(value = "/plan/getNewCustList")
-    public String getNewCustList(@RequestParam Map paramter) throws Exception {
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.get("EMPLOYEE_ID"));
-        paramter.put("PLAN_DATE", PlanTool.getPlanDate4Summarize());
-
-        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryNewCustList4Summary", paramter);
         return response.toJsonString();
     }
 
@@ -171,18 +157,18 @@ public class PlanController {
 
     @RequestMapping(value = "/plan/getPlanActionAndCustList")
     public String getPlanActionAndCustList(@RequestParam Map paramter) throws Exception{
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
+//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+//        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+//        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getPlanActionAndCustList", paramter);
         return response.toJsonString();
     }
 
     @RequestMapping(value = "/plan/getTargetLowerLimit")
     public String getTargetLowerLimit(@RequestParam Map paramter) throws Exception{
-        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
+//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+//        BizSessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+//        paramter.put("PLAN_EXECUTOR_ID", sessionEntity.getEmployeeId());
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.getTargetLowerLimit", paramter);
         return response.toJsonString();
     }

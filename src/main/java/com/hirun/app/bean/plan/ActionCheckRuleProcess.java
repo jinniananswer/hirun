@@ -4,15 +4,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
+import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
+import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,6 +23,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -145,7 +149,8 @@ public class ActionCheckRuleProcess {
         return isCommonActionBindPlan(tomorrowPlanEntity, actionTime);
     }
 
-    private static boolean isCommonActionBindPlan(PlanEntity planEntity, String actionTime) {
+    private static boolean isCommonActionBindPlan(PlanEntity planEntity, String actionTime) throws Exception {
+        CustActionDAO custActionDAO = DAOFactory.createDAO(CustActionDAO.class);
         if(planEntity == null) {
             return false;
         }
@@ -157,7 +162,8 @@ public class ActionCheckRuleProcess {
             return false;
         }
 
-        boolean hasDetail = "1".equals(planEntity.getHasDetail()) ? true : false;
+        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionListByPlanId(planEntity.getPlanId());
+        boolean hasDetail = ArrayTool.isEmpty(custActionEntityList) ? false : true;
         if(!PlanTool.isNormalWork(planEntity)
                 && !hasDetail) {
             return false;
