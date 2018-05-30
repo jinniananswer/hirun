@@ -45,7 +45,8 @@
                 }
             });
             $.ajaxPost('queryHousesPlan',null,function(data){
-                var dataset = new Wade.DatasetList(data);
+                var rst = new Wade.DataMap(data);
+                var dataset = rst.get("DATA");
                 $.housesPlan.drawHousesPlan(dataset);
             });
 
@@ -81,8 +82,6 @@
                         useTime:false,
                     }
                 );
-            },function(){
-                alert('error');
             });
         },
 
@@ -106,7 +105,7 @@
                 if(status == "0") {
                     html.push("<div class=\"right link\" ontap=\"$.housesPlan.initAudit(" + data.get("HOUSES_ID") + ")\"><span class=\"e_ico-select\"></span> 审核</div>");
                 }
-                html.push("<div class=\"right link\" ontap=\"parent.$.index.openNav('redirectToChangeHousesPlan?HOUSES_ID="+data.get("HOUSES_ID")+"','变更楼盘规划');\"><span class=\"e_ico-edit\"></span> 编辑</div>");
+                html.push("<div class=\"right link\" ontap=\"$.redirect.open('redirectToChangeHousesPlan?HOUSES_ID="+data.get("HOUSES_ID")+"','变更楼盘规划');\"><span class=\"e_ico-edit\"></span> 编辑</div>");
                 html.push("</div>");
                 html.push("<div class=\"content\">");
                 html.push("<span class=\"e_progress\"><span class=\"e_progressBar\">");
@@ -182,8 +181,6 @@
                     }
                     $.insertHtml('beforeend', $("#BIZ_SHOP"), html.join(""));
                 }
-            },function(){
-                alert('error');
             });
         },
 
@@ -199,7 +196,8 @@
             $("#SHOP").val(value);
 
             $.ajaxPost('initCounselors','&ORG_ID='+value,function(data){
-                var counselors = new Wade.DatasetList(data);
+                var rst = new Wade.DataMap(data);
+                var counselors = rst.get("COUNSELORS");
 
                 if(counselors != null){
                     var length = counselors.length;
@@ -211,8 +209,6 @@
                     }
                     $.insertHtml('beforeend', $("#BIZ_COUNSELORS"), html.join(""));
                 }
-            },function(){
-                alert('error');
             });
         },
 
@@ -299,10 +295,9 @@
             var parameter = $.buildJsonData("queryArea");
             hidePopup('UI-popup','UI-popup-query-cond');
             $.ajaxPost('queryHousesPlan', parameter, function (data) {
-                var dataset = new Wade.DatasetList(data);
+                var rst = new Wade.DataMap(data);
+                var dataset = rst.get("DATA");
                 $.housesPlan.drawHousesPlan(dataset);
-            }, function () {
-                alert('error');
             });
         },
 
@@ -328,8 +323,6 @@
                         parent.$.index.closeCurrentPage();
                     }
                 },{"cancel":"取消"})
-            }, function () {
-                alert('error');
             });
         }
     }});

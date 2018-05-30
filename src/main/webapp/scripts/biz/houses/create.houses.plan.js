@@ -53,8 +53,6 @@
                 }
                 $("#CHECK_DATE").val(today);
                 $("#PLAN_IN_DATE").val(today);
-            },function(){
-                alert('error');
             });
         },
 
@@ -95,8 +93,6 @@
                         $.housesPlan.afterSelectShop(defaultShopId, defaultShopName);
                     }
                 }
-            },function(){
-                alert('error');
             });
         },
 
@@ -115,7 +111,8 @@
             $("#SHOP").val(value);
 
             $.ajaxPost('initCounselors','&ORG_ID='+value,function(data){
-                var counselors = new Wade.DatasetList(data);
+                var rst = new Wade.DataMap(data);
+                var counselors = rst.get("COUNSELORS");
 
                 if(counselors != null){
                     var length = counselors.length;
@@ -127,8 +124,6 @@
                     }
                     $.insertHtml('beforeend', $("#BIZ_COUNSELORS"), html.join(""));
                 }
-            },function(){
-                alert('error');
             });
         },
 
@@ -330,8 +325,6 @@
                             parent.$.index.closeCurrentPage();
                         }
                     },{"cancel":"取消"})
-                }, function () {
-                    alert('error');
                 });
             }
         }

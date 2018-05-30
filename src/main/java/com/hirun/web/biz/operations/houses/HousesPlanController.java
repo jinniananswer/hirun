@@ -34,15 +34,8 @@ public class HousesPlanController extends RootController{
         ServiceRequest request = new ServiceRequest();
 
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.initCreatePlan", request);
-        JSONObject rst = new JSONObject();
-        rst.put("CITYS", response.getJSONArray("CITYS"));
-        rst.put("TODAY", response.getString("TODAY"));
-        String defaultCityId = response.getString("DEFAULT_CITY_ID");
-        if(StringUtils.isNotBlank(defaultCityId)){
-            rst.put("DEFAULT_CITY_ID", defaultCityId);
-            rst.put("DEFAULT_CITY_NAME", response.getString("DEFAULT_CITY_NAME"));
-        }
-        return rst.toJSONString();
+
+        return response.toJsonString();
     }
 
     @RequestMapping("/initArea")
@@ -52,17 +45,8 @@ public class HousesPlanController extends RootController{
         request.set("CITY_ID", cityId);
 
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.initArea", request);
-        JSONArray areas = response.getJSONArray("AREAS");
-        JSONArray shops = response.getJSONArray("SHOPS");
-        JSONObject obj = new JSONObject();
-        obj.put("AREAS", areas);
-        obj.put("SHOPS", shops);
-        String defaultShopId = response.getString("DEFAULT_SHOP_ID");
-        if(StringUtils.isNotBlank(defaultShopId)){
-            obj.put("DEFAULT_SHOP_ID", defaultShopId);
-            obj.put("DEFAULT_SHOP_NAME", response.getString("DEFAULT_SHOP_NAME"));
-        }
-        return obj.toJSONString();
+
+        return response.toJsonString();
     }
 
     @RequestMapping("/initCounselors")
@@ -72,31 +56,27 @@ public class HousesPlanController extends RootController{
 
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.initCounselors", parameter);
 
-        JSONArray counselors = response.getJSONArray("COUNSELORS");
-        return counselors.toJSONString();
+        return response.toJsonString();
     }
 
 
     @RequestMapping("/submitHousesPlan")
     public @ResponseBody String submitHousesPlan(@RequestParam Map submitData) throws Exception{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.createHousesPlan", submitData);
-        return null;
+        return response.toJsonString();
     }
 
     @RequestMapping("/queryHousesPlan")
     public @ResponseBody String queryHousesPlan(@RequestParam Map condition) throws Exception{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHousesPlan", condition);
-        JSONArray data = response.getJSONArray("DATA");
-        if(data == null){
-            return "";
-        }
-        return data.toJSONString();
+
+        return response.toJsonString();
     }
 
     @RequestMapping("/submitAudit")
     public @ResponseBody String submitAudit(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.submitAudit", parameter);
-        return "";
+        return response.toJsonString();
     }
 
     @RequestMapping("/redirectToChangeHousesPlan")
@@ -109,11 +89,8 @@ public class HousesPlanController extends RootController{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("HOUSES_ID", request.getParameter("HOUSES_ID"));
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.initChangeHousesPlan", parameter);
-        JSONObject rst = new JSONObject();
-        rst.put("HOUSES_PLAN", response.getJSONObject("HOUSES_PLAN"));
-        rst.put("CITYS", response.getJSONArray("CITYS"));
 
-        return rst.toJSONString();
+        return response.toJsonString();
     }
 
     @RequestMapping("/queryHousesByEmployeeId")
@@ -133,7 +110,7 @@ public class HousesPlanController extends RootController{
     @RequestMapping("/changeHousesPlan")
     public @ResponseBody String changeHousesPlan(@RequestParam Map submitData) throws Exception{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.changeHousePlan", submitData);
-        return null;
+        return response.toJsonString();
     }
 
     @RequestMapping("/redirectToDetail")
@@ -146,8 +123,6 @@ public class HousesPlanController extends RootController{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("HOUSES_ID", request.getParameter("HOUSES_ID"));
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.showHouseDetail", parameter);
-        JSONObject rst = new JSONObject();
-        rst.put("HOUSES_PLAN", response.getJSONObject("HOUSES_PLAN"));
-        return rst.toJSONString();
+        return response.toJsonString();
     }
 }

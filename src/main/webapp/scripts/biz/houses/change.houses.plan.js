@@ -139,7 +139,8 @@
             $("#SHOP").val(value);
 
             $.ajaxPost('initCounselors','&ORG_ID='+value,function(data){
-                var counselors = new Wade.DatasetList(data);
+                var rst = new Wade.DataMap(data);
+                var counselors = rst.get("COUNSELORS");
 
                 if(counselors != null){
                     var length = counselors.length;

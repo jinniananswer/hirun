@@ -4,24 +4,20 @@
             if($.validate.verifyAll("loginForm")){
                 var param = $.buildJsonData("loginForm");
                 $.ajaxPost('loginPost',param,function(data){
-                    var result = new Wade.DataMap(data);
-                    var resultCode = result.get("HEAD").get("RESULT_CODE");
-
-                    if(resultCode == "0"){
-                        if($.os.phone){
-                            window.location.href = "/phone_index";
-                        }
-                        else {
-                            window.location.href = "/";
-                        }
-                        return;
+                    if($.os.phone){
+                        window.location.href = "/phone_index";
                     }
+                    else {
+                        window.location.href = "/";
+                    }
+                }, function(resultCode, resultInfo){
                     if(resultCode == "HIRUN_LOGIN_000001")
-                        $.TipBox.show(document.getElementById('username'), result.get("HEAD").get("RESULT_INFO"), "red");
+                        $.TipBox.show(document.getElementById('username'), resultInfo, "red");
                     else if(resultCode == "HIRUN_LOGIN_000002")
-                        $.TipBox.show(document.getElementById('password'), result.get("HEAD").get("RESULT_INFO"), "red");
-                },function(){
-                    alert('error');
+                        $.TipBox.show(document.getElementById('password'), resultInfo, "red");
+                    else{
+                        MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "错误编码："+resultCode+"，错误信息："+resultInfo+"亲，赶紧联系管理员报告功能问题吧");
+                    }
                 });
             }
             else{

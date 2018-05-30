@@ -13,8 +13,6 @@
                 $.insertHtml('beforeend',$("#JOB_ROLE_NAME"),jobRoleName);
 				$("#HEAD_IMAGE").attr("src", headImage);
 
-            },function(){
-                alert('error');
             });
 		},
 		openNav : function(url, title){

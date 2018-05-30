@@ -26,15 +26,24 @@
 		},
 		
 		ajaxPost: function(url,param,successFunc, errFunc){
-			if(successFunc == null || typeof(successFunc) == "undefined" || typeof(successFunc) != "function"){
-				successFunc = function(data){};
-			}
-			
-			if(errFunc == null || typeof(errFunc) == "undefined" || typeof(errFunc) != "function"){
-				errFunc = function(data){
-                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "亲，赶紧联系管理员报告功能问题吧");
-				};
-			}
+
+            if(errFunc == null || typeof(errFunc) == "undefined" || typeof(errFunc) != "function"){
+                errFunc = function(resultCode, resultInfo){
+                    $.endPageLoading();
+                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "错误编码："+resultCode+"，错误信息："+resultInfo+"亲，赶紧联系管理员报告功能问题吧");
+                };
+            }
+
+			var runnSuccess = function(data){
+				var resultCode = data.HEAD.RESULT_CODE;
+				if(resultCode == '0'){
+					successFunc?successFunc(data.BODY):'';
+				}
+				else{
+					errFunc(data.HEAD.RESULT_CODE, data.HEAD.RESULT_INFO);
+				}
+			};
+
 			$.ajaxRequest(
 				{
 					url:url,
@@ -42,7 +51,7 @@
 					type:'POST',
 					dataType:'json',
 					async:true,
-					success:successFunc,
+					success:runnSuccess,
 					error:errFunc
 				}
 			)

@@ -29,9 +29,10 @@ public class HomeController extends RootController {
         String path = request.getContextPath();
         String basePath = request.getScheme()+"://" +request.getServerName()+":" +request.getServerPort()+path+"/" ;
 
-        JSONObject rst = new JSONObject();
+        ServiceResponse rst = new ServiceResponse();
+        rst.setSuccess();
         if(employee != null){
-            rst.put("NAME", employee.getName());
+            rst.set("NAME", employee.getName());
             String jobRoleName = "";
             String orgName = "";
             if(ArrayTool.isNotEmpty(jobRoles)){
@@ -58,31 +59,29 @@ public class HomeController extends RootController {
 
                 }
             }
-            rst.put("ORG_NAME", orgName);
-            rst.put("JOB_ROLE_NAME", jobRoleName);
+            rst.set("ORG_NAME", orgName);
+            rst.set("JOB_ROLE_NAME", jobRoleName);
 
             if("1".equals(employee.getSex())){
-                rst.put("HEAD_IMAGE", basePath + "frame/img/male.png");
+                rst.set("HEAD_IMAGE", basePath + "frame/img/male.png");
             }
             else{
-                rst.put("HEAD_IMAGE", basePath + "frame/img/female.png");
+                rst.set("HEAD_IMAGE", basePath + "frame/img/female.png");
             }
         }
         else{
-            rst.put("NAME", user.getUserName());
-            rst.put("ORG_NAME", "");
-            rst.put("JOB_ROLE_NAME", "");
-            rst.put("HEAD_IMAGE", basePath + "frame/img/male.png");
+            rst.set("NAME", user.getUserName());
+            rst.set("ORG_NAME", "");
+            rst.set("JOB_ROLE_NAME", "");
+            rst.set("HEAD_IMAGE", basePath + "frame/img/male.png");
         }
-        return rst.toJSONString();
+        return rst.toJsonString();
     }
 
     @RequestMapping("/initMenu")
     public @ResponseBody String initMenu(HttpSession session) throws Exception{
         ServiceRequest request = new ServiceRequest();
         ServiceResponse response = ServiceClient.call("OrgCenter.menu.MenuService.loadMenus", request);
-        JSONArray menus = response.getJSONArray("MENUS");
-        session.setAttribute("MENUS", menus);
-        return menus.toJSONString();
+        return response.toJsonString();
     }
 }

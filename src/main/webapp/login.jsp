@@ -6,6 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>hi-run</title>
 	<jsp:include page="/common.jsp"></jsp:include>
+	<style>
+		.c_tooltip { z-index:99999 !important; }
+		.c_msg-full{ z-index:99999 !important; }
+	</style>
 	<script src="scripts/login.js"></script>
 </head>
 <body>

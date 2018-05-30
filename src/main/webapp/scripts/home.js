@@ -3,11 +3,10 @@
     $.menus = {
         init:function(){
             $.ajaxPost("initMenu", null, function(data){
-                var menus = new Wade.DatasetList(data);
+                var rst = new Wade.DataMap(data);
+                var menus = rst.get("MENUS");
                 $.menus.draw(menus);
-            },function(){
-
-            })
+            });
         },
 
         draw : function(menus){
