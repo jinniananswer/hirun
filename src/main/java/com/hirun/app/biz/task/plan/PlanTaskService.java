@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
+import com.hirun.app.cache.HirunPlusStaffDataCache;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.most.core.app.database.dao.GenericDAO;
@@ -29,6 +30,7 @@ public class PlanTaskService extends GenericService {
         String today = TimeTool.today();
         String now = TimeTool.now();
         GenericDAO dao = new GenericDAO("out");
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
 
         //蓝图指导书推送
         StringBuilder sql = new StringBuilder();
@@ -41,6 +43,11 @@ public class PlanTaskService extends GenericService {
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
+            String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(jsonProject.getString("STAFF_ID"));
+            if(StringUtils.isBlank(employeeId)) {
+                continue;
+            }
+            jsonProject.put("STAFF_ID", employeeId);
             boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "LTZDSTS");
             if(isTrans) {
                 signToDone(id, now, "OUT_HIRUNPLUS_PROJECTS", "OUT_HIS_HIRUNPLUS_PROJECTS");
@@ -49,7 +56,7 @@ public class PlanTaskService extends GenericService {
 
         //关注公众号
         sql = new StringBuilder();
-        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(SUBSCRIBE_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID ");
+        sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(SUBSCRIBE_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,OPENID ");
         sql.append(" FROM out_hirunplus_reg ");
         sql.append(" WHERE DEAL_TAG = '0' ");
         sql.append(" ORDER BY SUBSCRIBE_TIME ");
@@ -58,7 +65,15 @@ public class PlanTaskService extends GenericService {
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
-            boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "GZHGZ");
+            String openId = jsonProject.getString("OPENID");
+            CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
+            boolean isTrans = false;
+            if(customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
+                jsonProject.put("STAFF_ID", customerEntity.getHouseCounselorId());
+                isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "GZHGZ");
+            } else {
+                continue;
+            }
             if(isTrans) {
                 signToDone(id, now, "out_hirunplus_reg", "out_his_hirunplus_reg");
             }
@@ -80,10 +95,14 @@ public class PlanTaskService extends GenericService {
             boolean isTrans = false;
             if("19".equals(roleId)) {
                 //扫码
+                String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(jsonProject.getString("STAFF_ID"));
+                if(StringUtils.isBlank(employeeId)) {
+                    continue;
+                }
+                jsonProject.put("STAFF_ID", employeeId);
                 isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
             } else if("11".equals(roleId)) {
                 //需要处理
-                CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
                 CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
                 //TODO 暂时不根据WX_NICK查了
                 if(customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
@@ -110,6 +129,11 @@ public class PlanTaskService extends GenericService {
         for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
+            String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(jsonProject.getString("STAFF_ID"));
+            if(StringUtils.isBlank(employeeId)) {
+                continue;
+            }
+            jsonProject.put("STAFF_ID", employeeId);
             boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
         }
 

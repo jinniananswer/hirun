@@ -1,6 +1,7 @@
 package com.hirun.app.dao.user;
 
 import com.hirun.pub.domain.entity.user.UserEntity;
+import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  * @Date 2018/4/18 9:56
  * @Description:
  */
+@DatabaseName("ins")
 public class UserDAO extends StrongObjectDAO {
 
     public UserDAO(String databaseName){
@@ -34,5 +36,14 @@ public class UserDAO extends StrongObjectDAO {
         parameter.put("USER_ID", userId);
         UserEntity user = this.queryByPk(UserEntity.class, "ins_user", parameter);
         return user;
+    }
+
+    public UserEntity queryUserByMobileNo(String mobileNo) throws SQLException {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("MOBILE_NO", mobileNo);
+        List<UserEntity> users = this.query(UserEntity.class, "ins_user", parameter);
+        if(ArrayTool.isEmpty(users))
+            return null;
+        return users.get(0);
     }
 }
