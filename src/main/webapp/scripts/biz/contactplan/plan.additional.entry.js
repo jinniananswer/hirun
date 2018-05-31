@@ -28,7 +28,7 @@ var planAdditionalEntry = {
 
             param = '?EXECUTOR_ID=' + $('#EMPLOYEE_ID').val();
             param += '&PLAN_DATE=' + $('#PLAN_DATE').val();
-            top.$.index.openNav(url+param,title);
+            $.redirect.open(url+param,title);
         }
     }
 };

@@ -50,8 +50,8 @@ public class SCANDataImport {
             dbParam.put("UID", jsonData.getString("uid"));
             dbParam.put("NICKNAME", jsonData.getString("nickname"));
             dbParam.put("HEADIMGURL", jsonData.getString("headimgurl"));
-            dbParam.put("SCAN_ID", jsonData.getString("scanId"));
-            dbParam.put("ROLE_ID", jsonData.getString("roleId"));
+            dbParam.put("SCAN_ID", jsonData.getString("scan_id"));
+            dbParam.put("ROLE_ID", jsonData.getString("role_id"));
             dbParam.put("CID", jsonData.getString("cid"));
             dbParam.put("ADD_TIME", jsonData.getString("add_time"));
             dbParam.put("STAT", jsonData.getString("stat"));

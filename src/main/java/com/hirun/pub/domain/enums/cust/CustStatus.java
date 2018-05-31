@@ -6,7 +6,7 @@ package com.hirun.pub.domain.enums.cust;
 public enum CustStatus {
 
     normal("正常","1"),
-    toBeFilled("待补录","1");
+    toBeFilled("待补录","9");
 
     private String value;
     private String name;

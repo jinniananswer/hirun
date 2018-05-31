@@ -43,7 +43,7 @@ var planSummarize = {
         var param = {};
         if(planDate && executorId) {
             param.PLAN_DATE = planDate;
-            param.EXECUTOR_ID = executorId;
+            param.PLAN_EXECUTOR_ID = executorId;
         }
         $.ajaxReq({
             url:'plan/getSummarizeInitData',

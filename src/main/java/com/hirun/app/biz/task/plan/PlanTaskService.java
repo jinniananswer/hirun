@@ -141,7 +141,7 @@ public class PlanTaskService extends GenericService {
     }
 
     private void signToDone(String id, String dealTime, String tableName, String hisTableName) throws Exception {
-        GenericDAO dao = new GenericDAO("ins");
+        GenericDAO dao = new GenericDAO("out");
         Map<String, String> dbParam = new HashMap<String, String>();
         dbParam.put("ID", id);
         dbParam.put("DEAL_TIME", dealTime);

@@ -85,7 +85,7 @@ public class PlanBean {
             customerEntity.setIdentifyCode(identifyCode);
             customerEntity.setWxNick(nickName);
             customerEntity.setCustName(nickName);
-            customerEntity.setCustStatus(CustStatus.normal.getValue());
+            customerEntity.setCustStatus(CustStatus.toBeFilled.getValue());
             customerEntity.setFirstPlanDate(planDate);
             customerEntity.setHouseCounselorId(executorId);
             customerEntity.setCreateDate(TimeTool.now());

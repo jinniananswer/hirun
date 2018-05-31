@@ -23,7 +23,8 @@ var planListQuery = {
 
         var $obj = $(obj)
         var employeeId = $obj.attr('employee_id');
-        top.$.index.openNav("biz/operations/contactplan/employee_dailysheet_detail_query.jsp?EXECUTOR_ID="+employeeId,"家装顾问日报表详情");
+
+        $.redirect.open("biz/operations/contactplan/employee_dailysheet_detail_query.jsp?EXECUTOR_ID="+employeeId,"家装顾问日报表详情");
     },
     clickEmployee: function(obj) {
         if(planListQuery.stopPropagation) {
