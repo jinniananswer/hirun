@@ -107,7 +107,7 @@ public class PlanTaskService extends GenericService {
                 //TODO 暂时不根据WX_NICK查了
                 if(customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
                     jsonProject.put("STAFF_ID", customerEntity.getHouseCounselorId());
-                    isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
+                    isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "ZX");
                 } else {
                     continue;
                 }
