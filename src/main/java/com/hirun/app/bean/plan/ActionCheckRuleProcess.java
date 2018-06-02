@@ -157,8 +157,7 @@ public class ActionCheckRuleProcess {
 
         String summarizeDate = planEntity.getSummarizeDate();
 
-        if(StringUtils.isNotBlank(summarizeDate)
-                && TimeTool.compareTwoTime(summarizeDate, actionTime) <= 0) {
+        if(StringUtils.isNotBlank(summarizeDate)) {
             return false;
         }
 

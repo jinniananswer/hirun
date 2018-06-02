@@ -6,7 +6,7 @@ var planListQuery = {
     queryEmployeeList : function() {
         var data = {};
         data.EMPLOYEE_LIST = [];
-        data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '252'})
+        data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '157', HINT : '今日没有录计划'})
         $('#employee_list').html(template("employee_template", data));
 
         planListQuery.getEmployeeDailySheet();

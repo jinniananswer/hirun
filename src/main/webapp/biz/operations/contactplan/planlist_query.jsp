@@ -28,7 +28,10 @@
 	{{each EMPLOYEE_LIST employee idx}}
 	<div class="c_box c_box-border" tag="employee_box" employee_id="{{employee.EMPLOYEE_ID}}">
 		<div class="c_title" employee_id="{{employee.EMPLOYEE_ID}}" ontap="planListQuery.clickEmployee(this)">
-			<div class="text">{{employee.EMPLOYEE_NAME}}</div>
+			<div class="text">
+				<span tag="employee_name">{{employee.EMPLOYEE_NAME}}</span>
+				<span tag="hint" class="e_red">({{employee.HINT}})</span>
+			</div>
 			<div class="fn">
 				<ul>
 					<li><span class="e_ico-unfold"></span></li>
