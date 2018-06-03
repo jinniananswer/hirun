@@ -67,7 +67,7 @@ public class CustController extends RootController{
         return response.toJsonString();
     }
 
-    @RequestMapping(value = "/cust/deleteCustById", method = RequestMethod.GET)
+    @RequestMapping(value = "/cust/deleteCustById", method = RequestMethod.POST)
     public String deleteCustById(@RequestParam Map map) throws Exception {
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.deleteCustById", map);
         return response.toJsonString();

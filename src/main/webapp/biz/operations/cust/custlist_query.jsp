@@ -89,7 +89,7 @@
     <div class="c_list c_list-line">
         <ul>
             {{each CUSTOMERLIST cust idx}}
-            <li id="CUST_ID_ + {{cust.CUST_ID}}">
+            <li id="CUST_ID_{{cust.CUST_ID}}">
                 <div class="main">
                     <div class="title">{{cust.CUST_NAME}}</div>
                 </div>

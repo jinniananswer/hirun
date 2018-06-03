@@ -65,7 +65,7 @@ var custListQuery = {
             type : 'POST',
             successFunc : function(data) {
                 $.endPageLoading();
-                $('#CUST_ID_').remove();
+                $('#CUST_ID_' + custId).remove();
             },
             errorFunc : function (resultCode, reusltInfo) {
                 $.endPageLoading();
