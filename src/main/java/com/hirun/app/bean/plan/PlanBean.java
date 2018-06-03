@@ -95,7 +95,6 @@ public class PlanBean {
             custId = String.valueOf(custDAO.insertAutoIncrement("INS_CUSTOMER", customerEntity.getContent()));
         }
 
-        //TODO 这里应该判一下该客户之前是否已经触发过该动作，如果有，则不应该重复触发
         if(ArrayTool.isEmpty(custActionDAO.queryCustFinishActionByCustIdAndActionCode(custId, actionCode))) {
             //update or insert cust_action
             PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);

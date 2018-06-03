@@ -2,9 +2,13 @@ package com.hirun.app.biz.cust;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.houses.HousesBean;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.cust.Sex;
+import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.Body;
@@ -137,9 +141,30 @@ public class CustService extends GenericService{
         }
 
         JSONObject jsonCust = customerEntity.toJson();
+        //根据编码查中文描述
         jsonCust.put("SEX_DESC", Sex.getNameByValue(jsonCust.getString("SEX")));
+        if(StringUtils.isNotBlank(jsonCust.getString("HOUSE_ID"))) {
+            jsonCust.put("HOUSE_DESC", HousesBean.getHousesEntityById(jsonCust.getString("HOUSE_ID")).getName());
+        }
+        if(StringUtils.isNotBlank(jsonCust.getString("HOUSE_MODE"))) {
+            jsonCust.put("HOUSE_MODE_DESC", StaticDataTool.getCodeName("HOUSE_MODE", jsonCust.getString("HOUSE_MODE")));
+        }
 
         response.setBody(new Body(jsonCust));
+
+        return response;
+    }
+
+    public ServiceResponse deleteCustById(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String custId = requestData.getString("CUST_ID");
+
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        Map<String, String> dbParam = new HashMap<String, String>();
+        dbParam.put("CUST_ID", custId);
+        dbParam.put("CUST_STATUS", CustStatus.del.getValue());
+        custDAO.save("INS_CUSTOMER", dbParam);
 
         return response;
     }

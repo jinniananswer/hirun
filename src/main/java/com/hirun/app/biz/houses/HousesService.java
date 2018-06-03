@@ -168,6 +168,8 @@ public class HousesService extends GenericService {
         return new ServiceResponse();
     }
 
+
+
     public ServiceResponse queryHousesPlan(ServiceRequest request) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.putAll(JSON.parseObject(request.getBody().getData().toJSONString(), Map.class));
@@ -480,5 +482,13 @@ public class HousesService extends GenericService {
 
     public ServiceResponse showHouseDetail(ServiceRequest request) throws Exception {
         return this.initChangeHousesPlan(request);
+    }
+
+    public ServiceResponse queryHouses(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        response.set("HOUSES_LIST", HousesPlanBean.queryHouses());
+
+        return response;
     }
 }

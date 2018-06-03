@@ -68,6 +68,7 @@
 			}
 
             var errFunc = function(data){
+                $.endPageLoading();
                 MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "亲，赶紧联系管理员报告功能问题吧");
             };
 

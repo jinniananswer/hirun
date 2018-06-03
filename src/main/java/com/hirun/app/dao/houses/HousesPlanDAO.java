@@ -1,5 +1,6 @@
 package com.hirun.app.dao.houses;
 
+import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.pub.data.RecordSet;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +14,7 @@ import java.util.Map;
  * @Date 2018/5/1 0:26
  * @Description:
  */
+@DatabaseName("ins")
 public class HousesPlanDAO extends StrongObjectDAO {
 
     public HousesPlanDAO(String databaseName){
@@ -65,6 +67,15 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" AND b.employee_id = :EMPLOYEE_ID ");
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("EMPLOYEE_ID", employeeId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public RecordSet queryHouses() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT DISTINCT a.houses_id, a.name ");
+        sb.append(" FROM INS_HOUSES a, INS_HOUSES_PLAN b ");
+        sb.append(" WHERE b.houses_id = a.houses_id ");
+        Map<String, String> parameter = new HashMap<String, String>();
         return this.queryBySql(sb.toString(), parameter);
     }
 }

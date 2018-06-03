@@ -81,10 +81,9 @@ var planEntry = {
                         planEntry.submitPlan();
                     }
                     else {
-                        // parent.$.index.closeCurrentPage();
+
                     }
                 },{"cancel":"继续"})
-				// $('#PLAN_TARGET_SET_PART').hide();
 			}
 		});
 
@@ -108,7 +107,7 @@ var planEntry = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
-                top.$.index.closeCurrentPage();
+                $.redirect.closeCurrentPage();
             },
         });
 
@@ -490,7 +489,7 @@ var planEntry = {
                 $.endPageLoading();
                 MessageBox.success("新增计划成功","点击【确定】关闭当前页面", function(btn){
                     if("ok" == btn) {
-                        parent.$.index.closeCurrentPage();
+                        $.redirect.closeCurrentPage();
                     }
                 });
             },

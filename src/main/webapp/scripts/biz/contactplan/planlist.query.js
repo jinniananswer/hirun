@@ -9,15 +9,15 @@ var planListQuery = {
         data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '157', HINT : '今日没有录计划'})
         $('#employee_list').html(template("employee_template", data));
 
-        planListQuery.getEmployeeDailySheet();
+        // planListQuery.getEmployeeDailySheet();
     },
-    getEmployeeDailySheet : function() {
-        $('#employee_list div[tag=employee_box]').each(function(idx, item) {
-            var $item = $(item);
-            var employeeId = $item.attr('employee_id');
-
-        })
-    },
+    // getEmployeeDailySheet : function() {
+    //     $('#employee_list div[tag=employee_box]').each(function(idx, item) {
+    //         var $item = $(item);
+    //         var employeeId = $item.attr('employee_id');
+    //
+    //     })
+    // },
     queryDetail : function(obj) {
         planListQuery.stopPropagation = true;
 

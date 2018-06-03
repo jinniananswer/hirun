@@ -90,7 +90,7 @@ var planSummarize = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
-                top.$.index.closeCurrentPage();
+                $.redirect.closeCurrentPage();
             },
         });
 
@@ -478,7 +478,7 @@ var planSummarize = {
             successFunc : function(data) {
                 $.endPageLoading();
                 alert('提交总结成功');
-                top.$.index.closeCurrentPage();
+                $.redirect.closeCurrentPage();
             },
             errorFunc : function (resultCode, resultInfo) {
                 $.endPageLoading();

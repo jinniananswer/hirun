@@ -47,7 +47,7 @@
 	</div>
 </div>
 <!-- 弹出层 开始 -->
-<div class="c_popup c_popup-half" id="selectCustPopup">
+<div class="c_popup" id="selectCustPopup">
 	<div class="c_popupBg" id="selectCustPopup_bg"></div>
 	<div class="c_popupBox">
 		<div class="c_popupWrapper" id="selectCustPopup_wrapper">
@@ -64,11 +64,6 @@
 										<span class="e_ico-search"></span>
 									</button>
 								</div>
-								<%--<div class="left" id="ADD_CUST_BUTTON">--%>
-									<%--<button class="" type="button" ontap="selectCust.showCustEdit(this)">--%>
-										<%--<span class="e_ico-add"></span>新增客户--%>
-									<%--</button>--%>
-								<%--</div>--%>
 							</div>
 						</div>
 						<div class="c_space"></div>
@@ -104,12 +99,12 @@
 										<input type="text" name="MOBILE_NO"/>
 									</div>
 								</li>
-								<li>
-									<div class="label">微信昵称</div>
-									<div class="value">
-										<input type="text" name="WX_NICK"/>
-									</div>
-								</li>
+								<%--<li>--%>
+									<%--<div class="label">微信昵称</div>--%>
+									<%--<div class="value">--%>
+										<%--<input type="text" name="WX_NICK"/>--%>
+									<%--</div>--%>
+								<%--</li>--%>
 								<li>
 									<div class="label">楼盘</div>
 									<div class="value">
@@ -132,7 +127,7 @@
 		</div>
 	</div>
 </div>
-<div class="c_popup c_popup-half" id="custInfoEditPopup">
+<div class="c_popup" id="custInfoEditPopup">
 	<div class="c_popupBg" id="custInfoEditPopup_bg"></div>
 	<div class="c_popupBox">
 		<div class="c_popupWrapper" id="custInfoEditPopup_wrapper">
@@ -221,7 +216,7 @@
 		</div>
 	</div>
 </div>
-<div class="c_popup c_popup-half" id="summarizeUnFinishCustPopup">
+<div class="c_popup" id="summarizeUnFinishCustPopup">
 	<div class="c_popupBg" id="summarizeUnFinishCustPopup_bg"></div>
 	<div class="c_popupBox">
 		<div class="c_popupWrapper" id="summarizeUnFinishCustPopup_wrapper">
@@ -268,7 +263,7 @@
 								<li>
 									<div class="label">原因：</div>
 									<div class="value">
-										<div class="c_list c_list-v c_list-col-3 c_list-space c_list-line c_list-s">
+										<div class="c_list c_list-v c_list-col-3 c_list-phone-col-2 c_list-space c_list-line c_list-s">
 											<ul id="cause_options">
 
 											</ul>
@@ -501,7 +496,6 @@
 					</ul>
 				</div>
 			</div>
-
 		</div>
 		<div class="side"><span class="e_ico-edit"></span></div>
 	</li>

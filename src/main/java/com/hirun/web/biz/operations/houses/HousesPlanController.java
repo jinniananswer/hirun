@@ -125,4 +125,10 @@ public class HousesPlanController extends RootController{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.showHouseDetail", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/queryHouses")
+    public @ResponseBody String queryHouses(@RequestParam Map condition) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHouses", condition);
+        return response.toJsonString();
+    }
 }
