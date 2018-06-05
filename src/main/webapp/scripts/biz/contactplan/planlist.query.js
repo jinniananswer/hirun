@@ -184,10 +184,10 @@ var planListQuery = {
                         chart.setOption(option);
                     }
 
-                    chart.on('click', function (params) {
-                        alert(params.targetType);
-                        console.log(params);
-                    });
+                    // chart.on('click', function (params) {
+                    //     alert(params.targetType);
+                    //     console.log(params);
+                    // });
 
                     chart = null;
                 },

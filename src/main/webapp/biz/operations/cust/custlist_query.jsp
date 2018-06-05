@@ -93,7 +93,7 @@
                 <div class="main">
                     <div class="title">{{cust.CUST_NAME}}</div>
                 </div>
-                <div class="side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
+                <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
                      ontap="custListQuery.showCustDetail(this)">
                     查看详情
                 </div>

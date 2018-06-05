@@ -263,7 +263,7 @@
 								<li>
 									<div class="label">原因：</div>
 									<div class="value">
-										<div class="c_list c_list-v c_list-col-3 c_list-phone-col-2 c_list-space c_list-line c_list-s">
+										<div class="c_list c_list-v c_list-col-2 c_list-phone-col-2 c_list-space c_list-line c_list-s">
 											<ul id="cause_options">
 
 											</ul>
