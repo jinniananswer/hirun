@@ -80,6 +80,18 @@ public class CustActionDAO extends StrongObjectDAO {
         return list;
     }
 
+    public List<CustActionEntity> queryCustFinishActionListByPlanId(String planId) throws Exception {
+        StringBuilder sql = new StringBuilder(200);
+        sql.append(" SELECT * FROM INS_CUST_ACTION ");
+        sql.append(" WHERE PLAN_ID = :PLAN_ID ");
+        sql.append(" AND FINISH_TIME IS NOT NULL ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_ID", planId);
+        List<CustActionEntity> list = this.queryBySql(CustActionEntity.class, sql.toString(), parameter);
+        return list;
+    }
+
     public CustActionEntity queryCustActionByCustIdAndActionCodeAndPlanId(String custId, String actionCode, String planId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("CUST_ID", custId);

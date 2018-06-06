@@ -4,4 +4,382 @@
  * auth:xiedx@asiainfo.com
  * Copyright 2015, WADE
  */
-!function(e,t,n){"use strict";function a(){return s?s:(e(n.body).append('<div id="'+p+'_float" class="c_float'+(c?" c_float-phone-auto":"")+'" style="width:22em;"><div  id="'+p+'_float_bg" class="bg"></div><div  id="'+p+'_float_content" class="content"></div></div>'),s=e.Calendar.append(p+"_float_content",{name:p,className:"c_calendar"+(c?"":" c_calendar-s")}),e("#"+p).select(function(n){d&&t[d]&&t[d]instanceof u&&!0!==t[d].useTime&&!0===t[d].dropDown&&(t[d].val(this.val()),e.event.trigger("afterAction",null,t[d].el),o())}),e("#"+p).clear(function(n){d&&t[d]&&t[d]instanceof u&&!0===t[d].dropDown&&(t[d].val(""),e.event.trigger("afterAction",null,t[d].el)),o()}),e("#"+p).ok(function(n){if(d&&t[d]&&t[d]instanceof u&&!0===t[d].useTime&&!0===t[d].dropDown)return t[d].val(this.val()),e.event.trigger("afterAction",null,t[d].el),o(),!1}),e("#"+p+"_float_bg").bind(f,function(){o()}),s)}function o(){if(d){var t=n.getElementById(p+"_float");if(null!=t&&1==t.nodeType){var a=t.className?t.className:"";(" "+a+" ").indexOf(" c_float-show ")>-1&&(t.className=e.trim((" "+a+" ").replace(/ c_float-show /gi," ")))}t=null,d=null}}if(e&&"undefined"==typeof e.DateField){var i=(Array.prototype.push,Array.prototype.splice,n.createElement("input")),l="oninput"in i;i=null;var s,d,r="undefined"!=typeof e.hasTouch?e.hasTouch:"ontouchstart"in t,f=r?"touchstart":"mousedown",c=e.os.phone||!0===e.ratioPhone,p="_Wade_DropDownCalendar",u=function(t,a){var o=this;o.el=t&&1==t.nodeType?t:n.getElementById(t),o.el&&o.el.nodeType&&(o.id=e.attr(o.el,"id"))&&(a&&e.isObject(a)&&e.extend(o,a),e.attr(o.el,"x-wade-uicomponent")||e.attr(o.el,"x-wade-uicomponent","datefield"),o._init(),o.constructor.call(o))};u.prototype=e.extend(new e.UIComponent,{val:function(e){var t=this;return void 0==e?t.el.value:void(t.value=t.el.value=e)},refresh:function(){var t=this;t.spanEl||(t.spanEl=e(t.el).parent("span.e_mix:first")[0]);var a=t.spanEl.getBoundingClientRect();t.spanLeft=a.left,t.spanTop=a.top,t.spanHeight=t.spanEl.offsetHeight,t.spanWidth=t.spanEl.offsetWidth;var o=t.spanTop,i=(t.spanLeft,n.body),l=i.offsetHeight-t.spanHeight-o;e.isNumber(i.scrollTop)&&(t.spanTop+=i.scrollTop-2),e.isNumber(i.scrollLeft)&&(t.spanLeft+=i.scrollLeft),t.dir=l>=o?"down":"up";var s="down"==t.dir?l:o,d=0,r=0,f=n.getElementById(p+"_float"),c=f.className?f.className:"";(" "+c+" ").indexOf(" c_float-show ")<0?(f.style.left="-99999px",f.style.top="-99999px",f.style.display="block",d=f.offsetWidth,r=f.offsetHeight,f.style.display=""):(d=f.offsetWidth,r=f.offsetHeight);var u=Math.min(s,r),y=document.documentElement.clientHeight;f.style.left=t.spanLeft+t.spanWidth-d+"px",r<=y&&o<r&&l<r?f.style.top=(y-r)/2+"px":f.style.top=("down"==t.dir?t.spanTop+t.spanHeight:t.spanTop-u)+"px"},getDisabled:function(){var e=this;return e.disabled},setDisabled:function(t){var n=this;"undefined"!=typeof t&&(n.disabled=!!t,n.el.disabled=n.disabled,setTimeout(function(){var t=n.spanEl?n.spanEl:n.el,a=t.className?t.className:"";n.disabled?(" "+a+" ").indexOf(" e_dis ")<0&&(t.className=e.trim(a+" e_dis")):(a=e.trim((" "+a+" ").replace(/ e_dis /gi," ")),t.className=a)},0))},getReadonly:function(){var e=this;return e.readonly},setReadonly:function(t){var n=this;"undefined"!=typeof t&&(n.readonly=!!t,setTimeout(function(){e.attr(n.el,"readonly",n.readonly)},0))},destroy:function(){var e=this;e.spanEl=null,e.icoEl=null,e.el=null},_init:function(){var t=this;if(t.spanEl=e(t.el).parent("span.e_mix:first")[0],t.icoEl=e(t.el).next("span.e_ico-date:first")[0],t.icoEl&&(t.icoEl.style.display=t.dropDown?"":"none"),(c||e.os.pad||t.readonly)&&t.setReadonly(!0),t.disabled&&t.setDisabled(!0),l?e(t.el).bind("input",function(e){this.value=(""+this.value).replace(/[^0-9-\/\s:]+/gi,"")}):e(t.el).keydown(function(e){return!(e.shiftKey||e.altKey||e.ctrlKey)&&(e.keyCode>47&&e.keyCode<58||e.keyCode>95&&e.keyCode<106||8==e.keyCode||46==e.keyCode||189==e.keyCode||191==e.keyCode)}),!0===t.dropDown){var o=function(o){if(!t.disabled&&!0===t.dropDown){o.originalEvent&&(o=o.originalEvent),a(),s&&(e.extend(s,{now:t.now,format:t.format,value:t.value,useTime:t.useTime}),s.reset()),t.refresh();var i=n.getElementById(p+"_float"),l=i.className?i.className:"";(" "+l+" ").indexOf(" c_float-show ")<0&&(i.className=e.trim(l+" c_float-show")),d=t.id}};e(t.el).bind("tap",o),e(t.icoEl).bind("tap",o)}}}),e(function(){e(n.body).bind(f,function(t){if(t&&t.target){var a=t.target;if(a&&a.nodeType&&s){for(var i=0,l=!1;a&&a.nodeType&&a!=n.body&&i<50;){var r=e.attr(a,"id");if(r&&e.isString(r)&&(0==r.indexOf(d)||0==r.indexOf(p))){l=!0;break}a=a.parentNode,i++}l||o()}}}),e(t).bind("onorientationchange"in t?"orientationchange":"resize",function(){o()}),r||e(n.body).bind("mousewheel",function(e){o()})}),t.DateField=e.DateField=u}}(window.Wade,window,document);
+(function ($, window, doc) {
+    "use strict";
+
+    if( !$ || typeof $.DateField != "undefined" )
+        return;
+
+    var push = Array.prototype.push,
+        splice = Array.prototype.splice;
+
+    var input 		 = doc.createElement("input");
+    var hasInput     = "oninput" in input;
+    var hasPattern   = "pattern" in input;
+    input 		 = null;
+
+    var hasTouch     = typeof $.hasTouch != "undefined" ? $.hasTouch : "ontouchstart" in window;
+    var START_EVENT  = hasTouch ? 'touchstart': 'mousedown';
+
+    var phoneMode = $.os.phone || true === $.ratioPhone; //手机模式
+    var dropDownCalendarId = "_Wade_DropDownCalendar";
+    var dropDownCalendar;
+
+    var activeDateFieldId;
+
+    var DateField = function(el, settings){
+        var that = this;
+
+        that.el = el && el.nodeType == 1 ? el : doc.getElementById(el);
+        if( !that.el || !that.el.nodeType || !(that.id = $.attr(that.el, "id")) )
+            return;
+
+        if(settings && $.isObject(settings))
+            $.extend(that, settings);
+
+        if(!$.attr(that.el, "x-wade-uicomponent")){
+            $.attr(that.el, "x-wade-uicomponent", "datefield");
+        }
+
+        that._init();
+
+        that.constructor.call(that);
+    };
+
+    DateField.prototype = $.extend(new $.UIComponent(), {
+        val: function(value){
+            var that = this;
+
+            if(value == undefined){
+                return that.el.value;
+            }
+
+            that.value = that.el.value = value;
+        },
+        refresh: function(){
+            var that = this;
+
+            if(!that.spanEl)
+                that.spanEl = $(that.el).parent("span.e_mix:first")[0];
+
+            var offset = that.spanEl.getBoundingClientRect(); //$(that.spanEl).offset();
+            that.spanLeft = offset.left, that.spanTop = offset.top,
+                that.spanHeight = that.spanEl.offsetHeight, that.spanWidth = that.spanEl.offsetWidth;
+
+            var topSize = that.spanTop, leftSize = that.spanLeft; //顶距，左距 (不包括body滚动条产生的scroll高度)
+            var body = doc.body;
+            var downSize =  body.offsetHeight - that.spanHeight - topSize; //底距 body.offsetHeight 只包括可见范围高度
+
+            if($.isNumber(body.scrollTop)){
+                that.spanTop += body.scrollTop - 2;  //BoundingClientRect 不包括body滚动条产生的scroll高度
+            }
+
+            if($.isNumber(body.scrollLeft)){
+                that.spanLeft += body.scrollLeft; //BoundingClientRect 不包括body滚动条产生的scroll宽度
+            }
+
+            that.dir = downSize >= topSize ? "down" : "up";
+
+            var maxHeight = that.dir == "down" ? downSize : topSize ; //多减去2像素边框
+            var floatWidth = 0, floatHeight = 0;
+
+            var floatEl = doc.getElementById(dropDownCalendarId + "_float");
+            var className = floatEl.className ? floatEl.className : "";
+            if( (" " + className + " ").indexOf(" c_float-show ") < 0 ){
+                floatEl.style.left = "-99999px";
+                floatEl.style.top = "-99999px";
+                floatEl.style.display = "block";
+                floatWidth = floatEl.offsetWidth;
+                floatHeight = floatEl.offsetHeight;
+                floatEl.style.display = "";
+            }else{
+                floatWidth = floatEl.offsetWidth;
+                floatHeight = floatEl.offsetHeight;
+            }
+
+            var h = Math.min(maxHeight, floatHeight);
+            var docHeight = document.documentElement.clientHeight;
+            floatEl.style.left = (that.spanLeft + that.spanWidth - floatWidth) + "px";
+
+            //如果浮动高度小于可见高度，但是上下高度都不足，则垂直居中显示
+            if( floatHeight <= docHeight && topSize < floatHeight && downSize < floatHeight) {
+                floatEl.style.top = (docHeight - floatHeight) / 2 + "px";
+            }else{
+                floatEl.style.top = (that.dir == "down" ? that.spanTop + that.spanHeight : that.spanTop - h) + "px";
+            }
+
+            //floatEl.style.width = that.spanWidth + "px";
+        },
+        getDisabled: function(){
+            var that = this;
+            return that.disabled;
+        },
+        setDisabled: function(value){
+            var that = this;
+
+            if(typeof value == "undefined")
+                return;
+
+            that.disabled = !!value;
+            that.el.disabled = that.disabled;
+
+            setTimeout(function(){
+                var el = that.spanEl ? that.spanEl : that.el;
+                var className = el.className ? el.className : "";
+                //设置样式
+                if(that.disabled){
+                    if( (" " + className + " ").indexOf(" e_dis ") < 0 )
+                        el.className = $.trim(className + " e_dis");
+                }else{
+                    className = $.trim( (" " + className + " ").replace(/ e_dis /ig, " ") );
+                    el.className = className;
+                }
+            }, 0);
+        },
+        getReadonly: function(){
+            var that = this;
+            return that.readonly;
+        },
+        setReadonly: function(value){
+            var that = this;
+            if(typeof value == "undefined")
+                return;
+
+            that.readonly = !!value;
+
+            setTimeout(function(){
+                $.attr(that.el, "readonly", that.readonly);
+            }, 0);
+        },
+        destroy: function(){
+            var that = this;
+
+            that.spanEl = null;
+            that.icoEl = null;
+
+            that.el = null;
+        },
+        _init: function(){
+            var that = this;
+
+            that.spanEl = $(that.el).parent("span.e_mix:first")[0];
+            that.icoEl = $(that.el).next("span.e_ico-date:first")[0];
+
+            if(that.icoEl){
+                that.icoEl.style.display = that.dropDown ? "" : "none";
+            }
+
+            if(phoneMode || $.os.pad || that.readonly){
+                that.setReadonly(true);
+            }
+
+            if(that.disabled){
+                that.setDisabled(true);
+            }
+
+            /********** 绑定事件 开始**********/
+            if( hasInput ){
+                $(that.el).bind("input", function(e){
+                    this.value = ("" + this.value).replace(/[^0-9-\/\s:]+/ig, "");
+                });
+            }else{
+                // "-" keyCode 189, "/" keCode 191
+                $(that.el).keydown(function(e){
+                    if(e.shiftKey || e.altKey || e.ctrlKey)
+                        return false;
+                    if( (e.keyCode > 47 && e.keyCode < 58) || (e.keyCode > 95 && e.keyCode < 106)
+                        || e.keyCode == 8 || e.keyCode == 46
+                        || e.keyCode == 189 || e.keyCode == 191 ){
+                        return true;
+                    }
+                    return false;
+                });
+            }
+
+            if(true === that.dropDown){
+
+                var dropDownFn = function(e){
+                    if(that.disabled) return;
+                    if(true !== that.dropDown) return;
+
+                    if (e.originalEvent)
+                        e = e.originalEvent;
+
+                    //生成下拉框
+                    _createDropDownCalendar();
+
+                    if(dropDownCalendar){
+
+                        $.extend(dropDownCalendar, {
+                            now: that.now,
+                            format: that.format,
+                            value: that.value,
+                            useTime: that.useTime,
+                            useMode: that.useMode,
+                        });
+
+                        //重置
+                        dropDownCalendar.reset();
+                    }
+
+                    that.refresh();
+
+                    var floatEl = doc.getElementById(dropDownCalendarId + "_float");
+                    var className = floatEl.className ? floatEl.className : "";
+
+                    if((" " + className + " ").indexOf(" c_float-show ") < 0)
+                        floatEl.className = $.trim(className + " c_float-show");
+
+                    activeDateFieldId = that.id;
+                };
+
+                //绑定dropDown事件
+                $(that.el).bind("tap", dropDownFn);
+                $(that.icoEl).bind("tap", dropDownFn);
+            }
+
+            /********** 绑定事件 结束**********/
+        }
+    });
+
+
+    function _createDropDownCalendar(){
+        if(dropDownCalendar)
+            return dropDownCalendar;
+
+        $(doc.body).append('<div id="' + dropDownCalendarId + '_float" class="c_float' + (phoneMode ? ' c_float-phone-auto' :'') + '" style="width:22em;"><div  id="' + dropDownCalendarId + '_float_bg" class="bg"></div><div  id="' + dropDownCalendarId + '_float_content" class="content"></div></div>');
+
+        dropDownCalendar = $.Calendar.append(dropDownCalendarId + "_float_content", {
+            name: dropDownCalendarId,
+            className: "c_calendar" + (phoneMode ? "" : " c_calendar-s")
+        });
+
+        /********************* 绑定日历事件 开始 ***************/
+
+        //绑定日历选择事件
+        $("#" + dropDownCalendarId).select(function(e){
+
+            //只有非time模式才设置返回值
+            if(activeDateFieldId && window[activeDateFieldId]
+                && window[activeDateFieldId] instanceof DateField
+                && true !== window[activeDateFieldId].useTime
+                && true === window[activeDateFieldId].dropDown){
+                //设置值
+                window[activeDateFieldId].val( this.val() );
+
+                //执行afterAction
+                $.event.trigger("afterAction", null, window[activeDateFieldId].el);
+
+
+                //隐藏日历
+                hideDropDownCalendar();
+            }
+        });
+
+        //绑定日历清除事件
+        $("#" + dropDownCalendarId).clear(function(e){
+
+            if(activeDateFieldId && window[activeDateFieldId]
+                && window[activeDateFieldId] instanceof DateField
+                && true === window[activeDateFieldId].dropDown){
+
+                //清空值
+                window[activeDateFieldId].val( "" );
+
+                //执行afterAction
+                $.event.trigger("afterAction", null, window[activeDateFieldId].el);
+            }
+
+            //隐藏日历
+            hideDropDownCalendar();
+        });
+
+        $("#" + dropDownCalendarId).ok(function(e){
+
+            if(activeDateFieldId && window[activeDateFieldId]
+                && window[activeDateFieldId] instanceof DateField
+                && true === window[activeDateFieldId].useTime
+                && true === window[activeDateFieldId].dropDown){
+
+                //清空值
+                window[activeDateFieldId].val( this.val() );
+
+                //执行afterAction
+                $.event.trigger("afterAction", null, window[activeDateFieldId].el);
+
+                //隐藏日历
+                hideDropDownCalendar();
+
+                return false;
+            }
+        });
+
+        $("#" + dropDownCalendarId + "_float_bg").bind(START_EVENT, function(){
+            //隐藏日历
+            hideDropDownCalendar();
+        });
+        /********************* 绑定日历事件 结束 ***************/
+
+        return dropDownCalendar;
+    }
+
+    function hideDropDownCalendar(){
+        if(!activeDateFieldId)
+            return;
+
+        var floatEl = doc.getElementById(dropDownCalendarId + "_float");
+        if(floatEl != null && floatEl.nodeType == 1){
+            var className = floatEl.className ? floatEl.className : "";
+            if( (" " + className + " ").indexOf(" c_float-show ") > -1 ){
+                floatEl.className = $.trim( (" " + className + " ").replace(/ c_float-show /ig, " ") );
+            }
+        }
+        floatEl = null;
+
+        activeDateFieldId = null;
+    }
+
+    $(function(){
+
+        $(doc.body).bind(START_EVENT, function(e){
+            if(!e || !e.target)
+                return
+            var node = e.target;
+            if(!node || !node.nodeType) return;
+
+            if(!dropDownCalendar) return;
+
+            var i = 0, found = false;
+            while(node && node.nodeType && node != doc.body && i < 50){
+                var id = $.attr(node, "id");
+                if(id && $.isString(id) && ( id.indexOf(activeDateFieldId) == 0 || id.indexOf(dropDownCalendarId) == 0 ) ){
+                    found = true;
+                    break;
+                }
+                node = node.parentNode;
+                i ++;
+            }
+
+            if(!found){
+                hideDropDownCalendar();
+            }
+        });
+
+        //窗口尺寸变化时隐藏
+        $(window).bind('onorientationchange' in window ? 'orientationchange' : 'resize', function(){
+            hideDropDownCalendar();
+        });
+
+        //鼠标滚轮事件
+        if(!hasTouch){
+            $(doc.body).bind("mousewheel", function(e){
+                //setTimeout(hideDropDownCalendar, 0);
+                hideDropDownCalendar();
+            });
+        }
+    });
+
+    //export
+    window.DateField = $.DateField = DateField;
+
+})(window.Wade, window, document);

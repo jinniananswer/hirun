@@ -43,6 +43,7 @@ public class DataImportTaskService extends GenericService {
         SCANDataImport.dataImport(start, now);
         LTZDSTSDataImport.dataImport(start, now);
         XQLTYTSDataImport.dataImport(start, now);
+        YJALDataImport.dataImport(start, now);
 
         if(dataGetTimeEntity == null) {
             dataGetTimeEntity = new DataGetTimeEntity();

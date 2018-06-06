@@ -33,6 +33,7 @@
     <entity name="OperationCenter.plan.PlanTaskService.transOriginalDataToAction"  class="com.hirun.app.biz.task.plan.PlanTaskService" method="transOriginalDataToAction"/>
     <entity name="OperationCenter.plan.DataImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.DataImportTaskService" method="hirunplusDataImport"/>
     <entity name="OperationCenter.plan.DataImportTaskService.hirunplusStaffDataImport"  class="com.hirun.app.biz.task.out.DataImportTaskService" method="hirunplusStaffDataImport"/>
+    <entity name="OperationCenter.plan.PlanService.queryEmployeeMonStat"  class="com.hirun.app.biz.plan.PlanService" method="queryEmployeeMonStat"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>

@@ -111,8 +111,10 @@ public class PlanTaskService extends GenericService {
                 } else {
                     continue;
                 }
-
+            } else {
+                isTrans = true;
             }
+
             if(isTrans) {
                 signToDone(id, now, "out_hirunplus_scan", "out_his_hirunplus_scan");
             }
@@ -135,6 +137,41 @@ public class PlanTaskService extends GenericService {
             }
             jsonProject.put("STAFF_ID", employeeId);
             boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
+
+            if(isTrans) {
+                signToDone(id, now, "out_hirunplus_commends", "out_his_hirunplus_commends");
+            }
+        }
+
+        //一键案例推送
+        sql = new StringBuilder();
+        sql.append(" SELECT ID,NICK_NAME NICKNAME,DATE_FORMAT(FROM_UNIXTIME(CREATE_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,ROLE_ID,OPENID ");
+        sql.append(" FROM out_hirunplus_yjal ");
+        sql.append(" WHERE DEAL_TAG = '0' ");
+        sql.append(" ORDER BY CREATE_TIME ");
+        jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
+
+        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+            JSONObject jsonProject = jsonProjectList.getJSONObject(i);
+            String id = jsonProject.getString("ID");
+            String staffId = jsonProject.getString("STAFF_ID");
+            String roleId = jsonProject.getString("ROLE_ID");
+            boolean isTrans = false;
+            if("19".equals(roleId)) {
+                String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(staffId);
+                if(StringUtils.isBlank(employeeId)) {
+                    continue;
+                }
+                jsonProject.put("STAFF_ID", employeeId);
+
+                isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "YJALTS");
+            } else {
+                isTrans = true;
+            }
+
+            if(isTrans) {
+                signToDone(id, now, "out_hirunplus_yjal", "out_his_hirunplus_yjal");
+            }
         }
 
         return response;

@@ -14,7 +14,7 @@
                     back();
                 }
                 else{
-                    top.$.index.closeCurrentPage(url, title);
+                    top.$.index.closeCurrentPage();
                 }
             }
         },

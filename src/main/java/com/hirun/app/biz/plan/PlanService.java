@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.bean.plan.PlanRuleProcess;
+import com.hirun.app.bean.plan.PlanStatBean;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.PlanActionLimitCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
@@ -14,6 +15,7 @@ import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
+import com.hirun.app.dao.stat.PlanFinishMonDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.param.ActionEntity;
@@ -22,6 +24,7 @@ import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
+import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
 import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
@@ -522,7 +525,8 @@ public class PlanService extends GenericService {
 //            }
         }
 
-        //更新客户的LAST_ACTION、LAST_ACTION_DATE
+        //更新统计信息
+        PlanStatBean.statMonPlanFinishActionByPlanEntity(planEntity);
 
         return response;
     }
@@ -888,6 +892,41 @@ public class PlanService extends GenericService {
         }
 
         response.set("DATA_LIST", datalist);
+
+        return response;
+    }
+
+    public ServiceResponse queryEmployeeMonStat(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String executorId = requestData.getString("PLAN_EXECUTOR_ID");
+        String statMon = requestData.getString("STAT_MON");
+        PlanFinishMonDAO planFinishMonDAO = DAOFactory.createDAO(PlanFinishMonDAO.class);
+        PlanFinishMonEntity entity = planFinishMonDAO.getPlanFinishMonEntityByStatMonAndEid(statMon, executorId);
+        JSONObject jsonStatResult;
+        JSONArray arrayResult = new JSONArray();
+        if(entity == null) {
+            jsonStatResult = new JSONObject();
+        } else {
+            jsonStatResult = JSONObject.parseObject(entity.getStatResult());
+        }
+        List<ActionEntity> actionList = ActionCache.getActionListByType("1");
+        for(ActionEntity actionEntity : actionList) {
+            String actionCode = actionEntity.getActionCode();
+            String actionName = actionEntity.getActionName();
+            JSONObject jsonStatMon = new JSONObject();
+            jsonStatMon.put("ACTION_CODE", actionCode);
+            jsonStatMon.put("ACTION_NAME", actionName);
+            if(jsonStatResult.containsKey(actionCode)) {
+                jsonStatMon.put("TOTAL_NUM", jsonStatResult.getIntValue(actionCode));
+            } else {
+                jsonStatMon.put("TOTAL_NUM", 0);
+            }
+
+            arrayResult.add(jsonStatMon);
+        }
+
+        response.set("ACTION_COUNT_LIST", arrayResult);
 
         return response;
     }

@@ -179,4 +179,10 @@ public class PlanController {
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryEmployeeDailySheetDetail", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/queryEmployeeMonStat")
+    public String queryEmployeeMonStat(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryEmployeeMonStat", parameter);
+        return response.toJsonString();
+    }
 }

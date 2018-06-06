@@ -7,7 +7,7 @@ var actionList = [
 	{"ACTION_CODE":"XQLTYTS","ACTION_NAME":"需求蓝图一推送"},
     {"ACTION_CODE":"ZX","ACTION_NAME":"咨询"},
 	{"ACTION_CODE":"DKCSMU","ACTION_NAME":"带看城市木屋","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
-	{"ACTION_CODE":"YJALTS","ACTION_NAME":"一键案例推送","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
+	{"ACTION_CODE":"YJALTS","ACTION_NAME":"一键案例推送"},
 ];
 var planSummarize = {
     planId : '',
@@ -477,8 +477,11 @@ var planSummarize = {
             dataType : 'json',
             successFunc : function(data) {
                 $.endPageLoading();
-                alert('提交总结成功');
-                $.redirect.closeCurrentPage();
+                MessageBox.success("计划总结成功","点击【确定】关闭当前页面", function(btn){
+                    if("ok" == btn) {
+                        $.redirect.closeCurrentPage();
+                    }
+                });
             },
             errorFunc : function (resultCode, resultInfo) {
                 $.endPageLoading();
