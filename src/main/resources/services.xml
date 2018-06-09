@@ -45,4 +45,7 @@
 
     <!--公共-->
     <entity name="Common.static.StaticDataService.getCodeTypeDatas"  class="com.hirun.app.biz.common.StaticDataService" method="getCodeTypeDatas"/>
+    <entity name="Common.msg.MsgService.queryMsgListByRecvId"  class="com.hirun.app.biz.common.MsgService" method="queryMsgListByRecvId"/>
+    <entity name="Common.msg.MsgService.getUnReadMsgCount"  class="com.hirun.app.biz.common.MsgService" method="getUnReadMsgCount"/>
+    <entity name="Common.msg.MsgService.setMsgListToRead"  class="com.hirun.app.biz.common.MsgService" method="setMsgListToRead"/>
 </service>

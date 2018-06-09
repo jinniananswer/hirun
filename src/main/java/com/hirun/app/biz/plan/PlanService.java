@@ -2,6 +2,8 @@ package com.hirun.app.biz.plan;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.common.MsgBean;
+import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.bean.plan.PlanRuleProcess;
@@ -25,9 +27,12 @@ import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
+import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
 import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
+import com.hirun.pub.websocket.MsgWebSocketClient;
+import com.hirun.pub.websocket.WebSocketMsg;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
@@ -500,6 +505,18 @@ public class PlanService extends GenericService {
                 parameter.put("CURR_CYCLE_FINISH_NUM", "0");//清0
                 parameter.put("CURR_CYCLE_IMPROPER_DAYS", "0");//清0
                 cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", parameter);
+
+                //如果有累计未完成计划，则发消息给上级主管
+                if(unFinishNum > 0) {
+                    String targetName = ActionCache.getAction(targetCode).getActionName();
+                    String employeeName = EmployeeBean.getEmployeeByEmployeeId(planEntity.getPlanExecutorId()).getName();
+
+                    StringBuilder msgContent = new StringBuilder();
+                    msgContent.append("截止到本周期结束，员工").append(employeeName).append("累计还有");
+                    msgContent.append(String.valueOf(unFinishNum)).append("个【").append(targetName);
+                    msgContent.append("】目标未完成");
+                    MsgBean.sendMsg(userId,msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
+                }
 
                 continue;
             }

@@ -29,4 +29,11 @@ public class EmployeeBean {
         EmployeeEntity employeeEntity = employeeDAO.queryEmployeeByUserId(userEntity.getUserId());
         return employeeEntity;
     }
+
+    public static EmployeeEntity getEmployeeByEmployeeId(String employeeId) throws Exception {
+        UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+
+        return employeeDAO.queryEmployeeByEmployeeId(employeeId);
+    }
 }

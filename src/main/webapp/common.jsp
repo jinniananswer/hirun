@@ -1,8 +1,24 @@
+<%@ page import="org.apache.commons.lang3.StringUtils" %>
+<%@ page import="com.alibaba.fastjson.JSONObject" %>
+<%@ page import="com.hirun.pub.domain.entity.user.UserEntity" %>
+<%@ page import="com.hirun.pub.domain.entity.org.EmployeeEntity" %>
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8"  %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://" +request.getServerName()+":" +request.getServerPort()+path+"/" ;
+
+    UserEntity userEntity = (UserEntity) session.getAttribute("USER");
+    String userId = "";
+    if(userEntity != null) {
+        userId = userEntity.getUserId();
+    }
+
+    EmployeeEntity employeeEntity = (EmployeeEntity)session.getAttribute("EMPLOYEE");
+    String employeeId = "";
+    if(employeeEntity != null) {
+        employeeId = employeeEntity.getEmployeeId();
+    }
 %>
 <html size="s">
 <head>
@@ -29,5 +45,15 @@
     <script src="frame/js/redirect.js"></script>
     <script src="frame/js/date.js"></script>
     <script src="frame/TouchUI/content/js/plugins/template/template.js"></script>
+    <script type="text/javascript">
+        var System = {};
+        System.basePath = '<%=path%>';
+
+        var User = {};
+        User.userId = '<%=userId%>';
+
+        var Employee = {};
+        Employee.employeeId = '<%=employeeId%>';
+    </script>
 </head>
 </html>

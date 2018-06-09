@@ -14,6 +14,20 @@
 				$("#HEAD_IMAGE").attr("src", headImage);
 
             });
+
+            $.ajaxReq({
+				url : 'common/msg/getUnReadMsgCount',
+				data : {
+					RECV_ID : User.userId
+				},
+				type : 'GET',
+				successFunc : function (data) {
+					$('#myMsg').html(data.UNREAD_NUM);
+                },
+				errorFunc : function (resultCode, resultInfo) {
+
+                }
+			})
 		},
 		openNav : function(url, title){
 			if(this.exists(title)){
@@ -181,6 +195,8 @@
 					break;
 				}
             }
-		}
+		},
+
+
 	}});
 })($);

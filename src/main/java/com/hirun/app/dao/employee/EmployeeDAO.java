@@ -33,6 +33,18 @@ public class EmployeeDAO extends StrongObjectDAO{
         return employees.get(0);
     }
 
+    public EmployeeEntity queryEmployeeByEmployeeId(String employeeId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+        List<EmployeeEntity> employees = this.query(EmployeeEntity.class, "ins_employee", parameter);
+        if(ArrayTool.isEmpty(employees)){
+            return null;
+        }
+
+        return employees.get(0);
+    }
+
     public List<EmployeeEntity> queryEmployeeByParentOrgJobRole(String parentOrgId, String jobRole) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PARENT_ORG_ID", parentOrgId);

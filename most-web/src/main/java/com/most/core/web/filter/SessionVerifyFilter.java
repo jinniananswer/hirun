@@ -62,4 +62,11 @@ public class SessionVerifyFilter implements Filter{
     public void destroy() {
 
     }
+
+    public static void main(String[] args) {
+        String excepUrlRegex = "/(login|register|loginPost|login.jsp|register.jsp|common.jsp|phone_include.jsp|refreshCache|websocketServer.*)";
+        String excepUrlRegex2 = "^/websocketServer.*";
+        Pattern excepUrlPattern = Pattern.compile(excepUrlRegex);
+        System.out.println(excepUrlPattern.matcher("/websocketServer/123").matches());
+    }
 }
