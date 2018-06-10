@@ -42,4 +42,7 @@
         <property name="prefix" value="/" />
         <property name="suffix" value=".jsp" />
     </bean>
+
+    <!-- 全局异常处理  自定义实现spring的全局异常解析器HandlerExceptionResolver -->
+    <bean id="exceptionResolver" class="com.most.core.pub.exception.GenericExceptionResolver"></bean>
 </beans>
