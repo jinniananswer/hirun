@@ -67,7 +67,7 @@ public class EmployeeDAO extends StrongObjectDAO{
 
         StringBuilder sb = new StringBuilder();
         sb.append("select a.* from ins_employee a, ins_employee_job_role b ");
-        sb.append("where b.c.parent_employee_id = :PARENT_EMPLOYEE_ID ");
+        sb.append("where b.parent_employee_id = :PARENT_EMPLOYEE_ID ");
         sb.append("and b.employee_id = a.employee_id ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
@@ -78,7 +78,7 @@ public class EmployeeDAO extends StrongObjectDAO{
 
         StringBuilder sb = new StringBuilder();
         sb.append("select a.* from ins_employee a, ins_employee_job_role b ");
-        sb.append("where b.c.parent_employee_id in ("+parentEmployeeIds+") ");
+        sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), new HashMap<String, String>());
@@ -92,7 +92,7 @@ public class EmployeeDAO extends StrongObjectDAO{
 
         StringBuilder sb = new StringBuilder();
         sb.append("select a.* from ins_employee a, ins_employee_job_role b ");
-        sb.append("where b.c.parent_employee_id = :PARENT_EMPLOYEE_ID ");
+        sb.append("where b.parent_employee_id = :PARENT_EMPLOYEE_ID ");
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and b.job_role = :JOB_ROLE ");
 
@@ -106,7 +106,7 @@ public class EmployeeDAO extends StrongObjectDAO{
 
         StringBuilder sb = new StringBuilder();
         sb.append("select a.* from ins_employee a, ins_employee_job_role b ");
-        sb.append("where b.c.parent_employee_id in ("+parentEmployeeIds+") ");
+        sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and b.job_role = :JOB_ROLE ");
 
@@ -118,7 +118,7 @@ public class EmployeeDAO extends StrongObjectDAO{
 
         StringBuilder sb = new StringBuilder();
         sb.append("select a.* from ins_employee a, ins_employee_job_role b ");
-        sb.append("where b.c.parent_employee_id in ("+parentEmployeeIds+") ");
+        sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and b.job_role in ("+jobRoles+") ");
 
