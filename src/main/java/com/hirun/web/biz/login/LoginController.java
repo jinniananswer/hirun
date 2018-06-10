@@ -61,11 +61,13 @@ public class LoginController extends RootController {
             if(user != null) {
                 sessionEntity.setUserId(user.getUserId());
                 sessionEntity.setUsername(user.getUserName());
+                sessionEntity.put("USER", userInfo);
             }
 
             if(employee != null) {
                 sessionEntity.put("EMPLOYEE_ID", employee.getEmployeeId());
                 sessionEntity.put("EMPLOYEE_NAME", employee.getName());
+                sessionEntity.put("EMPLOYEE", employeeInfo);
             }
 
             if(ArrayTool.isNotEmpty(jobRoles))

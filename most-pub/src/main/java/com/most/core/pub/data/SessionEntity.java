@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class SessionEntity {
 
-    protected JSONObject data;
+    private JSONObject data;
 
     public SessionEntity(JSONObject json){
         this.data = new JSONObject();

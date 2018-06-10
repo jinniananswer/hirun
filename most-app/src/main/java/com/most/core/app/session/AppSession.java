@@ -30,6 +30,8 @@ public class AppSession{
 
     private SessionEntity sessionEntity;
 
+    private RightsCollection rightsCollection;
+
     public AppSession(){
         this.createTime = TimeTool.now();
         this.sessionId = UUID.randomUUID().toString();
@@ -100,5 +102,13 @@ public class AppSession{
 
     public String getCreateTime(){
         return this.createTime;
+    }
+
+    protected RightsCollection getRights(){
+        return this.rightsCollection;
+    }
+
+    protected void setRights(RightsCollection rights){
+        this.rightsCollection = rights;
     }
 }

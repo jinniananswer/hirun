@@ -89,6 +89,10 @@ public class RecordSet implements Serializable{
         return this.dataset.get(index).getBoolean(key);
     }
 
+    public void clear(){
+        this.dataset.clear();
+    }
+
     public String toString(){
         return super.toString();
     }

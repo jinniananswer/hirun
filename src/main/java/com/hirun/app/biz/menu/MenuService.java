@@ -2,6 +2,7 @@ package com.hirun.app.biz.menu;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.dao.menu.MenuDAO;
 import com.hirun.pub.domain.entity.menu.MenuEntity;
 import com.most.core.app.service.GenericService;
@@ -25,6 +26,7 @@ public class MenuService extends GenericService{
         String menuLevel = "1";
         MenuDAO dao = new MenuDAO("sys");
         List<MenuEntity> dir = dao.queryMenusByLevel(menuLevel);
+        dir = Permission.filterMenus(dir);
 
         if(ArrayTool.isEmpty(dir)){
             return response;
@@ -40,7 +42,7 @@ public class MenuService extends GenericService{
             if(ArrayTool.isEmpty(subMenus)){
                 continue;
             }
-
+            subMenus = Permission.filterMenus(subMenus);
             JSONArray subMenuJsons = new JSONArray();
             for(MenuEntity subMenu : subMenus){
                 JSONObject subMenuJson = subMenu.toJson();

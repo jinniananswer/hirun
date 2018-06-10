@@ -1,6 +1,7 @@
 package com.hirun.app.dao.menu;
 
 import com.hirun.pub.domain.entity.menu.MenuEntity;
+import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
  * @Date 2018/4/21 11:50
  * @Description:
  */
+@DatabaseName("sys")
 public class MenuDAO extends StrongObjectDAO{
 
     public MenuDAO(String databaseName){
@@ -33,4 +35,5 @@ public class MenuDAO extends StrongObjectDAO{
         List<MenuEntity> menus = this.query(MenuEntity.class, "sys_menu", parameter);
         return menus;
     }
+
 }
