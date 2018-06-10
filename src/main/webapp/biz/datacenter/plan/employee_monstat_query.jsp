@@ -14,9 +14,12 @@
 	<script src="scripts/biz/datacenter/plan/employee.monstat.query.js"></script>
 </head>
 <body>
-<div class="c_header">
-	<div class="back" ontap="back();"><span>家装顾问月报表</span></div>
-</div>
+<%--<div class="c_header">--%>
+	<%--<div class="back" ontap="back();"><span>家装顾问月报表</span></div>--%>
+<%--</div>--%>
+<jsp:include page="/header.jsp">
+	<jsp:param value="家装顾问月报表" name="headerName"/>
+</jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
 	<div class="c_space"></div>
 	<div id="employee_list">

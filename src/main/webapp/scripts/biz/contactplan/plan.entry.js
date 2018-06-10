@@ -111,7 +111,8 @@ var planEntry = {
             },
         });
 
-        $('#planName').html(planEntry.planDate + '计划');
+        // $('#planName').html(planEntry.planDate + '计划');
+        Header.setHeaderName(planEntry.planDate + '计划');
 
         //客户查询条件初始化 开始
         // $.ajaxReq({

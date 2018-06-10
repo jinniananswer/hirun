@@ -14,9 +14,12 @@
     <script src="scripts/biz/cust/custlist.query.js"></script>
 </head>
 <body>
-<div class="c_header">
-    <div class="back" ontap="back();"><span>客户查询</span></div>
-</div>
+<%--<div class="c_header">--%>
+    <%--<div class="back" ontap="back();"><span>客户查询</span></div>--%>
+<%--</div>--%>
+<jsp:include page="/header.jsp">
+    <jsp:param value="客户查询" name="headerName"/>
+</jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
     <div class="c_space"></div>
     <div class="l_queryFn">

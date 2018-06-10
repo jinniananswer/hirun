@@ -14,9 +14,12 @@
 	<script src="scripts/biz/contactplan/plan.summarize.js"></script>
 </head>
 <body>
-<div class="c_header">
-	<div class="back" ontap="back();"><span id="planName"></span></div>
-</div>
+<%--<div class="c_header">--%>
+	<%--<div class="back" ontap="back();"><span id="planName"></span></div>--%>
+<%--</div>--%>
+<jsp:include page="/header.jsp">
+	<jsp:param value="" name="headerName"/>
+</jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
 	<div class="c_space"></div>
 	<div id="edit_cust_list_part">
