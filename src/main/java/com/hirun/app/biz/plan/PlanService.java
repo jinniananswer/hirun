@@ -37,6 +37,7 @@ import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.*;
+import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
@@ -83,11 +84,12 @@ public class PlanService extends GenericService {
             }
 
             for(ActionEntity actionEntity : actionEntityList) {
-                String errorMessage = ActionCheckRuleProcess.checkPlanAction(planExecutorId,actionEntity.getActionCode(),actionMap.getIntValue(actionEntity.getActionCode()),planDate,actionMap);
-                if(StringUtils.isNotBlank(errorMessage)) {
-                    response.setError("-1", errorMessage);
-                    return response;
-                }
+                ActionCheckRuleProcess.checkPlanAction(planExecutorId,actionEntity.getActionCode(),actionMap.getIntValue(actionEntity.getActionCode()),planDate,actionMap);
+//                String errorMessage = ActionCheckRuleProcess.checkPlanAction(planExecutorId,actionEntity.getActionCode(),actionMap.getIntValue(actionEntity.getActionCode()),planDate,actionMap);
+//                if(StringUtils.isNotBlank(errorMessage)) {
+//                    response.setError("-1", errorMessage);
+//                    return response;
+//                }
             }
         }
 
@@ -188,11 +190,12 @@ public class PlanService extends GenericService {
             String actionCode = (String) iter.next();
             int num = targetJSONObject.getIntValue(actionCode);
 //                String errorMessage = null;
-                String errorMessage = ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, num, planDate, targetJSONObject);
-                if (StringUtils.isNotBlank(errorMessage)) {
-                    response.setError("-1", errorMessage);
-                return response;
-            }
+            ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, num, planDate, targetJSONObject);
+//                String errorMessage = ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, num, planDate, targetJSONObject);
+//                if (StringUtils.isNotBlank(errorMessage)) {
+//                    response.setError("-1", errorMessage);
+//                return response;
+//            }
         }
 
         return response;
@@ -215,11 +218,12 @@ public class PlanService extends GenericService {
             targetJSONObject.put(planTarget.getString("ACTION_CODE"), planTarget.getIntValue("NUM"));
         }
 
-        String errorMessage = ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, custNum, planDate, targetJSONObject);
-        if (StringUtils.isNotBlank(errorMessage)) {
-            response.setError("-1", errorMessage);
-            return response;
-        }
+        ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, custNum, planDate, targetJSONObject);
+//        String errorMessage = ActionCheckRuleProcess.checkPlanAction(executorId, actionCode, custNum, planDate, targetJSONObject);
+//        if (StringUtils.isNotBlank(errorMessage)) {
+//            response.setError("-1", errorMessage);
+//            return response;
+//        }
 
         return response;
     }
@@ -237,8 +241,9 @@ public class PlanService extends GenericService {
 
         PlanEntity planEntity = planDAO.getPlanInfoById(planId);
         if(planEntity == null) {
-            response.setError("-1", "没有找到编码为【" + planId + "】的计划");
-            return response;
+            throw new GenericException("-1", "没有找到编码为【" + planId + "】的计划");
+//            response.setError("-1", "没有找到编码为【" + planId + "】的计划");
+//            return response;
         }
 
         //获取计划时间的所有客户动作，包括执行的和未执行的
@@ -400,8 +405,8 @@ public class PlanService extends GenericService {
         parameter.put("PLAN_ID", planId);
         List<PlanEntity> list = planDAO.query(PlanEntity.class, "INS_PLAN", parameter);
         if(ArrayTool.isEmpty(list)) {
-            //TODO 报错
-            response.setError("-1","找不到计划");
+            throw new GenericException("-1", "找不到计划");
+//            response.setError("-1","找不到计划");
         }
         PlanEntity planEntity = list.get(0);
         parameter.put("PLAN_ID", planEntity.getPlanId());
@@ -811,10 +816,11 @@ public class PlanService extends GenericService {
         JSONObject requestData = request.getBody().getData();
         String executorId = requestData.getString("PLAN_EXECUTOR_ID");
         String planDate = requestData.getString("PLAN_DATE");
-        String errorMessage = PlanRuleProcess.planEntryInitCheck(executorId, planDate);
-        if(StringUtils.isNotBlank(errorMessage)) {
-            response.setError("-1", errorMessage);
-        }
+        PlanRuleProcess.planEntryInitCheck(executorId, planDate);
+//        String errorMessage = PlanRuleProcess.planEntryInitCheck(executorId, planDate);
+//        if(StringUtils.isNotBlank(errorMessage)) {
+//            response.setError("-1", errorMessage);
+//        }
 
         return response;
     }

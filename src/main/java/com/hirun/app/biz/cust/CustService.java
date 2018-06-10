@@ -15,6 +15,7 @@ import com.most.core.pub.data.Body;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
@@ -136,8 +137,9 @@ public class CustService extends GenericService{
         parameter.put("CUST_ID", custId);
         CustomerEntity customerEntity = custDAO.queryByPk(CustomerEntity.class, "INS_CUSTOMER", parameter);
         if(customerEntity == null) {
-            response.setError("-1", "客户资料不存在");
-            return response;
+            throw new GenericException("-1", "客户资料不存在");
+//            response.setError("-1", "客户资料不存在");
+//            return response;
         }
 
         JSONObject jsonCust = customerEntity.toJson();

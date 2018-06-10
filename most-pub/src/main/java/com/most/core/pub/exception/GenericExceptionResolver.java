@@ -1,6 +1,6 @@
 package com.most.core.pub.exception;
 
-import com.alibaba.fastjson.JSONObject;
+import com.most.core.pub.data.ServiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,33 +24,31 @@ public class GenericExceptionResolver implements HandlerExceptionResolver {
         response.setCharacterEncoding("UTF-8"); //避免乱码
         response.setHeader("Cache-Control", "no-cache, must-revalidate");
         try {
-            JSONObject jsonError = new JSONObject();
+            ServiceResponse serviceResponse = new ServiceResponse();
             if(ex instanceof  InvocationTargetException) {
                 Throwable throwable = ex.getCause();
                 if(throwable instanceof  GenericException) {
                     GenericException genericException = (GenericException)throwable;
-                    jsonError.put("RESULT_CODE", genericException.getCode());
-                    jsonError.put("RESULT_INFO", genericException.getDesc());
-                    response.getWriter().write(jsonError.toJSONString());
+                    serviceResponse.setError(genericException.getCode(),genericException.getDesc());
+                    response.getWriter().write(serviceResponse.toJsonString());
                 } else {
-                    jsonError.put("RESULT_CODE", "-1");
-                    jsonError.put("RESULT_INFO", throwable.getMessage());
-                    response.getWriter().write(jsonError.toJSONString());
+                    serviceResponse.setError("-1",throwable.getMessage());
+                    response.getWriter().write(serviceResponse.toJsonString());
                 }
             } else if(ex instanceof  GenericException){
                 GenericException genericException = (GenericException)ex;
-                jsonError.put("RESULT_CODE", genericException.getCode());
-                jsonError.put("RESULT_INFO", genericException.getDesc());
-                response.getWriter().write(jsonError.toJSONString());
+                serviceResponse.setError(genericException.getCode(),genericException.getDesc());
+                response.getWriter().write(serviceResponse.toJsonString());
             } else {
-                jsonError.put("RESULT_CODE", "-1");
-                jsonError.put("RESULT_INFO", ex.getMessage());
-                response.getWriter().write(jsonError.toJSONString());
+                serviceResponse.setError("-1",ex.getMessage());
+                response.getWriter().write(serviceResponse.toJsonString());
             }
         } catch (IOException e) {
             logger.error("与客户端通讯异常\n", e);
         }
 
-        return null;
+        ModelAndView modelAndView=new ModelAndView();
+
+        return modelAndView;
     }
 }

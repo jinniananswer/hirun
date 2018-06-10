@@ -15,6 +15,7 @@ import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 public class ActionCheckRuleProcess {
 
-    public static String checkPlanAction(String executorId, String actionCode, int custNum, String planDate, JSONObject actionMap) throws Exception {
+    public static void checkPlanAction(String executorId, String actionCode, int custNum, String planDate, JSONObject actionMap) throws Exception {
         StringBuilder errorMessage = new StringBuilder();
         PlanDAO planDAO = new PlanDAO("ins");
 
@@ -77,11 +78,8 @@ public class ActionCheckRuleProcess {
 //            int currentCycleTotalNum = planActionNumDAO.getPlanActionFinishNumBetweenStartAndEnd(executorId,actionCode,startTime,planDate);
             if(totalLimitNum - currCycleFinishNum > custNum) {
                 errorMessage.append(actionName + "数需至少" + (totalLimitNum - currCycleFinishNum) + "个");
-                return errorMessage.toString();
+                throw new GenericException("-1", errorMessage.toString());
             }
-//            } else {
-//                totalLimitNum = preTotalUnfinishNum;
-//            }
 
             if(totalLimitNum > 0) {
 
@@ -100,11 +98,9 @@ public class ActionCheckRuleProcess {
             int relActionCustNum = actionMap.getIntValue(relActionCode);
             if (custNum < relActionCustNum * multipleNum) {
                 errorMessage.append(actionName + "数需至少" + relActionCustNum * multipleNum + "个");
-                return errorMessage.toString();
+                throw new GenericException("-1", errorMessage.toString());
             }
         }
-
-        return "";
     }
 
     public static boolean isActionBindYesterdayPlan(String actionTime, String today, String executorId) throws Exception {
@@ -115,20 +111,6 @@ public class ActionCheckRuleProcess {
             PlanEntity yesterdayPlanEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId,yesterday);
 
             return isCommonActionBindPlan(yesterdayPlanEntity, actionTime);
-//            String yesterdaySummarizeDate = yesterdayPlanEntity.getSummarizeDate();
-//            if(StringUtils.isBlank(yesterdaySummarizeDate)
-//                    || TimeTool.compareTwoTime(yesterdaySummarizeDate, actionTime) >= 0) {
-//                boolean hasDetail = "1".equals(yesterdayPlanEntity.getHasDetail()) ? true : false;
-//                if(!PlanTool.isNormalWork(yesterdayPlanEntity)
-//                        && !hasDetail) {
-//                    return false;
-//                } else {
-//                    return true;
-//                }
-//            } else {
-//                return false;
-//            }
-
         } else {
             return false;
         }
