@@ -14,9 +14,12 @@
     <script src="scripts/biz/common/msglist.query.js"></script>
 </head>
 <body>
-<div class="c_header">
-    <div class="back" ontap="back();"><span>我的消息</span></div>
-</div>
+<%--<div class="c_header">--%>
+    <%--<div class="back" ontap="back();"><span>我的消息</span></div>--%>
+<%--</div>--%>
+<jsp:include page="/header.jsp">
+    <jsp:param value="我的消息" name="headerName"/>
+</jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
     <div class="c_space"></div>
     <div id="msg_list">

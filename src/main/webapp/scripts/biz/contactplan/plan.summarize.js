@@ -55,7 +55,7 @@ var planSummarize = {
                 planSummarize.planDate = data.PLAN_DATE;
                 planSummarize.planId = data.PLAN_ID;
                 planSummarize.executorId = data.PLAN_EXECUTOR_ID;
-                $('#planName').html(planSummarize.planDate + '计划总结');
+                Header.setHeaderName(planSummarize.planDate + '计划总结');
 
                 if(data.CUST_LIST && data.CUST_LIST.length > 0) {
                     //计划中有新客户

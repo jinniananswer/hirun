@@ -14,9 +14,12 @@
 	<script src="scripts/biz/contactplan/plan.additional.entry.js"></script>
 </head>
 <body>
-<div class="c_header">
-	<div class="back" ontap="back();"><span>计划补录</span></div>
-</div>
+<%--<div class="c_header">--%>
+	<%--<div class="back" ontap="back();"><span>计划补录</span></div>--%>
+<%--</div>--%>
+<jsp:include page="/header.jsp">
+	<jsp:param value="计划补录" name="headerName"/>
+</jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
 	<div class="c_space"></div>
 	<div id="pre_info_form" class="c_list c_list-form">

@@ -14,9 +14,12 @@
     <script src="scripts/biz/cust/custdetail.query.js"></script>
 </head>
 <body>
-<div class="c_header">
-    <div class="back" ontap="back();"><span>客户明细</span></div>
-</div>
+<%--<div class="c_header">--%>
+    <%--<div class="back" ontap="back();"><span>客户明细</span></div>--%>
+<%--</div>--%>
+<jsp:include page="/header.jsp">
+    <jsp:param value="客户明细" name="headerName"/>
+</jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
     <div class="c_title">
         <div class="text" tag="cust_name">安文轩</div>
