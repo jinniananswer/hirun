@@ -3,6 +3,7 @@ package com.hirun.app.dao.employee;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
+import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
 import java.util.HashMap;
@@ -85,6 +86,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         return employees;
     }
 
+    @Deprecated
     public List<EmployeeEntity> querySubordinatesByParentEmployeeJobRole(String parentEmployeeId, String jobRole) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
@@ -100,6 +102,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         return employees;
     }
 
+    @Deprecated
     public List<EmployeeEntity> querySubordinatesInParentEmployeeJobRole(String parentEmployeeIds, String jobRole) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("JOB_ROLE", jobRole);
@@ -114,6 +117,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         return employees;
     }
 
+    @Deprecated
     public List<EmployeeEntity> querySubordinatesInParentEmployeeAndJobRoles(String parentEmployeeIds, String jobRoles) throws Exception{
 
         StringBuilder sb = new StringBuilder();
@@ -125,4 +129,30 @@ public class EmployeeDAO extends StrongObjectDAO{
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), new HashMap<String, String>());
         return employees;
     }
+
+    public RecordSet querySubordinatesEmployeeByParentEmployee(String parentEmployeeId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.*,b.job_role from ins_employee a, ins_employee_job_role b ");
+        sb.append("where b.parent_employee_id = :PARENT_EMPLOYEE_ID ");
+        sb.append("and b.employee_id = a.employee_id ");
+
+        RecordSet employees = this.queryBySql(sb.toString(), parameter);
+        return employees;
+    }
+
+    public RecordSet querySubordinatesEmployeeInParentEmployee(String parentEmployeeIds) throws Exception{
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.*,b.job_role from ins_employee a, ins_employee_job_role b ");
+        sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
+        sb.append("and b.employee_id = a.employee_id ");
+
+        RecordSet employees = this.queryBySql(sb.toString(), new HashMap<String, String>());
+        return employees;
+    }
+
+
 }

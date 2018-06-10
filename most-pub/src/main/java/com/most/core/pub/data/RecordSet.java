@@ -89,6 +89,13 @@ public class RecordSet implements Serializable{
         return this.dataset.get(index).getBoolean(key);
     }
 
+    public void addAll(RecordSet recordSet){
+        if(recordSet == null || recordSet.size() <= 0)
+            return;
+
+        this.dataset.addAll(recordSet.getDataset());
+    }
+
     public void clear(){
         this.dataset.clear();
     }
