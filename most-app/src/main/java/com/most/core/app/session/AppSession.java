@@ -85,7 +85,8 @@ public class AppSession{
         for(String key : keys){
             ConnectionWrapper conn = connections.get(key);
             try {
-                conn.close();
+                if(conn != null)
+                    conn.close();
             } catch (SQLException e) {
                 log.error(e);
             }
