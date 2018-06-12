@@ -39,4 +39,12 @@ public class HousesReportController extends RootController {
         ServiceResponse response = ServiceClient.call("DataCenter.houses.HousesReportService.reportCounselorPlanActual", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/queryCounselorLoopholeReport")
+    public @ResponseBody String queryCounselorLoopholeReport(HttpServletRequest request) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ORG_ID", request.getParameter("ORG_ID"));
+        ServiceResponse response = ServiceClient.call("DataCenter.houses.HousesReportService.reportCounselorLoophole", parameter);
+        return response.toJsonString();
+    }
 }
