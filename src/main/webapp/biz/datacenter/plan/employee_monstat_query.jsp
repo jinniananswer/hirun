@@ -32,7 +32,7 @@
 	<div class="c_box c_box-border" tag="employee_box" employee_id="{{employee.EMPLOYEE_ID}}">
 		<div class="c_title" employee_id="{{employee.EMPLOYEE_ID}}" ontap="EmployeeMonStatQuery.clickEmployee(this)">
 			<div class="text">
-				<span tag="employee_name">{{employee.EMPLOYEE_NAME}}</span>
+				<span tag="employee_name">{{employee.NAME}}</span>
 			</div>
 			<div class="fn">
 				<ul>
@@ -47,8 +47,8 @@
 						<div class="label">月份：</div>
 						<div class="value">
 							<span class="e_mix">
-								<input type="text" id="PLAN_DATE" name="PLAN_DATE" datatype="date"
-									   employee_id="{{employee.EMPLOYEE_ID}}" nullable="no" desc="补录计划日期" />
+								<input type="text" id="MON_DATE_{{employee.EMPLOYEE_ID}}" name="MON_DATE_{{employee.EMPLOYEE_ID}}" datatype="date"
+									   employee_id="{{employee.EMPLOYEE_ID}}" nullable="no" desc="月份" />
 								<span class="e_ico-date"></span>
 							</span>
 						</div>

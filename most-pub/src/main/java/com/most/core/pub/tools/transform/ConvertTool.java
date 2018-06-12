@@ -48,6 +48,23 @@ public class ConvertTool {
         return jsonArray;
     }
 
+    public static JSONArray toJSONArray(List<? extends GenericEntity> entities, String[] keys){
+        if(ArrayTool.isEmpty(entities)){
+            return new JSONArray();
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        for(GenericEntity entity : entities){
+            JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(entity.getContent()));
+            JSONObject newJSONObject = new JSONObject();
+            for(String key : keys) {
+                newJSONObject.put(key, jsonObject.getString(key));
+            }
+            jsonArray.add(newJSONObject);
+        }
+        return jsonArray;
+    }
+
     /**
      * value为空的排除
      * @param jsonObject

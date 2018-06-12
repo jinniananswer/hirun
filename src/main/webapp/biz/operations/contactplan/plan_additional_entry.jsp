@@ -27,9 +27,10 @@
 			<li class="link required">
 				<div class="label">家装顾问</div>
 				<div class="value">
-					<span class="e_mix" ontap="">
-						<input type="text" id="EMPLOYEE_ID" name="EMPLOYEE_ID" datatype="text" nullable="no" desc="家装顾问" value="" />
-						<%--<input type="hidden" id="EMPLOYEE_ID" name="EMPLOYEE_ID" datatype="text" nullable="yes" desc="家装顾问" value="" />--%>
+					<span class="e_mix" ontap="planAdditionalEntry.initCounselorPopup()">
+						<input type="text" id="EMPLOYEE_NAME" name="EMPLOYEE_NAME" datatype="text"
+							   employee_id=""
+							   nullable="no" desc="家装顾问" value="" readonly="true"/>
 						<span class="e_ico-check"></span>
 					</span>
 				</div>
@@ -50,6 +51,43 @@
 		<button type="button" class="e_button-r e_button-l e_button-green" ontap="planAdditionalEntry.okOnclick()">确定</button>
 	</div>
 </div>
+
+<div class="c_popup" id="UI-popup">
+	<div class="c_popupBg" id="UI-popup_bg"></div>
+	<div class="c_popupBox">
+		<div class="c_popupWrapper" id="UI-popup_wrapper">
+			<div class="c_popupGroup">
+				<div class="c_popupItem" id="UI-popup-query">
+					<div class="c_header">
+						<div class="back" ontap="hidePopup(this)">请选择家装顾问</div>
+					</div>
+					<div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+						<!-- 列表 开始 -->
+						<div class="c_list c_list-col-1 c_list-line c_list-border c_list-fixWrapSpace">
+							<ul id="BIZ_COUNSELORS">
+
+							</ul>
+						</div>
+						<!-- 列表 结束 -->
+						<div class="c_line"></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script id="employee_template" rel_id="BIZ_COUNSELORS" type="text/html">
+	{{each EMPLOYEE_LIST employee idx}}
+	<li class="link e_center" employee_name="{{employee.NAME}}" employee_id="{{employee.EMPLOYEE_ID}}"
+		ontap="planAdditionalEntry.afterSelectEmployee(this)">
+		<label class="group">
+			<div class="main">{{employee.NAME}}</div>
+		</label>
+	</li>
+	{{/each}}
+</script>
+
 
 <script type="text/javascript">
 	Wade.setRatio();

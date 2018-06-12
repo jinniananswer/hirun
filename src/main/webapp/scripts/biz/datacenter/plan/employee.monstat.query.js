@@ -1,29 +1,46 @@
 var EmployeeMonStatQuery = {
 	init : function() {
         EmployeeMonStatQuery.queryEmployeeList();
-        var now = $.date.now();
-        var nowYYYYMM = $.date.now().substring(0,4) + $.date.now().substring(5,7);
-        window["PLAN_DATE"] = new Wade.DateField(
-            "PLAN_DATE",
-            {
-                value:nowYYYYMM,
-                dropDown:true,
-                format:"yyyyMM",
-                useTime:false,
-                useMode:'month',
-            }
-        );
-        $('#PLAN_DATE').val(nowYYYYMM);
-        $("#PLAN_DATE").bind("afterAction", function(){
-            var $obj = $(this);
-            EmployeeMonStatQuery.refreshMonStat($obj.val(), $obj.attr('employee_Id'));
-        });
     },
     queryEmployeeList : function() {
-        var data = {};
-        data.EMPLOYEE_LIST = [];
-        data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '157'})
-        $('#employee_list').html(template("employee_template", data));
+        var now = $.date.now();
+        var nowYYYYMM = $.date.now().substring(0,4) + $.date.now().substring(5,7);
+        $.ajaxReq({
+            url : 'employee/getAllSubordinatesCounselors',
+            data : {
+                EMPLOYEE_IDS : Employee.employeeId,
+                COLUMNS : 'EMPLOYEE_ID,NAME'
+            },
+            successFunc : function(data) {
+                // data.EMPLOYEE_LIST = [];
+                // data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '157', HINT : '今日没有录计划'})
+                $('#employee_list').html(template("employee_template", data));
+
+                $.each(data.EMPLOYEE_LIST, function(idx, employee){
+                    var employeeId = employee.EMPLOYEE_ID;
+                    var monDateName = 'MON_DATE_' + employeeId;
+                    window[monDateName] = new Wade.DateField(
+                        monDateName,
+                        {
+                            value:nowYYYYMM,
+                            dropDown:true,
+                            format:"yyyyMM",
+                            useTime:false,
+                            useMode:'month',
+                        }
+                    );
+                    $('#' + monDateName).val(nowYYYYMM);
+                    $("#" + monDateName).bind("afterAction", function(){
+                        var $obj = $(this);
+                        EmployeeMonStatQuery.refreshMonStat($obj.val(), $obj.attr('employee_Id'));
+                    });
+                })
+
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        })
     },
     clickEmployee : function(obj) {
         $obj = $(obj);
@@ -33,7 +50,7 @@ var EmployeeMonStatQuery = {
         if(isQuery == 'false') {
             $obj.next().attr('is_query', "true");
             var employeeId = $obj.attr('employee_id');
-            var statMon = $('#PLAN_DATE').val();
+            var statMon = $('#MON_DATE_' + employeeId).val();
             EmployeeMonStatQuery.refreshMonStat(statMon, employeeId);
         }
     },

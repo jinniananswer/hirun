@@ -3,6 +3,7 @@
     <entity name="OrgCenter.login.LoginService.login"  class="com.hirun.app.biz.login.LoginService" method="login"/>
     <entity name="OrgCenter.menu.MenuService.loadMenus"  class="com.hirun.app.biz.menu.MenuService" method="loadMenus"/>
     <entity name="OrgCenter.menu.PersonnelService.changePassword"  class="com.hirun.app.biz.organization.personnel.PersonnelService" method="changePassword"/>
+    <entity name="OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors"  class="com.hirun.app.biz.employee.EmployeeService" method="getAllSubordinatesCounselors"/>
 
     <!--运营管理中心服务-->
     <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>

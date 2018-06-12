@@ -32,8 +32,10 @@
 	<div class="c_box c_box-border" tag="employee_box" employee_id="{{employee.EMPLOYEE_ID}}">
 		<div class="c_title" employee_id="{{employee.EMPLOYEE_ID}}" ontap="planListQuery.clickEmployee(this)">
 			<div class="text">
-				<span tag="employee_name">{{employee.EMPLOYEE_NAME}}</span>
+				<span tag="employee_name">{{employee.NAME}}</span>
+				{{if employee.HINT }}
 				<span tag="hint" class="e_red">({{employee.HINT}})</span>
+				{{/if}}
 			</div>
 			<div class="fn">
 				<ul>
