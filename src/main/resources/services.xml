@@ -47,6 +47,7 @@
     <entity name="DataCenter.houses.HousesReportService.reportAllHousesNature"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportAllHousesNature"/>
     <entity name="DataCenter.houses.HousesReportService.reportCompanyHousesNature"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportCompanyHousesNature"/>
     <entity name="DataCenter.houses.HousesReportService.reportCounselorPlanActual"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportCounselorPlanActual"/>
+    <entity name="DataCenter.houses.HousesReportService.reportCounselorLoophole"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportCounselorLoophole"/>
 
     <!--公共-->
     <entity name="Common.static.StaticDataService.getCodeTypeDatas"  class="com.hirun.app.biz.common.StaticDataService" method="getCodeTypeDatas"/>
