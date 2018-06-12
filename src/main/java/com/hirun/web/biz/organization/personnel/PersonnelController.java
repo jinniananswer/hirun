@@ -31,20 +31,21 @@ public class PersonnelController extends RootController {
         UserEntity user = (UserEntity) session.getAttribute("USER");
         String userPassword = user.getPassword();
         String encrytOldPassword = Encryptor.encryptMd5(oldPassword);
-        JSONObject rst = new JSONObject();
+        ServiceResponse response = new ServiceResponse();
+        response.setSuccess();
         if(StringUtils.equals(userPassword, encrytOldPassword)){
-            rst.put("RESULT_CODE", "0");
+            response.set("RESULT_CODE", "0");
         }
         else{
-            rst.put("RESULT_CODE", "-1");
-            rst.put("RESULT_INFO", "原密码不正确");
+            response.set("RESULT_CODE", "-1");
+            response.set("RESULT_INFO", "原密码不正确");
         }
-        return rst.toJSONString();
+        return response.toJsonString();
     }
 
     @RequestMapping("/submitChangePassword")
     public @ResponseBody String submitChangePassword(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.menu.PersonnelService.changePassword", parameter);
-        return "";
+        return response.toJsonString();
     }
 }
