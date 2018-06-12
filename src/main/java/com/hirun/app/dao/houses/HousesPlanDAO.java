@@ -4,6 +4,7 @@ import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.pub.data.RecordSet;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.SqlSessionException;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -77,5 +78,102 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" WHERE b.houses_id = a.houses_id ");
         Map<String, String> parameter = new HashMap<String, String>();
         return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public int getAllHousesNum() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT count(1) houses_num ");
+        sb.append(" FROM INS_HOUSES a ");
+        RecordSet rst = this.queryBySql(sb.toString(), null);
+        return rst.getInt(0, "HOUSES_NUM");
+    }
+
+    public RecordSet getGroupCountByHouseNature() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT nature, count(1) houses_num ");
+        sb.append(" FROM INS_HOUSES a ");
+        sb.append(" GROUP BY nature ");
+        return this.queryBySql(sb.toString(), null);
+    }
+
+    public int getCompanyHousesNum(String orgId) throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT count(1) houses_num ");
+        sb.append(" FROM INS_HOUSES a ");
+        sb.append(" WHERE a.org_id in ( ");
+        sb.append(" select b.org_id from ins_org b ");
+        sb.append(" where b.parent_org_id = :ORG_ID) ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ORG_ID", orgId);
+        RecordSet rst = this.queryBySql(sb.toString(), parameter);
+        return rst.getInt(0, "HOUSES_NUM");
+    }
+
+    public RecordSet getGroupCountByCompanyHouseNature(String orgId) throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT nature, count(1) houses_num ");
+        sb.append(" FROM INS_HOUSES a ");
+        sb.append(" WHERE a.org_id in ( ");
+        sb.append(" select b.org_id from ins_org b ");
+        sb.append(" where b.parent_org_id = :ORG_ID) ");
+        sb.append(" GROUP BY nature ");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ORG_ID", orgId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public RecordSet getPlanCounselorNumByShop(String orgId) throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select a.ORG_ID,b.name, sum(a.PLAN_COUNSELOR_NUM) plan_num ");
+        sb.append(" from ins_houses a, ins_org b,ins_org c ");
+        sb.append(" where c.org_id = :ORG_ID ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" group by a.ORG_ID,b.name ");
+        sb.append(" order by a.ORG_ID asc ");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ORG_ID", orgId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public RecordSet getActualCounselorNumByShop(String orgId) throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select a.ORG_ID,b.name, count(1) actual_num ");
+        sb.append(" from ins_houses_plan a, ins_org b,ins_org c ");
+        sb.append(" where c.ORG_ID = :ORG_ID ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" group by a.ORG_ID,b.name ");
+        sb.append(" order by a.ORG_ID asc ");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ORG_ID", orgId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public RecordSet getPlanCounselorNumByCompany() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select c.ORG_ID,c.name, sum(a.PLAN_COUNSELOR_NUM) plan_num ");
+        sb.append(" from ins_houses a, ins_org b,ins_org c ");
+        sb.append(" where c.type = '2' ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" group by c.ORG_ID,c.name ");
+        sb.append(" order by c.ORG_ID asc ");
+
+        return this.queryBySql(sb.toString(), null);
+    }
+
+    public RecordSet getActualCounselorNumByCompany() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select c.ORG_ID,c.name, count(1) actual_num ");
+        sb.append(" from ins_houses_plan a, ins_org b,ins_org c ");
+        sb.append(" where c.type = '2' ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" group by c.ORG_ID,c.name ");
+        sb.append(" order by c.ORG_ID asc ");
+
+        return this.queryBySql(sb.toString(), null);
     }
 }
