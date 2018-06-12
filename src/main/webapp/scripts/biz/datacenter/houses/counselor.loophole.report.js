@@ -1,18 +1,18 @@
 (function($){
-    $.extend({housesReport:{
+    $.extend({counselorReport:{
             init : function(){
                 window["UI-popup"] = new Wade.Popup("UI-popup");
-                $.ajaxPost('initHousesNatureReport','',function(data){
+                $.ajaxPost('queryCounselorLoopholeReport','',function(data){
                     var rst = new Wade.DataMap(data);
-                    var housesNum = rst.get("HOUSE_NUM");
-                    var natureGroup = rst.get("NATURE_GROUP");
+                    var loophole = rst.get("LOOPHOLE");
+                    var num = rst.get("NUM");
                     var companys = rst.get("COMPANYS");
-                    $("#house_num").empty();
+                    $("#loophole_num").empty();
                     html = [];
-                    html.push("楼盘总数："+housesNum);
-                    $.insertHtml('beforeend', $("#house_num"), html.join());
-                    $.housesReport.drawCompanys(companys);
-                    $.housesReport.drawPieChart(housesNum, natureGroup);
+                    html.push("缺口总数："+num);
+                    $.insertHtml('beforeend', $("#loophole_num"), html.join());
+                    $.counselorReport.drawCompanys(companys);
+                    $.counselorReport.drawPieChart(num, loophole);
                 });
             },
 
@@ -22,41 +22,41 @@
                     var html=[];
                     for(var i=0;i<length;i++){
                         var company = companys.get(i);
-                        html.push("<li class=\"link e_center\" ontap=\"$.housesReport.afterSelectCompany(\'"+company.get("ORG_ID")+"\',\'"+company.get("NAME")+"\')\"><div class=\"main\">"+company.get("NAME")+"</div></li>");
+                        html.push("<li class=\"link e_center\" ontap=\"$.counselorReport.afterSelectCompany(\'"+company.get("ORG_ID")+"\',\'"+company.get("NAME")+"\')\"><div class=\"main\">"+company.get("NAME")+"</div></li>");
                     }
                     $.insertHtml('beforeend', $("#COMPANY"), html.join(""));
                 }
             },
 
             afterSelectCompany : function(orgId, name){
-                $.ajaxPost('queryHousesNatureReport','&ORG_ID='+orgId,function(data){
+                $.ajaxPost('queryCounselorLoopholeReport','&ORG_ID='+orgId,function(data){
                     var rst = new Wade.DataMap(data);
-                    var housesNum = rst.get("HOUSE_NUM");
-                    var natureGroup = rst.get("NATURE_GROUP");
+                    var num = rst.get("NUM");
+                    var loophole = rst.get("LOOPHOLE");
                     $("#company_name").empty();
                     var html = [];
-                    html.push(name+"楼盘统计");
+                    html.push(name+"家装顾问缺口数统计");
                     $.insertHtml('beforeend', $("#company_name"), html.join(""));
-                    $("#house_num").empty();
+                    $("#loophole_num").empty();
                     html = [];
-                    html.push("楼盘总数："+housesNum);
-                    $.insertHtml('beforeend', $("#house_num"), html.join());
-                    $.housesReport.drawPieChart(housesNum, natureGroup);
+                    html.push("缺口总数："+num);
+                    $.insertHtml('beforeend', $("#loophole_num"), html.join());
+                    $.counselorReport.drawPieChart(num, loophole);
                 });
                 hidePopup('UI-popup','UI-popup-query-cond');
             },
 
-            drawPieChart : function(houseNum, natureGroup){
+            drawPieChart : function(num, loophole){
                 var data = [];
                 var seriesDatas = [];
-                if(natureGroup != null && natureGroup.length > 0){
-                    for(var i=0;i<natureGroup.length;i++){
-                        var nature = natureGroup.get(i);
-                        var nameValue = nature.get("NATURE_NAME")+":"+nature.get("HOUSES_NUM");
+                if(loophole != null && loophole.length > 0){
+                    for(var i=0;i<loophole.length;i++){
+                        var hole = loophole.get(i);
+                        var nameValue = hole.get("NAME")+":"+hole.get("LOOPHOLE");
                         data.push(nameValue);
                         seriesDatas.push({
                             name:nameValue,
-                            value:nature.get("HOUSES_NUM")
+                            value:hole.get("LOOPHOLE")
                         });
                     }
                 }
@@ -73,13 +73,30 @@
                         "data": data,
                         "left": "center"
                     },
+                    grid :{
+                        x:70,
+                        y2:140,
+                        x2:10,
+                        bottom:'50%'
+                    },
                     "tooltip": {
                         "trigger": "item",
                         "formatter": "{b} ({d}%)"
                     },
                     "series": [
                         {
+                            "avoidLabelOverlap": false,
                             "radius": "55%",
+                            "center":['50%','50%'],
+                            "label": {
+                                "normal":{
+                                    "show":false
+                                },
+                                "textStyle": {
+                                    "fontWeight": "bold",
+                                    "fontSize": 9
+                                }
+                            },
                             "type": "pie",
                             "data": seriesDatas
                         }
