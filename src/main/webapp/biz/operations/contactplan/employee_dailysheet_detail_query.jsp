@@ -20,13 +20,14 @@
 <jsp:include page="/header.jsp">
 	<jsp:param value="家装顾问日报表详情" name="headerName"/>
 </jsp:include>
-<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
+<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
 	<div id="dailysheet_detail">
 
 	</div>
 	<div class="e_space"></div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script id="dailysheet_detail_template" type="text/html">
 	{{each DATA_LIST action idx}}
 	<div class="c_box c_box-border">

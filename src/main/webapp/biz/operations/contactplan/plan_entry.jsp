@@ -20,7 +20,7 @@
 <jsp:include page="/header.jsp">
 	<jsp:param value="" name="headerName"/>
 </jsp:include>
-<div class="c_scroll c_scroll-float c_scroll-header">
+<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_list c_list-line c_list-space">
 		<ul>
 			<li>
@@ -75,12 +75,7 @@
 		<button class="e_button-r e_button-l e_button-green" type="button" ontap="planEntry.submitPlan()">提交</button>
 	</div>
 </div>
-    <%--<span class="l_editMain">--%>
-
-	<%--</span>--%>
-    <%--<span class="l_editPlace"></span>--%>
-<%--</div>--%>
-<!-- 弹出层 开始 -->
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <div class="c_popup" id="myPopup">
 	<div class="c_popupBg" id="myPopup_bg"></div>
 	<div class="c_popupBox">

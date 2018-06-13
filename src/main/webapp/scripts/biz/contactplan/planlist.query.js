@@ -4,11 +4,21 @@ var planListQuery = {
         planListQuery.queryEmployeeList();
     },
     queryEmployeeList : function() {
-        var data = {};
-        data.EMPLOYEE_LIST = [];
-        data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '157', HINT : '今日没有录计划'})
-        $('#employee_list').html(template("employee_template", data));
+        $.ajaxReq({
+            url : 'employee/getAllSubordinatesCounselors',
+            data : {
+                EMPLOYEE_IDS : Employee.employeeId,
+                COLUMNS : 'EMPLOYEE_ID,NAME'
+            },
+            successFunc : function(data) {
+                // data.EMPLOYEE_LIST = [];
+                // data.EMPLOYEE_LIST.push({EMPLOYEE_NAME : '小安', EMPLOYEE_ID : '157', HINT : '今日没有录计划'})
+                $('#employee_list').html(template("employee_template", data));
+            },
+            errorFunc : function(resultCode, resultInfo) {
 
+            }
+        })
         // planListQuery.getEmployeeDailySheet();
     },
     // getEmployeeDailySheet : function() {

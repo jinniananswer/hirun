@@ -1,6 +1,8 @@
 var planAdditionalEntry = {
     type : '',
     init : function() {
+        window["UI-popup"] = new Wade.Popup("UI-popup");
+
         window["PLAN_DATE"] = new Wade.DateField(
             "PLAN_DATE",
             {
@@ -26,9 +28,36 @@ var planAdditionalEntry = {
                 title = planDate+'计划总结补录';
             }
 
-            param = '?EXECUTOR_ID=' + $('#EMPLOYEE_ID').val();
+            param = '?EXECUTOR_ID=' + $('#EMPLOYEE_NAME').attr('employee_id');
             param += '&PLAN_DATE=' + $('#PLAN_DATE').val();
             $.redirect.open(url+param,title);
         }
+    },
+    initCounselorPopup : function() {
+        $.ajaxReq({
+            url : 'employee/getAllSubordinatesCounselors',
+            data : {
+                EMPLOYEE_IDS : Employee.employeeId,
+                COLUMNS : 'EMPLOYEE_ID,NAME'
+            },
+            successFunc : function(data) {
+                $('#BIZ_COUNSELORS').html(template("employee_template", data));
+            },
+            errorFunc : function(resultCode, resultInfo) {
+
+            }
+        })
+
+        showPopup('UI-popup','UI-popup-query');
+    },
+    afterSelectEmployee : function(obj) {
+        var $obj = $(obj);
+        var employeeName = $obj.attr('employee_name');
+        var employeeId = $obj.attr('employee_id');
+
+        $('#EMPLOYEE_NAME').val(employeeName);
+        $('#EMPLOYEE_NAME').attr('employee_id',employeeId);
+
+        hidePopup(obj);
     }
 };

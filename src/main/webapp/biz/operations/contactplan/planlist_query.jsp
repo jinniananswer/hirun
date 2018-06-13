@@ -20,20 +20,23 @@
 <jsp:include page="/header.jsp">
 	<jsp:param value="家装顾问日报表" name="headerName"/>
 </jsp:include>
-<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
+<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
 	<div id="employee_list">
 
 	</div>
 	<div class="e_space"></div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script id="employee_template" rel_id="employee_list" type="text/html">
 	{{each EMPLOYEE_LIST employee idx}}
 	<div class="c_box c_box-border" tag="employee_box" employee_id="{{employee.EMPLOYEE_ID}}">
 		<div class="c_title" employee_id="{{employee.EMPLOYEE_ID}}" ontap="planListQuery.clickEmployee(this)">
 			<div class="text">
-				<span tag="employee_name">{{employee.EMPLOYEE_NAME}}</span>
+				<span tag="employee_name">{{employee.NAME}}</span>
+				{{if employee.HINT }}
 				<span tag="hint" class="e_red">({{employee.HINT}})</span>
+				{{/if}}
 			</div>
 			<div class="fn">
 				<ul>
