@@ -22,7 +22,7 @@
     </div>
 </div>
 <!-- 滚动开始 -->
-<div class="c_scroll c_scroll-float c_scroll-header" id="scroll_div" onscroll="$.housesPlan.scrollHandler();">
+<div class="c_scroll c_scroll-float c_scroll-header" id="scroll_div">
     <!-- 筛选 结束 -->
     <div class="c_list c_list-line c_list-border c_list-space l_padding">
         <ul id="houses_plan">
