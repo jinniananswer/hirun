@@ -109,8 +109,14 @@
                 html.push("<div class=\"right link\" ontap=\"$.redirect.open('redirectToChangeHousesPlan?HOUSES_ID="+data.get("HOUSES_ID")+"','变更楼盘规划');\"><span class=\"e_ico-edit\"></span> 编辑</div>");
                 html.push("</div>");
                 html.push("<div class=\"content\">");
-                html.push("<span class=\"e_progress\"><span class=\"e_progressBar\">");
-                html.push("<span style=\"width:"+data.get("CUR_PROGRESS")+"%\" class=\"e_progressProgress\">发展周期"+data.get("ALL_DAYS")+"天×"+data.get("CUR_PROGRESS")+"%</span>");
+                if(data.get("PAST_CHECK_DATE") == "true")
+                    html.push("<span class=\"e_progress e_progress-red\">");
+                else if(data.get("PAST_RESPONSIBILITY") == true)
+                    html.push("<span class=\"e_progress e_progress-orange\">");
+                else
+                    html.push("<span class=\"e_progress\">");
+                html.push("<span class=\"e_progressBar\">");
+                html.push("<span style=\"width:"+data.get("CUR_PROGRESS")+"%\" class=\"e_progressProgress\">发展周期:"+data.get("PAST_DAYS")+"天/"+data.get("ALL_DAYS")+"天</span>");
                 html.push("</span></span>");
                 html.push("</div>");
                 html.push("<div class=\"content\">"+data.get("CITY_NAME")+"/"+data.get("AREA_NAME")+"/"+data.get("ORG_NAME")+"/"+data.get("CHECK_DATE")+"交房</div>");

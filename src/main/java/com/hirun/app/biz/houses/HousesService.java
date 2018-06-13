@@ -202,6 +202,15 @@ public class HousesService extends GenericService {
                 DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 LocalDate planInDate = LocalDate.parse(record.get("PLAN_IN_DATE"), dateTimeFormatter);
                 LocalDate destroyDate = LocalDate.parse(record.get("DESTROY_DATE"), dateTimeFormatter);
+                String checkDate = record.get("CHECK_DATE");
+                String today = TimeTool.today();
+                String responsibilityTime = TimeTool.addMonths(checkDate, TimeTool.DATE_FMT_3, 18);
+
+                if(today.compareTo(checkDate) >= 0)
+                    housesPlan.put("PAST_CHECK_DATE", "true");
+
+                if(today.compareTo(responsibilityTime) >= 0)
+                    housesPlan.put("PAST_RESPONSIBILITY", true);
                 LocalDate now = LocalDate.now();
                 long destroyMinusPlanInDate = TimeTool.getAbsDateDiffDay(destroyDate, planInDate);
                 long planMinusNow = TimeTool.getAbsDateDiffDay(now, planInDate);
@@ -210,6 +219,7 @@ public class HousesService extends GenericService {
                 double percent = Math.rint(minus * 100);
                 housesPlan.put("CUR_PROGRESS", percent + "");
                 housesPlan.put("ALL_DAYS", destroyMinusPlanInDate);
+                housesPlan.put("PAST_DAYS", planMinusNow);
                 housesPlan.put("STATUS", record.get("STATUS"));
                 housesPlan.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", record.get("CITY")));
                 housesPlan.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA")));
@@ -245,6 +255,57 @@ public class HousesService extends GenericService {
         }
         ServiceResponse response = new ServiceResponse();
         response.set("DATA", housesPlans);
+        return response;
+    }
+
+    public ServiceResponse queryMyHouses(ServiceRequest request) throws Exception{
+        HousesPlanDAO dao = new HousesPlanDAO("ins");
+        RecordSet recordset = dao.queryHousesByEmployeeId(request.getString("EMPLOYEE_ID"));
+        if (recordset == null || recordset.size() <= 0) {
+            return new ServiceResponse();
+        }
+
+        int size = recordset.size();
+        for (int i = 0; i < size; i++) {
+            Record record = recordset.get(i);
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate planInDate = LocalDate.parse(record.get("PLAN_IN_DATE"), dateTimeFormatter);
+            LocalDate destroyDate = LocalDate.parse(record.get("DESTROY_DATE"), dateTimeFormatter);
+            String checkDate = record.get("CHECK_DATE");
+            String today = TimeTool.today();
+            String responsibilityTime = TimeTool.addMonths(checkDate, TimeTool.DATE_FMT_3, 18);
+
+            if(today.compareTo(checkDate) >= 0)
+                record.put("PAST_CHECK_DATE", "true");
+
+            if(today.compareTo(responsibilityTime) >= 0)
+                record.put("PAST_RESPONSIBILITY", "true");
+            LocalDate now = LocalDate.now();
+            long destroyMinusPlanInDate = TimeTool.getAbsDateDiffDay(destroyDate, planInDate);
+            long planMinusNow = TimeTool.getAbsDateDiffDay(now, planInDate);
+            DecimalFormat df = new DecimalFormat("0.00");
+            double minus = Double.parseDouble(df.format((double) planMinusNow / (double) destroyMinusPlanInDate));
+            double percent = Math.rint(minus * 100);
+            record.put("CUR_PROGRESS", percent + "");
+            record.put("ALL_DAYS", destroyMinusPlanInDate);
+            record.put("PAST_DAYS", planMinusNow);
+            record.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", record.get("CITY")));
+            record.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA")));
+            record.put("ORG_NAME", record.get("ORG_NAME"));
+            record.put("STATUS_NAME", StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
+            String nature = record.get("NATURE");
+
+            if (StringUtils.equals("0", nature)) {
+                record.put("NATURE_NAME", "期");
+            } else if (StringUtils.equals("1", nature)) {
+                record.put("NATURE_NAME", "现");
+            } else if (StringUtils.equals("2", nature)) {
+                record.put("NATURE_NAME", "责");
+            }
+            record.put("NATURE", record.get("NATURE"));
+        }
+        ServiceResponse response = new ServiceResponse();
+        response.set("DATA", ConvertTool.toJSONArray(recordset));
         return response;
     }
 

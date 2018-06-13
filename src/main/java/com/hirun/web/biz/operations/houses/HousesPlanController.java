@@ -131,4 +131,15 @@ public class HousesPlanController extends RootController{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHouses", condition);
         return response.toJsonString();
     }
+
+    @RequestMapping("/queryMyHouses")
+    public @ResponseBody String queryMyHouses(HttpSession session) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        String sessionId = session.getId();
+        SessionEntity se = HttpSessionManager.getSessionEntity(sessionId);
+        parameter.put("EMPLOYEE_ID", se.get("EMPLOYEE_ID"));
+
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryMyHouses", parameter);
+        return response.toJsonString();
+    }
 }
