@@ -90,7 +90,7 @@
                             "center":['50%','50%'],
                             "label": {
                                 "normal":{
-                                    "show":false
+                                    "show":true
                                 },
                                 "textStyle": {
                                     "fontWeight": "bold",

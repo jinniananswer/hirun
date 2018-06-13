@@ -8,23 +8,33 @@ import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
+import com.most.core.pub.tools.security.Encryptor;
 import com.most.core.web.RootController;
 import com.most.core.web.agent.UserAgentUtil;
 import com.most.core.web.client.ServiceClient;
 import com.most.core.web.session.HttpSessionManager;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import java.util.Map;
 
 @Controller
 public class LoginController extends RootController {
+
+    @RequestMapping(value="/index")
+    public String index(HttpServletRequest request){
+        String userAgent = request.getHeader("User-Agent");
+        UserAgentUtil agentUtil = new UserAgentUtil(userAgent);
+        if(agentUtil.phone())
+            return "phone/phone_index";
+        else
+            return "index";
+    }
 
     @RequestMapping(value="/login")
     public String loginAccess(HttpServletRequest request){
@@ -41,7 +51,7 @@ public class LoginController extends RootController {
     }
 
     @RequestMapping(value = "/loginPost", method = RequestMethod.POST)
-    public @ResponseBody String login(@RequestParam Map loginData, HttpSession session) throws Exception{
+    public @ResponseBody String login(@RequestParam Map loginData, HttpSession session, HttpServletRequest request, HttpServletResponse servletResponse) throws Exception{
 
         ServiceResponse response = ServiceClient.call("OrgCenter.login.LoginService.login", loginData);
 
@@ -76,6 +86,14 @@ public class LoginController extends RootController {
             HttpSessionManager.putSessionEntity(session.getId(), sessionEntity);
 
             session.setAttribute("USER", user);
+
+            if(StringUtils.equals("1", request.getParameter("automatic"))){
+                //自动登陆保存
+                Cookie cookie = new Cookie("auth",user.getUserName()+"@"+user.getPassword());
+                cookie.setMaxAge(5*365*24*60*60);
+                cookie.setPath("/");
+                servletResponse.addCookie(cookie);
+            }
         }
         return response.toJsonString();
     }

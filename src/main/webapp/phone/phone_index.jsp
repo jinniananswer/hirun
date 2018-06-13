@@ -11,7 +11,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <jsp:include page="/phone_include.jsp"></jsp:include>
-    <script src="../scripts/phone_index.js"></script>
+    <script src="../scripts/phone.index.js"></script>
     <title>HIRUN</title>
 </head>
 <body>

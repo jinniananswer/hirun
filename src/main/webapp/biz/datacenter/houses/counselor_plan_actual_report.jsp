@@ -26,7 +26,7 @@
                     <ul>
                         <li>
                             <div class="main">
-                                <div class="title e_size-xxl" id="company_name">所有分公司家装顾问计划与实际数</div>
+                                <div class="title e_size-l" id="company_name">所有分公司家装顾问计划与实际数</div>
                                 <div class="content content-auto">
                                     <span></span>
                                     <div class="c_space-2"></div>

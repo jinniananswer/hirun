@@ -28,7 +28,7 @@
                             <ul>
                                 <li>
                                     <div class="main">
-                                        <div class="title e_size-xxl" id="company_name">所有分公司楼盘统计</div>
+                                        <div class="title e_size-l" id="company_name">所有分公司楼盘统计</div>
                                         <div class="content content-auto">
                                             <span id="house_num">楼盘总数：0</span>
                                             <div class="c_space-2"></div>

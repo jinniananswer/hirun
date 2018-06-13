@@ -11,7 +11,8 @@
                 [
                     {TEXT:"重点期盘", VALUE:"0"},
                     {TEXT:"重点现盘", VALUE:"1"},
-                    {TEXT:"责任楼盘", VALUE:"2"}
+                    {TEXT:"责任楼盘", VALUE:"2"},
+                    {TEXT:"散盘", VALUE:"2"}
                 ]
             );
 
@@ -324,6 +325,14 @@
                     }
                 },{"cancel":"取消"})
             });
+        },
+        scrollHandler: function(){
+            var scrollTop = $("#scroll_div").scrollTop();
+            var divHeight = $("#scroll_div").height();
+            var scrollHeight = document.getElementById("scroll_div").scrollHeight;
+            if(scrollTop + divHeight >= scrollHeight){
+                alert('加载数据');
+            }
         }
     }});
 })($);

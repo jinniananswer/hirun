@@ -57,12 +57,13 @@
                     continue;
                 }
 
-                html.push("<div class='c_list c_list-v c_list-col-2'>");
+                html.push("<div class='c_list c_list-v c_list-col-2 c_list-border c_list-line c_list-fixWrapSpace'>");
                 html.push("<ul>");
                 var subMenuLength = subMenus.length;
                 for(var j=0;j<subMenuLength;j++){
                     var subMenu = subMenus.get(j);
                     html.push("<li class='link' onclick=\"$.menus.openNav(\'"+subMenu.get("MENU_URL")+"\')\">");
+                    html.push("<div class='c_space-2'></div>");
                     html.push("<div class='pic'><img src='"+subMenu.get("ICO_URL")+"'/></div>");
                     html.push("<div class='main'>");
                     html.push("<div class='content content-row-2'>"+subMenu.get("TITLE")+"</div>");
@@ -71,8 +72,6 @@
                 }
                 html.push("</ul>");
                 html.push("</div>");
-
-                html.push("<div class=\"c_line c_line-dashed\"></div>");
             }
             $.insertHtml('beforeend',$("#menus"),html.join(""));
         },

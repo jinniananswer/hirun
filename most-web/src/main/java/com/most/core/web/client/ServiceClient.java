@@ -52,4 +52,15 @@ public class ServiceClient {
         ServiceResponse response = ServiceInvoker.invoke(serviceName, request);
         return response;
     }
+
+    public static ServiceResponse call(String serviceName, Map parameter, HttpSession session) throws Exception{
+        String sessionId = session.getId();
+        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(sessionId);
+        JSONObject jsonObject = new JSONObject(parameter);
+        ServiceRequest request = new ServiceRequest(jsonObject);
+        if(sessionEntity != null)
+            request.getHeader().putAll(sessionEntity.getData());
+        ServiceResponse response = ServiceInvoker.invoke(serviceName, request);
+        return response;
+    }
 }

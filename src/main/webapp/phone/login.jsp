@@ -19,12 +19,12 @@
 </head>
 <body>
 <!-- 滚动（替换为 java 组件） 开始 -->
-<div class="c_scroll c_scroll-float m_login">
+<div class="c_scroll c_scroll-float m_login" id="loginForm">
     <div class="logo">
-        <img src="../frame/img/logo3.png" alt="" />
+        <img src="../frame/img/logo-phone.png" alt="" />
     </div>
     <!-- 表单 开始 -->
-    <div class="form" id="loginForm">
+    <div class="form">
         <ul>
             <li>
                 <span class="e_ico-user"></span>
@@ -40,10 +40,10 @@
     <!-- 分列 开始 -->
     <div class="l_col">
         <div class="l_colItem">
-            <input type="checkbox" class="e_checkbox"  checked="checked" id="UI_automatic"/><span class="e_space"></span><label for="UI_automatic">自动登录</label>
+            <input type="checkbox" class="e_checkbox"  checked="checked" id="automatic" name="automatic" value="1"/><span class="e_space"></span><label for="automatic">自动登录</label>
         </div>
         <div class="l_colItem e_right">
-            <input type="checkbox" class="e_checkbox"  id="UI_show" /><span class="e_space"></span><label for="UI_show">显示密码</label>
+
         </div>
     </div>
     <!-- 分列 结束 -->

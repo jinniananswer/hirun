@@ -40,7 +40,13 @@ public class LoginService extends GenericService{
         }
 
         String userPassword = user.getPassword();
-        String passwordEncrpt = Encryptor.encryptMd5(password);
+        String passwordEncrpt = null;
+        if(StringUtils.equals("1", request.getString("IS_ENCRPT"))){
+            passwordEncrpt = password;
+        }
+        else{
+            passwordEncrpt = Encryptor.encryptMd5(password);
+        }
         if(!StringUtils.equals(userPassword, passwordEncrpt)){
             response.setError("HIRUN_LOGIN_000002", "密码不正确，请重新输入");
             return response;

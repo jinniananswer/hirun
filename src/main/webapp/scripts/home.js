@@ -35,6 +35,7 @@
                 for(var j=0;j<subMenuLength;j++){
                     var subMenu = subMenus.get(j);
                     html.push("<li class='link' onclick=\"parent.$.index.openNav(\'"+subMenu.get("MENU_URL")+"\',\'"+subMenu.get("TITLE")+"\')\">");
+                    html.push("<div class='c_space-2'></div>");
                     html.push("<div class='pic'><img src='"+subMenu.get("ICO_URL")+"'/></div>");
                     html.push("<div class='main'>");
                     html.push("<div class='content content-row-2'>"+subMenu.get("TITLE")+"</div>");
