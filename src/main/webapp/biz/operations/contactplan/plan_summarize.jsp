@@ -20,7 +20,7 @@
 <jsp:include page="/header.jsp">
 	<jsp:param value="" name="headerName"/>
 </jsp:include>
-<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
+<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
 	<div id="edit_cust_list_part">
 		<div class="c_title">
@@ -49,6 +49,7 @@
 		<button id="submitButton" class="e_button-r e_button-l e_button-green" type="button" ontap="planSummarize.submit()">提交</button>
 	</div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <!-- 弹出层 开始 -->
 <div class="c_popup" id="selectCustPopup">
 	<div class="c_popupBg" id="selectCustPopup_bg"></div>

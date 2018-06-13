@@ -20,7 +20,7 @@
 <jsp:include page="/header.jsp">
 	<jsp:param value="计划补录" name="headerName"/>
 </jsp:include>
-<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
+<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
 	<div id="pre_info_form" class="c_list c_list-form">
 		<ul>
@@ -51,7 +51,7 @@
 		<button type="button" class="e_button-r e_button-l e_button-green" ontap="planAdditionalEntry.okOnclick()">确定</button>
 	</div>
 </div>
-
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <div class="c_popup" id="UI-popup">
 	<div class="c_popupBg" id="UI-popup_bg"></div>
 	<div class="c_popupBox">
@@ -77,6 +77,7 @@
 		</div>
 	</div>
 </div>
+
 <script id="employee_template" rel_id="BIZ_COUNSELORS" type="text/html">
 	{{each EMPLOYEE_LIST employee idx}}
 	<li class="link e_center" employee_name="{{employee.NAME}}" employee_id="{{employee.EMPLOYEE_ID}}"
