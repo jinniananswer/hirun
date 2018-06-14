@@ -299,7 +299,7 @@
         checkHouseNum : function(){
             var obj = $("#HOUSE_NUM");
             if($.validate.verifyField(obj)){
-                var counselorNum = Math.round(obj.val()/500);
+                var counselorNum = parseInt(obj.val()/500) + 1;
                 if(counselorNum == 0 && obj.val() != 0){
                     counselorNum = 1;
                 }

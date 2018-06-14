@@ -33,12 +33,12 @@
                         <div class="main">密码变更</div>
                         <div class="more"></div>
                     </li>
-                    <li class="link" title="我的档案" ontap="">
-                        <div class="main">我的档案</div>
+                    <li class="link" title="通讯录" ontap="$.index.openNav('/biz/organization/personnel/contacts.jsp','通讯录');">
+                        <div class="main">通讯录</div>
                         <div class="more"></div>
                     </li>
-                    <li class="link" title="系统帮助" ontap="">
-                        <div class="main">系统帮助</div>
+                    <li class="link" title="我的档案" ontap="">
+                        <div class="main">我的档案</div>
                         <div class="more"></div>
                     </li>
                     <li class="link" title="我的消息" ontap="$.redirect.open('/biz/common/msglist_query.jsp','我的消息');$('#myMsg').html(0)">
