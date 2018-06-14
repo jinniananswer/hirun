@@ -24,7 +24,7 @@
     <div class="c_title">
         <div class="text" tag="cust_name">安文轩</div>
     </div>
-    <div class="c_param c_param-label-6" >
+    <div class="c_param c_param-label-8" >
         <ul id="cust_detail">
             <li>
                 <span class="label">性别：</span>
