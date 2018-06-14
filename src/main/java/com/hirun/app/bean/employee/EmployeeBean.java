@@ -132,4 +132,8 @@ public class EmployeeBean {
         return rst;
     }
 
+    public static String queryParentEmployeeIdByEmployeeIdAndJobRole(String employeeId, String jobRole) throws Exception {
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryParentEmployeeIdByEmployeeIdAndJobRole(employeeId, jobRole);
+    }
 }

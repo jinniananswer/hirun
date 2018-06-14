@@ -18,6 +18,7 @@ import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.app.dao.stat.PlanFinishMonDAO;
+import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.param.ActionEntity;
@@ -27,6 +28,7 @@ import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
+import com.hirun.pub.domain.entity.user.UserEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
 import com.hirun.pub.tool.CustomerTool;
@@ -517,10 +519,17 @@ public class PlanService extends GenericService {
                     String employeeName = EmployeeBean.getEmployeeByEmployeeId(planEntity.getPlanExecutorId()).getName();
 
                     StringBuilder msgContent = new StringBuilder();
-                    msgContent.append("截止到本周期结束，员工").append(employeeName).append("累计还有");
+                    msgContent.append("截止到本周期结束【").append(planEntity.getPlanDate()).append("】，员工").append(employeeName).append("累计还有");
                     msgContent.append(String.valueOf(unFinishNum)).append("个【").append(targetName);
                     msgContent.append("】目标未完成");
-                    MsgBean.sendMsg(userId,msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
+                    String parentEmployeeId = EmployeeBean.queryParentEmployeeIdByEmployeeIdAndJobRole(planEntity.getPlanExecutorId(), "42");
+                    if(StringUtils.isNotBlank(parentEmployeeId)) {
+                        UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
+                        UserEntity userEntity = userDAO.queryUserByEmployeeId(parentEmployeeId);
+                        if(userEntity != null) {
+                            MsgBean.sendMsg(userEntity.getUserId(),msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
+                        }
+                    }
                 }
 
                 continue;

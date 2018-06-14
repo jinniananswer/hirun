@@ -484,6 +484,7 @@ var planSummarize = {
                 });
             },
             errorFunc : function (resultCode, resultInfo) {
+                alert(resultInfo);
                 $.endPageLoading();
             }
         })

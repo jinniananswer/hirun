@@ -46,4 +46,18 @@ public class UserDAO extends StrongObjectDAO {
             return null;
         return users.get(0);
     }
+
+    public UserEntity queryUserByEmployeeId(String employeeId) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.* FROM ins_user a, ins_employee b ");
+        sb.append(" WHERE a.user_id = b.user_id ");
+        sb.append(" AND b.employee_id = :EMPLOYEE_ID ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+        List<UserEntity> users = this.queryBySql(UserEntity.class, sb.toString(), parameter);
+        if(ArrayTool.isEmpty(users))
+            return null;
+        return users.get(0);
+    }
 }
