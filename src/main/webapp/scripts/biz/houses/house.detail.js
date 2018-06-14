@@ -51,8 +51,16 @@
                 html.push("<div class=\"main\"><div class=\"title\">");
                 html.push(counselor.get("EMPLOYEE_NAME"));
                 html.push("</div><div class=\"content\">");
-                if(planCounselorNum > 1)
-                    html.push("负责楼栋："+counselor.get("TOWER_NO")+"; 负责户数："+counselor.get("EMPLOYEE_HOUSE_NUM"));
+                if(planCounselorNum > 1) {
+                    html.push("负责楼栋：");
+                    var towerNo = counselor.get("TOWER_NO");
+                    var employeeHouseNum  = counselor.get("EMPLOYEE_HOUSE_NUM");
+                    if(towerNo != null && towerNo != "undefined")
+                        html.push(towerNo);
+                    html.push("; 负责户数：");
+                    if(employeeHouseNum != null && employeeHouseNum != "undefined")
+                        html.push(employeeHouseNum);
+                }
                 html.push("</div></div></div></div>");
                 html.push("</li>");
             }

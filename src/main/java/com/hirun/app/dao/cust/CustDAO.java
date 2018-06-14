@@ -132,4 +132,17 @@ public class CustDAO extends StrongObjectDAO {
             return null;
         }
     }
+
+    public List<CustomerEntity> getCustomersByEmployeeIdHouseId(String employeeId, String houseId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+        parameter.put("HOUSE_ID", houseId);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_customer ");
+        sb.append("where house_counselor_id = :EMPLOYEE_ID ");
+        sb.append("and house_id = :HOUSE_ID ");
+        sb.append("and (cust_status = 1 or (cust_status = 9 and wx_nick is null)) ");
+        return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
+    }
 }

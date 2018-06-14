@@ -21,7 +21,7 @@
                 var size = dataset.length;
                 for(var i=0;i<size;i++){
                     var data = dataset.get(i);
-                    html.push("<li class='link' ontap=''>");
+                    html.push("<li class='link' ontap=\"$.redirect.open('redirectToMyDetail?HOUSES_ID="+data.get("HOUSES_ID")+"','"+data.get("NAME")+"规划详情');\">");
                     html.push("<div class=\"content\">");
                     html.push("<div class=\"group\">");
                     html.push("<div class=\"content\">");

@@ -2,6 +2,7 @@ package com.hirun.app.dao.houses;
 
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
+import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSessionException;
@@ -175,5 +176,24 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" order by c.ORG_ID asc ");
 
         return this.queryBySql(sb.toString(), null);
+    }
+
+    public Record queryHousesByEmployeeIdHouseId(String employeeId, String houseId) throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status, b.tower_no, b.house_num employee_house_num, c.name org_name ");
+        sb.append(" FROM INS_HOUSES a, INS_HOUSES_PLAN b, ins_org c ");
+        sb.append(" WHERE b.houses_id = a.houses_id ");
+        sb.append(" and c.org_id = a.org_id ");
+        sb.append(" AND b.employee_id = :EMPLOYEE_ID ");
+        sb.append(" and b.houses_id = :HOUSE_ID ");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+        parameter.put("HOUSE_ID", houseId);
+        RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
+
+        if(recordSet == null || recordSet.size() <= 0)
+            return null;
+
+        return recordSet.get(0);
     }
 }

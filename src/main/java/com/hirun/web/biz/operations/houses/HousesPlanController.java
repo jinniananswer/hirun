@@ -142,4 +142,17 @@ public class HousesPlanController extends RootController{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryMyHouses", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/showMyHouseDetail")
+    public @ResponseBody String queryMyHouseDetail(HttpServletRequest request) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("HOUSE_ID", request.getParameter("HOUSES_ID"));
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.showMyHouseDetail", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToMyDetail")
+    public String redirectToMyDetail() throws Exception{
+        return "/biz/operations/houses/my_house_detail";
+    }
 }

@@ -6,12 +6,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.authority.AuthorityJudgement;
 import com.hirun.app.bean.housesplan.HousesPlanBean;
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.houses.HouseDAO;
 import com.hirun.app.dao.houses.HousesPlanDAO;
 import com.hirun.app.dao.org.OrgDAO;
+import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
+import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
@@ -550,6 +553,26 @@ public class HousesService extends GenericService {
 
         response.set("HOUSES_LIST", HousesPlanBean.queryHouses());
 
+        return response;
+    }
+
+    public ServiceResponse showMyHouseDetail(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        HousesPlanDAO dao = DAOFactory.createDAO(HousesPlanDAO.class);
+        String employeeId = SessionManager.getSession().getSessionEntity().get("EMPLOYEE_ID");
+        Record house = dao.queryHousesByEmployeeIdHouseId(employeeId, request.getString("HOUSE_ID"));
+        if(house == null)
+            return response;
+
+        house.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", house.get("CITY")));
+        house.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", house.get("AREA")));
+        house.put("STATUS_NAME", StaticDataTool.getCodeName("AUDIT_STATUS", house.get("STATUS")));
+        house.put("NATURE_NAME", StaticDataTool.getCodeName("HOUSE_NATURE", house.get("NATURE")));
+        response.set("HOUSE", JSONObject.parseObject(JSON.toJSONString(house.getData())));
+
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        List<CustomerEntity> customers = custDAO.getCustomersByEmployeeIdHouseId(employeeId, request.getString("HOUSE_ID"));
+        response.set("CUSTOMERS", ConvertTool.toJSONArray(customers));
         return response;
     }
 }
