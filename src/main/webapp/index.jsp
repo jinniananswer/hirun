@@ -72,7 +72,8 @@
     var websocket = null;
     //判断当前浏览器是否支持WebSocket
     if('WebSocket' in window){
-        websocket = new WebSocket("ws://localhost:8080/websocketServer/633");
+        var userId = User.userId;
+        websocket = new WebSocket("ws://localhost:8080/websocketServer/" + userId);
     }
     else{
         alert('Not support websocket');
