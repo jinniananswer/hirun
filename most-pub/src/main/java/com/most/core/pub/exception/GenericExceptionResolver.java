@@ -40,9 +40,10 @@ public class GenericExceptionResolver implements HandlerExceptionResolver {
                 serviceResponse.setError(genericException.getCode(),genericException.getDesc());
                 response.getWriter().write(serviceResponse.toJsonString());
             } else {
-                serviceResponse.setError("-1",ex.getMessage());
+                serviceResponse.setError("-1",ex.getMessage() != null ? ex.getMessage() : "系统异常");
                 response.getWriter().write(serviceResponse.toJsonString());
             }
+            logger.error("异常:", ex);
         } catch (IOException e) {
             logger.error("与客户端通讯异常\n", e);
         }
