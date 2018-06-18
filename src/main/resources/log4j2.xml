@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <Configuration status="DEBUG">  
 	<properties>
-          <property name="LOG_HOME">logs/sample</property>
-          <property name="FILE_NAME">mylog</property>
+          <property name="LOG_HOME">/home/hirun/logs</property>
+          <property name="FILE_NAME">hirun</property>
     </properties>
     <Appenders>  
         <Console name="Console"  target="SYSTEM_OUT">  
