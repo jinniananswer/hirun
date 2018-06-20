@@ -5,6 +5,23 @@ var custListQuery = {
             mask:true
         });
 
+        window["RESTORE_DATE"] = new Wade.DateField(
+            "RESTORE_DATE",
+            {
+                dropDown:true,
+                format:"yyyy-MM-dd",
+                useTime:false,
+            }
+        );
+        window["CONTACT_DATE"] = new Wade.DateField(
+            "CONTACT_DATE",
+            {
+                dropDown:true,
+                format:"yyyy-MM-dd",
+                useTime:false,
+            }
+        );
+
         $.ajaxReq({
             url : 'queryHouses',
             data : {
@@ -33,6 +50,7 @@ var custListQuery = {
         custListQuery.queryCustList({});
     },
     queryCustList : function(param) {
+        param.CUST_STATUS = '1,7';
         $.ajaxReq({
             url : 'cust/queryCustList',
             data : param,
@@ -47,6 +65,8 @@ var custListQuery = {
     },
     queryCustList4Cond : function(obj) {
         var param = $.buildJsonData("queryCustParamForm");
+        param.HOUSE_COUNSELOR_IDS = $('#EMPLOYEE_NAMES').attr('EMPLOYEE_IDS');
+        delete param.EMPLOYEE_NAMES;
         custListQuery.queryCustList(param);
         hidePopup(obj);
     },
@@ -71,5 +91,143 @@ var custListQuery = {
                 $.endPageLoading();
             }
         })
+    },
+    selectCounselor : function(obj) {
+        counselorPopup.initCounselorPopup(obj, function(selectedEmployeeList) {
+            var employeeId = '';
+            var employeeName = '';
+            $.each(selectedEmployeeList, function(idx, employee) {
+                employeeId += employee.EMPLOYEE_ID;
+                employeeName += employee.EMPLOYEE_NAME;
+                if(idx+1 != selectedEmployeeList.length) {
+                    employeeId += ',';
+                    employeeName += ',';
+                }
+            })
+
+            if(selectedEmployeeList.length > 2) {
+                employeeName = selectedEmployeeList.length + '个家装顾问';
+            }
+
+            $('#EMPLOYEE_NAMES').val(employeeName);
+            $('#EMPLOYEE_NAMES').attr('employee_ids', employeeId);
+        });
+    },
+    custTraceClick : function(obj) {
+        var $obj = $(obj);
+        custContactPopup.showPopup($obj.attr('cust_id'));
     }
-};
+}
+
+var counselorPopup = {
+    callback : '',
+    init : true,
+    initCounselorPopup : function(obj, callback) {
+        if(counselorPopup.init) {
+            $.ajaxReq({
+                url : 'employee/getAllSubordinatesCounselors',
+                data : {
+                    EMPLOYEE_IDS : Employee.employeeId,
+                    COLUMNS : 'EMPLOYEE_ID,NAME'
+                },
+                successFunc : function(data) {
+                    $('#BIZ_COUNSELORS').html(template("employee_template", data));
+                },
+                errorFunc : function(resultCode, resultInfo) {
+
+                }
+            })
+
+            counselorPopup.init = false;
+
+            if(callback && callback != '') counselorPopup.callback = callback;
+        } else {
+
+        }
+
+        forwardPopup(obj,'counselorPopupItem');
+    },
+    clickEmployee : function(obj) {
+        var $obj = $(obj);
+        var employeeId = $obj.attr('employee_id');
+        var selected = $obj.attr("selected");
+        if(selected && selected == "true"){
+            //已有，表示取消动作
+            var ico = $("#COUNSELOR_"+employeeId+"_ico");
+            ico.remove();
+            $obj.attr("selected", "false");
+        }
+        else{
+            //没有，表示新添加
+            $obj.attr("selected", "true");
+            var label = $("#LABEL_"+employeeId);
+            var html=[];
+            html.push("<div class=\"side\" id=\"COUNSELOR_"+employeeId+"_ico\"><span class=\"e_ico-ok e_ico-pic e_ico-pic-xxxs\"></span></div>");
+            $.insertHtml('beforeend', label, html.join(""));
+        }
+    },
+    confirm : function(obj) {
+        var selectedEmployeeList = [];
+        $('#BIZ_COUNSELORS li[tag=li_employee]').each(function(idx, item) {
+            var $item = $(item);
+            var selected = $item.attr('selected');
+            if(selected && selected == "true") {
+                var employee = {};
+                employee.EMPLOYEE_ID = $item.attr('employee_id');
+                employee.EMPLOYEE_NAME = $item.attr('employee_name');
+                selectedEmployeeList.push(employee);
+            }
+        })
+
+        if(counselorPopup.callback) {
+            counselorPopup.callback(selectedEmployeeList);
+        }
+
+        backPopup(obj);
+    },
+    clear : function(obj) {
+        $('#BIZ_COUNSELORS li[tag=li_employee]').each(function(idx, item) {
+            var $item = $(item);
+            var selected = $item.attr('selected');
+            var employeeId = $item.attr('employee_id');
+            if(selected && selected == "true") {
+                var ico = $("#COUNSELOR_"+employeeId+"_ico");
+                ico.remove();
+                $item.attr("selected", "false");
+            }
+        })
+    }
+}
+
+var custContactPopup = {
+    custId : '',
+    callback : '',
+    showPopup : function (custId, callback) {
+        resetArea('custContactForm', true);
+        showPopup('UI-popup', 'CustContactPopupItem');
+        $('#CONTACT_DATE').val($.date.now());
+
+        custContactPopup.custId = custId;
+        if(callback) custContactPopup.callback = callback;
+    },
+    confirm : function (obj) {
+        if($.validate.verifyAll("custContactForm")) {
+            var custContactParam = $.buildJsonData("custContactForm");
+            custContactParam.CUST_ID = custContactPopup.custId;
+
+            $.ajaxReq({
+                url : 'cust/addCustContact',
+                data : custContactParam,
+                type : 'POST',
+                successFunc : function (data) {
+                    hidePopup(obj);
+                    if(custContactPopup.callback) custContactPopup.callback(custContactPopup.custId);
+                },
+                errorFunc : function (resultCode, resultInfo) {
+                    alert(resultInfo);
+                }
+            })
+        }
+    }
+}
+

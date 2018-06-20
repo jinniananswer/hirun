@@ -30,7 +30,13 @@ public class CustDAO extends StrongObjectDAO {
         StringBuilder sql = new StringBuilder(400);
         sql.append(" SELECT * FROM INS_CUSTOMER A");
         sql.append(" WHERE 1=1 ");
-        sql.append(" AND A.CUST_STATUS = '1' ");
+
+        if(StringUtils.isNotBlank(parameter.get("CUST_STATUS"))) {
+            sql.append(" AND A.CUST_STATUS in (").append(parameter.get("CUST_STATUS")).append(") ");
+        } else {
+            sql.append(" AND A.CUST_STATUS = '1' ");
+        }
+
         if(StringUtils.isNotBlank(parameter.get("CUST_NAME"))) {
             sql.append(" AND A.CUST_NAME LIKE CONCAT('%', :CUST_NAME, '%') ");
         }
@@ -55,6 +61,10 @@ public class CustDAO extends StrongObjectDAO {
                     " WHERE A.`CUST_ID` = B.`CUST_ID`" +
                     " AND B.`ACTION_CODE` = :UNEXECUTED_ACTION ");
             sql.append(" AND B.`FINISH_TIME` IS NOT NULL)");
+        }
+
+        if(StringUtils.isNotBlank(parameter.get("HOUSE_COUNSELOR_IDS"))) {
+            sql.append(" AND A.HOUSE_COUNSELOR_ID in (").append(parameter.get("HOUSE_COUNSELOR_IDS")).append(") ");
         }
 
         List<CustomerEntity> customerList = this.queryBySql(CustomerEntity.class, sql.toString(), parameter);

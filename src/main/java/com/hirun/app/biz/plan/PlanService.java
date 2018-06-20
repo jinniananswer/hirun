@@ -99,9 +99,10 @@ public class PlanService extends GenericService {
         planEntityParameter.put("PLAN_DATE", planDate);
         if(!"1".equals(planType) && planList.size() == 0) {
             //如果非正常活动,且没有具体计划内容，则直接为已总结
-            planEntityParameter.put("PLAN_STATUS", "2");
-            planEntityParameter.put("SUMMARIZE_USER_ID", userId);
-            planEntityParameter.put("SUMMARIZE_DATE", now);
+//            planEntityParameter.put("PLAN_STATUS", "2");
+//            planEntityParameter.put("SUMMARIZE_USER_ID", userId);
+//            planEntityParameter.put("SUMMARIZE_DATE", now);
+            PlanBean.addImproperPlan(planDate, planType, planExecutorId);
         } else {
             planEntityParameter.put("PLAN_STATUS", "0");
         }

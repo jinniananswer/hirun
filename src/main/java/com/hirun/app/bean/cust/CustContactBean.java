@@ -1,0 +1,44 @@
+package com.hirun.app.bean.cust;
+
+import com.hirun.app.dao.cust.CustContactDAO;
+import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.pub.domain.entity.cust.CustContactEntity;
+import com.hirun.pub.domain.enums.cust.CustStatus;
+import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.tools.time.TimeTool;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Created by awx on 2018/6/20/020.
+ */
+public class CustContactBean {
+
+    public static void addCustContact(CustContactEntity custContactEntity) throws Exception {
+        CustContactDAO custContactDAO = DAOFactory.createDAO(CustContactDAO.class);
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+        String now = TimeTool.now();
+
+        //插入ins_cust_contact
+        custContactEntity.setCreateDate(now);
+        custContactEntity.setCreateUserId(userId);
+        custContactDAO.insertAutoIncrement("INS_CUST_CONTACT", custContactEntity.getContent());
+
+        //更新ins_customer
+        if(StringUtils.isNotBlank(custContactEntity.getRestoreDate())) {
+            String custId = custContactEntity.getCustId();
+            Map<String, String> dbParam = new HashMap<String, String>();
+            dbParam.put("CUST_ID", custId);
+            dbParam.put("CUST_STATUS", CustStatus.pause.getValue());
+            dbParam.put("RESTORE_DATE", custContactEntity.getRestoreDate());
+            custDAO.save("INS_CUSTOMER", dbParam);
+        }
+
+    }
+}

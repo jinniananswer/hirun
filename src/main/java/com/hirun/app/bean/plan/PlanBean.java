@@ -19,7 +19,12 @@ import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
+import com.hirun.pub.domain.enums.plan.PlanStatus;
+import com.hirun.pub.domain.enums.plan.PlanType;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
@@ -29,6 +34,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -182,5 +188,74 @@ public class PlanBean {
         }
 
         return employeeEntity.getEmployeeId();
+    }
+
+    public static void addHolidayPlansByStartAndEnd(String holidayStartDate, String holidayEndDate, String planExecutorId) throws Exception {
+        PlanRuleProcess.planEntryInitCheck(planExecutorId, holidayStartDate);
+        //计算两个时间相隔多少天
+        int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(holidayStartDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                LocalDate.parse(holidayEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        for(int i = 0; i < interval; i++) {
+            String planDate = TimeTool.addTime(holidayStartDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, i).substring(0,10);
+            addImproperPlan(planDate, PlanType.holiday.getValue(), planExecutorId);
+        }
+    }
+
+    public static void addImproperPlan(String planDate, String planType, String planExecutorId) throws Exception {
+        String now = TimeTool.now();
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+        PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = DAOFactory.createDAO(PlanCycleFinishInfoDAO.class);
+
+        if(planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate) != null) {
+            throw new GenericException("-1", "已经有" + planDate + "的计划了");
+        }
+
+        PlanEntity planEntity = new PlanEntity();
+        planEntity.setPlanDate(planDate);
+        planEntity.setPlanStatus(PlanStatus.summarized.getValue());
+        planEntity.setSummarizeDate(now);
+        planEntity.setSummarizeUserId(userId);
+        planEntity.setPlanExecutorId(planExecutorId);
+        planEntity.setPlanType(planType);
+        planEntity.setCreateUserId(userId);
+        planEntity.setCreateDate(now);
+        planEntity.setUpdateUserId(userId);
+        planEntity.setUpdateTime(now);
+        planDAO.insertAutoIncrement("INS_PLAN", planEntity.getContent());
+
+        List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();
+        PlanCycleFinishInfoEntity planCycleFinishInfoEntity = null;
+        for(PlanTargetLimitEntity planTargetLimitEntity : planTargetLimitEntityList) {
+            String actionCode = planTargetLimitEntity.getTargetCode();
+            planCycleFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planExecutorId, actionCode);
+            //如果cyclePlanFinishInfo没数据，则先插一条数据
+            if(planCycleFinishInfoEntity == null) {
+                planCycleFinishInfoEntity = new PlanCycleFinishInfoEntity();
+                planCycleFinishInfoEntity.setExecutorId(planExecutorId);
+                planCycleFinishInfoEntity.setActionCode(actionCode);
+                planCycleFinishInfoEntity.setPreCycleEndDate(planDate);
+                planCycleFinishInfoEntity.setUnfinishNum("0");
+                planCycleFinishInfoEntity.setCurrCycleFinishNum("0");
+                planCycleFinishInfoEntity.setCurrCycleImproperDays("0");
+                cyclePlanFinishInfoDAO.insert("INS_PLAN_CYCLE_FINISH_INFO", planCycleFinishInfoEntity.getContent());
+            } else {
+                //更新INS_PLAN_CYCLE_FINISH_INFO
+                String preCycleEndDate = planCycleFinishInfoEntity.getPreCycleEndDate();
+                int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(preCycleEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        LocalDate.parse(planEntity.getPlanDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                if(interval == 1) {
+                    //离上一个周期仅一天，则上一周期时间顺延一天
+                    planCycleFinishInfoEntity.setPreCycleEndDate(planEntity.getPlanDate());
+                } else {
+                    int currCycleImproperDays = Integer.parseInt(planCycleFinishInfoEntity.getCurrCycleImproperDays());
+                    currCycleImproperDays++;
+                    planCycleFinishInfoEntity.setCurrCycleImproperDays(String.valueOf(currCycleImproperDays));
+                }
+                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", planCycleFinishInfoEntity.getContent());
+            }
+        }
     }
 }

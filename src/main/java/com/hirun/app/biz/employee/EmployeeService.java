@@ -2,6 +2,7 @@ package com.hirun.app.biz.employee;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.employee.EmployeeBean;
+import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -52,6 +53,18 @@ public class EmployeeService extends GenericService {
             record.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", record.get("JOB_ROLE")));
         }
         response.set("DATAS", ConvertTool.toJSONArray(recordSet));
+        return response;
+    }
+
+    public ServiceResponse entryHoliday(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String holidayStartDate = requestData.getString("HOLIDAY_START_DATE");
+        String holidayEndDate = requestData.getString("HOLIDAY_END_DATE");
+        String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+
+        PlanBean.addHolidayPlansByStartAndEnd(holidayStartDate, holidayEndDate, planExecutorId);
+
         return response;
     }
 }
