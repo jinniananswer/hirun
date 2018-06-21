@@ -49,7 +49,7 @@
 <%--<jsp:include page="/base/buttom/base_buttom.jsp"/>--%>
 <script type="text/javascript">
 	Wade.setRatio();
-    planAdditionalEntry.init();
+    holidayEntry.init();
 </script>
 </body>
 </html>

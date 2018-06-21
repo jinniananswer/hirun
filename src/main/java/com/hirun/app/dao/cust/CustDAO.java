@@ -92,15 +92,15 @@ public class CustDAO extends StrongObjectDAO {
         this.executeUpdate(sql.toString(), parameter);
     }
 
-    public List<CustomerEntity> queryNewCustListByPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
+    public List<CustomerEntity> queryNewCustListByPlanDate(String houseCounselorId) throws Exception {
         StringBuilder sql = new StringBuilder(200);
         sql.append(" SELECT * FROM INS_CUSTOMER ");
         sql.append(" WHERE CUST_STATUS = '9' ");
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
-        sql.append(" AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = :FIRST_PLAN_DATE) ");
+//        sql.append(" AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = :FIRST_PLAN_DATE) ");
+        sql.append(" AND WX_NICK IS NOT NULL ");
 
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("FIRST_PLAN_DATE", firstPlanDate);
         parameter.put("HOUSE_COUNSELOR_ID", houseCounselorId);
         List<CustomerEntity> list = this.queryBySql(CustomerEntity.class, sql.toString(), parameter);
         return list;

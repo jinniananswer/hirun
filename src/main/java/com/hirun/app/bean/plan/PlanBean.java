@@ -196,13 +196,13 @@ public class PlanBean {
         int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(holidayStartDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 LocalDate.parse(holidayEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
-        for(int i = 0; i < interval; i++) {
+        for(int i = 0; i < interval+1; i++) {
             String planDate = TimeTool.addTime(holidayStartDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, i).substring(0,10);
-            addImproperPlan(planDate, PlanType.holiday.getValue(), planExecutorId);
+            addImproperPlan(planDate, PlanType.holiday.getValue(), planExecutorId, "0");
         }
     }
 
-    public static void addImproperPlan(String planDate, String planType, String planExecutorId) throws Exception {
+    public static void addImproperPlan(String planDate, String planType, String planExecutorId, String isAdditionalRecord) throws Exception {
         String now = TimeTool.now();
         SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
         String userId = sessionEntity.getUserId();
@@ -224,6 +224,7 @@ public class PlanBean {
         planEntity.setCreateDate(now);
         planEntity.setUpdateUserId(userId);
         planEntity.setUpdateTime(now);
+        planEntity.setIsAdditionalRecord(isAdditionalRecord);
         planDAO.insertAutoIncrement("INS_PLAN", planEntity.getContent());
 
         List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();

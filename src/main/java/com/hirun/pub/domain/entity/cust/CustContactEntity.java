@@ -46,6 +46,22 @@ public class CustContactEntity extends GenericEntity{
 		this.set("CONTACT_NOTE", contactNote);
 	}
 	
+	public String getRemindDate(){
+		return this.get("REMIND_DATE");
+	}
+
+	public void setRemindDate(String remindDate){
+		this.set("REMIND_DATE", remindDate);
+	}
+	
+	public String getRemindActionCode(){
+		return this.get("REMIND_ACTION_CODE");
+	}
+
+	public void setRemindActionCode(String remindActionCode){
+		this.set("REMIND_ACTION_CODE", remindActionCode);
+	}
+	
 	public String getRestoreDate(){
 		return this.get("RESTORE_DATE");
 	}

@@ -108,7 +108,34 @@
                                         </span>
                                     </div>
                                 </li>
-                                <li class="link">
+                                <li class="required">
+                                    <div class="label">后续动作</div>
+                                    <div class="value">
+                                        <span class="e_segment">
+                                            <span idx="0" val="1">无</span>
+                                            <span idx="1" val="2">提醒</span>
+                                            <span idx="2" val="3">暂停接触</span>
+                                            <input type="hidden" name="AFTER_ACTION" id="AFTER_ACTION" nullable="no" desc="后续动作" />
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="link required" tag="remind" style="display: none">
+                                    <div class="label">提醒动作</div>
+                                    <div class="value">
+                                        <span id="custContactForm_action_container"></span>
+                                    </div>
+                                </li>
+                                <li class="link required" tag="remind" style="display: none">
+                                    <div class="label">提醒时间</div>
+                                    <div class="value">
+                                        <span class="e_mix">
+                                            <input type="text" id="REMIND_DATE" name="REMIND_DATE"
+                                                   datatype="date" desc="提醒时间" />
+                                            <span class="e_ico-date"></span>
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="link required" tag="pause" style="display: none">
                                     <div class="label">恢复接触日期</div>
                                     <div class="value">
                                         <span class="e_mix">

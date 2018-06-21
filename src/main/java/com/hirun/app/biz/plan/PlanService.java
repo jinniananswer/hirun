@@ -17,6 +17,7 @@ import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
+import com.hirun.app.dao.plan.PlanWorkDAO;
 import com.hirun.app.dao.stat.PlanFinishMonDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
@@ -28,6 +29,7 @@ import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
+import com.hirun.pub.domain.entity.plan.PlanWorkEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
@@ -62,10 +64,13 @@ public class PlanService extends GenericService {
         PlanDAO planDao = new PlanDAO("ins");
         CustActionDAO custActionDAO = new CustActionDAO("ins");
         PlanActionNumDAO planActionNumDAO = new PlanActionNumDAO("ins");
+        PlanWorkDAO planWorkDAO = DAOFactory.createDAO(PlanWorkDAO.class);
 
         String planDate = requestData.getString("PLAN_DATE");
         String planType = requestData.getString("PLAN_TYPE");
         String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+        String workMode = requestData.getString("WORK_MODE");
+        String isAdditionalRecord = requestData.getString("IS_ADDITIONAL_RECORD");
         JSONArray planList = requestData.getJSONArray("PLANLIST");
         if(planList == null) {
             planList = new JSONArray();
@@ -102,16 +107,18 @@ public class PlanService extends GenericService {
 //            planEntityParameter.put("PLAN_STATUS", "2");
 //            planEntityParameter.put("SUMMARIZE_USER_ID", userId);
 //            planEntityParameter.put("SUMMARIZE_DATE", now);
-            PlanBean.addImproperPlan(planDate, planType, planExecutorId);
-        } else {
-            planEntityParameter.put("PLAN_STATUS", "0");
+            PlanBean.addImproperPlan(planDate, planType, planExecutorId, isAdditionalRecord);
+            return response;
         }
+
+        planEntityParameter.put("PLAN_STATUS", "0");
         planEntityParameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         planEntityParameter.put("PLAN_TYPE", planType);
         planEntityParameter.put("CREATE_USER_ID", userId);
         planEntityParameter.put("CREATE_DATE", now);
         planEntityParameter.put("UPDATE_USER_ID", userId);
         planEntityParameter.put("UPDATE_TIME", now);
+        planEntityParameter.put("IS_ADDITIONAL_RECORD", isAdditionalRecord);
         String planId = String.valueOf(planDao.insertAutoIncrement("INS_PLAN", planEntityParameter));
 
         //将今天的计划动作数记到INS_PLAN_ACTION_NUM
@@ -171,6 +178,14 @@ public class PlanService extends GenericService {
             custActionDAO.insertBatch("INS_CUST_ACTION", custActionList);
         }
 //        }
+        if(planList.size() > 0) {
+            PlanWorkEntity planWorkEntity = new PlanWorkEntity();
+            planWorkEntity.setPlanId(planId);
+            planWorkEntity.setWorkMode(workMode);
+            planWorkEntity.setStartDate(planDate + " 09:00:00");
+            planWorkEntity.setEndDate(planDate + " 18:00:00");
+            planWorkDAO.insertAutoIncrement("INS_PLAN_WORK", planWorkEntity.getContent());
+        }
 
         return response;
     }
@@ -393,6 +408,7 @@ public class PlanService extends GenericService {
 
         JSONObject requestData = request.getBody().getData();
         String planId = requestData.getString("PLAN_ID");
+        String isAdditionalRecordSummarize = requestData.getString("IS_ADDITIONAL_RECORD_SUMMARIZE");
         JSONArray unFinishSummaryList = requestData.getJSONArray("UNFINISH_SUMMARY_LIST");
         JSONArray addExtraCustActionList = requestData.getJSONArray("ADD_EXTRA_CUST_ACTION_LIST");
         JSONArray transToFinishList = requestData.getJSONArray("TRANS_TO_FINISH_LIST");
@@ -413,6 +429,7 @@ public class PlanService extends GenericService {
         }
         PlanEntity planEntity = list.get(0);
         parameter.put("PLAN_ID", planEntity.getPlanId());
+        parameter.put("IS_ADDITIONAL_RECORD_SUMMARIZE", isAdditionalRecordSummarize);
         parameter.put("PLAN_STATUS", "2");
         parameter.put("UPDATE_USER_ID", userId);
         parameter.put("UPDATE_TIME", sysdate);
@@ -580,7 +597,7 @@ public class PlanService extends GenericService {
         CustActionDAO custActionDAO = new CustActionDAO("ins");
 
         JSONArray custList = new JSONArray();
-        List<CustomerEntity> customerEntityList = custDAO.queryNewCustListByPlanDate(planExecutorId, planDate);
+        List<CustomerEntity> customerEntityList = custDAO.queryNewCustListByPlanDate(planExecutorId);
         for(CustomerEntity customerEntity : customerEntityList) {
             JSONObject cust = customerEntity.toJSON(new String[] {"CUST_NAME", "WX_NICK", "CUST_ID"});
 

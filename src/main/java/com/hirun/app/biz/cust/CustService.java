@@ -182,6 +182,8 @@ public class CustService extends GenericService{
         custContactEntity.setContactDate(requestData.getString("CONTACT_DATE"));
         custContactEntity.setContactNote(requestData.getString("CONTACT_NOTE"));
         custContactEntity.setRestoreDate(requestData.getString("RESTORE_DATE"));
+        custContactEntity.setRemindDate(requestData.getString("REMIND_DATE"));
+        custContactEntity.setRemindActionCode(requestData.getString("REMIND_ACTION_CODE"));
         CustContactBean.addCustContact(custContactEntity);
 
         return response;

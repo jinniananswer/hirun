@@ -17,11 +17,9 @@ var holidayEntry = {
                 useTime:false,
             }
         );
-
-        planAdditionalEntry.type = $.params.get('TYPE');
     },
     okOnclick : function () {
-        var param = $.buildJsonData("queryCustParamForm");
+        var param = $.buildJsonData("holidayForm");
         param.PLAN_EXECUTOR_ID = User.userId;
         if ($.validate.verifyAll("holidayForm")) {
             $.beginPageLoading("休假录入中。。。");

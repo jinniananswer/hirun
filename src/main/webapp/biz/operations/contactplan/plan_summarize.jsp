@@ -25,9 +25,9 @@
 	<div id="edit_cust_list_part">
 		<div class="c_title">
 			<div class="text">客户资料补录</div>
-			<div class="fn">
-				<button type="button" ontap="planSummarize.showCustEditPopup(this)">新增客户</button>
-			</div>
+			<%--<div class="fn">--%>
+				<%--<button type="button" ontap="planSummarize.showCustEditPopup(this)">新增客户</button>--%>
+			<%--</div>--%>
 		</div>
 		<div class="c_list c_list-phone-line ">
 			<ul id="edit_cust_list">
@@ -150,10 +150,10 @@
 										<input type="text" id="CUST_ID" name="CUST_ID" style="display: none"/>
 									</div>
 								</li>
-								<li class="required">
+								<li>
 									<div class="label">微信昵称</div>
 									<div class="value">
-										<input type="text" id="WX_NICK" name="WX_NICK" nullable="no" desc="微信昵称"/>
+										<input type="text" id="WX_NICK" name="WX_NICK" desc="微信昵称" readonly="true"/>
 									</div>
 								</li>
 								<li class="required">

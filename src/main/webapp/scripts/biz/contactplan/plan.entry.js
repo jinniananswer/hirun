@@ -17,6 +17,7 @@ var planEntry = {
     currentActionIndex : '',
     planDate : '',
     executorId : '',
+    isAdditionalRecord : '',
     init : function() {
 		window["myPopup"] = new Wade.Popup("myPopup",{
 			visible:false,
@@ -43,23 +44,28 @@ var planEntry = {
 			step:1
 		});
 		
-		window["holidaySwitch"] = new Wade.Switch("holidaySwitch",{
-			switchOn:false,
-			onValue:"1",
-			offValue:"0",
-		});
+		// window["holidaySwitch"] = new Wade.Switch("holidaySwitch",{
+		// 	switchOn:false,
+		// 	onValue:"1",
+		// 	offValue:"0",
+		// });
 		
-		window["workMode"] = new Wade.Segment("workMode",{
+		window["planType"] = new Wade.Segment("planType",{
 			disabled:false
 		});
 
+        window["workMode"] = new Wade.Segment("workMode",{
+            disabled:false
+        });
+
 		//默认值 开始
         planEntry.currentActionIndex = 0;
+        $('#planType').val(1);
         $('#workMode').val(1);
 		
 		planEntry.setCurrentActionOn();
 		
-		$("#workMode").change(function(){
+		$("#planType").change(function(){
 			var modeVal = this.value; // this.value 获取分段器组件当前值
 			planActionList = [];//清空已选动作
             $('#ACTION_PART').hide();
@@ -86,6 +92,13 @@ var planEntry = {
                 },{"cancel":"继续"})
 			}
 		});
+
+        var isAdditionalRecord = $.params.get('IS_ADDITIONAL_RECORD');
+        if(isAdditionalRecord) {
+            planEntry.isAdditionalRecord = isAdditionalRecord;
+        } else {
+            planEntry.isAdditionalRecord = "0";
+        }
 
 		//从后台获取初始化数据，同步方式
         var planDate = $.params.get('PLAN_DATE');
@@ -326,7 +339,7 @@ var planEntry = {
         });
     },
     showPlanActionAndCustList : function(obj) {
-	    var workMode = $('#workMode').val();
+	    var planType = $('#planType').val();
         $.ajaxReq({
             url : 'plan/getPlanActionAndCustList',
             data : {
@@ -342,7 +355,7 @@ var planEntry = {
 
                 $.each(actionList, function(idx, action) {
                     action.NEW_CUST_LIST = planEntry.newCustList;
-                    if("1" != workMode) {
+                    if("1" != planType) {
                         action.CAN_DELETE = true;
                         action.CAN_DELETE_NEWCUST = true;
                     } else {
@@ -416,8 +429,8 @@ var planEntry = {
 		}
 	},
 	setPlanTarget : function() {
-	    var workMode = $('#workMode').val();
-	    if(workMode == '1') {
+	    var planType = $('#planType').val();
+	    if(planType == '1') {
             var targetList = [
                 {"ACTION_CODE" : 'ZX'},
                 {"ACTION_CODE" : 'HXJC'},
@@ -448,7 +461,7 @@ var planEntry = {
         }
 	},
     submitPlan : function() {
-        var workMode = $("#workMode").val();
+        var planType = $("#planType").val();
 
 	    var planList = [];
 	    $('#ACTION_LIST div[tag=PLAN_ACTION]').each(function(idx, item) {
@@ -478,7 +491,9 @@ var planEntry = {
             PLANLIST : JSON.stringify(planList),
             PLAN_DATE : planEntry.planDate,
             PLAN_EXECUTOR_ID : planEntry.executorId,
-            PLAN_TYPE : $("#workMode").val(),
+            PLAN_TYPE : $("#planType").val(),
+            WORK_MODE : $('#workMode').val(),
+            IS_ADDITIONAL_RECORD : planEntry.isAdditionalRecord,
         };
         $.beginPageLoading("计划录入中。。。");
         $.ajaxReq({
@@ -504,9 +519,9 @@ var planEntry = {
         var scanHouseCounselorNum =  $('#scanHouseCounselorNum').val();
         var adviceNum = $('#adviceNum').val();
         var addWxNum = $('#addWxNum').val();
-        var workMode = $('#workMode').val();
+        var planType = $('#planType').val();
 
-        if(workMode != '1') {
+        if(planType != '1') {
             //非正常工作，不校验
             return true;
         }
@@ -760,3 +775,20 @@ var selectCust = {
         }
     }
 };
+
+var workModePopup = {
+    showPopup : function () {
+        workModePopup.clear();
+
+        showPopup("myPopup", "workModePopupItem");
+    },
+    clear : function() {
+
+    },
+    confirm : function() {
+
+    },
+    addNewWorkMode : function () {
+
+    }
+}
