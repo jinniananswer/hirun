@@ -18,7 +18,7 @@
 	<%--<div class="back" ontap="back();"><span>计划补录</span></div>--%>
 <%--</div>--%>
 <jsp:include page="/header.jsp">
-	<jsp:param value="计划补录" name="headerName"/>
+	<jsp:param value="补录" name="headerName"/>
 </jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
@@ -71,7 +71,6 @@
 						<!-- 列表 结束 -->
 						<div class="c_line"></div>
 					</div>
-
 				</div>
 			</div>
 		</div>

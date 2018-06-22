@@ -78,4 +78,10 @@ public class CustController extends RootController{
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.addCustContact", map);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/cust/changeCounselor", method = RequestMethod.POST)
+    public String changeCounselor(@RequestParam Map map) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.changeCounselor", map);
+        return response.toJsonString();
+    }
 }

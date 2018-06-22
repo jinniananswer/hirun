@@ -2,9 +2,12 @@ package com.hirun.app.biz.cust;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.cust.CustBean;
 import com.hirun.app.bean.cust.CustContactBean;
 import com.hirun.app.bean.houses.HousesBean;
+import com.hirun.app.dao.cust.CustChangeRelaEmployeeLogDAO;
 import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
 import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.enums.cust.CustStatus;
@@ -185,6 +188,19 @@ public class CustService extends GenericService{
         custContactEntity.setRemindDate(requestData.getString("REMIND_DATE"));
         custContactEntity.setRemindActionCode(requestData.getString("REMIND_ACTION_CODE"));
         CustContactBean.addCustContact(custContactEntity);
+
+        return response;
+    }
+
+    public ServiceResponse changeCounselor(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+
+        CustChangeRelaEmployeeLogEntity entity = new CustChangeRelaEmployeeLogEntity();
+        entity.setCustId(requestData.getString("CUST_ID"));
+        entity.setNewEmployeeId(requestData.getString("NEW_EMPLOYEE_ID"));
+        entity.setChangeReason(requestData.getString("CHANGE_REASON"));
+        CustBean.changeCounselor(entity);
 
         return response;
     }
