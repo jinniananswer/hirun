@@ -197,7 +197,9 @@ public class PlanBean {
                                 .append(customerEntity.getCustName()).append("】，")
                                 .append("接触动作是【")
                                 .append(actionName)
-                                .append("】");
+                                .append("】，")
+                                .append("接触时间是")
+                                .append(operTime);
                         MsgBean.sendMsg(custRelaUserEntity.getUserId(),msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
 
                         //1、发给触发动作的家装顾问
@@ -206,9 +208,11 @@ public class PlanBean {
                                 .append(customerEntity.getCustName())
                                 .append("】,是归属于")
                                 .append(custRelaEmployeeEntity.getName())
-                                .append("接触动作是【")
+                                .append("，接触动作是【")
                                 .append(actionName)
-                                .append("】");
+                                .append("】，")
+                                .append("接触时间是")
+                                .append(operTime);
                         MsgBean.sendMsg(actionUserEntity.getUserId(),msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
                     }
                 }
