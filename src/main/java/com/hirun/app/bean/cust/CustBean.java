@@ -31,12 +31,13 @@ public class CustBean {
             return result;
         }
 
-        customerEntity = custDAO.getCustomerEntityByWxNick(wxNick);
-        if(customerEntity != null) {
-            result.put("DO_CUST", "no");
-            result.put("CUST_ID", customerEntity.getCustId());
-            return result;
-        }
+        //不根据微信昵称查了
+//        customerEntity = custDAO.getCustomerEntityByWxNick(wxNick);
+//        if(customerEntity != null) {
+//            result.put("DO_CUST", "no");
+//            result.put("CUST_ID", customerEntity.getCustId());
+//            return result;
+//        }
 
         //找不到的情况
         //当天看有没有新客户
