@@ -327,8 +327,8 @@ var planSummarize = {
                     //绑定未完成客户li上的编辑事件
 
                     $('#edit_cust_list_part').hide();
-                    $('#finishInfoList').show();
-                    $('#submitButton').show();
+                    $('#finishInfoList').css('display','');
+                    $('#submitButton').css('display','');
                 })
             },
             errorFunc : function(resultCode, resultInfo) {
@@ -534,10 +534,10 @@ var planSummarize = {
     },
     showBatchOper : function(actionCode) {
         $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").hide();
-        $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").show();
+        $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").css('display','');
     },
     showSingleOper : function(actionCode) {
-        $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").show();
+        $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").css('display','');
         $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").hide();
 
         $('[name=' + actionCode + '_custCheckBox]').each(function(idx, item) {
@@ -737,7 +737,7 @@ var summaryPopup = {
 
         //获取客户信息
         if(operType=="singleOper") {
-            $('#summarize_cust_info_part').show();
+            $('#summarize_cust_info_part').css('display','');
             $.ajaxRequest({
                     url : 'cust/getCustById',
                     data : {

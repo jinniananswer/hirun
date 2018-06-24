@@ -78,6 +78,7 @@ public class PlanBean {
     public static void actionBindPlan(String nickName, String identifyCode, String actionCode, String planDate, String executorId, String finishTime) throws Exception {
         CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
         CustActionDAO custActionDAO = DAOFactory.createDAO(CustActionDAO.class);
+        CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
         PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
 
         Map<String, String> doCustResult = CustBean.isCreateOrBindNewCust(nickName, identifyCode, planDate, executorId);
@@ -109,8 +110,7 @@ public class PlanBean {
             custId = String.valueOf(custDAO.insertAutoIncrement("INS_CUSTOMER", customerEntity.getContent()));
         }
 
-        //TODO 这个判断是否需要改？如果动作触发的家装顾问A与客户归属的家装顾问B不一致，要不要在A的计划完成数据里里体现该客户动作
-        if(ArrayTool.isEmpty(custActionDAO.queryCustFinishActionByCustIdAndActionCode(custId, actionCode))) {
+        if(ArrayTool.isEmpty(custActionDAO.queryCustFinishActionByCustIdAndActionCodeAndEid(custId, actionCode, executorId))) {
             //update or insert cust_action
             PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
             CustActionEntity custActionEntity = custActionDAO.queryCustActionByCustIdAndActionCodeAndPlanId(custId, actionCode, planEntity.getPlanId());
@@ -145,6 +145,7 @@ public class PlanBean {
      */
     public static boolean transOriginalDataToAction(JSONObject originalData, String date, String actionCode) throws Exception {
         CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
+        boolean isTrans = false;
 
         String nickName = originalData.getString("NICKNAME");
         String operTime = originalData.getString("OPER_TIME");
@@ -165,6 +166,30 @@ public class PlanBean {
         //不过还是需依赖客户已存在
         CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
         UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
+
+        if(ActionCheckRuleProcess.isActionBindYesterdayPlan(operTime, date, houseCounselorId)) {
+            //归到昨日计划里
+            String yesterday = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+            PlanBean.actionBindPlan(nickName, openId, actionCode, yesterday, houseCounselorId, operTime);
+//            signToDone(id, now);
+            isTrans = true;
+        }
+
+        if(!isTrans && ActionCheckRuleProcess.isActionBindTodayPlan(operTime, date, houseCounselorId)) {
+            //归到今日计划里
+            PlanBean.actionBindPlan(nickName, openId, actionCode, date, houseCounselorId, operTime);
+//            signToDone(id,now);
+            isTrans = true;
+        }
+
+        if(!isTrans && ActionCheckRuleProcess.isActionBindTomorrowPlan(operTime, date, houseCounselorId)) {
+            //归到明日计划里
+            String tomorrow = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
+            PlanBean.actionBindPlan(nickName, openId, actionCode, tomorrow, houseCounselorId, operTime);
+//            signToDone(id,now);
+            isTrans = true;
+        }
+
         CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
         if(customerEntity != null) {
             if(custOriginalActionDAO.getCustOriginalActionEntityByOutIdAndActionCodeAndCid(customerEntity.getCustId(), id, actionCode) == null) {
@@ -217,29 +242,6 @@ public class PlanBean {
                     }
                 }
             }
-        }
-
-        if(ActionCheckRuleProcess.isActionBindYesterdayPlan(operTime, date, houseCounselorId)) {
-            //归到昨日计划里
-            String yesterday = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
-            PlanBean.actionBindPlan(nickName, openId, actionCode, yesterday, houseCounselorId, operTime);
-//            signToDone(id, now);
-            return true;
-        }
-
-        if(ActionCheckRuleProcess.isActionBindTodayPlan(operTime, date, houseCounselorId)) {
-            //归到今日计划里
-            PlanBean.actionBindPlan(nickName, openId, actionCode, date, houseCounselorId, operTime);
-//            signToDone(id,now);
-            return true;
-        }
-
-        if(ActionCheckRuleProcess.isActionBindTomorrowPlan(operTime, date, houseCounselorId)) {
-            //归到明日计划里
-            String tomorrow = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
-            PlanBean.actionBindPlan(nickName, openId, actionCode, tomorrow, houseCounselorId, operTime);
-//            signToDone(id,now);
-            return true;
         }
 
         //无法归到任意计划里时，跳过

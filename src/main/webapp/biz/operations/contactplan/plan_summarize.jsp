@@ -461,7 +461,9 @@
 		<%--ontap="planSummarize.summarize(this)">--%>
 	>
 		<div class="main">
-			<div class="title link" tag="singleOper" ontap="planSummarize.summarize(this)">
+			<div class="title link" tag="singleOper" ontap="planSummarize.summarize(this)"
+				 action_code="{{ACTION_CODE}}"
+				 cust_id="{{cust.CUST_ID}}">
 				<span class="e_red">{{cust.CUST_NAME}}</span>
 				<span class="e_ico-edit"></span>
 			</div>

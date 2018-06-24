@@ -60,7 +60,7 @@ public class CustDAO extends StrongObjectDAO {
             sql.append(" AND NOT EXISTS(SELECT * FROM INS_CUST_ACTION B " +
                     " WHERE A.`CUST_ID` = B.`CUST_ID`" +
                     " AND B.`ACTION_CODE` = :UNEXECUTED_ACTION ");
-            sql.append(" AND B.`FINISH_TIME` IS NOT NULL)");
+            sql.append(" AND B.`EXECUTOR_ID` = :HOUSE_COUNSELOR_ID)");
         }
 
         if(StringUtils.isNotBlank(parameter.get("HOUSE_COUNSELOR_IDS"))) {

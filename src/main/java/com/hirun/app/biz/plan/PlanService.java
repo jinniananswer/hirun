@@ -14,6 +14,7 @@ import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.cache.PlanUnFinishCauseCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.app.dao.cust.CustOriginalActionDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
@@ -417,6 +418,7 @@ public class PlanService extends GenericService {
 
         String sysdate = TimeTool.now();
         CustActionDAO custActionDAO = new CustActionDAO("ins");
+        CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
         PlanDAO planDAO = new PlanDAO("ins");
         Map<String, List<String>> custActionMap = new HashMap<String, List<String>>();
 
@@ -472,16 +474,48 @@ public class PlanService extends GenericService {
                 actionList.add(actionCode);
             }
             custActionDAO.insertBatch("INS_CUST_ACTION", addExtraCustActionDbParamList);
+
+            //记cust_origin_action
+            List<Map<String, String>> custOriginActionDbParamList = new ArrayList<Map<String, String>>();
+            for(int i = 0, size = addExtraCustActionList.size(); i < size; i++) {
+                Map<String, String> custOriginActionDbParam = ConvertTool.toMap(addExtraCustActionList.getJSONObject(i));
+                if(!custOriginActionDbParam.containsKey("FINISH_TIME")) {
+                    custOriginActionDbParam.put("FINISH_TIME", sysdate);
+                }
+                custOriginActionDbParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
+                custOriginActionDbParam.put("CREATE_USER_ID", userId);
+                custOriginActionDbParam.put("CREATE_DATE", sysdate);
+                custOriginActionDbParamList.add(custOriginActionDbParam);
+            }
+            custOriginalActionDAO.insertBatch("INS_CUST_ORIGINAL_ACTION", custOriginActionDbParamList);
         }
 
         if(ArrayTool.isNotEmpty(transToFinishList)) {
+            List<Map<String, String>> custOriginActionDbParamList = new ArrayList<Map<String, String>>();
             for(int i = 0, size = transToFinishList.size(); i < size; i++) {
                 parameter = ConvertTool.toMap(transToFinishList.getJSONObject(i));
-                parameter.put("UPDATE_USER_ID", userId);
-                parameter.put("UPDATE_TIME", sysdate);
-                parameter.put("FINISH_TIME", sysdate);
-                custActionDAO.save("INS_CUST_ACTION", parameter);
+                CustActionEntity custActionEntity = custActionDAO.queryByPk(CustActionEntity.class, "INS_CUST_ACTION", parameter);
+                if(custActionEntity != null) {
+                    custActionEntity.setFinishTime(sysdate);
+                    custActionEntity.setUpdateTime(sysdate);
+                    custActionEntity.setUpdateUserId(userId);
+                    custActionDAO.update("INS_CUST_ACTION", custActionEntity.getContent());
+
+                    Map<String, String> custOriginActionDbParam = new HashMap<String, String>();
+                    custOriginActionDbParam.put("CUST_ID", custActionEntity.getCustId());
+                    custOriginActionDbParam.put("ACTION_CODE", custActionEntity.getActionCode());
+                    custOriginActionDbParam.put("CUST_ID", custActionEntity.getFinishTime());
+                    custOriginActionDbParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
+                    custOriginActionDbParam.put("CREATE_USER_ID", userId);
+                    custOriginActionDbParam.put("CREATE_DATE", sysdate);
+                    custOriginActionDbParamList.add(custOriginActionDbParam);
+                }
+//                parameter.put("UPDATE_USER_ID", userId);
+//                parameter.put("UPDATE_TIME", sysdate);
+//                parameter.put("FINISH_TIME", sysdate);
+//                custActionDAO.save("INS_CUST_ACTION", parameter);
             }
+            custOriginalActionDAO.insertBatch("INS_CUST_ORIGINAL_ACTION", custOriginActionDbParamList);
         }
 
         //更新INS_PLAN_CYCLE_FINISH_INFO
