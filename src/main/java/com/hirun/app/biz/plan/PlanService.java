@@ -504,7 +504,7 @@ public class PlanService extends GenericService {
                     Map<String, String> custOriginActionDbParam = new HashMap<String, String>();
                     custOriginActionDbParam.put("CUST_ID", custActionEntity.getCustId());
                     custOriginActionDbParam.put("ACTION_CODE", custActionEntity.getActionCode());
-                    custOriginActionDbParam.put("CUST_ID", custActionEntity.getFinishTime());
+                    custOriginActionDbParam.put("FINISH_TIME", custActionEntity.getFinishTime());
                     custOriginActionDbParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
                     custOriginActionDbParam.put("CREATE_USER_ID", userId);
                     custOriginActionDbParam.put("CREATE_DATE", sysdate);
