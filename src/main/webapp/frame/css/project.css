@@ -27,7 +27,7 @@
 
 .p_login { height:100%; background:#fff;}
 .p_login > .logo { font-size:200%; line-height:2.8; color:#4d5b65; background:#fff; padding:0 1em;}
-.p_login > .pannel { position:relative; height:40em; background:url(../img/login.jpg) no-repeat; background-size:100% 100%;}
+.p_login > .pannel { position:relative; height:40em; background:url(../img/login_bg_3.jpg) no-repeat; background-size:100% 100%;}
 .p_login > .pannel .c_float { width:24em; position:absolute; right:4em; top:4em; font-size:130%;}
 .p_login > .pannel .c_float .c_list .main .title { font-weight:bold; font-size:140%; color:#4d5b65;}
 .p_login .copyright { line-height:4; text-align:center; color:#4d5b65;}
