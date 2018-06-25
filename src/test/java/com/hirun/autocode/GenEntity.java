@@ -28,9 +28,9 @@ public class GenEntity
 		String packageName = "com.hirun.pub.domain.entity.out";
 		Connection conn = null;
 		String dirPath = "D:/file/";
-		String tableName = "OUT_DATA_GET_INFO";
+		String tableName = "INS_CUSTOMER";
 		try{
-			conn = ConnectionFactory.getConnection("out");
+			conn = ConnectionFactory.getConnection("ins");
 			Configuration cfg = new Configuration();
 			String fileName = this.getFileName(tableName);
 

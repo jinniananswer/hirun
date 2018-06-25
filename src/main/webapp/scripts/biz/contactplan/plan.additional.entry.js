@@ -30,6 +30,11 @@ var planAdditionalEntry = {
 
             param = '?EXECUTOR_ID=' + $('#EMPLOYEE_NAME').attr('employee_id');
             param += '&PLAN_DATE=' + $('#PLAN_DATE').val();
+            if(planAdditionalEntry.type == '1') {
+                param += '&IS_ADDITIONAL_RECORD=1'
+            } else if(planAdditionalEntry.type == '2') {
+                param += '&IS_ADDITIONAL_RECORD_SUMMARIZE=1'
+            }
             $.redirect.open(url+param,title);
         }
     },

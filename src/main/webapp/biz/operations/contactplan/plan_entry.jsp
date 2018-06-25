@@ -24,13 +24,39 @@
 	<div class="c_list c_list-line c_list-space">
 		<ul>
 			<li>
-					<span class="e_segment">
-						<span idx="0" val="1">正常上班</span>
-						<span idx="1" val="2">活动</span>
-						<span idx="2" val="3">休假</span>
-						<input type="hidden" name="planStatus" id="workMode" nullable="no" desc="级别" />
-					</span>
+				<span class="e_segment">
+					<span idx="0" val="1">正常上班</span>
+					<span idx="1" val="2">活动</span>
+					<span idx="2" val="3">休假</span>
+					<input type="hidden" name="planType" id="planType" nullable="no" desc="类型" />
+				</span>
 			</li>
+
+			<li>
+				<span class="e_segment">
+					<span idx="0" val="1">守点</span>
+					<span idx="1" val="2">做需求蓝图</span>
+					<input type="hidden" name="workMode" id="workMode" nullable="no" desc="工作方式" />
+				</span>
+			</li>
+
+			<%--<li>--%>
+				<%--<div class="content">--%>
+					<%--<div class="main">--%>
+						<%--<div class="title">工作方式</div>--%>
+					<%--</div>--%>
+					<%--<div class="fn">--%>
+						<%--<span class="e_ico-edit" ontap="workModePopup.showPopup()"></span>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+				<%--<div class="sub">--%>
+					<%--<div class="main">--%>
+						<%--<div class="title">守点</div>--%>
+						<%--<div class="content">9:00-18:00</div>--%>
+					<%--</div>--%>
+				<%--</div>--%>
+			<%--</li>--%>
+
 			<li class="link" id="PLAN_TARGET_SET_PART">
 				<div class="main">
 					<div class="title">今日目标设置</div>
@@ -75,7 +101,7 @@
 		<button class="e_button-r e_button-l e_button-green" type="button" ontap="planEntry.submitPlan()">提交</button>
 	</div>
 </div>
-<jsp:include page="/base/buttom/base_buttom.jsp"/>
+<%--<jsp:include page="/base/buttom/base_buttom.jsp"/>--%>
 <div class="c_popup" id="myPopup">
 	<div class="c_popupBg" id="myPopup_bg"></div>
 	<div class="c_popupBox">
@@ -187,6 +213,79 @@
 						<div class="c_space"></div>
 					</div>
 				</div>
+				<!--
+				<div class="c_popupItem" id="workModePopupItem">
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this)">工作方式设置</div>
+					</div>
+					<div class="l_padding">
+						<div class="c_form c_form-label-4">
+							<ul>
+								<li>
+									<div class="label">工作方式</div>
+									<div class="value">
+										<span class="e_segment">
+											<span idx="0" val="1">守点</span>
+											<span idx="1" val="2">做需求蓝图</span>
+											<span idx="2" val="3">会议</span>
+											<input type="hidden" name="WORK_MODE" id="WORK_MODE" nullable="no" desc="级别" />
+										</span>
+									</div>
+								</li>
+								<li>
+									<div class="label">时间段</div>
+									<div class="value">
+										<span class="e_mix e-mix-ip">
+											<input type="text" maxlength="2" placeholder="小时"/>
+											<span class="e_label">:</span>
+											<input type="text" maxlength="2" placeholder="分钟"/>
+											<span class="e_label">-</span>
+											<input type="text" maxlength="2" placeholder="小时"/>
+											<span class="e_label">:</span>
+											<input type="text" maxlength="2" placeholder="分钟"/>
+										</span>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="c_space"></div>
+						<div class="c_form c_form-label-4">
+							<ul>
+								<li>
+									<div class="label">工作方式</div>
+									<div class="value">
+										<span class="e_segment">
+											<span idx="0" val="1">守点</span>
+											<span idx="1" val="2">做需求蓝图</span>
+											<span idx="2" val="3">会议</span>
+											<input type="hidden" name="WORK_MODE" id="WORK_MODE" nullable="no" desc="级别" />
+										</span>
+									</div>
+								</li>
+								<li>
+									<div class="label">时间段</div>
+									<div class="value">
+										<span class="e_mix e-mix-ip">
+											<input type="text" maxlength="2" placeholder="小时"/>
+											<span class="e_label">:</span>
+											<input type="text" maxlength="2" placeholder="分钟"/>
+											<span class="e_label">-</span>
+											<input type="text" maxlength="2" placeholder="小时"/>
+											<span class="e_label">:</span>
+											<input type="text" maxlength="2" placeholder="分钟"/>
+										</span>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="c_space"></div>
+						<div class="c_submit c_submit-full">
+							<button type="button" class="e_button-l e_button-green" ontap="planEntry.afterPlanTargetSet(this)">确定</button>
+						</div>
+						<div class="c_space"></div>
+					</div>
+				</div>
+				-->
 			</div>
 			<div class="c_popupGroup">
 				<div class="c_popupItem" id="customerSelectPopup2">
@@ -434,7 +533,7 @@
 					>
 						<div class="main">
 							<div class="title">
-								<span tag="text">{{cust.CUST_NAME}}</span>
+								<span tag="text" class="e_red">{{cust.CUST_NAME}}</span>
 								{{if action.CAN_DELETE}}
 								<span tag="ico" class="e_ico-delete e_blue"></span>
 								{{/if}}

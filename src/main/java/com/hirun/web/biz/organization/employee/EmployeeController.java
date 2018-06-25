@@ -40,4 +40,10 @@ public class EmployeeController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.personnel.EmployeeService.queryContacts", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/employee/entryHoliday")
+    public @ResponseBody String entryHoliday(@RequestParam Map pageData) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.entryHoliday", pageData);
+        return response.toJsonString();
+    }
 }

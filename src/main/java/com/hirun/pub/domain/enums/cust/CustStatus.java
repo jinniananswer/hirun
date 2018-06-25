@@ -6,6 +6,7 @@ package com.hirun.pub.domain.enums.cust;
 public enum CustStatus {
 
     normal("正常","1"),
+    pause("暂停","7"),
     del("删除","8"),
     toBeFilled("待补录","9");
 

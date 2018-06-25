@@ -100,7 +100,7 @@ public class PlanTaskService extends GenericService {
                     continue;
                 }
                 jsonProject.put("STAFF_ID", employeeId);
-                isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
+                isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "SMJRQLC");
             } else if("11".equals(roleId)) {
                 //需要处理
                 CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);

@@ -15,7 +15,7 @@ public class PlanTool {
         String planDate = "";
         String now = TimeTool.now();
         int hour = Integer.parseInt(TimeTool.now("HH"));
-        if(hour <= 9) {
+        if(hour < 9) {
             planDate = now;
         } else {
             planDate = TimeTool.addTime(now, TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1);
@@ -30,7 +30,7 @@ public class PlanTool {
         String planDate = "";
         String now = TimeTool.now();
         int hour = Integer.parseInt(TimeTool.now("HH"));
-        if(hour <= 9) {
+        if(hour < 9) {
             planDate = TimeTool.addTime(now, TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1);
         } else {
             planDate = now;

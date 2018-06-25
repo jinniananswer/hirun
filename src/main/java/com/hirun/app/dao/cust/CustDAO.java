@@ -30,7 +30,13 @@ public class CustDAO extends StrongObjectDAO {
         StringBuilder sql = new StringBuilder(400);
         sql.append(" SELECT * FROM INS_CUSTOMER A");
         sql.append(" WHERE 1=1 ");
-        sql.append(" AND A.CUST_STATUS = '1' ");
+
+        if(StringUtils.isNotBlank(parameter.get("CUST_STATUS"))) {
+            sql.append(" AND A.CUST_STATUS in (").append(parameter.get("CUST_STATUS")).append(") ");
+        } else {
+            sql.append(" AND A.CUST_STATUS = '1' ");
+        }
+
         if(StringUtils.isNotBlank(parameter.get("CUST_NAME"))) {
             sql.append(" AND A.CUST_NAME LIKE CONCAT('%', :CUST_NAME, '%') ");
         }
@@ -54,7 +60,12 @@ public class CustDAO extends StrongObjectDAO {
             sql.append(" AND NOT EXISTS(SELECT * FROM INS_CUST_ACTION B " +
                     " WHERE A.`CUST_ID` = B.`CUST_ID`" +
                     " AND B.`ACTION_CODE` = :UNEXECUTED_ACTION ");
+            sql.append(" AND B.`EXECUTOR_ID` = :HOUSE_COUNSELOR_ID");
             sql.append(" AND B.`FINISH_TIME` IS NOT NULL)");
+        }
+
+        if(StringUtils.isNotBlank(parameter.get("HOUSE_COUNSELOR_IDS"))) {
+            sql.append(" AND A.HOUSE_COUNSELOR_ID in (").append(parameter.get("HOUSE_COUNSELOR_IDS")).append(") ");
         }
 
         List<CustomerEntity> customerList = this.queryBySql(CustomerEntity.class, sql.toString(), parameter);
@@ -82,15 +93,15 @@ public class CustDAO extends StrongObjectDAO {
         this.executeUpdate(sql.toString(), parameter);
     }
 
-    public List<CustomerEntity> queryNewCustListByPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
+    public List<CustomerEntity> queryNewCustListByPlanDate(String houseCounselorId) throws Exception {
         StringBuilder sql = new StringBuilder(200);
         sql.append(" SELECT * FROM INS_CUSTOMER ");
         sql.append(" WHERE CUST_STATUS = '9' ");
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
-        sql.append(" AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = :FIRST_PLAN_DATE) ");
+//        sql.append(" AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = :FIRST_PLAN_DATE) ");
+        sql.append(" AND WX_NICK IS NOT NULL ");
 
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("FIRST_PLAN_DATE", firstPlanDate);
         parameter.put("HOUSE_COUNSELOR_ID", houseCounselorId);
         List<CustomerEntity> list = this.queryBySql(CustomerEntity.class, sql.toString(), parameter);
         return list;

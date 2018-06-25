@@ -5,6 +5,7 @@
     <entity name="OrgCenter.personnel.PersonnelService.changePassword"  class="com.hirun.app.biz.organization.personnel.PersonnelService" method="changePassword"/>
     <entity name="OrgCenter.personnel.EmployeeService.queryContacts"  class="com.hirun.app.biz.employee.EmployeeService" method="queryContacts"/>
     <entity name="OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors"  class="com.hirun.app.biz.employee.EmployeeService" method="getAllSubordinatesCounselors"/>
+    <entity name="OrgCenter.employee.EmployeeService.entryHoliday"  class="com.hirun.app.biz.employee.EmployeeService" method="entryHoliday"/>
 
     <!--运营管理中心服务-->
     <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>
@@ -46,6 +47,8 @@
     <entity name="CustCenter.cust.CustService.addCustByNum"  class="com.hirun.app.biz.cust.CustService" method="addCustByNum"/>
     <entity name="CustCenter.cust.CustService.getCustById"  class="com.hirun.app.biz.cust.CustService" method="getCustById"/>
     <entity name="CustCenter.cust.CustService.deleteCustById"  class="com.hirun.app.biz.cust.CustService" method="deleteCustById"/>
+    <entity name="CustCenter.cust.CustService.addCustContact"  class="com.hirun.app.biz.cust.CustService" method="addCustContact"/>
+    <entity name="CustCenter.cust.CustService.changeCounselor"  class="com.hirun.app.biz.cust.CustService" method="changeCounselor"/>
 
     <!--数据中心服务-->
     <entity name="DataCenter.houses.HousesReportService.reportAllHousesNature"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportAllHousesNature"/>

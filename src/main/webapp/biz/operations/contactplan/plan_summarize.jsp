@@ -25,9 +25,9 @@
 	<div id="edit_cust_list_part">
 		<div class="c_title">
 			<div class="text">客户资料补录</div>
-			<div class="fn">
-				<button type="button" ontap="planSummarize.showCustEditPopup(this)">新增客户</button>
-			</div>
+			<%--<div class="fn">--%>
+				<%--<button type="button" ontap="planSummarize.showCustEditPopup(this)">新增客户</button>--%>
+			<%--</div>--%>
 		</div>
 		<div class="c_list c_list-phone-line ">
 			<ul id="edit_cust_list">
@@ -150,10 +150,10 @@
 										<input type="text" id="CUST_ID" name="CUST_ID" style="display: none"/>
 									</div>
 								</li>
-								<li class="required">
+								<li>
 									<div class="label">微信昵称</div>
 									<div class="value">
-										<input type="text" id="WX_NICK" name="WX_NICK" nullable="no" desc="微信昵称"/>
+										<input type="text" id="WX_NICK" name="WX_NICK" desc="微信昵称" readonly="true"/>
 									</div>
 								</li>
 								<li class="required">
@@ -461,7 +461,9 @@
 		<%--ontap="planSummarize.summarize(this)">--%>
 	>
 		<div class="main">
-			<div class="title link" tag="singleOper" ontap="planSummarize.summarize(this)">
+			<div class="title link" tag="singleOper" ontap="planSummarize.summarize(this)"
+				 action_code="{{ACTION_CODE}}"
+				 cust_id="{{cust.CUST_ID}}">
 				<span class="e_red">{{cust.CUST_NAME}}</span>
 				<span class="e_ico-edit"></span>
 			</div>

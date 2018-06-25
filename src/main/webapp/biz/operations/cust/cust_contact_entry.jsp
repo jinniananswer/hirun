@@ -9,13 +9,13 @@
     <base href="<%=basePath%>"></base>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>客户查询</title>
+    <title>客户接触记录录入</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="scripts/biz/cust/custlist.query.js"></script>
+    <script src="scripts/biz/cust/cust.contact.entry.js"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
-    <jsp:param value="客户查询" name="headerName"/>
+    <jsp:param value="客户接触记录录入" name="headerName"/>
 </jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
     <div class="c_space"></div>
@@ -64,23 +64,12 @@
                                         </span>
                                     </div>
                                 </li>
-                                <li>
-                                    <div class="label">家装顾问</div>
-                                    <div class="value">
-                                        <span class="e_mix" ontap="custListQuery.selectCounselor(this)">
-                                            <input type="text" id="EMPLOYEE_NAMES" name="EMPLOYEE_NAMES" datatype="text"
-                                                   employee_ids=""
-                                                   nullable="no" desc="家装顾问" value="" readonly="true"/>
-                                            <span class="e_ico-check"></span>
-                                        </span>
-                                    </div>
-                                </li>
                             </ul>
                         </div>
                         <!-- 客户列表 结束 -->
                         <div class="c_space"></div>
                         <div class="c_submit c_submit-full">
-                            <button type="button" class="e_button-l e_button-green" ontap="custListQuery.queryCustList4Cond(this)">查询</button>
+                            <button type="button" class="e_button-l e_button-green" ontap="custContactEntry.queryCustList4Cond(this)">查询</button>
                         </div>
                     </div>
                 </div>
@@ -155,29 +144,6 @@
                     </div>
                 </div>
             </div>
-            <div class="c_popupGroup">
-                <div class="c_popupItem" id="counselorPopupItem">
-                    <div class="c_header">
-                        <div class="back" ontap="hidePopup(this)">请选择家装顾问</div>
-                    </div>
-                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
-                        <!-- 列表 开始 -->
-                        <div class="c_list c_list-col-1 c_list-line c_list-border c_list-fixWrapSpace">
-                            <ul id="BIZ_COUNSELORS">
-
-                            </ul>
-                        </div>
-                        <!-- 列表 结束 -->
-                        <div class="c_line"></div>
-                    </div>
-                    <div class="l_bottom">
-                        <div class="c_submit c_submit-full">
-                            <button type="button" class="e_button-l e_button-red" ontap="counselorPopup.clear(this)">清空</button>
-                            <button type="button" class="e_button-l e_button-green" ontap="counselorPopup.confirm(this)">确定</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -190,16 +156,13 @@
                     <div class="title">{{cust.CUST_NAME}}</div>
                 </div>
                 <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
-                     ontap="custListQuery.showCustDetail(this)">
+                     ontap="custContactEntry.showCustDetail(this)">
                     查看详情
                 </div>
 
                 <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
-                     ontap="custListQuery.custTraceClick(this)">
+                     ontap="custContactEntry.custTraceClick(this)">
                     跟踪记录填写
-                </div>
-                <div class="fn" cust_id="{{cust.CUST_ID}}" ontap="custListQuery.deleteCust($(this).attr('cust_id'))">
-                    <span class="e_ico-delete"></span>
                 </div>
             </li>
             {{/each}}
@@ -220,7 +183,7 @@
 
 <script type="text/javascript">
     Wade.setRatio();
-    custListQuery.init();
+    custContactEntry.init();
 </script>
 </body>
 </html>

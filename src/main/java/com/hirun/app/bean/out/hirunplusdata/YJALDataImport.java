@@ -48,7 +48,7 @@ public class YJALDataImport {
 
             dbParam.put("UID", jsonData.getString("uid"));
             dbParam.put("SHARE_UID", jsonData.getString("share_uid"));
-            dbParam.put("NICKNAME", jsonData.getString("nick_name"));
+            dbParam.put("NICK_NAME", jsonData.getString("nick_name"));
             dbParam.put("CREATE_TIME", jsonData.getString("create_time"));
             dbParam.put("STAFF_ID", jsonData.getString("staff_id"));
             dbParam.put("ROLE_ID", jsonData.getString("role_id"));

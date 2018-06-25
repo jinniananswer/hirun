@@ -14,9 +14,11 @@ import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.cache.PlanUnFinishCauseCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.app.dao.cust.CustOriginalActionDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
+import com.hirun.app.dao.plan.PlanWorkDAO;
 import com.hirun.app.dao.stat.PlanFinishMonDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
@@ -28,6 +30,7 @@ import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
+import com.hirun.pub.domain.entity.plan.PlanWorkEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
@@ -62,10 +65,13 @@ public class PlanService extends GenericService {
         PlanDAO planDao = new PlanDAO("ins");
         CustActionDAO custActionDAO = new CustActionDAO("ins");
         PlanActionNumDAO planActionNumDAO = new PlanActionNumDAO("ins");
+        PlanWorkDAO planWorkDAO = DAOFactory.createDAO(PlanWorkDAO.class);
 
         String planDate = requestData.getString("PLAN_DATE");
         String planType = requestData.getString("PLAN_TYPE");
         String planExecutorId = requestData.getString("PLAN_EXECUTOR_ID");
+        String workMode = requestData.getString("WORK_MODE");
+        String isAdditionalRecord = requestData.getString("IS_ADDITIONAL_RECORD");
         JSONArray planList = requestData.getJSONArray("PLANLIST");
         if(planList == null) {
             planList = new JSONArray();
@@ -99,18 +105,21 @@ public class PlanService extends GenericService {
         planEntityParameter.put("PLAN_DATE", planDate);
         if(!"1".equals(planType) && planList.size() == 0) {
             //如果非正常活动,且没有具体计划内容，则直接为已总结
-            planEntityParameter.put("PLAN_STATUS", "2");
-            planEntityParameter.put("SUMMARIZE_USER_ID", userId);
-            planEntityParameter.put("SUMMARIZE_DATE", now);
-        } else {
-            planEntityParameter.put("PLAN_STATUS", "0");
+//            planEntityParameter.put("PLAN_STATUS", "2");
+//            planEntityParameter.put("SUMMARIZE_USER_ID", userId);
+//            planEntityParameter.put("SUMMARIZE_DATE", now);
+            PlanBean.addImproperPlan(planDate, planType, planExecutorId, isAdditionalRecord);
+            return response;
         }
+
+        planEntityParameter.put("PLAN_STATUS", "0");
         planEntityParameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         planEntityParameter.put("PLAN_TYPE", planType);
         planEntityParameter.put("CREATE_USER_ID", userId);
         planEntityParameter.put("CREATE_DATE", now);
         planEntityParameter.put("UPDATE_USER_ID", userId);
         planEntityParameter.put("UPDATE_TIME", now);
+        planEntityParameter.put("IS_ADDITIONAL_RECORD", isAdditionalRecord);
         String planId = String.valueOf(planDao.insertAutoIncrement("INS_PLAN", planEntityParameter));
 
         //将今天的计划动作数记到INS_PLAN_ACTION_NUM
@@ -170,6 +179,14 @@ public class PlanService extends GenericService {
             custActionDAO.insertBatch("INS_CUST_ACTION", custActionList);
         }
 //        }
+        if(planList.size() > 0) {
+            PlanWorkEntity planWorkEntity = new PlanWorkEntity();
+            planWorkEntity.setPlanId(planId);
+            planWorkEntity.setWorkMode(workMode);
+            planWorkEntity.setStartDate(planDate + " 09:00:00");
+            planWorkEntity.setEndDate(planDate + " 18:00:00");
+            planWorkDAO.insertAutoIncrement("INS_PLAN_WORK", planWorkEntity.getContent());
+        }
 
         return response;
     }
@@ -392,6 +409,7 @@ public class PlanService extends GenericService {
 
         JSONObject requestData = request.getBody().getData();
         String planId = requestData.getString("PLAN_ID");
+        String isAdditionalRecordSummarize = requestData.getString("IS_ADDITIONAL_RECORD_SUMMARIZE");
         JSONArray unFinishSummaryList = requestData.getJSONArray("UNFINISH_SUMMARY_LIST");
         JSONArray addExtraCustActionList = requestData.getJSONArray("ADD_EXTRA_CUST_ACTION_LIST");
         JSONArray transToFinishList = requestData.getJSONArray("TRANS_TO_FINISH_LIST");
@@ -400,6 +418,7 @@ public class PlanService extends GenericService {
 
         String sysdate = TimeTool.now();
         CustActionDAO custActionDAO = new CustActionDAO("ins");
+        CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
         PlanDAO planDAO = new PlanDAO("ins");
         Map<String, List<String>> custActionMap = new HashMap<String, List<String>>();
 
@@ -412,6 +431,7 @@ public class PlanService extends GenericService {
         }
         PlanEntity planEntity = list.get(0);
         parameter.put("PLAN_ID", planEntity.getPlanId());
+        parameter.put("IS_ADDITIONAL_RECORD_SUMMARIZE", isAdditionalRecordSummarize);
         parameter.put("PLAN_STATUS", "2");
         parameter.put("UPDATE_USER_ID", userId);
         parameter.put("UPDATE_TIME", sysdate);
@@ -454,16 +474,48 @@ public class PlanService extends GenericService {
                 actionList.add(actionCode);
             }
             custActionDAO.insertBatch("INS_CUST_ACTION", addExtraCustActionDbParamList);
+
+            //记cust_origin_action
+            List<Map<String, String>> custOriginActionDbParamList = new ArrayList<Map<String, String>>();
+            for(int i = 0, size = addExtraCustActionList.size(); i < size; i++) {
+                Map<String, String> custOriginActionDbParam = ConvertTool.toMap(addExtraCustActionList.getJSONObject(i));
+                if(!custOriginActionDbParam.containsKey("FINISH_TIME")) {
+                    custOriginActionDbParam.put("FINISH_TIME", sysdate);
+                }
+                custOriginActionDbParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
+                custOriginActionDbParam.put("CREATE_USER_ID", userId);
+                custOriginActionDbParam.put("CREATE_DATE", sysdate);
+                custOriginActionDbParamList.add(custOriginActionDbParam);
+            }
+            custOriginalActionDAO.insertBatch("INS_CUST_ORIGINAL_ACTION", custOriginActionDbParamList);
         }
 
         if(ArrayTool.isNotEmpty(transToFinishList)) {
+            List<Map<String, String>> custOriginActionDbParamList = new ArrayList<Map<String, String>>();
             for(int i = 0, size = transToFinishList.size(); i < size; i++) {
                 parameter = ConvertTool.toMap(transToFinishList.getJSONObject(i));
-                parameter.put("UPDATE_USER_ID", userId);
-                parameter.put("UPDATE_TIME", sysdate);
-                parameter.put("FINISH_TIME", sysdate);
-                custActionDAO.save("INS_CUST_ACTION", parameter);
+                CustActionEntity custActionEntity = custActionDAO.queryByPk(CustActionEntity.class, "INS_CUST_ACTION", parameter);
+                if(custActionEntity != null) {
+                    custActionEntity.setFinishTime(sysdate);
+                    custActionEntity.setUpdateTime(sysdate);
+                    custActionEntity.setUpdateUserId(userId);
+                    custActionDAO.update("INS_CUST_ACTION", custActionEntity.getContent());
+
+                    Map<String, String> custOriginActionDbParam = new HashMap<String, String>();
+                    custOriginActionDbParam.put("CUST_ID", custActionEntity.getCustId());
+                    custOriginActionDbParam.put("ACTION_CODE", custActionEntity.getActionCode());
+                    custOriginActionDbParam.put("FINISH_TIME", custActionEntity.getFinishTime());
+                    custOriginActionDbParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
+                    custOriginActionDbParam.put("CREATE_USER_ID", userId);
+                    custOriginActionDbParam.put("CREATE_DATE", sysdate);
+                    custOriginActionDbParamList.add(custOriginActionDbParam);
+                }
+//                parameter.put("UPDATE_USER_ID", userId);
+//                parameter.put("UPDATE_TIME", sysdate);
+//                parameter.put("FINISH_TIME", sysdate);
+//                custActionDAO.save("INS_CUST_ACTION", parameter);
             }
+            custOriginalActionDAO.insertBatch("INS_CUST_ORIGINAL_ACTION", custOriginActionDbParamList);
         }
 
         //更新INS_PLAN_CYCLE_FINISH_INFO
@@ -579,7 +631,7 @@ public class PlanService extends GenericService {
         CustActionDAO custActionDAO = new CustActionDAO("ins");
 
         JSONArray custList = new JSONArray();
-        List<CustomerEntity> customerEntityList = custDAO.queryNewCustListByPlanDate(planExecutorId, planDate);
+        List<CustomerEntity> customerEntityList = custDAO.queryNewCustListByPlanDate(planExecutorId);
         for(CustomerEntity customerEntity : customerEntityList) {
             JSONObject cust = customerEntity.toJSON(new String[] {"CUST_NAME", "WX_NICK", "CUST_ID"});
 

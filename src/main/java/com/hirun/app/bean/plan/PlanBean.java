@@ -1,6 +1,7 @@
 package com.hirun.app.bean.plan;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.common.MsgBean;
 import com.hirun.app.bean.cust.CustBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.cache.ActionCache;
@@ -8,18 +9,28 @@ import com.hirun.app.cache.HirunPlusStaffDataCache;
 import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.app.dao.cust.CustOriginalActionDAO;
 import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
+import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
+import com.hirun.pub.domain.entity.cust.CustOriginalActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
+import com.hirun.pub.domain.entity.user.UserEntity;
+import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
+import com.hirun.pub.domain.enums.plan.PlanStatus;
+import com.hirun.pub.domain.enums.plan.PlanType;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
@@ -29,6 +40,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,10 +78,13 @@ public class PlanBean {
     public static void actionBindPlan(String nickName, String identifyCode, String actionCode, String planDate, String executorId, String finishTime) throws Exception {
         CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
         CustActionDAO custActionDAO = DAOFactory.createDAO(CustActionDAO.class);
+        CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
         PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+
         Map<String, String> doCustResult = CustBean.isCreateOrBindNewCust(nickName, identifyCode, planDate, executorId);
         String doCust = doCustResult.get("DO_CUST");
         String custId = doCustResult.get("CUST_ID");
+        String now = TimeTool.now();
 
         if("BIND_VIRTUAL".equals(doCust)) {
             //UPDATE
@@ -88,14 +103,14 @@ public class PlanBean {
             customerEntity.setCustStatus(CustStatus.toBeFilled.getValue());
             customerEntity.setFirstPlanDate(planDate);
             customerEntity.setHouseCounselorId(executorId);
-            customerEntity.setCreateDate(TimeTool.now());
+            customerEntity.setCreateDate(now);
             customerEntity.setCreateUserId("0");
-            customerEntity.setUpdateTime(TimeTool.now());
+            customerEntity.setUpdateTime(now);
             customerEntity.setUpdateUserId("0");
             custId = String.valueOf(custDAO.insertAutoIncrement("INS_CUSTOMER", customerEntity.getContent()));
         }
 
-        if(ArrayTool.isEmpty(custActionDAO.queryCustFinishActionByCustIdAndActionCode(custId, actionCode))) {
+        if(ArrayTool.isEmpty(custActionDAO.queryCustFinishActionByCustIdAndActionCodeAndEid(custId, actionCode, executorId))) {
             //update or insert cust_action
             PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
             CustActionEntity custActionEntity = custActionDAO.queryCustActionByCustIdAndActionCodeAndPlanId(custId, actionCode, planEntity.getPlanId());
@@ -104,7 +119,7 @@ public class PlanBean {
                 String actionId = custActionEntity.getActionId();
                 custActionEntity.setFinishTime(finishTime);
                 custActionEntity.setUpdateUserId("0");
-                custActionEntity.setUpdateTime(TimeTool.now());
+                custActionEntity.setUpdateTime(now);
                 custActionDAO.update("INS_CUST_ACTION", custActionEntity.getContent());
             } else {
                 //insert
@@ -116,9 +131,9 @@ public class PlanBean {
                 custActionEntity.setPlanDealDate(planEntity.getPlanDate());
                 custActionEntity.setFinishTime(finishTime);
                 custActionEntity.setExecutorId(executorId);
-                custActionEntity.setCreateDate(TimeTool.now());
+                custActionEntity.setCreateDate(now);
                 custActionEntity.setCreateUserId("0");
-                custActionEntity.setUpdateTime(TimeTool.now());
+                custActionEntity.setUpdateTime(now);
                 custActionEntity.setUpdateUserId("0");
                 custActionDAO.insertAutoIncrement("INS_CUST_ACTION", custActionEntity.getContent());
             }
@@ -126,9 +141,12 @@ public class PlanBean {
     }
 
     /**
-     * 原始数据转换为需求蓝图指导书
+     * 原始数据转换为客户完成动作
      */
     public static boolean transOriginalDataToAction(JSONObject originalData, String date, String actionCode) throws Exception {
+        CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
+        boolean isTrans = false;
+
         String nickName = originalData.getString("NICKNAME");
         String operTime = originalData.getString("OPER_TIME");
         String staffId = originalData.getString("STAFF_ID");
@@ -140,28 +158,90 @@ public class PlanBean {
         }
 
         String houseCounselorId = staffId;
+        String now = TimeTool.now();
+
+        //记下原始数据。
+        //这里与计划绑定动作的地方不在一起，原因是我想动作可能绑不到某个计划上，比如没录计划或休假
+        //但原始数据就不要依赖计划了
+        //不过还是需依赖客户已存在
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
 
         if(ActionCheckRuleProcess.isActionBindYesterdayPlan(operTime, date, houseCounselorId)) {
             //归到昨日计划里
             String yesterday = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
             PlanBean.actionBindPlan(nickName, openId, actionCode, yesterday, houseCounselorId, operTime);
 //            signToDone(id, now);
-            return true;
+            isTrans = true;
         }
 
-        if(ActionCheckRuleProcess.isActionBindTodayPlan(operTime, date, houseCounselorId)) {
+        if(!isTrans && ActionCheckRuleProcess.isActionBindTodayPlan(operTime, date, houseCounselorId)) {
             //归到今日计划里
             PlanBean.actionBindPlan(nickName, openId, actionCode, date, houseCounselorId, operTime);
 //            signToDone(id,now);
-            return true;
+            isTrans = true;
         }
 
-        if(ActionCheckRuleProcess.isActionBindTomorrowPlan(operTime, date, houseCounselorId)) {
+        if(!isTrans && ActionCheckRuleProcess.isActionBindTomorrowPlan(operTime, date, houseCounselorId)) {
             //归到明日计划里
             String tomorrow = TimeTool.addTime(date + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, 1).substring(0,10);
             PlanBean.actionBindPlan(nickName, openId, actionCode, tomorrow, houseCounselorId, operTime);
 //            signToDone(id,now);
-            return true;
+            isTrans = true;
+        }
+
+        CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
+        if(customerEntity != null) {
+            if(custOriginalActionDAO.getCustOriginalActionEntityByOutIdAndActionCodeAndCid(customerEntity.getCustId(), id, actionCode) == null) {
+                //只有根据out表的id、actioncode，custid查不到的时候才新增一条
+                CustOriginalActionEntity custOriginalActionEntity = new CustOriginalActionEntity();
+                custOriginalActionEntity.setCustId(customerEntity.getCustId());
+                custOriginalActionEntity.setActionCode(actionCode);
+                custOriginalActionEntity.setFinishTime(operTime);
+                custOriginalActionEntity.setEmployeeId(houseCounselorId);
+                custOriginalActionEntity.setOutId(id);
+                custOriginalActionEntity.setCreateUserId("0");
+                custOriginalActionEntity.setCreateDate(now);
+                custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custOriginalActionEntity.getContent());
+
+                String custRelaHounselorId = customerEntity.getHouseCounselorId();
+                if(!houseCounselorId.equals(custRelaHounselorId)) {
+                    //发消息通知双方
+                    String actionName = ActionCache.getAction(actionCode).getActionName();
+                    EmployeeEntity custRelaEmployeeEntity = EmployeeBean.getEmployeeByEmployeeId(custRelaHounselorId);
+                    UserEntity custRelaUserEntity = userDAO.queryUserByEmployeeId(custRelaHounselorId);
+
+                    EmployeeEntity actionEmployeeEntity = EmployeeBean.getEmployeeByEmployeeId(houseCounselorId);
+                    UserEntity actionUserEntity = userDAO.queryUserByEmployeeId(houseCounselorId);
+                    if(custRelaEmployeeEntity != null && custRelaUserEntity != null
+                            && actionEmployeeEntity != null && actionUserEntity != null) {
+                        //1、发给客户归属家装顾问
+                        StringBuilder msgContent = new StringBuilder();
+                        msgContent.append(actionEmployeeEntity.getName())
+                                .append("正在接触归属于你的客户【")
+                                .append(customerEntity.getCustName()).append("】，")
+                                .append("接触动作是【")
+                                .append(actionName)
+                                .append("】，")
+                                .append("接触时间是")
+                                .append(operTime);
+                        MsgBean.sendMsg(custRelaUserEntity.getUserId(),msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
+
+                        //1、发给触发动作的家装顾问
+                        msgContent = new StringBuilder();
+                        msgContent.append("你正在接触的客户【")
+                                .append(customerEntity.getCustName())
+                                .append("】,是归属于")
+                                .append(custRelaEmployeeEntity.getName())
+                                .append("，接触动作是【")
+                                .append(actionName)
+                                .append("】，")
+                                .append("接触时间是")
+                                .append(operTime);
+                        MsgBean.sendMsg(actionUserEntity.getUserId(),msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
+                    }
+                }
+            }
         }
 
         //无法归到任意计划里时，跳过
@@ -182,5 +262,75 @@ public class PlanBean {
         }
 
         return employeeEntity.getEmployeeId();
+    }
+
+    public static void addHolidayPlansByStartAndEnd(String holidayStartDate, String holidayEndDate, String planExecutorId) throws Exception {
+        PlanRuleProcess.planEntryInitCheck(planExecutorId, holidayStartDate);
+        //计算两个时间相隔多少天
+        int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(holidayStartDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                LocalDate.parse(holidayEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+
+        for(int i = 0; i < interval+1; i++) {
+            String planDate = TimeTool.addTime(holidayStartDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, i).substring(0,10);
+            addImproperPlan(planDate, PlanType.holiday.getValue(), planExecutorId, "0");
+        }
+    }
+
+    public static void addImproperPlan(String planDate, String planType, String planExecutorId, String isAdditionalRecord) throws Exception {
+        String now = TimeTool.now();
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+        PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = DAOFactory.createDAO(PlanCycleFinishInfoDAO.class);
+
+        if(planDAO.getPlanEntityByEidAndPlanDate(planExecutorId, planDate) != null) {
+            throw new GenericException("-1", "已经有" + planDate + "的计划了");
+        }
+
+        PlanEntity planEntity = new PlanEntity();
+        planEntity.setPlanDate(planDate);
+        planEntity.setPlanStatus(PlanStatus.summarized.getValue());
+        planEntity.setSummarizeDate(now);
+        planEntity.setSummarizeUserId(userId);
+        planEntity.setPlanExecutorId(planExecutorId);
+        planEntity.setPlanType(planType);
+        planEntity.setCreateUserId(userId);
+        planEntity.setCreateDate(now);
+        planEntity.setUpdateUserId(userId);
+        planEntity.setUpdateTime(now);
+        planEntity.setIsAdditionalRecord(isAdditionalRecord);
+        planDAO.insertAutoIncrement("INS_PLAN", planEntity.getContent());
+
+        List<PlanTargetLimitEntity> planTargetLimitEntityList = PlanTargetLimitCache.getPlanTargetLimitList();
+        PlanCycleFinishInfoEntity planCycleFinishInfoEntity = null;
+        for(PlanTargetLimitEntity planTargetLimitEntity : planTargetLimitEntityList) {
+            String actionCode = planTargetLimitEntity.getTargetCode();
+            planCycleFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planExecutorId, actionCode);
+            //如果cyclePlanFinishInfo没数据，则先插一条数据
+            if(planCycleFinishInfoEntity == null) {
+                planCycleFinishInfoEntity = new PlanCycleFinishInfoEntity();
+                planCycleFinishInfoEntity.setExecutorId(planExecutorId);
+                planCycleFinishInfoEntity.setActionCode(actionCode);
+                planCycleFinishInfoEntity.setPreCycleEndDate(planDate);
+                planCycleFinishInfoEntity.setUnfinishNum("0");
+                planCycleFinishInfoEntity.setCurrCycleFinishNum("0");
+                planCycleFinishInfoEntity.setCurrCycleImproperDays("0");
+                cyclePlanFinishInfoDAO.insert("INS_PLAN_CYCLE_FINISH_INFO", planCycleFinishInfoEntity.getContent());
+            } else {
+                //更新INS_PLAN_CYCLE_FINISH_INFO
+                String preCycleEndDate = planCycleFinishInfoEntity.getPreCycleEndDate();
+                int interval = (int)TimeTool.getAbsDateDiffDay(LocalDate.parse(preCycleEndDate, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        LocalDate.parse(planEntity.getPlanDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                if(interval == 1) {
+                    //离上一个周期仅一天，则上一周期时间顺延一天
+                    planCycleFinishInfoEntity.setPreCycleEndDate(planEntity.getPlanDate());
+                } else {
+                    int currCycleImproperDays = Integer.parseInt(planCycleFinishInfoEntity.getCurrCycleImproperDays());
+                    currCycleImproperDays++;
+                    planCycleFinishInfoEntity.setCurrCycleImproperDays(String.valueOf(currCycleImproperDays));
+                }
+                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", planCycleFinishInfoEntity.getContent());
+            }
+        }
     }
 }

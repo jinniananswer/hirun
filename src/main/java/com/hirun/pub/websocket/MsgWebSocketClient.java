@@ -78,7 +78,7 @@ public class MsgWebSocketClient {
         }
         try {
             client.sendMessage(webSocketMsg.toJSONString());
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("发送websocket消息失败:{}",e);
         }
     }

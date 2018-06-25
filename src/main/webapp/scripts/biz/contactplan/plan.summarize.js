@@ -20,6 +20,7 @@ var planSummarize = {
     addExtraCustActionList : [],//计划外触发的客户动作（在总结时选择的）的结果集
     custOperMap : {},
     executorId : '',
+    isAdditionalRecordSummarize : '',
     init : function() {
         window["selectCustPopup"] = new Wade.Popup("selectCustPopup",{
             visible:false,
@@ -37,6 +38,13 @@ var planSummarize = {
         });
 
         new radios('cause_options');
+
+        var isAdditionalRecordSummarize = $.params.get('IS_ADDITIONAL_RECORD_SUMMARIZE');
+        if(isAdditionalRecordSummarize) {
+            planSummarize.isAdditionalRecordSummarize = isAdditionalRecordSummarize;
+        } else {
+            planSummarize.isAdditionalRecordSummarize = "0";
+        }
 
         var planDate = $.params.get('PLAN_DATE');
         var executorId = $.params.get('EXECUTOR_ID');
@@ -319,8 +327,8 @@ var planSummarize = {
                     //绑定未完成客户li上的编辑事件
 
                     $('#edit_cust_list_part').hide();
-                    $('#finishInfoList').show();
-                    $('#submitButton').show();
+                    $('#finishInfoList').css('display','');
+                    $('#submitButton').css('display','');
                 })
             },
             errorFunc : function(resultCode, resultInfo) {
@@ -468,6 +476,7 @@ var planSummarize = {
         param.UNFINISH_SUMMARY_LIST = JSON.stringify(unfinishSummaryList);
         param.ADD_EXTRA_CUST_ACTION_LIST = JSON.stringify(addExtraCustActionList);
         param.TRANS_TO_FINISH_LIST = JSON.stringify(transToFinishList);
+        param.IS_ADDITIONAL_RECORD_SUMMARIZE = planSummarize.isAdditionalRecordSummarize;
 
         $.beginPageLoading("提交总结中。。。");
         $.ajaxReq({
@@ -525,10 +534,10 @@ var planSummarize = {
     },
     showBatchOper : function(actionCode) {
         $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").hide();
-        $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").show();
+        $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").css('display','');
     },
     showSingleOper : function(actionCode) {
-        $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").show();
+        $('#FINISH_INFO_' + actionCode + " [tag=singleOper]").css('display','');
         $('#FINISH_INFO_' + actionCode + " [tag=batchOper]").hide();
 
         $('[name=' + actionCode + '_custCheckBox]').each(function(idx, item) {
@@ -728,7 +737,7 @@ var summaryPopup = {
 
         //获取客户信息
         if(operType=="singleOper") {
-            $('#summarize_cust_info_part').show();
+            $('#summarize_cust_info_part').css('display','');
             $.ajaxRequest({
                     url : 'cust/getCustById',
                     data : {

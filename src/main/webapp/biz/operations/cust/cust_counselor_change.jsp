@@ -9,13 +9,13 @@
     <base href="<%=basePath%>"></base>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>客户查询</title>
+    <title>客户变更家装顾问</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="scripts/biz/cust/custlist.query.js"></script>
+    <script src="scripts/biz/cust/cust.counselor.change.js"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
-    <jsp:param value="客户查询" name="headerName"/>
+    <jsp:param value="客户变更家装顾问" name="headerName"/>
 </jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
     <div class="c_space"></div>
@@ -67,7 +67,7 @@
                                 <li>
                                     <div class="label">家装顾问</div>
                                     <div class="value">
-                                        <span class="e_mix" ontap="custListQuery.selectCounselor(this)">
+                                        <span class="e_mix" ontap="custCounselorChange.selectCounselor(this)">
                                             <input type="text" id="EMPLOYEE_NAMES" name="EMPLOYEE_NAMES" datatype="text"
                                                    employee_ids=""
                                                    nullable="no" desc="家装顾问" value="" readonly="true"/>
@@ -80,68 +80,32 @@
                         <!-- 客户列表 结束 -->
                         <div class="c_space"></div>
                         <div class="c_submit c_submit-full">
-                            <button type="button" class="e_button-l e_button-green" ontap="custListQuery.queryCustList4Cond(this)">查询</button>
+                            <button type="button" class="e_button-l e_button-green" ontap="custCounselorChange.queryCustList4Cond(this)">查询</button>
                         </div>
                     </div>
                 </div>
-                <div class="c_popupItem" id="CustContactPopupItem">
+                <div class="c_popupItem" id="CustCounselorChangePopupItem">
                     <div class="c_header">
-                        <div class="back" ontap="backPopup(this)">客户接触记录填写</div>
+                        <div class="back" ontap="backPopup(this)">变更家装顾问</div>
                     </div>
                     <div class="c_scroll c_scroll-float c_scroll-header l_padding">
-                        <div class="c_list c_list_form c_list-line" id="custContactForm">
+                        <div class="c_list c_list_form c_list-line" id="changeForm">
                             <ul>
                                 <li class="required">
-                                    <div class="label">接触笔记</div>
+                                    <div class="label">变更原因</div>
                                     <div class="value">
-                                        <textarea id="CONTACT_NOTE" name="CONTACT_NOTE" class="e_textarea-row-4"
-                                                  nullable="no" desc="接触笔记"></textarea>
+                                        <textarea id="CHANGE_REASON" name="CHANGE_REASON" class="e_textarea-row-3"
+                                                  nullable="no" desc="变更原因"></textarea>
                                     </div>
                                 </li>
-                                <li class="required">
-                                    <div class="label">接触日期</div>
+                                <li class="link required">
+                                    <div class="label">家装顾问</div>
                                     <div class="value">
-                                        <span class="e_mix">
-                                            <input type="text" id="CONTACT_DATE" name="CONTACT_DATE"
-                                                   datatype="date" desc="接触日期" nullable="no"/>
-                                            <span class="e_ico-date"></span>
-                                        </span>
-                                    </div>
-                                </li>
-                                <li class="required">
-                                    <div class="label">后续动作</div>
-                                    <div class="value">
-                                        <span class="e_segment">
-                                            <span idx="0" val="1">无</span>
-                                            <span idx="1" val="2">提醒</span>
-                                            <span idx="2" val="3">暂停接触</span>
-                                            <input type="hidden" name="AFTER_ACTION" id="AFTER_ACTION" nullable="no" desc="后续动作" />
-                                        </span>
-                                    </div>
-                                </li>
-                                <li class="link required" tag="remind" style="display: none">
-                                    <div class="label">提醒动作</div>
-                                    <div class="value">
-                                        <span id="custContactForm_action_container"></span>
-                                    </div>
-                                </li>
-                                <li class="link required" tag="remind" style="display: none">
-                                    <div class="label">提醒时间</div>
-                                    <div class="value">
-                                        <span class="e_mix">
-                                            <input type="text" id="REMIND_DATE" name="REMIND_DATE"
-                                                   datatype="date" desc="提醒时间" />
-                                            <span class="e_ico-date"></span>
-                                        </span>
-                                    </div>
-                                </li>
-                                <li class="link required" tag="pause" style="display: none">
-                                    <div class="label">恢复接触日期</div>
-                                    <div class="value">
-                                        <span class="e_mix">
-                                            <input type="text" id="RESTORE_DATE" name="RESTORE_DATE"
-                                                   datatype="date" desc="跟踪恢复日期" />
-                                            <span class="e_ico-date"></span>
+                                        <span class="e_mix" ontap="custCounselorChangePopup.selectCounselor(this)">
+                                            <input type="text" id="EMPLOYEE_NAME" name="EMPLOYEE_NAME" datatype="text"
+                                                   employee_id=""
+                                                   nullable="no" desc="家装顾问" value="" readonly="true"/>
+                                            <span class="e_ico-check"></span>
                                         </span>
                                     </div>
                                 </li>
@@ -150,7 +114,7 @@
                         <!-- 客户列表 结束 -->
                         <div class="c_space"></div>
                         <div class="c_submit c_submit-full">
-                            <button type="button" class="e_button-l e_button-green" ontap="custContactPopup.confirm(this)">确定</button>
+                            <button type="button" class="e_button-l e_button-green" ontap="custCounselorChangePopup.confirm(this)">确定</button>
                         </div>
                     </div>
                 </div>
@@ -170,7 +134,7 @@
                         <!-- 列表 结束 -->
                         <div class="c_line"></div>
                     </div>
-                    <div class="l_bottom">
+                    <div class="l_bottom" id="submitPart">
                         <div class="c_submit c_submit-full">
                             <button type="button" class="e_button-l e_button-red" ontap="counselorPopup.clear(this)">清空</button>
                             <button type="button" class="e_button-l e_button-green" ontap="counselorPopup.confirm(this)">确定</button>
@@ -190,16 +154,12 @@
                     <div class="title">{{cust.CUST_NAME}}</div>
                 </div>
                 <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
-                     ontap="custListQuery.showCustDetail(this)">
+                     ontap="custCounselorChange.showCustDetail(this)">
                     查看详情
                 </div>
-
                 <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
-                     ontap="custListQuery.custTraceClick(this)">
-                    跟踪记录填写
-                </div>
-                <div class="fn" cust_id="{{cust.CUST_ID}}" ontap="custListQuery.deleteCust($(this).attr('cust_id'))">
-                    <span class="e_ico-delete"></span>
+                     ontap="custCounselorChange.clickCustCounselorChange(this)">
+                    变更家装顾问
                 </div>
             </li>
             {{/each}}
@@ -220,7 +180,7 @@
 
 <script type="text/javascript">
     Wade.setRatio();
-    custListQuery.init();
+    custCounselorChange.init();
 </script>
 </body>
 </html>
