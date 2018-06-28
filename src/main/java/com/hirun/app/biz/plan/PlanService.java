@@ -8,10 +8,7 @@ import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.bean.plan.PlanRuleProcess;
 import com.hirun.app.bean.plan.PlanStatBean;
-import com.hirun.app.cache.ActionCache;
-import com.hirun.app.cache.PlanActionLimitCache;
-import com.hirun.app.cache.PlanTargetLimitCache;
-import com.hirun.app.cache.PlanUnFinishCauseCache;
+import com.hirun.app.cache.*;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.cust.CustOriginalActionDAO;
@@ -22,6 +19,7 @@ import com.hirun.app.dao.plan.PlanWorkDAO;
 import com.hirun.app.dao.stat.PlanFinishMonDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
+import com.hirun.pub.domain.entity.cust.CustOriginalActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.param.ActionEntity;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
@@ -34,6 +32,8 @@ import com.hirun.pub.domain.entity.plan.PlanWorkEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
+import com.hirun.pub.domain.enums.plan.PlanStatus;
+import com.hirun.pub.domain.enums.plan.PlanType;
 import com.hirun.pub.tool.CustomerTool;
 import com.hirun.pub.tool.PlanTool;
 import com.hirun.pub.websocket.MsgWebSocketClient;
@@ -637,7 +637,7 @@ public class PlanService extends GenericService {
 
             //获取客户已完成的动作
             JSONArray jsonArrayCustActionList = new JSONArray();
-            List<CustActionEntity> custActionEntityList = custActionDAO.queryCustFinishActionByCustId(cust.getString("CUST_ID"));
+            List<CustActionEntity> custActionEntityList = custActionDAO.queryCustFinishActionByCustIdAndEid(cust.getString("CUST_ID"), planExecutorId);
             for(CustActionEntity custActionEntity : custActionEntityList) {
                 JSONObject jsonObjectCustAction = custActionEntity.toJSON(new String[] {"ACTION_CODE","FINISH_TIME"});
                 jsonObjectCustAction.put("ACTION_NAME", ActionCache.getAction(custActionEntity.getActionCode()).getActionName());
@@ -709,24 +709,17 @@ public class PlanService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         Map<String, String> parameter = new HashMap<String, String>();
         JSONArray custList = new JSONArray();
+        CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
 
         JSONObject requestData = request.getBody().getData();
         String custId = requestData.getString("CUST_ID");
 
-        CustActionDAO custActionDAO = new CustActionDAO("ins");
-
-        parameter.put("CUST_ID", custId);
-        List<CustActionEntity> custActionEntityList = custActionDAO.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
-        if(ArrayTool.isNotEmpty(custActionEntityList)) {
-            for(CustActionEntity custActionEntity : custActionEntityList) {
-                if(StringUtils.isBlank(custActionEntity.getFinishTime())) {
-                    //只要完成的
-                    continue;
-                }
-                JSONObject custAction = custActionEntity.toJSON(new String[] {"FINISH_TIME"});
-                custAction.put("ACTION_NAME", ActionCache.getAction(custActionEntity.getActionCode()).getActionName());
-                custList.add(custAction);
-            }
+        List<CustOriginalActionEntity> custOriginalActionEntityList = custOriginalActionDAO.getCustOriginalActionEntityByCustId(custId);
+        for(CustOriginalActionEntity custOriginalActionEntity : custOriginalActionEntityList) {
+            JSONObject custAction = custOriginalActionEntity.toJSON(new String[] {"FINISH_TIME"});
+            custAction.put("ACTION_NAME", ActionCache.getAction(custOriginalActionEntity.getActionCode()).getActionName());
+            custAction.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(custOriginalActionEntity.getEmployeeId()).getName());
+            custList.add(custAction);
         }
 
         response.set("CUST_FINISH_ACTION_LIST", custList);
@@ -1011,6 +1004,82 @@ public class PlanService extends GenericService {
         }
 
         response.set("ACTION_COUNT_LIST", arrayResult);
+
+        return response;
+    }
+
+    public ServiceResponse queryPlanDetail(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String executorId = requestData.getString("PLAN_EXECUTOR_ID");
+        String planDate = requestData.getString("PLAN_DATE");
+
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+        CustActionDAO custActionDAO = DAOFactory.createDAO(CustActionDAO.class);
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        Map<String, String> custMap = new HashMap<String, String>();//key:custId;value:custName
+
+        JSONArray datalist = new JSONArray();
+        JSONObject baseInfo = new JSONObject();
+        List<ActionEntity> actionEntityList = ActionCache.getActionListByType("1");
+
+        PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
+        if(planEntity != null) {
+            baseInfo.put("PLAN_DATE", planEntity.getPlanDate());
+            baseInfo.put("PLAN_STATUS_DESC", PlanStatus.getNameByValue(planEntity.getPlanStatus()));
+            baseInfo.put("PLAN_TYPE_DESC", PlanType.getNameByValue(planEntity.getPlanType()));
+
+            //查询明细
+            for(ActionEntity actionEntity : actionEntityList) {
+                //先给个初始值
+                JSONObject jsonActionMap = new JSONObject();
+                String actionCode = actionEntity.getActionCode();
+                JSONArray planFinishCustList = new JSONArray();
+                JSONArray planUnFinishCustList = new JSONArray();
+                JSONArray planCustList = new JSONArray();
+
+                //查昨天的
+                String planId = planEntity.getPlanId();
+                List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionListByPlanIdAndActionCode(planId, actionCode);
+                for(CustActionEntity custActionEntity : custActionEntityList) {
+                    String custId = custActionEntity.getCustId();
+                    String finishTime = custActionEntity.getFinishTime();
+                    String unFinishCauseDesc = custActionEntity.getUnfinishCauseDesc();
+                    if(!custMap.containsKey(custId)) {
+                        CustomerEntity customerEntity = custDAO.getCustById(custId);
+                        custMap.put(custId, customerEntity.getCustName());
+                    }
+                    String custName = custMap.get(custId);
+
+                    JSONObject planCust = new JSONObject();
+                    planCust.put("CUST_NAME", custName);
+                    planCustList.add(planCust);
+
+                    if(StringUtils.isNotBlank(finishTime)) {
+                        //完成的
+                        JSONObject planFinishCust = new JSONObject();
+                        planFinishCust.put("CUST_NAME", custName);
+                        planFinishCust.put("FINISH_TIME", finishTime);
+                        planFinishCustList.add(planFinishCust);
+                    } else {
+                        JSONObject planUnFinishCust = new JSONObject();
+                        planUnFinishCust.put("CUST_NAME", custName);
+                        planUnFinishCust.put("UNFINISH_CAUSE_DESC", unFinishCauseDesc);
+                        planUnFinishCustList.add(planUnFinishCust);
+                    }
+                }
+                jsonActionMap.put("PLAN_CUST_LIST", planCustList);
+                jsonActionMap.put("PLAN_FINISH_CUST_LIST", planFinishCustList);
+                jsonActionMap.put("PLAN_UNFINISH_CUST_LIST", planUnFinishCustList);
+                jsonActionMap.put("ACTION_NAME",actionEntity.getActionName());
+                datalist.add(jsonActionMap);
+            }
+        } else {
+
+        }
+
+        response.set("CUST_ACTION_LIST", datalist);
+        response.set("PLAN_INFO", baseInfo);
 
         return response;
     }

@@ -1,5 +1,10 @@
 var custDetailQuery = {
     init : function() {
+        window["custActionTable"] = new Wade.Table("custActionTable", {
+            fixedMode:true,
+            editMode:false
+        });
+
         custDetailQuery.queryCustDetail($.params.get('custId'));
         custDetailQuery.queryCustFinishActioListn($.params.get('custId'));
     },
@@ -11,7 +16,7 @@ var custDetailQuery = {
             },
             type : 'GET',
             successFunc : function(data) {
-                $('div[tag=cust_name]').html(data.CUST_NAME);
+                $('span[tag=cust_name]').html(data.CUST_NAME);
                 $('span[tag=sex]').html(data.SEX_DESC ? data.SEX_DESC : '');
                 $('span[tag=wx_nick]').html(data.WX_NICK ? data.WX_NICK : '');
                 $('span[tag=mobile_no]').html(data.MOBILE_NO ? data.MOBILE_NO : '');
@@ -36,7 +41,10 @@ var custDetailQuery = {
             dataType:'json',
             async:true,
             successFunc:function(data) {
-                $('#cust_detail').append(template('cust_action_list_template', data));
+                $.each(data.CUST_FINISH_ACTION_LIST, function(idx, action) {
+                    action._className = "no";
+                    custActionTable.addRow(action);
+                })
             }
         });
     }
