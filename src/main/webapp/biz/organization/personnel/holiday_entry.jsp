@@ -46,7 +46,7 @@
 		<button type="button" class="e_button-r e_button-l e_button-green" ontap="holidayEntry.okOnclick()">确定</button>
 	</div>
 </div>
-<%--<jsp:include page="/base/buttom/base_buttom.jsp"/>--%>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script type="text/javascript">
 	Wade.setRatio();
     holidayEntry.init();

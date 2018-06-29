@@ -12,8 +12,8 @@
 </head>
 <body>
 <div class="c_tab c_tab-avg c_tab-full c_tab-nav"
-     style="height:4em;position: absolute;bottom:0"
-     id="myTab">
+     style="height:4em;position: absolute;bottom:0; display: none;"
+     id="myTab" tag="buttomPhone">
     <div class="tab">
         <div class="list">
             <ul>
@@ -39,6 +39,11 @@
 </div>
 <script type="text/javascript">
     var baseButtom = {
+        init : function() {
+            if($.os.phone) {
+                $('div[tag=buttomPhone]').show();
+            }
+        },
         openHomePage : function() {
             if($.os.phone) {
                 $.redirect.open('phone/phone_index.jsp','首页')
@@ -47,6 +52,7 @@
             }
         }
     }
+    baseButtom.init();
 </script>
 </body>
 </html>

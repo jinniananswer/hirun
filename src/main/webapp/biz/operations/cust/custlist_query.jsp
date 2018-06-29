@@ -33,6 +33,8 @@
     </div>
     <div class="e_space"></div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
+
 <div class="c_popup" id="UI-popup">
     <div class="c_popupBg" id="UI-popup_bg"></div>
     <div class="c_popupBox">

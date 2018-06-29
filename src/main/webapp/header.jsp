@@ -16,7 +16,7 @@
     <div class="back" ontap="back();">
         <span tag="header_name"><%=request.getParameter("headerName")%></span>
     </div>
-    <div class="right">
+    <div tag="headerPhone" class="right" style="display:none">
         <div class="fn">
             <span class="e_ico-menu "ontap="Header.showFloatLayerFn(this);"></span>
         </div>

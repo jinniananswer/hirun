@@ -149,6 +149,8 @@
         </div>
     </div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
+
 <script id="cust_action_list_template" rel_id="" type="text/html">
     {{each CUST_FINISH_ACTION_LIST action idx}}
     <li>

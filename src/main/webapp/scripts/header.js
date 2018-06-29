@@ -3,19 +3,24 @@
  */
 var Header = {
     init : function () {
-        $.ajaxReq({
-            url : 'common/msg/getUnReadMsgCount',
-            data : {
-                RECV_ID : User.userId
-            },
-            type : 'GET',
-            successFunc : function (data) {
-                $('#myMsg').html(data.UNREAD_NUM);
-            },
-            errorFunc : function (resultCode, resultInfo) {
+        if($.os.phone) {
+            $("div[tag=headerPhone]").show();
 
-            }
-        })
+            $.ajaxReq({
+                url : 'common/msg/getUnReadMsgCount',
+                data : {
+                    RECV_ID : User.userId
+                },
+                type : 'GET',
+                successFunc : function (data) {
+                    $('#myMsg').html(data.UNREAD_NUM);
+                },
+                errorFunc : function (resultCode, resultInfo) {
+
+                }
+            })
+        }
+
     },
     showFloatLayerFn : function (obj){
         // 获取 button 位置并设置给 floatLayer

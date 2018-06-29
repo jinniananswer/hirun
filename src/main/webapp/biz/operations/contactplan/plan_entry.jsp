@@ -101,7 +101,7 @@
 		<button class="e_button-r e_button-l e_button-green" type="button" ontap="planEntry.submitPlan()">提交</button>
 	</div>
 </div>
-<%--<jsp:include page="/base/buttom/base_buttom.jsp"/>--%>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <div class="c_popup" id="myPopup">
 	<div class="c_popupBg" id="myPopup_bg"></div>
 	<div class="c_popupBox">

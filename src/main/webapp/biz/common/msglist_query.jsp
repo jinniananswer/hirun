@@ -26,6 +26,8 @@
     </div>
     <div class="e_space"></div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
+
 <script id="msg_template" rel_id="msg_list" type="text/html">
     {{each MSG_LIST msg idx}}
     <div class="c_article" style="padding: 0em 0.5em 0em 0.5em;">
