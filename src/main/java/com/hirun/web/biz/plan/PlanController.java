@@ -191,4 +191,10 @@ public class PlanController {
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryPlanDetail", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/queryCustUnFinishCause")
+    public String getCustUnFinishActionCause(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.queryCustUnFinishCause", parameter);
+        return response.toJsonString();
+    }
 }

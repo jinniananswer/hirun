@@ -1,16 +1,11 @@
 package com.hirun.app.dao.cust;
 
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
-import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
-import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.RecordSet;
-import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -169,5 +164,23 @@ public class CustActionDAO extends StrongObjectDAO {
         parameter.put("ACTION_CODE", actionCode);
         List<CustActionEntity> list = this.query(CustActionEntity.class, "INS_CUST_ACTION", parameter);
         return list;
+    }
+
+    public List<CustActionEntity> queryCustUnFinishCauseByCustId(String custId) throws Exception {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * FROM ins_cust_action a ");
+        sql.append(" WHERE a.cust_id = :CUST_ID ");
+        sql.append(" AND NOT EXISTS (SELECT 1 FROM ins_cust_action b ");
+        sql.append("                 WHERE a.CUST_ID = b.CUST_ID ");
+        sql.append("                 AND b.finish_time IS NOT NULL ");
+        sql.append("                 AND a.action_code = b.action_code) ");
+        sql.append(" AND action_id IN (SELECT MAX(action_id) FROM ins_cust_action c ");
+        sql.append("                   WHERE c.cust_id = a.cust_id ");
+        sql.append("                   GROUP BY c.action_code) ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("CUST_ID", custId);
+
+        return this.queryBySql(CustActionEntity.class, sql.toString(), parameter);
     }
 }

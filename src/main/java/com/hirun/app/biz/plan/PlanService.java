@@ -1083,4 +1083,26 @@ public class PlanService extends GenericService {
 
         return response;
     }
+
+    public ServiceResponse queryCustUnFinishCause(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        Map<String, String> parameter = new HashMap<String, String>();
+        JSONArray custList = new JSONArray();
+        CustActionDAO custActionDAO = DAOFactory.createDAO(CustActionDAO.class);
+
+        JSONObject requestData = request.getBody().getData();
+        String custId = requestData.getString("CUST_ID");
+
+        List<CustActionEntity> custActionEntityList = custActionDAO.queryCustUnFinishCauseByCustId(custId);
+        for(CustActionEntity custActionEntity : custActionEntityList) {
+            JSONObject custAction = custActionEntity.toJSON(new String[] {"UNFINISH_CAUSE_DESC"});
+            custAction.put("ACTION_NAME", ActionCache.getAction(custActionEntity.getActionCode()).getActionName());
+            custAction.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(custActionEntity.getExecutorId()).getName());
+            custList.add(custAction);
+        }
+
+        response.set("CUST_UNFINISH_ACTION_CAUSE", custList);
+
+        return response;
+    }
 }

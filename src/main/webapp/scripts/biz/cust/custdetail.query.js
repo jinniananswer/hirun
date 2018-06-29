@@ -5,8 +5,15 @@ var custDetailQuery = {
             editMode:false
         });
 
+        window["custUnFinishCauseTable"] = new Wade.Table("custUnFinishCauseTable", {
+            fixedMode:true,
+            editMode:false
+        });
+
         custDetailQuery.queryCustDetail($.params.get('custId'));
-        custDetailQuery.queryCustFinishActioListn($.params.get('custId'));
+        custDetailQuery.queryCustFinishActioList($.params.get('custId'));
+        custDetailQuery.queryCustContactList($.params.get('custId'));
+        custDetailQuery.queryCustUnFinishActioList($.params.get('custId'));
     },
     queryCustDetail : function(custId) {
         $.ajaxReq({
@@ -24,6 +31,7 @@ var custDetailQuery = {
                 $('span[tag=house_detail]').html(data.HOUSE_DETAIL ? data.HOUSE_DETAIL : '');
                 $('span[tag=house_mode]').html(data.HOUSE_MODE_DESC ? data.HOUSE_MODE_DESC : '');
                 $('span[tag=house_area]').html(data.HOUSE_AREA ? data.HOUSE_AREA : '');
+                $('span[tag=employee_name]').html(data.EMPLOYEE_NAME ? data.EMPLOYEE_NAME : '');
                 $('span[tag=cust_detail]').html(data.CUST_DETAIL ? data.CUST_DETAIL : '');
             },
             errorFunc : function(resultCode, resultInfo) {
@@ -31,7 +39,7 @@ var custDetailQuery = {
             }
         })
     },
-    queryCustFinishActioListn : function(custId) {
+    queryCustFinishActioList : function(custId) {
         $.ajaxReq({
             url:'plan/getCustFinishActionList',
             data: {
@@ -44,6 +52,36 @@ var custDetailQuery = {
                 $.each(data.CUST_FINISH_ACTION_LIST, function(idx, action) {
                     action._className = "no";
                     custActionTable.addRow(action);
+                })
+            }
+        });
+    },
+    queryCustContactList : function(custId) {
+        $.ajaxReq({
+            url:'cust/queryCustContact',
+            data: {
+                CUST_ID : custId
+            },
+            type:'GET',
+            dataType:'json',
+            async:true,
+            successFunc:function(data) {
+                $('#custContactList').html(template('cust_contact_list_template', data));
+            }
+        });
+    },
+    queryCustUnFinishActioList : function(custId) {
+        $.ajaxReq({
+            url:'plan/queryCustUnFinishCause',
+            data: {
+                CUST_ID : custId
+            },
+            type:'GET',
+            dataType:'json',
+            successFunc:function(data) {
+                $.each(data.CUST_UNFINISH_ACTION_CAUSE, function(idx, action) {
+                    action._className = "no";
+                    custUnFinishCauseTable.addRow(action);
                 })
             }
         });
