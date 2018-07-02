@@ -5,6 +5,7 @@ var custCounselorChange = {
             mask:true
         });
 
+        /*
         $.ajaxReq({
             url : 'queryHouses',
             data : {
@@ -29,8 +30,15 @@ var custCounselorChange = {
 
             }
         })
+        */
 
         custCounselorChange.queryCustList({});
+
+        $("#HOUSE_SEARCH_TEXT").keydown(function(){
+            if(event.keyCode == "13") {
+                housesPopup.searchHouses($(this).val())
+            }
+        });
     },
     queryCustList : function(param) {
         param.CUST_STATUS = '1,7';
@@ -53,7 +61,9 @@ var custCounselorChange = {
     queryCustList4Cond : function(obj) {
         var param = $.buildJsonData("queryCustParamForm");
         param.HOUSE_COUNSELOR_IDS = $('#EMPLOYEE_NAMES').attr('EMPLOYEE_IDS');
+        param.HOUSE_ID = $('#HOUSES_NAME').attr('houses_id');
         delete param.EMPLOYEE_NAMES;
+        delete param.HOUSES_NAME;
         custCounselorChange.queryCustList(param);
         hidePopup(obj);
     },
@@ -87,6 +97,12 @@ var custCounselorChange = {
         var $obj = $(obj);
         custCounselorChangePopup.showCustCounselorChangePopup($obj.attr('cust_id'), function() {
 
+        })
+    },
+    selectHouses : function (obj) {
+        housesPopup.showHousesPopup(obj, function(housesId, housesName) {
+            $('#HOUSES_NAME').val(housesName);
+            $('#HOUSES_NAME').attr('houses_id', housesId);
         })
     }
 }
@@ -130,7 +146,7 @@ var custCounselorChangePopup = {
             })
 
         }
-    }
+    },
 }
 
 var counselorPopup = {
@@ -245,3 +261,29 @@ var counselorPopup = {
     }
 }
 
+var housesPopup = {
+    callback : '',
+    showHousesPopup : function(obj, callback) {
+        if(callback) housesPopup.callback = callback;
+
+        forwardPopup(obj,'housesPopupItem');
+    },
+    searchHouses : function(housesName) {
+        $.ajaxReq({
+            url : 'houses/queryHousesByName',
+            data : {
+                HOUSES_NAME : housesName
+            },
+            successFunc : function (data) {
+                $('#BIZ_HOUSES').html(template('houses_template', data))
+            }
+        })
+    },
+    clickHouses : function(obj) {
+        var $obj = $(obj);
+        var housesId = $obj.attr('houses_id');
+        var housesName = $obj.attr('houses_name');
+
+        if(housesPopup.callback) housesPopup.callback(housesId, housesName);
+    },
+}

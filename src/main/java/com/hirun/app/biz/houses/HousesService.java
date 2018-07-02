@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.authority.AuthorityJudgement;
+import com.hirun.app.bean.houses.HousesBean;
 import com.hirun.app.bean.housesplan.HousesPlanBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.dao.cust.CustDAO;
@@ -12,6 +13,7 @@ import com.hirun.app.dao.houses.HouseDAO;
 import com.hirun.app.dao.houses.HousesPlanDAO;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.entity.houses.HousesEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -573,6 +575,17 @@ public class HousesService extends GenericService {
         CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
         List<CustomerEntity> customers = custDAO.getCustomersByEmployeeIdHouseId(employeeId, request.getString("HOUSE_ID"));
         response.set("CUSTOMERS", ConvertTool.toJSONArray(customers));
+        return response;
+    }
+
+    public ServiceResponse queryHousesByName(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String housesName = request.getString("HOUSES_NAME");
+
+        List<HousesEntity> housesEntityList = HousesBean.queryHousesEntityListByName(housesName);
+
+        response.set("HOUSES_LIST", ConvertTool.toJSONArray(housesEntityList, new String[] {"HOUSES_ID","NAME"}));
+
         return response;
     }
 }
