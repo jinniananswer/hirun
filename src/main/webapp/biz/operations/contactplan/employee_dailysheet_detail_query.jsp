@@ -32,7 +32,7 @@
 	{{each DATA_LIST action idx}}
 	<div class="c_box c_box-border">
 		<div class="c_title" ontap="$(this).next().toggle();">
-			<div class="text">{{action.ACTION_NAME}}</div>
+			<div class="text e_strong e_blue">{{action.ACTION_NAME}}</div>
 			<div class="fn">
 				<ul>
 					<li><span class="e_ico-unfold"></span></li>

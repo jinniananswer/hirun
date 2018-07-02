@@ -501,6 +501,7 @@ var planSummarize = {
     checkBeforeSubmit : function() {
         var hasUnSummaryCust = false;
         var errorMessage = '';
+        var errorAction = [];
         $.each(actionList, function(idx, action){
             var actionCode = action.ACTION_CODE;
             $('#FINISH_INFO_' + actionCode + ' ul[tag=UNFINISH_CUST_LIST]').find('li[li_type=unFinish]').each(function(idx, unFinishCust) {
@@ -508,15 +509,16 @@ var planSummarize = {
                 if('2' != $unFinishCust.attr('oper_code')) {
                     hasUnSummaryCust = true;
                     return false;
+
                 }
             })
             if(hasUnSummaryCust) {
-                return false;
+                errorAction.push("【" + action.ACTION_NAME + "】");
             }
         });
 
-        if(hasUnSummaryCust) {
-            errorMessage = '还有未完成客户没有填写原因，请先填写未完成原因';
+        if(errorAction.length > 0) {
+            errorMessage = '以下这些动作还有未完成客户没有填写原因，请先填写未完成原因。包括' + errorAction.join(",");
         }
 
         return errorMessage;
