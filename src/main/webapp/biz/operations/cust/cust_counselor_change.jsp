@@ -127,7 +127,7 @@
             <div class="c_popupGroup">
                 <div class="c_popupItem" id="counselorPopupItem">
                     <div class="c_header">
-                        <div class="back" ontap="hidePopup(this)">请选择家装顾问</div>
+                        <div class="back" ontap="backPopup(this)">请选择家装顾问</div>
                     </div>
                     <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                         <!-- 列表 开始 -->
@@ -148,7 +148,7 @@
                 </div>
                 <div class="c_popupItem" id="housesPopupItem">
                     <div class="c_header">
-                        <div class="back" ontap="hidePopup(this)">请选择楼盘</div>
+                        <div class="back" ontap="backPopup(this)">请选择楼盘</div>
                     </div>
                     <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                         <div class="c_list c_list-form">

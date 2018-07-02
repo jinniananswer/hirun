@@ -43,7 +43,7 @@ var custCounselorChange = {
     queryCustList : function(param) {
         param.CUST_STATUS = '1,7';
         if(!param.HOUSE_COUNSELOR_IDS) {
-            param.HOUSE_COUNSELOR_ID = Employee.employeeId;
+            param.TOP_EMPLOYEE_ID = Employee.employeeId;
         }
 
         $.ajaxReq({
@@ -167,6 +167,10 @@ var counselorPopup = {
                 COLUMNS : 'EMPLOYEE_ID,NAME'
             },
             successFunc : function(data) {
+                var myEmployeeInfo = {};
+                myEmployeeInfo.EMPLOYEE_ID = Employee.employeeId;
+                myEmployeeInfo.NAME = Employee.employeeName;
+                data.EMPLOYEE_LIST.push(myEmployeeInfo);
                 $('#BIZ_COUNSELORS').html(template("employee_template", data));
             },
             errorFunc : function(resultCode, resultInfo) {

@@ -16,8 +16,10 @@
 
     EmployeeEntity employeeEntity = (EmployeeEntity)session.getAttribute("EMPLOYEE");
     String employeeId = "";
+    String employeeName = "";
     if(employeeEntity != null) {
         employeeId = employeeEntity.getEmployeeId();
+        employeeName = employeeEntity.getName();
     }
 %>
 <html size="s">
@@ -56,6 +58,7 @@
 
         var Employee = {};
         Employee.employeeId = '<%=employeeId%>';
+        Employee.employeeName = '<%=employeeName%>';
     </script>
 </head>
 </html>

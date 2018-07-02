@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.cust.CustBean;
 import com.hirun.app.bean.cust.CustContactBean;
+import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.houses.HousesBean;
 import com.hirun.app.cache.EmployeeCache;
 import com.hirun.app.dao.cust.CustChangeRelaEmployeeLogDAO;
@@ -12,6 +13,7 @@ import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
 import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.cust.Sex;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -84,6 +86,16 @@ public class CustService extends GenericService{
         JSONObject requestData = request.getBody().getData();
 
         Map<String, String> parameter = ConvertTool.toMap(requestData);
+        String topEmployeeId = requestData.getString("TOP_EMPLOYEE_ID");
+        if(StringUtils.isNotBlank(topEmployeeId)) {
+            StringBuilder houseCounselorIds = new StringBuilder();
+            List<EmployeeEntity> employeeEntityList = EmployeeBean.getAllSubordinatesCounselors(topEmployeeId);
+            for(EmployeeEntity employeeEntity : employeeEntityList) {
+                houseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
+            }
+            houseCounselorIds.append(topEmployeeId);
+            parameter.put("HOUSE_COUNSELOR_IDS", houseCounselorIds.toString());
+        }
 
         CustDAO dao = new CustDAO("ins");
         List<CustomerEntity> customerList = dao.queryCustList(parameter);
