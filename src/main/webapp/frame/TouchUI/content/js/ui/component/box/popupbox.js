@@ -4,4 +4,529 @@
  * auth:xiedx@asiainfo.com
  * Copyright 2015, WADE
  */
-!function(e,a,t){"use strict";function i(e,a){if(e&&e.nodeType&&a)return e.currentStyle?e.currentStyle[a]:t.defaultView.getComputedStyle(e,!1)[a]}if(e&&"undefined"==typeof e.PopupBox){var p=Array.prototype.push,n=Array.prototype.splice,r="undefined"!=typeof e.hasTouch?e.hasTouch:"ontouchstart"in a,o=r?"touchstart":"mousedown",s=null,d=[],l=0,u=function(){var a,t=e.getParentIframe();return t&&parent.Wade&&parent.Wade.PopupBox&&(a=parent.Wade.PopupBox.findPopup(t)),a&&(s=t),a},c=function(i){if(i){var p=e.Popup&&e.isFunction(e.Popup)&&e.Popup.prototype._init,n=e.Dialog&&e.isFunction(e.Dialog)&&e.Dialog.prototype._init;if(e.isString(i)&&a[i]&&(p&&a[i]instanceof e.Popup||n&&a[i]instanceof e.Dialog))return a[i];if(i.nodeType)for(var r,o,s=0,d=i.parentNode;s<50&&d&&d.nodeType&&d!=t.body;){if(e.nodeName(d,"div")&&(o=" "+d.className+" ")&&(o.indexOf(" c_popup ")>-1||o.indexOf(" c_dialog ")>-1)&&(r=e.attr(d,"id"))&&a[r]&&(p&&a[r]instanceof e.Popup||n&&a[r]instanceof e.Dialog))return a[r];d=d.parentNode,s++}}},f=function(e){var a;return s=null,(a=c(e))?a:u()},g={findPopup:function(e){return f(e)},showPopup:function(e,a,t){var i=f(e);i&&i.show(a,t)},hidePopup:function(e){var a=f(e);a&&a.hide()},forwardPopup:function(t,i,p,n,r,o){var d=f(t);if(d)if(arguments.length<3)d.forward(s?s:t,i);else{var l=i;if(!(t&&t.nodeType&&l&&e.isString(l)&&p&&e.isString(p)))return;e.Frame||a.includeScript(e.UI_FRAME_JS,!0,!0);var u=d.append(s?s:t,l),c="frame_"+u;d.getFrame(c).reset(p,n,r,o,l),d.forward(s?s:t,u),u=c=null}},backPopup:function(e,a,t,i){var p=f(e);return!!p&&(p.back(s?s:e,a,t,i),!0)},popupPage:function(i,p,n,r,o,s,d,l,u){if(e.isSameDomain(parent)&&!e.isSamePage(parent)&&!0!==parent.StopPopupRecursion&&parent.Wade&&(parent.Wade.Popup||parent.Wade.Dialog||parent.Wade.Tabset)){var c,f,g=e.getParentIframe();if(g&&((c=e.attr(g,"popupId"))&&parent[c]&&(parent.Wade.Popup&&parent[c]instanceof parent.Wade.Popup||parent.Wade.Dialog&&parent[c]instanceof parent.Wade.Dialog)||(f=e.attr(g,"tabsetId"))&&parent[f]&&parent.Wade.Tabset&&parent[f]instanceof parent.Wade.Tabset))return void parent.popupPage(i,p,n,r,o,s,d,l,a)}if(i&&e.isString(i)&&p&&e.isString(p)){e.Popup||a.includeScript(e.UI_POPUP_JS,!0,!0),e.Frame||a.includeScript(e.UI_FRAME_JS,!0,!0),e.isFunction(s)&&(l=d,d=s,s=null),i=e.xss(i);var v,m=e.md5("popup_"+i);if(v=a["popup_"+m]){if(!0!==v.visible){var h=a["frame_"+m].reset(p,n,r,o,i);v.show(1,h)}}else{s?"half"==s?s="c_popup c_popup-half":"full"==s?s="c_popup c_popup-full":"wide"==s&&(s="c_popup c_popup-wide"):s="c_popup";var _=[];_.push('<div id="popup_'+m+'" class="'+s+'">'),_.push('<div class="c_popupBg"></div>'),_.push('<div class="c_popupBox">'),_.push('<div class="c_popupWrapper">'),_.push('<div id="popup_'+m+'_group1" class="c_popupGroup" level="1">'),_.push('<div class="c_popupItem">'),_.push('<iframe id="frame_'+m+'" style="width:100%;height:100%;display:none" frameborder="0"></iframe>'),_.push('<div class="c_msg c_msg-full c_msg-loading">'),_.push('<div class="wrapper">'),_.push('<div class="emote"></div>'),_.push('<div class="info"><div class="text"><div class="title">loading</div></div></div>'),_.push("</div>"),_.push("</div>"),_.push("</div>"),_.push("</div>"),_.push("</div>"),_.push("</div>"),e(t.body).append(_.join("")),_=null,d&&(e.isFunction(d)?e("#popup_"+m).afterAction(d):e.isString(d)&&e("#popup_"+m).attr("onafterAction",d)),l&&(e.isFunction(l)?e("#popup_"+m).hideAction(l):e.isString(l)&&e("#popup_"+m).attr("onhideAction",l)),a["frame_"+m]=new Wade.Frame("frame_"+m,{autoInit:!1,title:i,page:p,listener:n,params:r,subsys:o}),v=a["popup_"+m]=new Wade.Popup("popup_"+m,{visible:!1,mask:!0,srcWindow:u}),v.show(1)}return v}},popupDialog:function(i,p,n,r,o,s,d,l,u,c,f){if(e.isNumeric(o)&&(c=u,u=l,l=d,d=s,s=o,o=null),e.isFunction(l)&&(u=l,c=u,l=!0),e.isSameDomain(parent)&&!e.isSamePage(parent)&&!0!==parent.StopPopupRecursion&&parent.Wade&&(parent.Wade.Popup||parent.Wade.Dialog||parent.Wade.Tabset)){var g,v,m=e.getParentIframe();if(m&&((g=e.attr(m,"popupId"))&&parent[g]&&(parent.Wade.Popup&&parent[g]instanceof parent.Wade.Popup||parent.Wade.Dialog&&parent[g]instanceof parent.Wade.Dialog)||(v=e.attr(m,"tabsetId"))&&parent[v]&&parent.Wade.Tabset&&parent[v]instanceof parent.Wade.Tabset))return void parent.popupDialog(i,p,n,r,o,s,d,l,u,c,a)}if(i&&e.isString(i)&&p&&e.isString(p)){e.Dialog||a.includeScript(e.UI_DIALOG_JS,!0,!0),e.Frame||a.includeScript(e.UI_FRAME_JS,!0,!0),i=e.xss(i);var h,_=e.md5("dialog_"+i);if(h=a["dialog_"+_]){if(!0!==h.visible){a["frame_"+_].reset(p,n,r,o,i);h.show()}}else{e.isNumeric(s)&&(s+="em"),e.isNumeric(d)&&(d+="em");var y=[];y.push('<div id="dialog_'+_+'" class="c_dialog" style="display:none;">'),y.push('<div class="wrapper">'),y.push('<div class="header">'),y.push('<div class="text">'+i+"</div>"),y.push('<div class="fn">'),y.push('<div class="close"></div>'),y.push("</div>"),y.push("</div>"),y.push('<div class="content">'),y.push('<iframe id="frame_'+_+'" style="width:100%;height:100%;display:none" frameborder="0"></iframe>'),y.push('<div class="c_msg c_msg-full c_msg-loading">'),y.push('<div class="wrapper">'),y.push('<div class="emote"></div>'),y.push('<div class="info"><div class="text"><div class="title">loading</div></div></div>'),y.push("</div>"),y.push("</div>"),y.push("</div>"),y.push("</div>"),e(t.body).append(y.join("")),y=null,u&&(e.isFunction(u)?e("#dialog_"+_).afterAction(u):e.isString(u)&&e("#dialog_"+_).attr("onafterAction",u)),c&&(e.isFunction(c)?e("#dialog_"+_).hideAction(c):e.isString(c)&&e("#dialog_"+_).attr("onhideAction",c)),a["frame_"+_]=new Wade.Frame("frame_"+_,{autoInit:!1,title:i,page:p,listener:n,params:r,subsys:o}),h=a["dialog_"+_]=new Wade.Dialog("dialog_"+_,{closeable:0!=l,height:d,width:s,srcWindow:f}),h.show()}return h}},setPopupReturnValue:function(t,i,p,n){var r,o=e.isSameDomain(parent),s=o&&parent.Wade&&parent.System,d=o&&parent.Wade&&parent.popupPageExternal;if(s||d){var l,u;if(s)r=parent;else{l=parent.Wade.getGlobalFrame().popUpExternalPageStack.slice(parent.Wade.getGlobalFrame().popUpExternalPageStack.length-1)[0];var c=parent.Wade.getFrame(l,null,"id");u=c?c.frameElement:o?a.frameElement:null;var g=u?u.srcframeName?u.srcframeName:u.getAttribute("srcframeName"):"";r=g&&""!=g?parent.Wade.getFrame(g,null,"globalUniqueFrameId"):parent.Wade.getSameWadeDomainTop()}if(!r)return;if(e.isPlainObject(p)){for(var v in p)if(v&&"undefined"!=v){var i=s?r.getElement(v):r.$("#"+v);s?i&&i.nodeType&&r.setFormElementValue(i.tagName.toLowerCase(),i,p[v]):i.val(p[v])}}else if(e.isArray(p)&&p.length&&p.length%2==0)for(var m=0;m<p.length;m+=2){var v=p[m],h=p[m+1];if(v&&"undefined"!=v){var i=s?r.getElement(v):r.$("#"+v);s?i&&i.nodeType&&r.setFormElementValue(i.tagName.toLowerCase(),i,h):i.val(h)}}if(!1!==n)if(s)parent.Wade.dialog.closeCurrentDialog();else{var _=u?u.eventId?u.eventId:u.getAttribute("eventId"):"",y=u?u.guidValue?u.guidValue:u.getAttribute("guidValue"):"";r.Wade.closePopupPageExternal(!1,null,_,y,l,!1)}}else{var P=f(t);P&&P.setPopupReturnValue(i,p,n)}},showFloatLayer:function(a,i){if(a&&e.isString(a)&&(a=t.getElementById(a)),a&&a.nodeType){var n=e.attr(a,"id");n||(n="_floatLayer_"+ ++l,e.attr(a,"id",n));var r=a.className?a.className:"";if((" "+r+" ").indexOf(" c_float ")>-1){if((" "+r+" ").indexOf(" c_float-show ")>-1)return;a.className=e.trim(r+" c_float-show")}else{var o=i&&e.isString(i)?i:"";if(a.style.display==o)return;a.style.display=o}a.style.zIndex=e.zIndexer.get(n),p.call(d,n)}},hideFloatLayer:function(a){if(a&&e.isString(a)&&(a=t.getElementById(a)),a&&a.nodeType){var i=e.attr(a,"id");if(i){var p=a.className?a.className:"";if((" "+p+" ").indexOf(" c_float ")>-1){if((" "+p+" ").indexOf(" c_float-show ")<0)return;a.className=e.trim((" "+p+" ").replace(/ c_float-show /g," "))}else{if("none"==a.style.display)return;a.style.display="none"}e.zIndexer.remove(i),n.call(d,e.inArray(i,d),1)}}},toggleFloatLayer:function(a,p){if(a&&e.isString(a)&&(a=t.getElementById(a)),a&&a.nodeType){var n=a.className?a.className:"",r=(" "+n+" ").indexOf(" c_float ")>-1?(" "+n+" ").indexOf(" c_float-show ")>-1:"none"!=i(a,"display");r?g.hideFloatLayer(a):g.showFloatLayer(a,p)}}};e(function(){e(t.body).bind(o,function(a){if(a&&a.target){var i=a.target;if(i&&i.nodeType&&!(d.length<=0)){for(var p=0,n=!1;i&&i.nodeType&&i!=t.body&&p<50;){var r=e.attr(i,"id"),o=e.attr(i,"x-wade-float");if(o&&e.inArray(o,d)==d.length-1){n=!0;break}if(r&&e.inArray(r,d)==d.length-1&&"none"!=i.style.display){n=!0;break}i=i.parentNode,p++}n||g.hideFloatLayer(d[d.length-1])}}})}),e.PopupBox=g,e.each("showPopup,hidePopup,forwardPopup,backPopup,popupPage,popupDialog,setPopupReturnValue,showFloatLayer,hideFloatLayer,toggleFloatLayer".split(","),function(t,i){a[i]=e.PopupBox[i]})}}(window.Wade,window,document);
+(function($, window, doc){
+    "use strict";
+
+    if( !$ || typeof $.PopupBox != "undefined")
+        return;
+
+    var push = Array.prototype.push,
+        splice = Array.prototype.splice;
+
+    var hasTouch     = typeof $.hasTouch != "undefined" ? $.hasTouch : "ontouchstart" in window;
+    var START_EVENT  = hasTouch ? 'touchstart': 'mousedown';
+
+    var popupIframe = null; //popup组件对象所在的iframe
+
+    var floatLayers = [];
+    var floatLayerGUID = 0;
+
+    /*
+     获取css样式表中的样式
+     */
+    function getStyle(obj, attr){
+        if(!obj || !obj.nodeType || !attr)
+            return;
+
+        if(obj.currentStyle){
+            return obj.currentStyle[attr];
+        }else{
+            return doc.defaultView.getComputedStyle(obj,false)[attr];
+        }
+    }
+
+    //从父窗口中查找弹窗组件
+    var _findParentPopup = function(){
+        var popup, frame = $.getParentIframe();
+        if(frame && parent.Wade && parent.Wade.PopupBox){
+            popup = parent.Wade.PopupBox.findPopup(frame);
+        }
+
+        if(popup){
+            popupIframe = frame;
+        }
+        return popup;
+    }
+
+    var	_findPopupByNode = function(node){
+
+        if(!node) return;
+
+        var hasPopup = $.Popup && $.isFunction($.Popup) && $.Popup.prototype._init;
+        var hasDialog = $.Dialog && $.isFunction($.Dialog) && $.Dialog.prototype._init;
+
+        if( $.isString(node) && window[node] && (
+                ( hasPopup && window[node] instanceof $.Popup ) ||
+                ( hasDialog && window[node] instanceof $.Dialog )
+            ) ){
+            return window[node];
+        }
+
+        if(!node.nodeType)
+            return;
+
+        var n = 0, id, p = node.parentNode, className;
+        while(n < 50 && p && p.nodeType && p != doc.body){  //最大查找50层节点
+            if($.nodeName(p, "div")
+                && ( className = (" " + p.className + " ") ) && ( className.indexOf(" c_popup ") > -1 || className.indexOf(" c_dialog ") > -1)
+                && ( id = $.attr(p, "id") ) ){
+
+                if(window[id] && (
+                        ( hasPopup && window[id] instanceof $.Popup ) ||
+                        ( hasDialog && window[id] instanceof $.Dialog )
+                    )){
+                    return window[id];
+                }
+            }
+            p = p.parentNode;
+            n ++;
+        }
+    };
+
+    var _findPopup = function(node){
+        var popup; popupIframe = null; //置空 popupIframe
+        if( !( popup = _findPopupByNode(node) ) ){
+            return  _findParentPopup();
+        }
+        return popup;
+    }
+
+    var PopupBox = {
+        findPopup: function(node){
+            return _findPopup(node);
+        },
+        showPopup: function(node, item, reset){
+            var popup = _findPopup(node);
+            if(popup){
+                popup.show(item, reset);
+            }
+        },
+        hidePopup: function(node){
+            var popup = _findPopup(node);
+            if(popup){
+                popup.hide();
+            }
+        },
+        forwardPopup: function(node, arg1, page, listener, params, subsys){ //根据参数个数判断是那种方式 forwardPopup(node, title, page, listener, params)
+            var popup = _findPopup(node);
+            if(popup){
+                if(arguments.length < 3){
+                    //popupIframe 不为空，则Popup组件对象位于父窗口， 替换forward入参元素
+                    popup.forward(popupIframe ? popupIframe : node, arg1); //popup.forward(node, item);
+                }else{
+                    var title = arg1;
+                    if(!node || !node.nodeType || !title || !$.isString(title) || !page || !$.isString(page))
+                        return;
+
+                    if(!$.Frame){ //有可能存在未加载Frame脚本的情况，需要检测并引入frame组件js
+                        window.includeScript($.UI_FRAME_JS, true, true);
+                    }
+
+                    var itemId = popup.append(popupIframe ? popupIframe : node, title); //返回itemId
+                    var frameId = "frame_" + itemId;  //约定frameId为 'frame_' + itemId
+
+                    popup.getFrame(frameId).reset(page, listener, params, subsys, title);
+                    popup.forward(popupIframe ? popupIframe : node, itemId);
+
+                    itemId = frameId = null;
+                }
+            }
+        },
+        backPopup: function(node, item, el, value){ //支持返回时带回数据到上一个界面
+            var popup = _findPopup(node);
+            if(popup){
+                popup.back(popupIframe ? popupIframe : node, item, el, value);
+                return true;
+            }
+            return false;
+        },
+        popupPage: function(title, page, listener, params, subsys, className, afterAction, hideAction, srcWindow){
+
+            //判断父窗口
+            if($.isSameDomain(parent) && !$.isSamePage(parent) && true !== parent.StopPopupRecursion && parent.Wade && ( parent.Wade.Popup || parent.Wade.Dialog || parent.Wade.Tabset )){
+                var popupId, tabsetId, frame = $.getParentIframe();
+                if(frame && (
+                        ( (popupId = $.attr(frame, "popupId")) && parent[popupId] && ( (parent.Wade.Popup && parent[popupId] instanceof parent.Wade.Popup) || (parent.Wade.Dialog && parent[popupId] instanceof parent.Wade.Dialog) ) )
+                        || ( (tabsetId = $.attr(frame, "tabsetId")) && parent[tabsetId] && parent.Wade.Tabset && parent[tabsetId] instanceof parent.Wade.Tabset )
+                    ) ){
+                    parent.popupPage(title, page, listener, params, subsys, className, afterAction, hideAction, window);
+                    return;
+                }
+            }
+
+            if(!title || !$.isString(title) || !page || !$.isString(page))
+                return;
+
+            if(!$.Popup){ //引入popup组件js
+                window.includeScript($.UI_POPUP_JS, true, true);
+            }
+
+            if(!$.Frame){ //引入frame组件js
+                window.includeScript($.UI_FRAME_JS, true, true);
+            }
+
+            //处理参数
+            if($.isFunction(className)){
+                hideAction = afterAction;
+                afterAction = className;
+                className = null;
+            }
+
+            title = $.xss(title);
+
+            var guid = $.md5("popup_" + title), popup;
+            if( ( popup = window["popup_" + guid] ) ){
+                if(true !== popup.visible){
+                    var reset = window["frame_" + guid].reset(page, listener, params, subsys, title);
+                    popup.show(1, reset);
+                }
+            }else{
+
+                //简化样式入参
+                if(!className) className = "c_popup";
+                else if("half" == className) className = "c_popup c_popup-half";
+                else if("full" == className) className = "c_popup c_popup-full";
+                else if("wide" == className) className = "c_popup c_popup-wide";
+
+                //构造popup和frame的html
+                var html = [];
+                html.push('<div id="popup_' + guid + '" class="' + className + '">');
+                html.push('<div class="c_popupBg"></div>');
+                html.push('<div class="c_popupBox">');
+                html.push('<div class="c_popupWrapper">');
+                html.push('<div id="popup_' + guid + '_group1" class="c_popupGroup" level="1">'); //必须加上level属性
+                html.push('<div class="c_popupItem">');
+
+                html.push('<iframe id="frame_' + guid + '" style="width:100%;height:100%;display:none" frameborder="0"></iframe>');
+                html.push('<div class="c_msg c_msg-full c_msg-loading">');
+                html.push('<div class="wrapper">');
+                html.push('<div class="emote"></div>');
+                html.push('<div class="info"><div class="text"><div class="title">loading</div></div></div>');
+                html.push('</div>');
+                html.push('</div>');
+
+                html.push('</div>');
+                html.push('</div>');
+                html.push('</div>');
+                html.push('</div>');
+
+                //插入到body下
+                $(doc.body).append(html.join(""));
+                html = null;
+
+                //绑定事件
+                if(afterAction){
+                    if($.isFunction(afterAction)){
+                        $("#popup_" + guid).afterAction(afterAction);
+                    }else if($.isString(afterAction)){
+                        $("#popup_" + guid).attr("onafterAction", afterAction);
+                    }
+                }
+                if(hideAction){
+                    if($.isFunction(hideAction)){
+                        $("#popup_" + guid).hideAction(hideAction);
+                    }else if($.isString(hideAction)){
+                        $("#popup_" + guid).attr("onhideAction", hideAction);
+                    }
+                }
+
+                window["frame_" + guid] = new Wade.Frame("frame_" + guid, {autoInit:false, title:title, page:page, listener:listener, params:params, subsys:subsys});
+                popup = window["popup_" + guid] = new Wade.Popup("popup_" + guid, {visible:false, mask:true, srcWindow: srcWindow});
+                popup.show(1);
+            }
+
+            return popup;
+        },
+        popupDialog: function(title, page, listener, params, subsys, width, height, closeable, afterAction, hideAction, srcWindow){
+
+            //预处理参数
+            if($.isNumeric(subsys)){
+                hideAction = afterAction;
+                afterAction = closeable;
+                closeable = height;
+                height = width;
+                width = subsys;
+                subsys = null;
+            }
+
+            //预处理参数
+            if($.isFunction(closeable)){
+                afterAction = closeable;
+                hideAction = afterAction;
+                closeable = true;
+            }
+
+            //判断父窗口
+            if($.isSameDomain(parent) && !$.isSamePage(parent) && true !== parent.StopPopupRecursion && parent.Wade && ( parent.Wade.Popup || parent.Wade.Dialog || parent.Wade.Tabset )){
+                var popupId, tabsetId, frame = $.getParentIframe();
+                if(frame && (
+                        ( (popupId = $.attr(frame, "popupId")) && parent[popupId] && ( (parent.Wade.Popup && parent[popupId] instanceof parent.Wade.Popup) || (parent.Wade.Dialog && parent[popupId] instanceof parent.Wade.Dialog) ) )
+                        || ( (tabsetId = $.attr(frame, "tabsetId")) && parent[tabsetId] && parent.Wade.Tabset && parent[tabsetId] instanceof parent.Wade.Tabset )
+                    ) ){
+                    parent.popupDialog(title, page, listener, params, subsys, width, height, closeable, afterAction, hideAction, window);
+                    return;
+                }
+            }
+
+            if(!title || !$.isString(title) || !page || !$.isString(page))
+                return;
+
+            if(!$.Dialog){ //引入popup组件js
+                window.includeScript($.UI_DIALOG_JS, true, true);
+            }
+
+            if(!$.Frame){ //引入frame组件js
+                window.includeScript($.UI_FRAME_JS, true, true);
+            }
+
+            title = $.xss(title);
+
+            var guid = $.md5("dialog_" + title), dialog;
+            if( ( dialog = window["dialog_" + guid] ) ){
+                if(true !== dialog.visible){
+                    var reset = window["frame_" + guid].reset(page, listener, params, subsys, title);
+                    dialog.show();
+                }
+            }else{
+
+                if($.isNumeric(width)){
+                    width += "em";
+                }
+
+                if($.isNumeric(height)){
+                    height += "em";
+                }
+
+                //构造dialog和frame的html
+                var html = [];
+                html.push('<div id="dialog_' + guid + '" class="c_dialog" style="display:none;">');
+                html.push('<div class="wrapper">');
+
+                html.push('<div class="header">');
+                html.push('<div class="text">' + title + '</div>');
+                html.push('<div class="fn">');
+                html.push('<div class="close"></div>');
+                html.push('</div>');
+                html.push('</div>');
+
+                html.push('<div class="content">');
+
+                html.push('<iframe id="frame_' + guid + '" style="width:100%;height:100%;display:none" frameborder="0"></iframe>');
+                html.push('<div class="c_msg c_msg-full c_msg-loading">');
+                html.push('<div class="wrapper">');
+                html.push('<div class="emote"></div>');
+                html.push('<div class="info"><div class="text"><div class="title">loading</div></div></div>');
+                html.push('</div>');
+                html.push('</div>');
+
+                html.push('</div>');
+                html.push('</div>');
+
+                //插入到body下
+                $(doc.body).append(html.join(""));
+                html = null;
+
+                //绑定事件
+                if(afterAction){
+                    if($.isFunction(afterAction)){
+                        $("#dialog_" + guid).afterAction(afterAction);
+                    }else if($.isString(afterAction)){
+                        $("#dialog_" + guid).attr("onafterAction", afterAction);
+                    }
+                }
+                if(hideAction){
+                    if($.isFunction(hideAction)){
+                        $("#dialog_" + guid).hideAction(hideAction);
+                    }else if($.isString(hideAction)){
+                        $("#dialog_" + guid).attr("onhideAction", hideAction);
+                    }
+                }
+
+                window["frame_" + guid] = new Wade.Frame("frame_" + guid, {autoInit:false, title:title, page:page, listener:listener, params:params, subsys:subsys});
+                dialog = window["dialog_" + guid] = new Wade.Dialog("dialog_" + guid, {closeable:false == closeable ? false : true, height: height, width: width, srcWindow: srcWindow});
+
+                dialog.show();
+            }
+
+            return dialog;
+        },
+        setPopupReturnValue: function(node, el, value, close){
+            var same = $.isSameDomain(parent);
+            var wade3 = same && parent.Wade && parent.System;
+            var wade4 = same && parent.Wade && parent.popupPageExternal;
+            var srcFrame;
+            if(wade3 || wade4){
+                var currentPopupFrameId, frameElementThis;
+                if(wade3){
+                    srcFrame = parent;
+                }else{
+                    currentPopupFrameId = parent.Wade.getGlobalFrame().popUpExternalPageStack.slice(parent.Wade.getGlobalFrame().popUpExternalPageStack.length - 1)[0];
+                    var popUpFrameElement = parent.Wade.getFrame(currentPopupFrameId, null, "id");
+                    frameElementThis = popUpFrameElement ? popUpFrameElement.frameElement : same ? window.frameElement : null;
+                    var srcframeName = frameElementThis ? frameElementThis.srcframeName ? frameElementThis.srcframeName : frameElementThis.getAttribute("srcframeName") : "";
+                    if (srcframeName && srcframeName != "") {
+                        srcFrame = parent.Wade.getFrame(srcframeName, null, "globalUniqueFrameId");
+                    } else {
+                        srcFrame = parent.Wade.getSameWadeDomainTop();
+                    }
+                }
+
+                if(!srcFrame) return;
+
+                if ($.isPlainObject(value)) {
+                    for (var id in value) {
+                        if (id && id != "undefined") {
+                            var el = wade3 ? srcFrame.getElement(id) : srcFrame.$("#" + id);
+                            if (wade3) {
+                                if (el && el.nodeType) srcFrame.setFormElementValue(el.tagName.toLowerCase(), el, value[id]);
+                            } else {
+                                el.val(value[id]);
+                            }
+                        }
+                    }
+                } else if ($.isArray(value) && value.length && value.length % 2 == 0) {
+                    for (var i = 0; i < value.length; i = i + 2) {
+                        var id = value[i], val = value[i + 1];
+                        if (id && id != "undefined") {
+                            var el = wade3 ? srcFrame.getElement(id) : srcFrame.$("#" + id);
+                            if (wade3) {
+                                if (el && el.nodeType) srcFrame.setFormElementValue(el.tagName.toLowerCase(), el, val);
+                            } else {
+                                el.val(val);
+                            }
+                        }
+                    }
+                }
+                if (false !== close) {
+                    if (wade3) {
+                        parent.Wade.dialog.closeCurrentDialog();
+                    } else {
+                        var eventId = frameElementThis ? frameElementThis.eventId ? frameElementThis.eventId : frameElementThis.getAttribute("eventId") : "";
+                        var guidValue = frameElementThis ? frameElementThis.guidValue ? frameElementThis.guidValue : frameElementThis.getAttribute("guidValue") : "";
+                        srcFrame.Wade.closePopupPageExternal(false, null, eventId, guidValue, currentPopupFrameId, false);
+                    }
+                }
+            }else{
+                var popup = _findPopup(node);
+                if(popup){
+                    popup.setPopupReturnValue(el, value, close);
+                }
+            }
+        },
+        showFloatLayer: function(el, display){ //显示指定的浮动层，支持点击浮动层之外区域时，自动隐藏该浮动层
+            if(el && $.isString(el))
+                el = doc.getElementById(el);
+
+            if(!el || !el.nodeType)
+                return;
+
+            var id = $.attr(el, "id");
+            if(!id){
+                id = "_floatLayer_" + (++ floatLayerGUID);
+                $.attr(el, "id", id);
+            }
+
+            //设置z-Index
+            var className = el.className ? el.className : "";
+            if( (" " + className + " ").indexOf(" c_float ") > -1 ){
+                if( (" " + className + " ").indexOf(" c_float-show ") > -1 )
+                    return;
+                //设置样式
+                el.className = $.trim(className + " c_float-show"); //设置样式
+            }else{
+                var disp = display && $.isString(display) ? display : "";
+                if(el.style.display  == disp)
+                    return;
+                //设置显示
+                el.style.display = disp;
+            }
+
+            el.style.zIndex = $.zIndexer.get(id); //设置zIndex
+            push.call(floatLayers, id);
+        },
+        hideFloatLayer: function(el){  //隐藏指定的浮动层
+            if(el && $.isString(el))
+                el = doc.getElementById(el);
+
+            if(!el || !el.nodeType)
+                return;
+
+            var id = $.attr(el, "id");
+            if(!id) return;
+
+            //移除z-Index
+            var className = el.className ? el.className : "";
+            if( (" " + className + " ").indexOf(" c_float ") > -1 ){
+                if( (" " + className + " ").indexOf(" c_float-show ") < 0 )
+                    return;
+
+                //设置样式
+                el.className = $.trim(  (" " + className + " ").replace(/ c_float-show /g, " ") );
+            }else{
+                if("none" == el.style.display)
+                    return;
+
+                //设置隐藏
+                el.style.display = "none";
+            }
+
+            $.zIndexer.remove(id);
+            splice.call(floatLayers, $.inArray(id, floatLayers), 1);
+        },
+        toggleFloatLayer: function(el, display){
+            if(el && $.isString(el))
+                el = doc.getElementById(el);
+
+            if(!el || !el.nodeType)
+                return;
+
+            var className = el.className ? el.className : "";
+            var isDisplay = (" " + className + " ").indexOf(" c_float ") > -1 ? (" " + className + " ").indexOf(" c_float-show ") > -1
+                : getStyle(el, "display") != "none";
+            if(isDisplay){
+                PopupBox.hideFloatLayer(el);
+            }else{
+                PopupBox.showFloatLayer(el, display);
+            }
+        }
+    };
+
+    $(function(){
+
+        $(doc.body).bind(START_EVENT, function(e){
+            if(!e || !e.target)
+                return;
+            var node = e.target;
+            if(!node || !node.nodeType) return;
+
+            if(floatLayers.length <= 0) return;
+
+            var i = 0, found = false;
+            while(node && node.nodeType && node != doc.body && i < 50){
+                var id = $.attr(node, "id"), xwf = $.attr(node, "x-wade-float");
+                if(xwf && $.inArray(xwf, floatLayers) == (floatLayers.length - 1)){
+                    found = true;
+                    break;
+                }
+                if(id && $.inArray(id, floatLayers) == (floatLayers.length - 1) && "none" != node.style.display){
+                    found = true;
+                    break;
+                }
+                node = node.parentNode;
+                i ++;
+            }
+
+            if(!found){
+                PopupBox.hideFloatLayer(floatLayers[floatLayers.length - 1]);
+            }
+        });
+
+    });
+
+    window.PopupBox = $.PopupBox = PopupBox;
+
+    $.each("showPopup,hidePopup,forwardPopup,backPopup,popupPage,popupDialog,setPopupReturnValue,showFloatLayer,hideFloatLayer,toggleFloatLayer,popupPageByUrl".split(","), function(idx, name){
+        window[name] = $.PopupBox[name];
+    });
+
+})(window.Wade, window, document);
