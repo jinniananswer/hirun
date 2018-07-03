@@ -1,0 +1,183 @@
+* { margin:0; padding:0; list-style:none; outline:0 none; -webkit-focus-ring-color:rgba(0,0,0,0); -webkit-tap-highlight-color:rgba(0,0,0,0);}
+html { font-size:100px;}
+body { font-size:14%; font-family:verdana,"microsoft yahei"; color:#333; background:#fff;}
+a { text-decoration:none;}
+img { border:0 none; vertical-align:top;}
+@font-face { font-family:"base"; src:url('../img/base.ttf') format('truetype');}
+@font-face { font-family: 'text'; src:url('../img/text.eot'); src:url('../img/text.woff') format('woff'),url('../img/text.ttf') format('truetype');}
+
+
+
+[class^="e_ico"] { font-family:"base";}
+.e_ico-travel:before     { content:"\e600";}
+.e_ico-android:before    { content:"\e601";}
+.e_ico-approve:before    { content:"\e602";}
+.e_ico-flight:before     { content:"\e603";}
+.e_ico-ios:before        { content:"\e604";}
+.e_ico-more:before       { content:"\e605";}
+.e_ico-myasiainfo:before { content:"\e606";}
+.e_ico-slogan:before     { content:"\e607";}
+.e_ico-close:before      { content:"\e608";}
+
+
+
+.m_header { overflow:hidden; position:fixed; top:0; left:0; width:100%; z-index:2; box-shadow:0 0.05rem 0.05rem rgba(0,0,0,0.2); background:rgba(255,255,255,0.95);}
+.m_header .logo { margin:0.18rem auto; width:1.83rem; height:0.51rem; background:url(../img/logo-phone.png) no-repeat; background-size:100% 100%; -webkit-background-size:100% 100%;}
+.m_header .text { font-family:"text","microsoft yahei"; font-size:0.24rem; color:#5885be; line-height:0.51rem; margin:0.18rem 0; margin-left:0.24rem; float:left; border-left:1px solid #eee; padding-left:0.24rem;}
+.m_header .nav { float:right; font-family:"text","microsoft yahei";}
+.m_header .nav li { float:left; width:1.6rem; line-height:0.82rem; height:0.82rem; border-top:0.05rem solid rgba(255,255,255,0); text-align:center; font-size:0.18rem; cursor:pointer;}
+.m_header .nav li.on { border-color:#8fc320; color:#8fc320;}
+.m_header .nav li:hover { background:rgba(0,0,0,0.05);}
+
+
+
+.m_tip { position:fixed; top:0.87rem; left:0; width:100%; overflow:hidden; z-index:2; pointer-events:none;}
+.m_tip .text {
+    -webkit-transition:-webkit-transform 0.3s ease-out;
+    -moz-transition:   -moz-transform 0.3s ease-out;
+    -o-transition:     -o-transform 0.3s ease-out;
+    transition:        transform 0.3s ease-out;
+    -webkit-transform-style:preserve-3d;
+    -moz-transform-style:preserve-3d;
+    -o-transform-style:preserve-3d;
+    transform-style:preserve-3d;
+    -webkit-transform:translate(0,-100%);
+    -moz-transform:translate(0,-100%);
+    -o-transform:translate(0,-100%);
+    transform:translate(0,-100%);
+    display:block; background:rgba(0,0,0,0.5);color:#fff; box-sizing:border-box; -webkit-box-sizing:border-box; font-size:0.18rem; padding:0.18rem 0.68rem 0.18rem 0.18rem; line-height:0.24rem;
+}
+.m_tip .close { position:absolute; right:0; top:0; bottom:0; width:0.5rem; line-height:0.5rem; font-size:0.3rem; text-align:center;}
+.m_tip .close:hover { opacity:0.5;}
+.m_tip a { color:#fc0; text-decoration:underline;}
+.m_tip a:hover { text-decoration:none;}
+.m_tip-show { pointer-events:auto;}
+.m_tip-show .text {
+    -webkit-transform:translateY(0);
+    -moz-transform:translateY(0);
+    -o-transform:translateY(0);
+    transform:translateY(0);
+}
+
+
+.m_banner { position:relative; margin-top:0.87rem; height:6.45rem; background:url(../img/login_bg_3.jpg) no-repeat right 0; background-size:100% 100%; -webkit-background-size:100% 100%;}
+.m_banner .slogan { font-size:4.4rem; color:#fff; line-height:4.4rem; position:absolute; top:-0.6rem; left:0.8rem; cursor:default;}
+.m_banner .man { position:absolute; right:0.88rem; top:-0.35rem; width:3.96rem; height:7.49rem; background:url(../img/login_bg_3.jpg) no-repeat; background-size:100% 100%; -webkit-background-size:100% 100%;}
+.m_banner .download { position:absolute; right:0.8rem; top:2.7rem;}
+.m_banner .download button { font-family:"text","microsoft yahei"; cursor:pointer; border-radius:0.05rem; color:#fff; background:#8fc320; border:0 none; height:0.8rem; font-size:0.36rem; padding-left:0.45rem;}
+.m_banner .download button[disabled] { opacity:0.3; background:#aaa;}
+.m_banner .download button:hover { background:#ec8b00;}
+.m_banner .download button .e_ico-more { display:inline-block; width:0.8rem; text-align:center; font-size:0.2rem; vertical-align:middle; opacity:0.8;}
+.m_banner .download .tip { color:rgba(255,255,255,0.5); font-size:0.16rem; margin-top:0.16rem;}
+.m_banner .option { position:absolute; right:0.8rem; top:2.5rem; background:rgba(255,255,255,0.1);}
+.m_banner .option li { float:left;}
+.m_banner .option li a,
+.m_banner .option li .a { display:block; padding:0.2rem; color:#fff;}
+.m_banner .option li span { display:block;}
+.m_banner .option li a:hover { background:rgba(0,0,0,0.2);}
+.m_banner .option .icon { line-height:1.6rem; width:1.6rem; height:1.6rem; text-align:center; font-size:0.8rem;}
+.m_banner .option .text { font-size:0.16rem; line-height:0.2rem; margin-top:0.1rem; text-align:center;}
+.m_banner .option .size { font-size:0.14rem; line-height:0.2rem; margin-top:0.05rem; text-align:center; opacity:0.6;}
+.m_banner .option img { width:1.6rem; height:1.6rem;}
+.m_banner .option:hover,
+.m_banner .download:hover~.option { display:block;}
+
+
+
+.m_intro { background:#f7f7f7; padding:0.2rem;}
+.m_intro .pic { background:#333; padding:0.2rem; color:#fff;}
+.m_intro .pic .cn { font-size:0.36rem; font-family:"text","microsoft yahei";}
+.m_intro .pic .icon { font-size:0.9rem; text-align:center; line-height:2.1rem;}
+.m_intro .pic .en { font-size:0.16rem; opacity:0.8;}
+.m_intro .text { font-size:0.16rem; background:#fff; padding:0.16rem 0.2rem; line-height:0.26rem; height:0.78rem;}
+.m_intro ul { display:table; table-layout:fixed; width:100%; border-spacing:0.2rem;}
+.m_intro li { display:table-cell;}
+.m_intro .li1 .pic { background:#595387;}
+.m_intro .li2 .pic { background:#4a7fa1;}
+.m_intro .li3 .pic { background:#46b9bc;}
+.m_intro .li4 .pic { background:#8fc320;}
+
+
+
+.m_popup {
+    position:fixed; text-align:center; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:3;
+    -webkit-transition:-webkit-transform 0.3s ease-out;
+    -moz-transition:   -moz-transform 0.3s ease-out;
+    -o-transition:     -o-transform 0.3s ease-out;
+    transition:        transform 0.3s ease-out;
+    -webkit-transform-style:preserve-3d;
+    -moz-transform-style:preserve-3d;
+    -o-transform-style:preserve-3d;
+    transform-style:preserve-3d;
+    -webkit-transform:translate(0,100%);
+    -moz-transform:translate(0,100%);
+    -o-transform:translate(0,100%);
+    transform:translate(0,100%);
+}
+.m_popup:before { content:""; display:inline-block; width:1px; height:100%; vertical-align:middle; margin-right-:0.04rem;}
+.m_popup .box { display:inline-block; width:80%; font-size:0.16rem; text-align:left; vertical-align:middle;}
+.m_popup .box .content { padding:0.16rem 0.2rem; line-height:1.6; background:#fff; border-top-left-radius:0.05rem; border-top-right-radius:0.05rem;}
+.m_popup .box .submit { cursor:pointer; line-height:0.6rem; text-align:center; border-top:1px solid #ddd; background:#fff; border-bottom-left-radius:0.05rem; border-bottom-right-radius:0.05rem;}
+.m_popup .box .submit:hover { background:#f7f7f7;}
+.m_popup .help { margin-top:0.1rem; color:#3a6ea5;}
+.m_popup-show {
+    -webkit-transform:translateY(0);
+    -moz-transform:translateY(0);
+    -o-transform:translateY(0);
+    transform:translateY(0);
+}
+
+
+.m_copyright { background:#333; color:#adadad; font-size:0.16rem; padding:0.16rem; text-align:center;}
+.m_copyright a { color:#adadad;}
+.m_copyright a:hover { text-decoration:underline;}
+
+
+
+@media all and (orientation:landscape) {
+    .m_header,
+    body { min-width:11.8rem;}
+}
+@media all and (orientation:portrait){
+    .m_tip { top:3.85rem;}
+    .m_tip .text { font-size:0.54rem; line-height:0.8rem; padding:0.64rem 1.44rem 0.64rem 0.64rem;}
+    .m_tip .close { font-size:0.8rem; width:auto; height:auto; line-height:0.8rem; top:50%; margin-top:-0.4rem; right:0.4rem;}
+    .m_tip .close span:before { vertical-align:top;}
+    .m_header .logo { width:4.54rem; height:1.26rem; margin:0.5rem auto;}
+    .m_header .text { font-size:0.6rem; line-height:1.26rem; margin:0.5rem 0; margin-left:0.5rem; padding-left:0.5rem;}
+    .m_header .nav { float:none; clear:both; overflow:hidden; width:100%; font-size:0.48rem;}
+    .m_header .nav li { width:33.3%; font-size:0.48rem; line-height:1.5rem; height:1.5rem; border:0 none; border-bottom:0.1rem solid rgba(255,255,255,0);}
+    .m_header .nav li.on { line-height:1.5rem;}
+    .m_banner { margin-top:2.2rem; height:11.7rem; background-size:200% auto; background-position:left top;}
+    .m_banner .man { display:none;}
+    .m_banner .slogan { font-size:10rem; line-height:10rem; text-align:center; width:100%; left:0; top:-2rem;}
+    .m_banner .download { left:0; top:7.5rem; text-align:center; width:100%;}
+    .m_banner .download .tip { font-size:0.42rem; margin-top:0.42rem;}
+    .m_banner .download button { width:6.2rem; height:2.1rem; border-radius:0.1rem; font-size:0.88rem; padding:0;}
+    .m_banner .download button .e_ico-more { display:none;}
+    .m_banner .option { left:0; width:100%; top:auto; bottom:0;}
+    .m_banner .option li { width:33.3%;}
+    .m_banner .option li a,
+    .m_banner .option li .a { padding:0.4rem;}
+    .m_banner .option .text { font-size:0.4rem; line-height:0.8; margin-top:0.4rem;}
+    .m_banner .option .size { font-size:0.3rem; line-height:0.8; margin-top:0.3rem;}
+    .m_banner .option .icon { font-size:2.4rem; width:auto; height:3.4rem; line-height:3.4rem;}
+    .m_banner .option img { width:3.4rem; height:3.4rem;}
+    .m_intro { padding:0 0.3rem 0.3rem;}
+    .m_intro ul { display:block; overflow:hidden; border-spacing:0;}
+    .m_intro li { float:left; width:50%; margin-top:0.3rem;}
+    .m_intro li:nth-child(2n) .pic { margin-left:0.15rem;}
+    .m_intro li:nth-child(2n+1) .pic { margin-right:0.15rem;}
+    .m_intro li:nth-child(2n) .text { margin-left:0.15rem;}
+    .m_intro li:nth-child(2n+1) .text { margin-right:0.15rem;}
+    .m_intro .pic { padding:0.3rem;}
+    .m_intro .pic .cn { font-size:0.8rem;}
+    .m_intro .pic .icon { font-size:2rem; line-height:4rem;}
+    .m_intro .pic .en { font-size:0.4rem;}
+    .m_intro .text { padding:0.3rem; font-size:0.42rem; line-height:0.7rem; height:2.1rem;}
+    .m_copyright { font-size:0.42rem; line-height:1.2rem;}
+    .m_popup .box { font-size:0.48rem;}
+    .m_popup .box .content { padding:0.48rem 0.6rem; border-top-left-radius:0.15rem; border-top-right-radius:0.15rem;}
+    .m_popup .box .submit { line-height:1.8rem; border-bottom-left-radius:0.15rem; border-bottom-right-radius:0.15rem;}
+    .m_popup .help { margin-top:0.3rem;}
+}
