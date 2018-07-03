@@ -42,10 +42,6 @@ public class CustController extends RootController{
 
     @RequestMapping(value = "/cust/queryCustList", method = RequestMethod.GET)
     public String queryCustList(@RequestParam Map pageData) throws Exception {
-//        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
-//        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
-//        pageData.put("HOUSE_COUNSELOR_ID", sessionEntity.get("EMPLOYEE_ID"));
-
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustList", pageData);
         return response.toJsonString();
     }
@@ -82,6 +78,12 @@ public class CustController extends RootController{
     @RequestMapping(value = "/cust/changeCounselor", method = RequestMethod.POST)
     public String changeCounselor(@RequestParam Map map) throws Exception {
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.changeCounselor", map);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/cust/queryCustContact", method = RequestMethod.GET)
+    public String queryCustContact(@RequestParam Map map) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustContact", map);
         return response.toJsonString();
     }
 }

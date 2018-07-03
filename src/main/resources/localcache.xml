@@ -6,6 +6,7 @@
         <cache className="com.hirun.app.cache.ActionCache" init="false" />
         <cache className="com.hirun.app.cache.PlanUnFinishCauseCache" init="false" />
         <cache className="com.hirun.app.cache.HirunPlusStaffDataCache" init="false" />
+        <cache className="com.hirun.app.cache.EmployeeCache" init="false" />
     </readonly>
    <readwrite>
 

@@ -5,6 +5,7 @@ import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,5 +24,19 @@ public class HouseDAO extends StrongObjectDAO {
         Map<String, String> param = new HashMap<String, String>();
         param.put("HOUSES_ID", housesId);
         return this.queryByPk(HousesEntity.class, "INS_HOUSES", param);
+    }
+
+    public List<HousesEntity> queryHousesEntityListByName(String housesName) throws Exception {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT HOUSES_ID, NAME ");
+        sql.append(" FROM INS_HOUSES ");
+        sql.append(" WHERE 1=1 ");
+        sql.append(" AND now() < DESTROY_DATE ");
+        sql.append(" AND NAME LIKE CONCAT('%', :NAME, '%') ");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("NAME", housesName);
+
+        return this.queryBySql(HousesEntity.class, sql.toString(), param);
     }
 }

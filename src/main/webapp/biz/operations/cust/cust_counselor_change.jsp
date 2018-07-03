@@ -33,6 +33,7 @@
     </div>
     <div class="e_space"></div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <div class="c_popup" id="UI-popup">
     <div class="c_popupBg" id="UI-popup_bg"></div>
     <div class="c_popupBox">
@@ -60,7 +61,11 @@
                                 <li>
                                     <div class="label">楼盘</div>
                                     <div class="value">
-                                        <span id="queryCustParamForm_house_container"></span>
+                                        <span class="e_mix" ontap="custCounselorChange.selectHouses(this)">
+                                            <input type="text" id="HOUSES_NAME" name="HOUSES_NAME" datatype="text"
+                                                   houses_id=""
+                                                   nullable="no" desc="楼盘" value="" readonly="true"/>
+                                            <span class="e_ico-check"></span>
                                         </span>
                                     </div>
                                 </li>
@@ -122,7 +127,7 @@
             <div class="c_popupGroup">
                 <div class="c_popupItem" id="counselorPopupItem">
                     <div class="c_header">
-                        <div class="back" ontap="hidePopup(this)">请选择家装顾问</div>
+                        <div class="back" ontap="backPopup(this)">请选择家装顾问</div>
                     </div>
                     <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                         <!-- 列表 开始 -->
@@ -139,6 +144,31 @@
                             <button type="button" class="e_button-l e_button-red" ontap="counselorPopup.clear(this)">清空</button>
                             <button type="button" class="e_button-l e_button-green" ontap="counselorPopup.confirm(this)">确定</button>
                         </div>
+                    </div>
+                </div>
+                <div class="c_popupItem" id="housesPopupItem">
+                    <div class="c_header">
+                        <div class="back" ontap="backPopup(this)">请选择楼盘</div>
+                    </div>
+                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                        <div class="c_list c_list-form">
+                            <ul>
+                                <li>
+                                    <div class="value">
+                                        <span class="e_mix">
+                                            <input id="HOUSE_SEARCH_TEXT" name="HOUSE_SEARCH_TEXT" type="text" placeholder="楼盘名称（模糊搜索）" nullable="no" desc="查询条件">
+                                            <button type="button" class="e_button-blue" ontap="housesPopup.searchHouses($('#HOUSE_SEARCH_TEXT').val())"><span class="e_ico-search"></span><span>查询</span></button>
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="c_list c_list-col-1 c_list-line c_list-border c_list-fixWrapSpace">
+                            <ul id="BIZ_HOUSES">
+
+                            </ul>
+                        </div>
+                        <div class="c_line"></div>
                     </div>
                 </div>
             </div>
@@ -173,6 +203,16 @@
         ontap="counselorPopup.clickEmployee(this)" tag="li_employee">
         <label class="group" id="LABEL_{{employee.EMPLOYEE_ID}}">
             <div class="main">{{employee.NAME}}</div>
+        </label>
+    </li>
+    {{/each}}
+</script>
+<script id="houses_template" rel_id="BIZ_HOUSES" type="text/html">
+    {{each HOUSES_LIST houses idx}}
+    <li class="link e_center" houses_name="{{houses.NAME}}" houses_id="{{houses.HOUSES_ID}}"
+        ontap="housesPopup.clickHouses(this)">
+        <label class="group" id="LABEL_HOUSES_{{houses.HOUSES_ID}}">
+            <div class="main">{{houses.NAME}}</div>
         </label>
     </li>
     {{/each}}

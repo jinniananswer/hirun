@@ -85,7 +85,7 @@ public class MsgWebSocketClient {
 
     public static void main(String[] args) throws Exception {
         MsgWebSocketClient client = new MsgWebSocketClient();
-        client.start("ws://localhost:8080/websocketServer/server123");
+        client.start("ws://localhost:8080/websocketServer/serverabc");
         try{
             client.sendMessage("测试一下");
         } catch (Exception e) {

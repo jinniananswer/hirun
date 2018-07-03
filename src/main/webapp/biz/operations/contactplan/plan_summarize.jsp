@@ -317,7 +317,7 @@
 <script id="finishInfoTemplate" type="text/html">
 	<div class="c_box c_box-border" id="FINISH_INFO_{{ACTION_CODE}}">
 		<div class="c_title" ontap="$(this).next().toggle();">
-			<div class="text">{{ACTION_NAME}}</div>
+			<div class="text e_strong e_blue">{{ACTION_NAME}}</div>
 			<div class="fn">
 				<ul>
 					<li><span>计划数:{{PLAN_CUSTNUM}}人 / 实际数:<span tag="finishCustNum">{{FINISH_CUSTNUM}}</span></span><span class="e_ico-unfold"></span></li>

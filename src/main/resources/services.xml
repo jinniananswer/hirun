@@ -21,6 +21,7 @@
     <entity name="OperationCenter.house.HousesService.queryHousesByEmployeeId"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesByEmployeeId"/>
     <entity name="OperationCenter.house.HousesService.queryHouses"  class="com.hirun.app.biz.houses.HousesService" method="queryHouses"/>
     <entity name="OperationCenter.house.HousesService.showMyHouseDetail"  class="com.hirun.app.biz.houses.HousesService" method="showMyHouseDetail"/>
+    <entity name="OperationCenter.house.HousesService.queryHousesByName"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesByName"/>
     <entity name="OperationCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.checkPlanAction"  class="com.hirun.app.biz.plan.PlanService" method="checkPlanAction"/>
@@ -39,6 +40,8 @@
     <entity name="OperationCenter.plan.DataImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.DataImportTaskService" method="hirunplusDataImport"/>
     <entity name="OperationCenter.plan.DataImportTaskService.hirunplusStaffDataImport"  class="com.hirun.app.biz.task.out.DataImportTaskService" method="hirunplusStaffDataImport"/>
     <entity name="OperationCenter.plan.PlanService.queryEmployeeMonStat"  class="com.hirun.app.biz.plan.PlanService" method="queryEmployeeMonStat"/>
+    <entity name="OperationCenter.plan.PlanService.queryPlanDetail"  class="com.hirun.app.biz.plan.PlanService" method="queryPlanDetail"/>
+    <entity name="OperationCenter.plan.PlanService.queryCustUnFinishCause"  class="com.hirun.app.biz.plan.PlanService" method="queryCustUnFinishCause"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
@@ -49,6 +52,7 @@
     <entity name="CustCenter.cust.CustService.deleteCustById"  class="com.hirun.app.biz.cust.CustService" method="deleteCustById"/>
     <entity name="CustCenter.cust.CustService.addCustContact"  class="com.hirun.app.biz.cust.CustService" method="addCustContact"/>
     <entity name="CustCenter.cust.CustService.changeCounselor"  class="com.hirun.app.biz.cust.CustService" method="changeCounselor"/>
+    <entity name="CustCenter.cust.CustService.queryCustContact"  class="com.hirun.app.biz.cust.CustService" method="queryCustContact"/>
 
     <!--数据中心服务-->
     <entity name="DataCenter.houses.HousesReportService.reportAllHousesNature"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportAllHousesNature"/>

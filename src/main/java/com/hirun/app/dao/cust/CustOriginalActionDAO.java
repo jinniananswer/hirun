@@ -45,4 +45,11 @@ public class CustOriginalActionDAO extends StrongObjectDAO {
 
         return this.query(CustOriginalActionEntity.class, "INS_CUST_ORIGINAL_ACTION", dbParam);
     }
+
+    public List<CustOriginalActionEntity> getCustOriginalActionEntityByCustId(String custId) throws Exception {
+        Map<String, String> dbParam = new HashMap<String, String>();
+        dbParam.put("CUST_ID", custId);
+
+        return this.query(CustOriginalActionEntity.class, "INS_CUST_ORIGINAL_ACTION", dbParam);
+    }
 }

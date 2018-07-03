@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.cust.CustBean;
 import com.hirun.app.bean.cust.CustContactBean;
+import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.houses.HousesBean;
+import com.hirun.app.cache.EmployeeCache;
 import com.hirun.app.dao.cust.CustChangeRelaEmployeeLogDAO;
+import com.hirun.app.dao.cust.CustContactDAO;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
 import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.cust.Sex;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -82,6 +86,16 @@ public class CustService extends GenericService{
         JSONObject requestData = request.getBody().getData();
 
         Map<String, String> parameter = ConvertTool.toMap(requestData);
+        String topEmployeeId = requestData.getString("TOP_EMPLOYEE_ID");
+        if(StringUtils.isNotBlank(topEmployeeId)) {
+            StringBuilder houseCounselorIds = new StringBuilder();
+            List<EmployeeEntity> employeeEntityList = EmployeeBean.getAllSubordinatesCounselors(topEmployeeId);
+            for(EmployeeEntity employeeEntity : employeeEntityList) {
+                houseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
+            }
+            houseCounselorIds.append(topEmployeeId);
+            parameter.put("HOUSE_COUNSELOR_IDS", houseCounselorIds.toString());
+        }
 
         CustDAO dao = new CustDAO("ins");
         List<CustomerEntity> customerList = dao.queryCustList(parameter);
@@ -156,6 +170,7 @@ public class CustService extends GenericService{
         if(StringUtils.isNotBlank(jsonCust.getString("HOUSE_MODE"))) {
             jsonCust.put("HOUSE_MODE_DESC", StaticDataTool.getCodeName("HOUSE_MODE", jsonCust.getString("HOUSE_MODE")));
         }
+        jsonCust.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")).getName());
 
         response.setBody(new Body(jsonCust));
 
@@ -202,6 +217,23 @@ public class CustService extends GenericService{
         entity.setChangeReason(requestData.getString("CHANGE_REASON"));
         CustBean.changeCounselor(entity);
 
+        return response;
+    }
+
+    public ServiceResponse queryCustContact(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String custId = request.getString("CUST_ID");
+        CustContactDAO custContactDAO = DAOFactory.createDAO(CustContactDAO.class);
+
+        List<CustContactEntity> list = custContactDAO.queryCustContactEntityListByCustId(custId);
+        JSONArray array = ConvertTool.toJSONArray(list);
+
+        for(int i = 0; i <array.size(); i++) {
+            JSONObject custContact = array.getJSONObject(i);
+            custContact.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(custContact.getString("CREATE_USER_ID")).getName());
+        }
+
+        response.set("CUST_CONTACT_LIST", array);
         return response;
     }
 }

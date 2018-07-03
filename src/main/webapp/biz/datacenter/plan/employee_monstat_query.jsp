@@ -27,6 +27,8 @@
 	</div>
 	<div class="e_space"></div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
+
 <script id="employee_template" rel_id="employee_list" type="text/html">
 	{{each EMPLOYEE_LIST employee idx}}
 	<div class="c_box c_box-border" tag="employee_box" employee_id="{{employee.EMPLOYEE_ID}}">
