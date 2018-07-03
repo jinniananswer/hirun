@@ -62,7 +62,7 @@
                 var subMenuLength = subMenus.length;
                 for(var j=0;j<subMenuLength;j++){
                     var subMenu = subMenus.get(j);
-                    html.push("<li class='link' onclick=\"$.menus.openNav(\'"+subMenu.get("MENU_URL")+"\')\">");
+                    html.push("<li class='link' onclick=\"$.menus.openNav(\'"+subMenu.get("MENU_URL")+"\', \'"+subMenu.get("TITLE")+"\')\">");
                     html.push("<div class='c_space-2'></div>");
                     html.push("<div class='pic'><img src='"+subMenu.get("ICO_URL")+"'/></div>");
                     html.push("<div class='main'>");
@@ -76,8 +76,9 @@
             $.insertHtml('beforeend',$("#menus"),html.join(""));
         },
 
-        openNav : function(url){
-            window.location.href = url;
+        openNav : function(url, title){
+            // window.location.href = url;
+            $.redirect.popupPageByUrl(title, url)
         }
     };
 

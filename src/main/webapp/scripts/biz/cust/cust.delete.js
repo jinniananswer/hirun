@@ -70,8 +70,8 @@ var custDelete = {
     showCustDetail : function(obj) {
         var $obj = $(obj);
         var url = 'biz/operations/cust/custdetail_query.jsp?custId=' + $obj.attr('cust_id');
-        // $.redirect.open(url, $obj.attr('cust_name'));
-        $.redirect.popupPageByUrl($obj.attr('cust_name'),url);
+        $.redirect.open(url, $obj.attr('cust_name'));
+        // $.redirect.popupPageByUrl($obj.attr('cust_name'),url);
     },
     deleteCust : function(custId) {
         $.beginPageLoading('客户删除中');

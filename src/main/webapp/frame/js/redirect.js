@@ -32,16 +32,16 @@
             popupPageByUrl: function(title, url, className, afterAction, hideAction, srcWindow){
 
                 //判断父窗口
-                // if($.isSameDomain(parent) && !$.isSamePage(parent) && true !== parent.StopPopupRecursion && parent.Wade && ( parent.Wade.Popup || parent.Wade.Dialog || parent.Wade.Tabset )){
-                //     var popupId, tabsetId, frame = $.getParentIframe();
-                //     if(frame && (
-                //             ( (popupId = $.attr(frame, "popupId")) && parent[popupId] && ( (parent.Wade.Popup && parent[popupId] instanceof parent.Wade.Popup) || (parent.Wade.Dialog && parent[popupId] instanceof parent.Wade.Dialog) ) )
-                //             || ( (tabsetId = $.attr(frame, "tabsetId")) && parent[tabsetId] && parent.Wade.Tabset && parent[tabsetId] instanceof parent.Wade.Tabset )
-                //         ) ){
-                //         parent.popupPageByUrl(title, url, className, afterAction, hideAction, srcWindow);
-                //         return;
-                //     }
-                // }
+                if($.isSameDomain(parent) && !$.isSamePage(parent) && true !== parent.StopPopupRecursion && parent.Wade && ( parent.Wade.Popup || parent.Wade.Dialog || parent.Wade.Tabset )){
+                    var popupId, tabsetId, frame = $.getParentIframe();
+                    if(frame && (
+                            ( (popupId = $.attr(frame, "popupId")) && parent[popupId] && ( (parent.Wade.Popup && parent[popupId] instanceof parent.Wade.Popup) || (parent.Wade.Dialog && parent[popupId] instanceof parent.Wade.Dialog) ) )
+                            || ( (tabsetId = $.attr(frame, "tabsetId")) && parent[tabsetId] && parent.Wade.Tabset && parent[tabsetId] instanceof parent.Wade.Tabset )
+                        ) ){
+                        parent.$.redirect.popupPageByUrl(title, url, className, afterAction, hideAction, srcWindow);
+                        return;
+                    }
+                }
 
                 if(!title || !$.isString(title))
                     return;
@@ -66,12 +66,11 @@
                 var path = url.split('?')[0];
                 var guid = $.md5("popup_" + path), popup;
                 if( ( popup = window["popup_" + guid] ) ){
-                    if(true !== popup.visible){
+                    // if(true !== popup.visible){
                         var reset = window["frame_" + guid].forceResetByUrl(url, title);
                         popup.show(1, reset);
-                    }
+                    // }
                 }else{
-
                     //简化样式入参
                     if(!className) className = "c_popup";
                     else if("half" == className) className = "c_popup c_popup-half";
@@ -121,7 +120,7 @@
                     }
 
                     window["frame_" + guid] = new Wade.Frame("frame_" + guid, {autoInit:false, title:title, src:url});
-                    popup = window["popup_" + guid] = new Wade.Popup("popup_" + guid, {visible:false, mask:true, srcWindow: srcWindow});
+                    popup = window["popup_" + guid] = new Wade.Popup("popup_" + guid, {visible:false, mask:false, srcWindow: srcWindow});
                     popup.show(1);
                 }
 
