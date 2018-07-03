@@ -77,8 +77,8 @@
         },
 
         openNav : function(url, title){
-            // window.location.href = url;
-            $.redirect.popupPageByUrl(title, url)
+            window.location.href = url;
+            // $.redirect.popupPageByUrl(title, url)
         }
     };
 
