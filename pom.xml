@@ -269,6 +269,17 @@
       <version>9.4.2.v20170220</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>1.47</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.fernandospr</groupId>
+      <artifactId>javapns-jdk16</artifactId>
+      <version>2.2.1</version>
+    </dependency>
+
     <!--测试时用到的 end-->
   </dependencies>
 
