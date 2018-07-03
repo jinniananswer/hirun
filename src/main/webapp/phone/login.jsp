@@ -38,7 +38,7 @@
             <li>
                 <span class="e_ico-pwd"></span>
                 <input type="password" id="password" name="password" placeholder="请输入密码" datatype="text" nullable="no" desc="密码" />
-                <input type="hidden" name="USER_DEVICE_TOKEN" id="USER_DEVICE_TOKEN" nullable="no" desc="用户终端标识" />
+                <input type="hidden" name="USER_DEVICE_TOKEN" id="USER_DEVICE_TOKEN" nullable="yes" desc="用户终端标识" />
             </li>
         </ul>
     </div>
