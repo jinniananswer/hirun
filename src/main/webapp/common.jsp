@@ -33,11 +33,13 @@
     <script src="frame/TouchUI/content/js/jcl-plugins.js"></script>
     <script src="frame/TouchUI/content/js/jcl-ui.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/popup.js"></script>
+    <script src="frame/TouchUI/content/js/ui/component/base/frame.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/segment.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/switch.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/select.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/tabset/tabset.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/box/tipbox.js"></script>
+    <script src="frame/TouchUI/content/js/ui/component/box/popupbox.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/datefield.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/calendar/calendar.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/increasereduce.js"></script>
