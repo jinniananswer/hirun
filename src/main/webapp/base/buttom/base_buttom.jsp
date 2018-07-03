@@ -46,7 +46,7 @@
         },
         openHomePage : function() {
             if($.os.phone) {
-                $.redirect.open('phone/phone_index.jsp','首页')
+                $.redirect.topOpen('phone/phone_index.jsp','首页')
             } else {
                 $.redirect.open('home.jsp','首页')
             }

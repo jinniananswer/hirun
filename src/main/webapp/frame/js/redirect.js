@@ -10,6 +10,12 @@
                     top.$.index.openNav(url, title);
                 }
             },
+            topOpen : function(url, title){
+                if($.os.phone){
+                    window.top.location.href = url;
+                }
+
+            },
             closeCurrentPage : function () {
                 if($.os.phone){
                     backPopup(this);
