@@ -58,7 +58,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
             sb.append("AND a.houses_id in (select e.houses_id from ins_houses_plan e, ins_employee f where f.employee_id = e.employee_id and f.employee_id in ("+parameter.get("EMPLOYEE_ID")+"))");
         }
 
-        return this.queryBySql(sb.toString(), parameter, 0, 10);
+        return this.queryBySql(sb.toString(), parameter);
     }
 
     public RecordSet queryHousesByEmployeeId(String employeeId) throws SQLException{

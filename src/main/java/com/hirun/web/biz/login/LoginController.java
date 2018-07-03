@@ -52,7 +52,7 @@ public class LoginController extends RootController {
 
     @RequestMapping(value = "/loginPost", method = RequestMethod.POST)
     public @ResponseBody String login(@RequestParam Map loginData, HttpSession session, HttpServletRequest request, HttpServletResponse servletResponse) throws Exception{
-
+        logger.debug("====================deviceToken=============="+loginData.get("USER_DEVICE_TOKEN"));
         ServiceResponse response = ServiceClient.call("OrgCenter.login.LoginService.login", loginData);
 
         if(response.isSuccess()) {

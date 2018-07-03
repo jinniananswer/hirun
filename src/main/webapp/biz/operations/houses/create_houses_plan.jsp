@@ -36,7 +36,7 @@
 							</span>
                         </div>
                     </li>
-                    <li class="required link" ontap="showPopup('UI-popup','UI-CITY')">
+                    <li class="required link" ontap="$('#CITY_TEXT').focus();$('#CITY_TEXT').blur();showPopup('UI-popup','UI-CITY')">
                         <div class="label">归属城市</div>
                         <div class="value">
                             <input type="text" id="CITY_TEXT" name="CITY_TEXT" nullable="no" readonly="true" desc="归属城市" />
@@ -44,7 +44,7 @@
                         </div>
                         <div class="more"></div>
                     </li>
-                    <li class="required link" ontap="showPopup('UI-popup','UI-AREA')">
+                    <li class="required link" ontap="$('#AREA_TEXT').focus();$('#AREA_TEXT').blur();showPopup('UI-popup','UI-AREA')">
                         <div class="label">归属区域</div>
                         <div class="value">
                             <input type="text" id="AREA_TEXT" name="AREA_TEXT" nullable="no" readonly="true" desc="归属区域" />
@@ -52,7 +52,7 @@
                         </div>
                         <div class="more"></div>
                     </li>
-                    <li class="required link" ontap="showPopup('UI-popup','UI-SHOP')">
+                    <li class="required link" ontap="$('#SHOP_TEXT').focus();$('#SHOP_TEXT').blur();showPopup('UI-popup','UI-SHOP')">
                         <div class="label">归属门店</div>
                         <div class="value">
                             <input type="text" id="SHOP_TEXT" name="SHOP_TEXT" nullable="no" readonly="true" desc="责任店面" />
@@ -60,7 +60,7 @@
                         </div>
                         <div class="more"></div>
                     </li>
-                    <li class="link required">
+                    <li class="link required" ontap="$('#CHECK_DATE').focus();$('#CHECK_DATE').blur();">
                         <div class="label">交房时间</div>
                         <div class="value"><span class="e_mix">
 								<input type="text" id="CHECK_DATE" name="CHECK_DATE" datatype="date" readonly="true" desc="交房时间"/>
@@ -75,14 +75,14 @@
                         <div class="label">计划分配家装顾问数</div>
                         <div class="value"><input id="PLAN_COUNSELOR_NUM" name="PLAN_COUNSELOR_NUM" datatype="numeric" type="text" nullable="no" disabled="true" desc="计划分配家装顾问数" value="0"/></div>
                     </li>
-                    <li class="link">
+                    <li class="link" ontap="$('#PLAN_IN_DATE').focus();$('#PLAN_IN_DATE').blur();">
                         <div class="label">计划进入时间</div>
                         <div class="value"><span class="e_mix">
 								<input type="text" id="PLAN_IN_DATE" name="PLAN_IN_DATE" datatype="date" readonly="true" desc="计划进入时间" />
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
-                    <li class="link" ontap="$.housesPlan.initCounselor();">
+                    <li class="link" ontap="$('#EMPLOYEE_NAME').focus();$('#EMPLOYEE_NAME').blur();$.housesPlan.initCounselor();">
                         <div class="label">家装顾问</div>
                         <div class="value"><span class="e_mix">
                             <input type="text" id="EMPLOYEE_NAME" name="EMPLOYEE_NAME" datatype="text" nullable="yes" readonly="true" desc="家装顾问" value="" />

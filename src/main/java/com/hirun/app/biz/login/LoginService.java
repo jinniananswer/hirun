@@ -6,19 +6,25 @@ import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.app.dao.user.UserDAO;
+import com.hirun.app.dao.user.UserDeviceDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
+import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.Record;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.security.Encryptor;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author jinnian
@@ -74,6 +80,33 @@ public class LoginService extends GenericService{
         }
         response.set("USER", user.toJson());
         response.set("EMPLOYEE", employee.toJson());
+
+        //保存用户的设备号
+        String deviceToken = request.getString("USER_DEVICE_TOKEN");
+        if(StringUtils.isNotEmpty(deviceToken)){
+            deviceToken = deviceToken.replaceAll("&lt;", "");
+            deviceToken = deviceToken.replaceAll("&gt;", "");
+            UserDeviceDAO deviceDAO = DAOFactory.createDAO(UserDeviceDAO.class);
+            Record userDevice = deviceDAO.queryUserDeviceByUserId(user.getUserId());
+            if(userDevice == null){
+                //没有，新增一条用户设备信息
+                Map<String, String> deviceParameter = new HashMap<String, String>();
+                deviceParameter.put("USER_ID", user.getUserId());
+                deviceParameter.put("DEVICE_TOKEN", deviceToken);
+                deviceParameter.put("CREATE_USER_ID", user.getUserId());
+                deviceParameter.put("UPDATE_USER_ID", user.getUserId());
+                String now = SessionManager.getSession().getCreateTime();
+                deviceParameter.put("CREATE_DATE", now);
+                deviceParameter.put("UPDATE_TIME", now);
+                deviceDAO.insert("ins_user_device", deviceParameter);
+            }
+            else{
+                //有，更新记录
+                Map<String, String> deviceParameter = userDevice.getData();
+                deviceParameter.put("DEVICE_TOKEN", deviceToken);
+                deviceDAO.save("ins_user_device", deviceParameter);
+            }
+        }
 
         return response;
     }

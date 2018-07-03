@@ -322,7 +322,7 @@
                             document.location.reload();
                         }
                         else {
-                            parent.$.index.closeCurrentPage();
+                            $.rediret.closeCurrentPage();
                         }
                     },{"cancel":"取消"})
                 });

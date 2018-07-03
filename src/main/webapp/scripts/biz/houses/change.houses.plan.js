@@ -345,7 +345,7 @@
                 var parameter = $.buildJsonData("submitArea");
                 $.ajaxPost('changeHousesPlan', parameter, function (data) {
                     MessageBox.success("变更楼盘规划成功","点击确定关闭当前页面", function(btn){
-                        parent.$.index.closeCurrentPage();
+                        $.redirect.closeCurrentPage();
                     })
                 });
             }
