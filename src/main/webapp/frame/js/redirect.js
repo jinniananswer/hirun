@@ -3,8 +3,8 @@
         redirect:{
             open : function(url, title){
                 if($.os.phone){
-                    window.location.href = url;
-                    // this.popupPageByUrl(title, url);
+                    // window.location.href = url;
+                    this.popupPageByUrl(title, url);
                 }
                 else{
                     top.$.index.openNav(url, title);
@@ -18,7 +18,12 @@
             },
             closeCurrentPage : function () {
                 if($.os.phone){
-                    backPopup(this);
+                    if(self == top) {
+                        back();
+                    } else {
+                        backPopup(this);
+                    }
+
                 }
                 else{
                     top.$.index.closeCurrentPage();
@@ -58,7 +63,8 @@
 
                 title = $.xss(title);
 
-                var guid = $.md5("popup_" + title), popup;
+                var path = url.split('?')[0];
+                var guid = $.md5("popup_" + path), popup;
                 if( ( popup = window["popup_" + guid] ) ){
                     if(true !== popup.visible){
                         var reset = window["frame_" + guid].forceResetByUrl(url, title);

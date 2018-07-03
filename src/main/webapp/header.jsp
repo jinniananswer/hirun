@@ -13,7 +13,7 @@
 </head>
 <body>
 <div class="c_header">
-    <div class="back" ontap="backPopup(this);">
+    <div class="back" ontap="$.redirect.closeCurrentPage();">
         <span tag="header_name"><%=request.getParameter("headerName")%></span>
     </div>
     <div tag="headerPhone" class="right" style="display:none">
