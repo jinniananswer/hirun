@@ -1,0 +1,72 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>后台管理系统客户端 | 下载</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"/>
+    <link rel="stylesheet" href="../frame/css/download.css" rel="stylesheet" type="text/css"/>
+</head>
+<body><div class="m_wrapper">
+
+
+
+    <div class="m_header">
+        <div class="text">鸿扬家装-给您一个好看好住的家</div>
+    </div>
+
+    <div class="m_banner">
+        <div class="download" id="download">
+            <button type="button" id="downloadButton" onclick="download();"><span id="buttonText">立即下载</span><span class="e_ico-more"></span></button>
+            <div class="tip" id="tip"></div>
+        </div>
+        <div class="option" id="option" style="display:none;">
+            <ul>
+                <li>
+                    <a href="http://115.28.232.97:8000/aiplan-release.apk">
+                        <span class="icon"><span class="e_ico-android"></span></span>
+                        <span class="text">Android 版下载</span>
+                        <span class="size">3.2M</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="a">
+                        <span class="qr"><img src="img/android.png" alt="" /></span>
+                        <span class="text">Android 版扫码</span>
+                        <span class="size">3.2M</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="a">
+                        <span class="qr"><img src="img/ios.png" alt="" /></span>
+                        <span class="text">iOS 版扫码</span>
+                        <span class="size">5.2M</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="m_popup" id="popup">
+        <div class="box">
+            <div class="content">
+                <div class="tip">尊敬的 ios9 用户，由于系统限制，启动应用时会出现<strong>“未受信任的企业级开发者”</strong>提示，下载后请做出如下操作：</div>
+                <div class="help">设置 > 通用 > 描述文件 > Beijing star... > 信任“Beijing star...”</div>
+            </div>
+            <div class="submit" onclick="document.getElementById('popup').className = 'm_popup';">我知道了</div>
+        </div>
+    </div>
+    <div class="m_copyright">版权所有：m.o.s.t工作室&nbsp;&nbsp;/&nbsp;&nbsp;研发人员：金念、安文轩</div>
+
+
+
+</div>
+<script>
+
+    function download() {
+        document.getElementById('download').style.display = 'none';
+        document.getElementById('option').style.display = '';
+    }
+</script>
+
+</body>
+</html>
