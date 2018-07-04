@@ -289,5 +289,7 @@ var housesPopup = {
         var housesName = $obj.attr('houses_name');
 
         if(housesPopup.callback) housesPopup.callback(housesId, housesName);
+
+        backPopup(obj);
     },
 }
