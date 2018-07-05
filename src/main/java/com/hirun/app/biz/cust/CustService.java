@@ -7,7 +7,6 @@ import com.hirun.app.bean.cust.CustContactBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.houses.HousesBean;
 import com.hirun.app.cache.EmployeeCache;
-import com.hirun.app.dao.cust.CustChangeRelaEmployeeLogDAO;
 import com.hirun.app.dao.cust.CustContactDAO;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
