@@ -70,6 +70,14 @@ public class CustContactEntity extends GenericEntity{
 		this.set("RESTORE_DATE", restoreDate);
 	}
 	
+	public String getEmployeeId(){
+		return this.get("EMPLOYEE_ID");
+	}
+
+	public void setEmployeeId(String employeeId){
+		this.set("EMPLOYEE_ID", employeeId);
+	}
+	
 	public String getCreateUserId(){
 		return this.get("CREATE_USER_ID");
 	}

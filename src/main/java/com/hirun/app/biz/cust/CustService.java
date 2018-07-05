@@ -169,7 +169,7 @@ public class CustService extends GenericService{
         if(StringUtils.isNotBlank(jsonCust.getString("HOUSE_MODE"))) {
             jsonCust.put("HOUSE_MODE_DESC", StaticDataTool.getCodeName("HOUSE_MODE", jsonCust.getString("HOUSE_MODE")));
         }
-        jsonCust.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")).getName());
+        jsonCust.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")));
 
         response.setBody(new Body(jsonCust));
 
@@ -201,6 +201,7 @@ public class CustService extends GenericService{
         custContactEntity.setRestoreDate(requestData.getString("RESTORE_DATE"));
         custContactEntity.setRemindDate(requestData.getString("REMIND_DATE"));
         custContactEntity.setRemindActionCode(requestData.getString("REMIND_ACTION_CODE"));
+        custContactEntity.setEmployeeId(requestData.getString("EMPLOYEE_ID"));
         CustContactBean.addCustContact(custContactEntity);
 
         return response;
@@ -229,7 +230,7 @@ public class CustService extends GenericService{
 
         for(int i = 0; i <array.size(); i++) {
             JSONObject custContact = array.getJSONObject(i);
-            custContact.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(custContact.getString("CREATE_USER_ID")).getName());
+            custContact.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(custContact.getString("EMPLOYEE_ID")));
         }
 
         response.set("CUST_CONTACT_LIST", array);
