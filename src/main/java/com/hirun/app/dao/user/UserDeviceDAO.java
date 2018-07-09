@@ -26,6 +26,13 @@ public class UserDeviceDAO extends GenericDAO {
             return null;
     }
 
+    public RecordSet queryUserDevicesByUserId(String userId) throws SQLException{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("USER_ID", userId);
+        RecordSet recordSet = this.query("ins_user_device", parameter);
+        return recordSet;
+    }
+
     public Record queryUserDeviceByUserIdAndDevice(String userId, String deviceToken) throws SQLException{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("USER_ID", userId);

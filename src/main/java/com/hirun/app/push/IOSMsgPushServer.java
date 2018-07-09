@@ -20,16 +20,8 @@ public class IOSMsgPushServer {
 
     private static Logger log = LogManager.getLogger(IOSMsgPushServer.class.getName());
 
-    public static void sendNotification(String userId, String message){
+    public static void sendNotification(String deviceToken, String message){
         try{
-            UserDeviceDAO dao = DAOFactory.createDAO(UserDeviceDAO.class);
-            Record userDevice = dao.queryUserDeviceByUserId(userId);
-            if(userDevice == null)
-                return;
-            // 设备的 Token 值
-            String deviceToken = userDevice.get("DEVICE_TOKEN");
-            deviceToken = deviceToken.replaceAll(" ","");
-
             // 图标小红圈的数值
             int badge = 1;
             // 铃音
