@@ -160,6 +160,7 @@ var custContactPopup = {
         if($.validate.verifyAll("custContactForm")) {
             var custContactParam = $.buildJsonData("custContactForm");
             custContactParam.CUST_ID = custContactPopup.custId;
+            custContactParam.EMPLOYEE_ID = Employee.employeeId;
 
             $.ajaxReq({
                 url : 'cust/addCustContact',

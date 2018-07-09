@@ -718,7 +718,7 @@ public class PlanService extends GenericService {
         for(CustOriginalActionEntity custOriginalActionEntity : custOriginalActionEntityList) {
             JSONObject custAction = custOriginalActionEntity.toJSON(new String[] {"FINISH_TIME"});
             custAction.put("ACTION_NAME", ActionCache.getAction(custOriginalActionEntity.getActionCode()).getActionName());
-            custAction.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(custOriginalActionEntity.getEmployeeId()).getName());
+            custAction.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(custOriginalActionEntity.getEmployeeId()));
             custList.add(custAction);
         }
 
@@ -1097,7 +1097,7 @@ public class PlanService extends GenericService {
         for(CustActionEntity custActionEntity : custActionEntityList) {
             JSONObject custAction = custActionEntity.toJSON(new String[] {"UNFINISH_CAUSE_DESC"});
             custAction.put("ACTION_NAME", ActionCache.getAction(custActionEntity.getActionCode()).getActionName());
-            custAction.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeEntityByEmployeeId(custActionEntity.getExecutorId()).getName());
+            custAction.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(custActionEntity.getExecutorId()));
             custList.add(custAction);
         }
 

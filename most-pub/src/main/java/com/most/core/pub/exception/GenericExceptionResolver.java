@@ -32,7 +32,7 @@ public class GenericExceptionResolver implements HandlerExceptionResolver {
                     serviceResponse.setError(genericException.getCode(),genericException.getDesc());
                     response.getWriter().write(serviceResponse.toJsonString());
                 } else {
-                    serviceResponse.setError("-1",throwable.getMessage());
+                    serviceResponse.setError("-1",throwable.getMessage() != null ? throwable.getMessage() : throwable.toString());
                     response.getWriter().write(serviceResponse.toJsonString());
                 }
             } else if(ex instanceof  GenericException){
