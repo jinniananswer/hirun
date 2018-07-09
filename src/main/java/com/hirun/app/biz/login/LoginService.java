@@ -18,6 +18,7 @@ import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.security.Encryptor;
 import org.apache.commons.lang3.StringUtils;
@@ -86,8 +87,15 @@ public class LoginService extends GenericService{
         if(StringUtils.isNotEmpty(deviceToken)){
             deviceToken = deviceToken.replaceAll("&lt;", "");
             deviceToken = deviceToken.replaceAll("&gt;", "");
+            deviceToken = deviceToken.replaceAll(" ", "");
             UserDeviceDAO deviceDAO = DAOFactory.createDAO(UserDeviceDAO.class);
-            Record userDevice = deviceDAO.queryUserDeviceByUserId(user.getUserId());
+            Record userDevice = deviceDAO.queryUserDeviceByUserIdAndDevice(user.getUserId(), deviceToken);
+            String os = request.getHeader().getString("OPERATION_SYSTEM");
+            int osCode = 0;
+            if(StringUtils.equals(os, "IOS"))
+                osCode = 1;
+            else if(StringUtils.equals(os, "ANDROID"))
+                osCode = 2;
             if(userDevice == null){
                 //没有，新增一条用户设备信息
                 Map<String, String> deviceParameter = new HashMap<String, String>();
@@ -95,16 +103,14 @@ public class LoginService extends GenericService{
                 deviceParameter.put("DEVICE_TOKEN", deviceToken);
                 deviceParameter.put("CREATE_USER_ID", user.getUserId());
                 deviceParameter.put("UPDATE_USER_ID", user.getUserId());
+                deviceParameter.put("OPERATION_SYSTEM", osCode+"");
                 String now = SessionManager.getSession().getCreateTime();
                 deviceParameter.put("CREATE_DATE", now);
                 deviceParameter.put("UPDATE_TIME", now);
                 deviceDAO.insert("ins_user_device", deviceParameter);
             }
             else{
-                //有，更新记录
-                Map<String, String> deviceParameter = userDevice.getData();
-                deviceParameter.put("DEVICE_TOKEN", deviceToken);
-                deviceDAO.save("ins_user_device", deviceParameter);
+
             }
         }
 

@@ -21,7 +21,6 @@ public class IOSMsgPushServer {
     private static Logger log = LogManager.getLogger(IOSMsgPushServer.class.getName());
 
     public static void sendNotification(String userId, String message){
-        log.debug("===================userid================="+userId);
         try{
             UserDeviceDAO dao = DAOFactory.createDAO(UserDeviceDAO.class);
             Record userDevice = dao.queryUserDeviceByUserId(userId);
@@ -31,8 +30,6 @@ public class IOSMsgPushServer {
             String deviceToken = userDevice.get("DEVICE_TOKEN");
             deviceToken = deviceToken.replaceAll(" ","");
 
-            log.debug("===============device token==============="+deviceToken);
-
             // 图标小红圈的数值
             int badge = 1;
             // 铃音
@@ -40,7 +37,6 @@ public class IOSMsgPushServer {
 
             // 推送证书的路径
             String certificatePath = Thread.currentThread().getContextClassLoader().getResource("/").getPath()+"push.p12";
-            log.debug("=================certificatePath=============="+certificatePath);
             // 证书的密码
             String certificatePassword = "123456";// 此处注意导出的证书密码不能为空因为空密码会报错
             boolean sendCount = true;
@@ -67,9 +63,6 @@ public class IOSMsgPushServer {
             List<PushedNotification> successfulNotifications = PushedNotification.findSuccessfulNotifications(notifications);
             int failed = failedNotifications.size();
             int successful = successfulNotifications.size();
-
-            log.debug("==============push successful================"+successful);
-            log.debug("==============push faild==============="+failedNotifications.get(0).getException());
 
             pushManager.stopConnection();
         }
