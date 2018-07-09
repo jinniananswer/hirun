@@ -27,7 +27,7 @@
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
                     var sex = data.get("SEX");
-                    html.push("<li><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    html.push("<li class='link'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     if(sex == "1")
                         html.push("<img src=\"/frame/img/male.png\" class='e_pic-r' style='width:4em;height:4em'/>");
                     else
@@ -44,9 +44,9 @@
                     html.push(data.get("ORG_NAME"));
                     html.push("</div><div class='content'>"+data.get("JOB_ROLE_NAME"));
                     html.push("</div></div>")
-                    html.push("<div class=\"side e_size-m\">");
+                    html.push("<div class=\"side e_size-m\"><a href='tel:"+data.get("CONTACT_NO")+"'>");
                     html.push(data.get("CONTACT_NO"));
-                    html.push("</div></div></div></li>");
+                    html.push("</a></div></div></div></li>");
                 }
 
                 $.insertHtml('beforeend', $("#contacts"), html.join(""));
