@@ -4,5 +4,6 @@
         <task taskName="hirunPlusDataImportTask" cronExpr="0 0/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusDataImportTask"/>
         <task taskName="transOriginalDataToAction" cronExpr="0 10/30 0-23 * * ?" className="com.hirun.app.task.TransOriginalDataToActionTask"/>
         <task taskName="hirunPlusStaffDataImportTask" cronExpr="0 20 3 * * ?" className="com.hirun.app.task.HirunPlusStaffDataImportTask"/>
+        <task taskName="performDueTask" cronExpr="0 0/10 * * * ?" className="com.hirun.app.task.PerformDueTask"/>
     </cronTask>
 </task>
