@@ -53,6 +53,8 @@
     <entity name="CustCenter.cust.CustService.addCustContact"  class="com.hirun.app.biz.cust.CustService" method="addCustContact"/>
     <entity name="CustCenter.cust.CustService.changeCounselor"  class="com.hirun.app.biz.cust.CustService" method="changeCounselor"/>
     <entity name="CustCenter.cust.CustService.queryCustContact"  class="com.hirun.app.biz.cust.CustService" method="queryCustContact"/>
+    <entity name="CustCenter.cust.CustService.queryCustContact"  class="com.hirun.app.biz.cust.CustService" method="queryCustContact"/>
+
 
     <!--数据中心服务-->
     <entity name="DataCenter.houses.HousesReportService.reportAllHousesNature"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportAllHousesNature"/>
@@ -65,4 +67,5 @@
     <entity name="Common.msg.MsgService.queryMsgListByRecvId"  class="com.hirun.app.biz.common.MsgService" method="queryMsgListByRecvId"/>
     <entity name="Common.msg.MsgService.getUnReadMsgCount"  class="com.hirun.app.biz.common.MsgService" method="getUnReadMsgCount"/>
     <entity name="Common.msg.MsgService.setMsgListToRead"  class="com.hirun.app.biz.common.MsgService" method="setMsgListToRead"/>
+    <entity name="Common.common.PerformDueTaskService.deal"  class="com.hirun.app.biz.common.PerformDueTaskService" method="deal"/>
 </service>

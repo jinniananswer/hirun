@@ -1,12 +1,22 @@
 package com.hirun.app.bean.cust;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.common.MsgBean;
+import com.hirun.app.bean.employee.EmployeeBean;
+import com.hirun.app.cache.ActionCache;
 import com.hirun.app.dao.cust.CustChangeRelaEmployeeLogDAO;
+import com.hirun.app.dao.cust.CustContactDAO;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
+import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.hirun.pub.domain.enums.common.MsgType;
+import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.ServiceRequest;
+import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
@@ -80,5 +90,55 @@ public class CustBean {
         entity.setCreateDate(now);
 
         custChangeRelaEmployeeLogDAO.insert("INS_CUST_CHANGE_RELA_EMPLOYEE_LOG", entity.getContent());
+    }
+
+    public static void restore(String custId) throws Exception {
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        CustomerEntity customerEntity = custDAO.getCustById(custId);
+        String today = TimeTool.today();
+        String now = TimeTool.now();
+        if(customerEntity == null || !customerEntity.getCustStatus().equals(CustStatus.pause.getValue())){
+            return;
+        }
+
+        customerEntity.setCustStatus(CustStatus.normal.getValue());
+        custDAO.update("INS_CUSTOMER", customerEntity.getContent());
+
+        //提醒家装顾问
+        String employeeId = customerEntity.getHouseCounselorId();
+        EmployeeEntity employeeEntity = EmployeeBean.getEmployeeByEmployeeId(employeeId);
+        StringBuilder msgContent = new StringBuilder();
+        msgContent.append("您的客户【").append(customerEntity.getCustName()).append("】");
+        msgContent.append("已于").append(today).append("恢复，可以继续跟踪");
+        MsgBean.sendMsg(employeeEntity.getUserId(), msgContent.toString(), "0", now, MsgType.sys);
+    }
+
+    public static void remind(String custContactId) throws Exception {
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        CustContactDAO custContactDAO = DAOFactory.createDAO(CustContactDAO.class);
+        CustContactEntity custContactEntity = custContactDAO.getCustContactEntityByCustContactId(custContactId);
+        String today = TimeTool.today();
+        String now = TimeTool.now();
+        if(custContactEntity == null) {
+
+        }
+        String custId = custContactEntity.getCustId();
+
+        CustomerEntity customerEntity = custDAO.getCustById(custId);
+        if(customerEntity == null){
+
+        }
+
+        String custStatus = customerEntity.getCustStatus();
+        if(CustStatus.normal.getValue().equals(custStatus)) {
+            //提醒家装顾问
+            String actionName = ActionCache.getAction(custContactEntity.getRemindActionCode()).getActionName();
+            StringBuilder msgContent = new StringBuilder();
+            msgContent.append(today).append("你要对客户【").append(customerEntity.getCustName()).append("】");
+            msgContent.append("做【").append(actionName).append("】").append("的动作，");
+            msgContent.append("请联系客户");
+            EmployeeEntity employeeEntity = EmployeeBean.getEmployeeByEmployeeId(custContactEntity.getEmployeeId());
+            MsgBean.sendMsg(employeeEntity.getUserId(), msgContent.toString(), "0", now, MsgType.sys);
+        }
     }
 }

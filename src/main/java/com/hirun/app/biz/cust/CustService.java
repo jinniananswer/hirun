@@ -2,10 +2,12 @@ package com.hirun.app.biz.cust;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.common.MsgBean;
 import com.hirun.app.bean.cust.CustBean;
 import com.hirun.app.bean.cust.CustContactBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.houses.HousesBean;
+import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.EmployeeCache;
 import com.hirun.app.dao.cust.CustContactDAO;
 import com.hirun.app.dao.cust.CustDAO;
@@ -13,6 +15,7 @@ import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
 import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.cust.Sex;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -24,6 +27,7 @@ import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.exception.GenericException;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
@@ -89,8 +93,10 @@ public class CustService extends GenericService{
         if(StringUtils.isNotBlank(topEmployeeId)) {
             StringBuilder houseCounselorIds = new StringBuilder();
             List<EmployeeEntity> employeeEntityList = EmployeeBean.getAllSubordinatesCounselors(topEmployeeId);
-            for(EmployeeEntity employeeEntity : employeeEntityList) {
-                houseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
+            if(ArrayTool.isNotEmpty(employeeEntityList)) {
+                for(EmployeeEntity employeeEntity : employeeEntityList) {
+                    houseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
+                }
             }
             houseCounselorIds.append(topEmployeeId);
             parameter.put("HOUSE_COUNSELOR_IDS", houseCounselorIds.toString());
@@ -234,6 +240,64 @@ public class CustService extends GenericService{
         }
 
         response.set("CUST_CONTACT_LIST", array);
+        return response;
+    }
+
+    public ServiceResponse restore(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String custId = request.getString("CUST_ID");
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        CustomerEntity customerEntity = custDAO.getCustById(custId);
+        String today = TimeTool.today();
+        String now = TimeTool.now();
+        if(customerEntity == null || !customerEntity.getCustStatus().equals(CustStatus.pause.getValue())){
+            return response;
+        }
+
+        customerEntity.setCustStatus(CustStatus.normal.getValue());
+        custDAO.update("INS_CUSTOMER", customerEntity.getContent());
+
+        //提醒家装顾问
+        String employeeId = customerEntity.getHouseCounselorId();
+        EmployeeEntity employeeEntity = EmployeeBean.getEmployeeByEmployeeId(employeeId);
+        StringBuilder msgContent = new StringBuilder();
+        msgContent.append("您的客户【").append(customerEntity.getCustName()).append("】");
+        msgContent.append("已于").append(today).append("恢复，可以继续跟踪");
+        MsgBean.sendMsg(employeeEntity.getUserId(), msgContent.toString(), "0", now, MsgType.sys);
+
+        return response;
+    }
+
+    public ServiceResponse remind(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String custContactId = request.getString("CUST_CONTACT_ID");
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        CustContactDAO custContactDAO = DAOFactory.createDAO(CustContactDAO.class);
+        CustContactEntity custContactEntity = custContactDAO.getCustContactEntityByCustContactId(custContactId);
+        String today = TimeTool.today();
+        String now = TimeTool.now();
+        if(custContactEntity == null) {
+            return response;
+        }
+        String custId = custContactEntity.getCustId();
+
+        CustomerEntity customerEntity = custDAO.getCustById(custId);
+        if(customerEntity == null){
+            return response;
+        }
+
+        String custStatus = customerEntity.getCustStatus();
+        if(CustStatus.normal.getValue().equals(custStatus)) {
+            //提醒家装顾问
+            String actionName = ActionCache.getAction(custContactEntity.getRemindActionCode()).getActionName();
+            StringBuilder msgContent = new StringBuilder();
+            msgContent.append(today).append("你要对客户【").append(customerEntity.getCustName()).append("】");
+            msgContent.append("做【").append(actionName).append("】").append("的动作，");
+            msgContent.append("请联系客户");
+            EmployeeEntity employeeEntity = EmployeeBean.getEmployeeByEmployeeId(custContactEntity.getEmployeeId());
+            MsgBean.sendMsg(employeeEntity.getUserId(), msgContent.toString(), "0", now, MsgType.sys);
+        }
+
         return response;
     }
 }
