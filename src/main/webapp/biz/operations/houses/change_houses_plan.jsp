@@ -31,12 +31,7 @@
                     <li class="link required">
                         <div class="label">楼盘性质</div>
                         <div class="value">
-							<span class="e_segment">
-								<span idx="0" val="0">重点期盘</span>
-								<span idx="1" val="1">重点现盘</span>
-								<span idx="2" val="2">责任楼盘</span>
-                                <input type="hidden" name="NATURE" id="NATURE" nullable="no" desc="级别" />
-							</span>
+                            <span id="houseNatureContainer"></span>
                         </div>
                     </li>
                     <li class="required link" ontap="$('#CITY_TEXT').focus();$('#CITY_TEXT').blur();showPopup('UI-popup','UI-CITY')">
