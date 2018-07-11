@@ -70,7 +70,7 @@
                         <div class="label">计划分配家装顾问数</div>
                         <div class="value"><input id="PLAN_COUNSELOR_NUM" name="PLAN_COUNSELOR_NUM" datatype="numeric" type="text" nullable="no" disabled="true" desc="计划分配家装顾问数" value="0"/></div>
                     </li>
-                    <li class="link" ontap="$('#PLAN_IN_DATE').focus();$('#PLAN_IN_DATE').blur();">
+                    <li class="link required" ontap="$('#PLAN_IN_DATE').focus();$('#PLAN_IN_DATE').blur();">
                         <div class="label">计划进入时间</div>
                         <div class="value"><span class="e_mix">
 								<input type="text" id="PLAN_IN_DATE" name="PLAN_IN_DATE" datatype="date" readonly="true" desc="计划进入时间" />
