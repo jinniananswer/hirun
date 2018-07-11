@@ -57,6 +57,10 @@
 							<div class="c_submit c_submit-full">
 								<button id="login_btn" type="button" class="e_button-l e_button-green" ontap="$.login.verifyLogin();">登陆</button>
 							</div>
+							<div class="c_space-2"></div>
+							<div class="e_right p_loginLinks">
+								<a href="phone/download.html">手机APP下载</a>
+							</div>
 							<!-- 提交 结束 -->
 							<!--
 							<div class="c_space-2"></div>
