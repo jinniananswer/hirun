@@ -1,6 +1,24 @@
 (function($){
     $.extend({housesPlan:{
         init : function(){
+            window["UI-popup"] = new Wade.Popup("UI-popup");
+            window["AUDIT_OPTION"] = new Wade.Switch("AUDIT_OPTION",{
+                switchOn:true,
+                onValue:"1",
+                offValue:"2"
+            });
+
+            $("#AUDIT_OPTION").change(function(){
+                if(this.value == "1"){
+                    //审核通过
+                    $("#AUDIT_OPINION").attr("nullable", "yes");
+                }
+                else if(this.value == "2"){
+                    //审核不通过
+                    $("#AUDIT_OPINION").attr("nullable", "no");
+                }
+            });
+
             $.ajaxPost('initChangeHousesPlan','&HOUSES_ID='+$("#HOUSES_ID").val(),function(data){
                 var rst = new Wade.DataMap(data);
                 var housePlan = rst.get("HOUSES_PLAN");
@@ -66,6 +84,36 @@
             }
             $.insertHtml('beforeend', $("#COUNSELOR_DETAIL"), html.join(""));
 
+        },
+
+        initAudit : function(){
+            var houseId = $("#HOUSES_ID").val();
+            $("#AUDIT_HOUSES_ID").val(houseId);
+            $("#AUDIT_OPTION").val("1");
+            showPopup('UI-popup','UI-popup-audit');
+        },
+
+        redirectToChange : function(){
+            var houseId = $("#HOUSES_ID").val();
+            $.redirect.open('redirectToChangeHousesPlan?HOUSES_ID='+houseId,'变更楼盘规划');
+        },
+
+        submitAudit : function(){
+            if(!$.validate.verifyAll("auditArea")){
+                return;
+            }
+
+            var parameter = $.buildJsonData("auditArea");
+            $.ajaxPost('submitAudit', parameter, function (data) {
+                MessageBox.success("审核楼盘规划成功","点击确定返回当前页，点击取消关闭当前页面", function(btn){
+                    if("ok" == btn) {
+                        document.location.reload();
+                    }
+                    else {
+                        parent.$.index.closeCurrentPage();
+                    }
+                },{"cancel":"取消"})
+            });
         }
     }});
 })($);

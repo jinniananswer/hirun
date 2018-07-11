@@ -29,22 +29,6 @@
                 ]
             );
 
-            window["AUDIT_OPTION"] = new Wade.Switch("AUDIT_OPTION",{
-                switchOn:true,
-                onValue:"1",
-                offValue:"2"
-            });
-
-            $("#AUDIT_OPTION").change(function(){
-                if(this.value == "1"){
-                    //审核通过
-                    $("#AUDIT_OPINION").attr("nullable", "yes");
-                }
-                else if(this.value == "2"){
-                    //审核不通过
-                    $("#AUDIT_OPINION").attr("nullable", "no");
-                }
-            });
             $.ajaxPost('queryHousesPlan',null,function(data){
                 var rst = new Wade.DataMap(data);
                 var dataset = rst.get("DATA");
@@ -311,30 +295,6 @@
             });
         },
 
-        initAudit : function(housesId){
-            $("#AUDIT_HOUSES_ID").val(housesId);
-            $("#AUDIT_OPTION").val("1");
-            showPopup('UI-popup','UI-popup-audit');
-            event.stopPropagation();
-        },
-
-        submitAudit : function(){
-            if(!$.validate.verifyAll("auditArea")){
-                return;
-            }
-
-            var parameter = $.buildJsonData("auditArea");
-            $.ajaxPost('submitAudit', parameter, function (data) {
-                MessageBox.success("审核楼盘规划成功","点击确定返回当前页，点击取消关闭当前页面", function(btn){
-                    if("ok" == btn) {
-                        document.location.reload();
-                    }
-                    else {
-                        parent.$.index.closeCurrentPage();
-                    }
-                },{"cancel":"取消"})
-            });
-        },
         scrollHandler: function(){
             var scrollTop = $("#scroll_div").scrollTop();
             var divHeight = $("#scroll_div").height();

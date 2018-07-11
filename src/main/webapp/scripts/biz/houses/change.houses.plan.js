@@ -2,13 +2,26 @@
     $.extend({housesPlan:{
         init : function(){
             window["UI-popup"] = new Wade.Popup("UI-popup");
-            window["NATURE"] = new Wade.Segment("NATURE",{
-                disabled:false
-            });
+            $.Select.append(
+                // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
+                "houseNatureContainer",
+                // 参数设置
+                {
+                    id:"NATURE",
+                    name:"NATURE",
+                    addDefault:false
+                },
+                // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
+                [
+                    {TEXT:"重点期盘", VALUE:"0"},
+                    {TEXT:"重点现盘", VALUE:"1"},
+                    {TEXT:"责任楼盘", VALUE:"2"},
+                    {TEXT:"散盘", VALUE:"3"}
+                ]
+            );
 
-            $("#NATURE").change(function(){
-                var modeVal = this.value; // this.value 获取分段器组件当前值
-                $("#NATURE").val(modeVal);
+            $("#NATURE").bind("change", function(){
+                $("#NATURE").val(this.value); // 当前值
             });
 
             window["CHECK_DATE"] = new Wade.DateField(
