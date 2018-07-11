@@ -9,7 +9,7 @@
                     var companys = rst.get("COMPANYS");
                     $("#loophole_num").empty();
                     html = [];
-                    html.push("缺口总数："+num);
+                    html.push("缺口总数："+num+"人次");
                     $.insertHtml('beforeend', $("#loophole_num"), html.join());
                     $.counselorReport.drawCompanys(companys);
                     $.counselorReport.drawPieChart(num, loophole);

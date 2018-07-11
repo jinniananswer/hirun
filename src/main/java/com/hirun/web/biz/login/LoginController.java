@@ -52,7 +52,16 @@ public class LoginController extends RootController {
 
     @RequestMapping(value = "/loginPost", method = RequestMethod.POST)
     public @ResponseBody String login(@RequestParam Map loginData, HttpSession session, HttpServletRequest request, HttpServletResponse servletResponse) throws Exception{
-        logger.debug("====================deviceToken=============="+loginData.get("USER_DEVICE_TOKEN"));
+        SessionEntity sessionEntity = new SessionEntity();
+        HttpSessionManager.putSessionEntity(session.getId(), sessionEntity);
+
+        String userAgent = request.getHeader("User-Agent");
+        UserAgentUtil agentUtil = new UserAgentUtil(userAgent);
+        if(agentUtil.ios())
+            sessionEntity.put("OPERATION_SYSTEM","IOS");
+        else if(agentUtil.android() || agentUtil.androidICS())
+            sessionEntity.put("OPERATION_SYSTEM", "ANDROID");
+
         ServiceResponse response = ServiceClient.call("OrgCenter.login.LoginService.login", loginData);
 
         if(response.isSuccess()) {
@@ -63,7 +72,6 @@ public class LoginController extends RootController {
 
             UserEntity user = new UserEntity(JSON.parseObject(userInfo.toJSONString(), Map.class));
             EmployeeEntity employee = new EmployeeEntity(JSON.parseObject(employeeInfo.toJSONString(), Map.class));
-            SessionEntity sessionEntity = new SessionEntity();
 
             session.setAttribute("USER", user);
             session.setAttribute("EMPLOYEE", employee);
@@ -82,8 +90,6 @@ public class LoginController extends RootController {
 
             if(ArrayTool.isNotEmpty(jobRoles))
                 sessionEntity.put("JOB_ROLES", jobRoles);
-
-            HttpSessionManager.putSessionEntity(session.getId(), sessionEntity);
 
             session.setAttribute("USER", user);
 

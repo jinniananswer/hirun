@@ -114,7 +114,7 @@ function goto(url) {
 	window.location.href = url;
 }
 function back() {
-	window.history.go(-1);
+	window.history.back();
 }
 function getNext(node) {
 	if(node.nextSibling.nodeType == 3) {

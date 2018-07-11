@@ -19,6 +19,7 @@
 <!-- 标题栏 结束 -->
 <!-- 滚动（替换为 java 组件） 开始 -->
 <div class="c_scroll c_scroll-float c_scroll-header">
+    <div class="l_padding">
     <div class="c_box c_box-border">
         <!-- 标题 开始 -->
         <div class="c_title">
@@ -116,6 +117,13 @@
             </table>
         </div>
         <!-- 表格 结束 -->
+    </div>
+    <div class="c_space"></div>
+    <div class="c_submit c_submit-full">
+        <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.housesPlan.submit()">提交</button>
+        <button type="button" class="e_button-r e_button-l e_button-navy" ontap="$.housesPlan.submit()">提交</button>
+    </div>
+    <div class="c_space"></div>
     </div>
 </div>
 <!-- 滚动 结束 -->
