@@ -138,6 +138,35 @@ public class PlanBean {
                 custActionDAO.insertAutoIncrement("INS_CUST_ACTION", custActionEntity.getContent());
             }
         }
+
+        if(ArrayTool.isEmpty(custActionDAO.queryCustFinishActionByCustIdAndActionCodeAndEid(custId, "JW", executorId))) {
+            //update or insert cust_action
+            PlanEntity planEntity = planDAO.getPlanEntityByEidAndPlanDate(executorId, planDate);
+            CustActionEntity custActionEntity = custActionDAO.queryCustActionByCustIdAndActionCodeAndPlanId(custId, "JW", planEntity.getPlanId());
+            if(custActionEntity != null) {
+                //update
+                String actionId = custActionEntity.getActionId();
+                custActionEntity.setFinishTime(finishTime);
+                custActionEntity.setUpdateUserId("0");
+                custActionEntity.setUpdateTime(now);
+                custActionDAO.update("INS_CUST_ACTION", custActionEntity.getContent());
+            } else {
+                //insert
+                custActionEntity = new CustActionEntity();
+                custActionEntity.setCustId(custId);
+                custActionEntity.setActionCode("JW");
+                custActionEntity.setPlanId(planEntity.getPlanId());
+                custActionEntity.setActionStatus(ActionStatus.outerPlan.getValue());
+                custActionEntity.setPlanDealDate(planEntity.getPlanDate());
+                custActionEntity.setFinishTime(finishTime);
+                custActionEntity.setExecutorId(executorId);
+                custActionEntity.setCreateDate(now);
+                custActionEntity.setCreateUserId("0");
+                custActionEntity.setUpdateTime(now);
+                custActionEntity.setUpdateUserId("0");
+                custActionDAO.insertAutoIncrement("INS_CUST_ACTION", custActionEntity.getContent());
+            }
+        }
     }
 
     /**
@@ -204,6 +233,19 @@ public class PlanBean {
                 custOriginalActionEntity.setCreateDate(now);
                 custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custOriginalActionEntity.getContent());
 
+                //如果没有加微的原始动作，则也记一条加微的
+                if(ArrayTool.isEmpty(custOriginalActionDAO.getCustOriginalActionEntityByActionCodeAndCidAndEid(customerEntity.getCustId(), "JW", houseCounselorId))) {
+                    CustOriginalActionEntity custJWOriginalActionEntity = new CustOriginalActionEntity();
+                    custJWOriginalActionEntity.setCustId(customerEntity.getCustId());
+                    custJWOriginalActionEntity.setActionCode("JW");
+                    custJWOriginalActionEntity.setFinishTime(operTime);
+                    custJWOriginalActionEntity.setEmployeeId(houseCounselorId);
+                    custJWOriginalActionEntity.setCreateUserId("0");
+                    custJWOriginalActionEntity.setCreateDate(now);
+                    custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custJWOriginalActionEntity.getContent());
+                }
+
+
                 String custRelaHounselorId = customerEntity.getHouseCounselorId();
                 if(!houseCounselorId.equals(custRelaHounselorId)) {
                     //发消息通知双方
@@ -245,7 +287,7 @@ public class PlanBean {
         }
 
         //无法归到任意计划里时，跳过
-        return false;
+        return isTrans;
     }
 
     public static String getEmployeeIdByHirunPlusStaffId(String staffId) throws Exception {

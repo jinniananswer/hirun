@@ -30,7 +30,7 @@
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script id="dailysheet_detail_template" type="text/html">
 	{{each DATA_LIST action idx}}
-	<div class="c_box c_box-border">
+	<div class="c_box c_box-border c_box-gray">
 		<div class="c_title" ontap="$(this).next().toggle();">
 			<div class="text e_strong e_blue">{{action.ACTION_NAME}}</div>
 			<div class="fn">
