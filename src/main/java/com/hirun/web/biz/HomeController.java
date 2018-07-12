@@ -84,4 +84,10 @@ public class HomeController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.menu.MenuService.loadMenus", request);
         return response.toJsonString();
     }
+
+    @RequestMapping("/out")
+    public String loginOut(HttpSession session) throws Exception{
+        session.invalidate();
+        return "/login";
+    }
 }
