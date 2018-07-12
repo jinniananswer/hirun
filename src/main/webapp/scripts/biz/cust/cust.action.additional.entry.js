@@ -97,6 +97,7 @@ var custActionSelectPopup = {
             "YJALTS" : "一键案例推送",
         }
 
+        /*
         $.ajaxReq({
             url : 'plan/getCustFinishActionList',
             data : {
@@ -126,6 +127,17 @@ var custActionSelectPopup = {
                 
             }
         })
+        */
+        var templateData = {};
+        var actionList = [];
+        $.each(actionMap, function(key, value) {
+            var action = {"ACTION_CODE" : key, "ACTION_NAME" : value};
+            actionList.push(action);
+        })
+        templateData.ACTION_LIST = actionList;
+
+        $('#action_list').empty().html(template('action_list_template', templateData));
+        new checks('action_list');
 
         if(callback) custActionSelectPopup.callback;
 
