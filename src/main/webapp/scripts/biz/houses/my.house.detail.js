@@ -24,7 +24,7 @@
                 html.push("<li><span class='label'>发展时间：</span><span class='value'>"+house.get("PLAN_IN_DATE")+"~"+house.get("DESTROY_DATE")+"</span></li>");
                 html.push("<li><span class='label'>当前状态：</span><span class='value'>"+house.get("STATUS_NAME")+"</span></li>");
                 html.push("<li><span class='label e_red'>我负责的楼栋：</span><span class='value e_red'>");
-                var towerNo = house.get("STATUS_NAME");
+                var towerNo = house.get("TOWER_NO");
                 if(towerNo !=null && towerNo != "undefined")
                     html.push(towerNo);
                 html.push("</span></li>");
@@ -61,12 +61,12 @@
                     html.push("</span></div>");
                     html.push("<div class=\"main\"><div class=\"title\">");
                     html.push(customer.get("CUST_NAME"));
-                    html.push("</div><div class=\"content\">");
+                    html.push("</div><div class=\"content content-row-3\">");
                     html.push("联系电话：");
                     var mobile_no = customer.get("MOBILE_NO");
                     var houseDetail  = customer.get("HOUSE_DETAIL");
                     if(mobile_no != null && mobile_no != "undefined")
-                        html.push(mobile_no);
+                        html.push("<a href='tel:'"+mobile_no+"'>"+mobile_no+"</a>");
                     html.push("; 楼栋位置：");
                     if(houseDetail != null && houseDetail != "undefined")
                         html.push(houseDetail);

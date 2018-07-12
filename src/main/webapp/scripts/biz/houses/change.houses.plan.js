@@ -79,8 +79,14 @@
                         var html=[];
                         for(var i=0;i<length;i++){
                             var counselor = counselors.get(i);
-                            html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+counselor.get("EMPLOYEE_NAME") +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"text\" desc=\""+counselor.get("EMPLOYEE_NAME")+"分配楼栋\" id=\""+counselor.get("EMPLOYEE_ID")+"_TOWERNUM\" name=\""+counselor.get("EMPLOYEE_ID")+"_TOWERNUM\" value=\""+counselor.get("TOWER_NO")+"\"/></div></li>");
-                            html.push("<li tag=\"HOUSENUM\"><div class=\"label\">"+counselor.get("EMPLOYEE_NAME") +"负责的户数</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+counselor.get("EMPLOYEE_NAME")+"负责户数\" id=\""+counselor.get("EMPLOYEE_ID")+"_HOUSENUM\" name=\""+counselor.get("EMPLOYEE_ID")+"_HOUSENUM\" value=\""+counselor.get("EMPLOYEE_HOUSE_NUM")+"\"/></div></li>");
+                            var towerNo = counselor.get("TOWER_NO");
+                            var employeeHousesNum = counselor.get("EMPLOYEE_HOUSE_NUM");
+                            if(!towerNo)
+                                towerNo = "";
+                            if(!employeeHousesNum)
+                                employeeHousesNum = "";
+                            html.push("<li tag=\"TOWERNUM\"><div class=\"label\">"+counselor.get("EMPLOYEE_NAME") +"分配的楼栋</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"text\" desc=\""+counselor.get("EMPLOYEE_NAME")+"分配楼栋\" id=\""+counselor.get("EMPLOYEE_ID")+"_TOWERNUM\" name=\""+counselor.get("EMPLOYEE_ID")+"_TOWERNUM\" value=\""+towerNo+"\"/></div></li>");
+                            html.push("<li tag=\"HOUSENUM\"><div class=\"label\">"+counselor.get("EMPLOYEE_NAME") +"负责的户数</div><div class=\"value\"><input type=\"text\" nullable=\"no\" datatype=\"numeric\" desc=\""+counselor.get("EMPLOYEE_NAME")+"负责户数\" id=\""+counselor.get("EMPLOYEE_ID")+"_HOUSENUM\" name=\""+counselor.get("EMPLOYEE_ID")+"_HOUSENUM\" value=\""+employeeHousesNum+"\"/></div></li>");
                             if(i != length -1){
                                 counselorIds += counselor.get("EMPLOYEE_ID") + ",";
                                 counselorNames += counselor.get("EMPLOYEE_NAME") + ",";
