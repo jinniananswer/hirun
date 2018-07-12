@@ -74,6 +74,7 @@ public class HousesService extends GenericService {
             response.set("DEFAULT_CITY_ID", org.getCity());
             response.set("DEFAULT_CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", org.getCity()));
         }
+
         return response;
     }
 
