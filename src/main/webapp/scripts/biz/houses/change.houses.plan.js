@@ -42,6 +42,15 @@
                 }
             );
 
+            window["ACTUAL_IN_DATE"] = new Wade.DateField(
+                "ACTUAL_IN_DATE",
+                {
+                    dropDown:true,
+                    format:"yyyy-MM-dd",
+                    useTime:false,
+                }
+            );
+
             $.ajaxPost('initChangeHousesPlan','&HOUSES_ID='+$("#HOUSES_ID").val(),function(data){
                 var rst = new Wade.DataMap(data);
                 var citys = rst.get("CITYS");
@@ -66,6 +75,8 @@
                     $("#HOUSE_NUM").val(housePlan.get("HOUSE_NUM"));
                     $("#PLAN_COUNSELOR_NUM").val(housePlan.get("PLAN_COUNSELOR_NUM"));
                     $("#PLAN_IN_DATE").val(housePlan.get("PLAN_IN_DATE"));
+                    if(housePlan.get("ACTUAL_IN_DATE"))
+                        $("#ACTUAL_IN_DATE").val(housePlan.get("ACTUAL_IN_DATE"));
                     $("#CITY_TEXT").val(housePlan.get("CITY_NAME"));
                     $("#CITY").val(housePlan.get("CITY"));
                     $("#SHOP").val(housePlan.get("ORG_ID"));

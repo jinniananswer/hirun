@@ -11,7 +11,7 @@
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header">
-    <div class="back" ontap="back();">楼盘规划</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">楼盘规划</div>
     <div class="fn">
 
     </div>
@@ -69,7 +69,7 @@
     <div class="c_box c_box-border l_padding l_padding-u">
         <!-- 标题 开始 -->
         <div class="c_title">
-            <div class="text">指标与实际完成情况（当前周期：交房前三个月）</div>
+            <div class="text">我的完成情况（当前周期：交房前三个月）</div>
         </div>
         <!-- 标题 结束 -->
         <div class="c_table c_table-hasGrid c_table-lite c_table-border">
@@ -77,39 +77,32 @@
                 <thead>
                 <tr>
                     <th>指标</th>
-                    <th>计划完成(户)</th>
                     <th>当前完成(户)</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>咨询数</td>
-                    <td>12</td>
                     <td class="e_orange">8</td>
                 </tr>
                 <tr>
                     <td>推送蓝图一数</td>
-                    <td>36</td>
                     <td class="e_orange">36</td>
                 </tr>
                 <tr>
                     <td>扫码数</td>
-                    <td>36</td>
                     <td class="e_orange">30</td>
                 </tr>
                 <tr>
                     <td>关注公众号数</td>
-                    <td>72</td>
                     <td class="e_orange">130</td>
                 </tr>
                 <tr>
                     <td>推送蓝图指导书数</td>
-                    <td>72</td>
                     <td class="e_orange">68</td>
                 </tr>
                 <tr>
                     <td>加微数</td>
-                    <td>72</td>
                     <td class="e_orange">68</td>
                 </tr>
                 </tbody>
@@ -119,6 +112,7 @@
     </div>
 </div>
 <!-- 滚动 结束 -->
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script>
     Wade.setRatio();
     $.myHouse.init();

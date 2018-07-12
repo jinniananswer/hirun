@@ -37,15 +37,15 @@
                         <div class="main">通讯录</div>
                         <div class="more"></div>
                     </li>
-                    <li class="link" title="我的档案" ontap="">
-                        <div class="main">我的档案</div>
-                        <div class="more"></div>
-                    </li>
                     <li class="link" title="我的消息" ontap="$.redirect.open('/biz/common/msglist_query.jsp','我的消息');$('#myMsg').html(0)">
                         <div class="main">
                             我的消息
                             <span class="e_ico-pic-red e_ico-pic-xxxs e_ico-pic-r" id="myMsg">0</span>
                         </div>
+                        <div class="more"></div>
+                    </li>
+                    <li class="link" title="退出登陆" ontap="window.location.href='/out'">
+                        <div class="main">退出登陆</div>
                         <div class="more"></div>
                     </li>
                 </ul>

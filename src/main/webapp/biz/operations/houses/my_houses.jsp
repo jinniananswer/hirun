@@ -16,7 +16,7 @@
 </head>
 <body>
 <div class="c_header">
-    <div class="back" ontap="back();">我的楼盘</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">我的楼盘</div>
     <div class="fn">
 
     </div>
@@ -31,6 +31,7 @@
     </div>
 </div>
 <!-- 滚动 结束 -->
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 
 <script>
     Wade.setRatio();

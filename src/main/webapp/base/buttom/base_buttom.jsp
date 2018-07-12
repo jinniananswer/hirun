@@ -17,22 +17,19 @@
     <div class="tab">
         <div class="list">
             <ul>
-                <li ontap="baseButtom.openHomePage()">
+                <li ontap="baseButtom.open('phone/phone_index.jsp','首页')">
                     <div class="ico"><span class="e_ico-home"></span></div>
                     <div class="text">首页</div>
                 </li>
-                <li>
-                    <div class="ico"><span class="e_ico-cart"></span></div>
-                    <div class="text">数据中心</div>
+                <li ontap="baseButtom.open('biz/common/msglist_query.jsp','我的消息')">
+                    <div class="ico"><span class="e_ico-msg"></span></div>
+                    <div class="text">我的消息</div>
                 </li>
-                <li>
-                    <div class="ico"><span class="e_ico-guide"></span></div>
-                    <div class="text">运营中心</div>
+                <li ontap="baseButtom.open('phone/toolbox.jsp','工具箱')">
+                    <div class="ico"><span class="e_ico-config"></span></div>
+                    <div class="text">工具箱</div>
                 </li>
-                <li>
-                    <div class="ico"><span class="e_ico-user"></span></div>
-                    <div class="text">我的</div>
-                </li>
+
             </ul>
         </div>
     </div>
@@ -44,12 +41,11 @@
                 $('div[tag=buttomPhone]').show();
             }
         },
-        openHomePage : function() {
+        open : function(url, title) {
             if($.os.phone) {
-                $.redirect.topOpen('phone/phone_index.jsp','首页')
-//                $.redirect.popupPageByUrl('首页','phone/phone_index.jsp')
+                $.redirect.topOpen(url,title);
             } else {
-                $.redirect.open('home.jsp','首页')
+                $.redirect.open(url,title);
             }
         }
     }

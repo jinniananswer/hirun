@@ -16,7 +16,7 @@
 </head>
 <body>
 <div class="c_header">
-    <div class="back" ontap="back();">楼盘规划查询</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">楼盘规划查询</div>
     <div class="fn">
         <button class="e_button-blue" type="button" ontap="showPopup('UI-popup','UI-popup-query-cond')"><span class="e_ico-search"></span></button>
     </div>
@@ -31,7 +31,7 @@
     </div>
 </div>
 <!-- 滚动 结束 -->
-
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <!-- 弹窗 开始 -->
 <div class="c_popup" id="UI-popup">
     <div class="c_popupBg" id="UI-popup_bg"></div>

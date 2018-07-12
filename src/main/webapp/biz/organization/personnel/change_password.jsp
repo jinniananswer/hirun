@@ -11,7 +11,7 @@
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header e_show">
-    <div class="back" ontap="back();">密码修改</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">密码修改</div>
 </div>
 <!-- 标题栏 结束 -->
 <!-- 滚动（替换为 java 组件） 开始 -->
@@ -49,6 +49,7 @@
     </div>
 </div>
 <!-- 滚动 结束 -->
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script>
     Wade.setRatio();
 </script>

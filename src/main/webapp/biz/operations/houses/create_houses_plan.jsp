@@ -11,7 +11,7 @@
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header e_show">
-    <div class="back" ontap="back();">新增楼盘规划</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">新增楼盘规划</div>
 </div>
 <!-- 标题栏 结束 -->
 <!-- 滚动（替换为 java 组件） 开始 -->
@@ -77,6 +77,13 @@
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
+                    <li class="link" ontap="$('#ACTUAL_IN_DATE').focus();$('#ACTUAL_IN_DATE').blur();">
+                        <div class="label">实际进入时间</div>
+                        <div class="value"><span class="e_mix">
+								<input type="text" id="ACTUAL_IN_DATE" name="ACTUAL_IN_DATE" datatype="date" readonly="true" desc="实际进入时间" />
+								<span class="e_ico-date"></span>
+							</span></div>
+                    </li>
                     <li class="link" ontap="$('#EMPLOYEE_NAME').focus();$('#EMPLOYEE_NAME').blur();$.housesPlan.initCounselor();">
                         <div class="label">家装顾问</div>
                         <div class="value"><span class="e_mix">
@@ -100,6 +107,7 @@
     </div>
 </div>
 <!-- 滚动 结束 -->
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <!-- 弹窗 开始 -->
 <div class="c_popup" id="UI-popup">
     <div class="c_popupBg" id="UI-popup_bg"></div>

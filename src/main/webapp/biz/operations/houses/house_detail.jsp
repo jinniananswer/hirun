@@ -11,7 +11,7 @@
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header">
-    <div class="back" ontap="back();">楼盘规划</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">楼盘规划</div>
     <div class="fn">
 
     </div>
@@ -126,6 +126,7 @@
     <div class="c_space"></div>
     </div>
 </div>
+<jsp:include page="/base/buttom/base_buttom.jsp"/>
 <div class="c_popup" id="UI-popup">
     <div class="c_popupBg" id="UI-popup_bg"></div>
     <div class="c_popupBox">

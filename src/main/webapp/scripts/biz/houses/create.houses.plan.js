@@ -44,6 +44,15 @@
                 }
             );
 
+            window["ACTUAL_IN_DATE"] = new Wade.DateField(
+                "ACTUAL_IN_DATE",
+                {
+                    dropDown:true,
+                    format:"yyyy-MM-dd",
+                    useTime:false,
+                }
+            );
+
             $.ajaxPost('initCreateHousesPlan',null,function(data){
                 var rst = new Wade.DataMap(data);
                 var citys = rst.get("CITYS");
