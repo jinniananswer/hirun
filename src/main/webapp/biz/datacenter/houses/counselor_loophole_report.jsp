@@ -43,7 +43,12 @@
                 </div>
                 <!-- 简介 结束 -->
                 <div class="c_space-2"></div>
-                <div name="myPieChart" id="myPieChart" style="height:55em;"></div>
+                <div name="myPieChart" id="myPieChart" style="height:35em;"></div>
+                <div class="c_param c_param-v c_param-phone-col-2 c_param-avg" style="margin-top:-2em;">
+                    <ul id="loophole_detail">
+
+                    </ul>
+                </div>
 
             </div>
             <!-- 基础 结束 -->
