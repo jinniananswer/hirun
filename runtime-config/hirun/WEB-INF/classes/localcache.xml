@@ -1,0 +1,14 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<localcaches>
+    <readonly>
+        <cache className="com.hirun.app.cache.PlanTargetLimitCache" init="false" />
+        <cache className="com.hirun.app.cache.PlanActionLimitCache" init="false" />
+        <cache className="com.hirun.app.cache.ActionCache" init="false" />
+        <cache className="com.hirun.app.cache.PlanUnFinishCauseCache" init="false" />
+        <cache className="com.hirun.app.cache.HirunPlusStaffDataCache" init="false" />
+        <cache className="com.hirun.app.cache.PerformDueTaskDefCache" init="false" />
+    </readonly>
+   <readwrite>
+       <cache name="EMPLOYEE_NAME_CACHE" maxSize="5000" />
+    </readwrite>
+</localcaches>

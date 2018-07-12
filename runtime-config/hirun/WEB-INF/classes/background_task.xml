@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<task>
+    <cronTask>
+        <task taskName="hirunPlusDataImportTask" cronExpr="0 0/10 0-23 * * ?" className="com.hirun.app.task.HirunPlusDataImportTask"/>
+        <task taskName="transOriginalDataToAction" cronExpr="0 5/10 0-23 * * ?" className="com.hirun.app.task.TransOriginalDataToActionTask"/>
+        <task taskName="hirunPlusStaffDataImportTask" cronExpr="0 20 3 * * ?" className="com.hirun.app.task.HirunPlusStaffDataImportTask"/>
+        <task taskName="performDueTask" cronExpr="0 0/10 * * * ?" className="com.hirun.app.task.PerformDueTask"/>
+    </cronTask>
+</task>
