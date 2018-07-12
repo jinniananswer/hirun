@@ -25,7 +25,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
 
     public RecordSet queryHousesPlan(Map<String, String> parameter) throws SQLException{
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date,a.plan_counselor_num, a.status, b.employee_id, b.tower_no,b.house_num employee_house_num,   c.name employee_name,c.sex, d.name org_name ");
+        sb.append("SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date, date_format(a.actual_in_date, '%Y-%m-%d') actual_in_date,date_format(a.destroy_date, '%Y-%m-%d') destroy_date,a.plan_counselor_num, a.status, b.employee_id, b.tower_no,b.house_num employee_house_num,   c.name employee_name,c.sex, d.name org_name ");
         sb.append("FROM ins_houses a ");
         sb.append("LEFT JOIN ins_houses_plan b ON (b.houses_id = a.houses_id and now() between b.start_date and b.end_date) ");
         sb.append("LEFT JOIN ins_employee c ON (c.employee_id = b.employee_id and c.destroy_date is null) ");
@@ -63,7 +63,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
 
     public RecordSet queryHousesByEmployeeId(String employeeId) throws SQLException{
         StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status ");
+        sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date,date_format(a.actual_in_date, '%Y-%m-%d') actual_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status ");
         sb.append(" FROM INS_HOUSES a, INS_HOUSES_PLAN b ");
         sb.append(" WHERE b.houses_id = a.houses_id ");
         sb.append(" AND b.employee_id = :EMPLOYEE_ID ");
@@ -180,7 +180,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
 
     public Record queryHousesByEmployeeIdHouseId(String employeeId, String houseId) throws SQLException{
         StringBuilder sb = new StringBuilder();
-        sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status, b.tower_no, b.house_num employee_house_num, c.name org_name ");
+        sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date,date_format(a.actual_in_date, '%Y-%m-%d') actual_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status, b.tower_no, b.house_num employee_house_num, c.name org_name ");
         sb.append(" FROM INS_HOUSES a, INS_HOUSES_PLAN b, ins_org c ");
         sb.append(" WHERE b.houses_id = a.houses_id ");
         sb.append(" and c.org_id = a.org_id ");

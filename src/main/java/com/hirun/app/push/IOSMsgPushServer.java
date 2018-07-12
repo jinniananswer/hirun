@@ -28,7 +28,7 @@ public class IOSMsgPushServer {
             String sound = "default";
 
             // 推送证书的路径
-            String certificatePath = Thread.currentThread().getContextClassLoader().getResource("/").getPath()+"push.p12";
+            String certificatePath = Thread.currentThread().getContextClassLoader().getResource("/").getPath()+"dhome_dis_push.p12";
             // 证书的密码
             String certificatePassword = "123456";// 此处注意导出的证书密码不能为空因为空密码会报错
             boolean sendCount = true;
@@ -42,7 +42,7 @@ public class IOSMsgPushServer {
             }
             PushNotificationManager pushManager = new PushNotificationManager();
             // true：表示的是产品发布推送服务 false：表示的是产品测试推送服务
-            pushManager.initializeConnection(new AppleNotificationServerBasicImpl(certificatePath, certificatePassword, false));
+            pushManager.initializeConnection(new AppleNotificationServerBasicImpl(certificatePath, certificatePassword, true));
             List<PushedNotification> notifications = new ArrayList<PushedNotification>();
             // 发送push消息
 

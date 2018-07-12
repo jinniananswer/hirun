@@ -8,6 +8,7 @@ import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.web.RootController;
+import com.most.core.web.agent.UserAgentUtil;
 import com.most.core.web.client.ServiceClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -86,8 +87,15 @@ public class HomeController extends RootController {
     }
 
     @RequestMapping("/out")
-    public String loginOut(HttpSession session) throws Exception{
+    public String loginOut(HttpSession session, HttpServletRequest request) throws Exception{
         session.invalidate();
-        return "/login";
+        String userAgent = request.getHeader("User-Agent");
+        UserAgentUtil agentUtil = new UserAgentUtil(userAgent);
+        if(agentUtil.phone()){
+            return "phone/login";
+        }
+        else {
+            return "login";
+        }
     }
 }

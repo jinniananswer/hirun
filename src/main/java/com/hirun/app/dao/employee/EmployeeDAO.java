@@ -56,7 +56,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("where b.parent_org_id = :PARENT_ORG_ID ");
         sb.append("and c.employee_id = a.employee_id ");
         sb.append("and c.org_id = b.org_id ");
-        sb.append("and c.job_role = :JOB_ROLE ");
+        sb.append("and c.job_role in ('"+jobRole+"') ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
         return employees;
