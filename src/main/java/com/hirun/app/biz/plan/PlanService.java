@@ -716,7 +716,7 @@ public class PlanService extends GenericService {
 
         List<CustOriginalActionEntity> custOriginalActionEntityList = custOriginalActionDAO.getCustOriginalActionEntityByCustId(custId);
         for(CustOriginalActionEntity custOriginalActionEntity : custOriginalActionEntityList) {
-            JSONObject custAction = custOriginalActionEntity.toJSON(new String[] {"FINISH_TIME"});
+            JSONObject custAction = custOriginalActionEntity.toJSON(new String[] {"FINISH_TIME", "ACTION_CODE", "EMPLOYEE_ID"});
             custAction.put("ACTION_NAME", ActionCache.getAction(custOriginalActionEntity.getActionCode()).getActionName());
             custAction.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(custOriginalActionEntity.getEmployeeId()));
             custList.add(custAction);
@@ -1102,6 +1102,50 @@ public class PlanService extends GenericService {
         }
 
         response.set("CUST_UNFINISH_ACTION_CAUSE", custList);
+
+        return response;
+    }
+
+    public ServiceResponse additionalAddCustAction(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        Map<String, String> parameter = new HashMap<String, String>();
+        JSONArray custList = new JSONArray();
+        CustActionDAO custActionDAO = DAOFactory.createDAO(CustActionDAO.class);
+        CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
+
+        JSONObject requestData = request.getBody().getData();
+        String custId = requestData.getString("CUST_ID");
+        String executorId = requestData.getString("EXECUTOR_ID");
+        JSONArray actionList = requestData.getJSONArray("ACTION_LIST");
+
+        String now = TimeTool.now();
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
+
+        for(int i = 0, size = actionList.size(); i < size; i++) {
+            JSONObject action = actionList.getJSONObject(i);
+            CustActionEntity custActionEntity = new CustActionEntity();
+            custActionEntity.setCustId(custId);
+            custActionEntity.setActionCode(action.getString("ACTION_CODE"));
+            custActionEntity.setPlanId("0");
+            custActionEntity.setActionStatus("1");
+            custActionEntity.setFinishTime(now);
+            custActionEntity.setExecutorId(executorId);
+            custActionEntity.setCreateUserId(userId);
+            custActionEntity.setCreateDate(now);
+            custActionEntity.setUpdateUserId(userId);
+            custActionEntity.setUpdateTime(now);
+            custActionDAO.insert("INS_CUST_ACTION", custActionEntity.getContent());
+
+            CustOriginalActionEntity custOriginalActionEntity = new CustOriginalActionEntity();
+            custOriginalActionEntity.setCustId(custId);
+            custOriginalActionEntity.setActionCode(action.getString("ACTION_CODE"));
+            custOriginalActionEntity.setFinishTime(now);
+            custOriginalActionEntity.setEmployeeId(executorId);
+            custOriginalActionEntity.setCreateUserId(userId);
+            custOriginalActionEntity.setCreateDate(now);
+            custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custOriginalActionEntity.getContent());
+        }
 
         return response;
     }

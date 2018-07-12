@@ -462,7 +462,7 @@
 </script>
 <script id="action_list_template" type="text/html" rel_id="ACTION_LIST">
 	{{each ACTION_LIST action idx}}
-	<div class="c_box c_box-border" id="FINISH_INFO_{{action.ACTION_CODE}}" tag="PLAN_ACTION" action_code="{{action.ACTION_CODE}}">
+	<div class="c_box c_box-border c_box-gray" id="FINISH_INFO_{{action.ACTION_CODE}}" tag="PLAN_ACTION" action_code="{{action.ACTION_CODE}}">
 		<div class="c_title" ontap="$(this).next().toggle();">
 			<div class="text e_strong e_blue">{{action.ACTION_NAME}}</div>
 			<div class="fn">

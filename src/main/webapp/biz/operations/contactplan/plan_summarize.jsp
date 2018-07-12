@@ -315,7 +315,7 @@
 	</li>
 </script>
 <script id="finishInfoTemplate" type="text/html">
-	<div class="c_box c_box-border" id="FINISH_INFO_{{ACTION_CODE}}">
+	<div class="c_box c_box-border c_box-gray" id="FINISH_INFO_{{ACTION_CODE}}">
 		<div class="c_title" ontap="$(this).next().toggle();">
 			<div class="text e_strong e_blue">{{ACTION_NAME}}</div>
 			<div class="fn">

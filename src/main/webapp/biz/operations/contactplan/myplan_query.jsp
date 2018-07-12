@@ -59,8 +59,8 @@
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script id="finishInfoTemplate" type="text/html">
 	{{each CUST_ACTION_LIST custAction idx}}
-	<div class="c_box c_box-border">
-		<div class="c_title" ontap="$(this).next().toggle();" style="background: rgba(52,24,255,0.07)">
+	<div class="c_box c_box-border c_box-gray">
+		<div class="c_title" ontap="$(this).next().toggle();">
 			<div class="text">{{custAction.ACTION_NAME}}</div>
 			<div class="fn">
 				<ul>

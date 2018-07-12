@@ -42,6 +42,7 @@
     <entity name="OperationCenter.plan.PlanService.queryEmployeeMonStat"  class="com.hirun.app.biz.plan.PlanService" method="queryEmployeeMonStat"/>
     <entity name="OperationCenter.plan.PlanService.queryPlanDetail"  class="com.hirun.app.biz.plan.PlanService" method="queryPlanDetail"/>
     <entity name="OperationCenter.plan.PlanService.queryCustUnFinishCause"  class="com.hirun.app.biz.plan.PlanService" method="queryCustUnFinishCause"/>
+    <entity name="OperationCenter.plan.PlanService.additionalAddCustAction"  class="com.hirun.app.biz.plan.PlanService" method="additionalAddCustAction"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
