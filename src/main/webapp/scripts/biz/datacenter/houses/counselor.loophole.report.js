@@ -49,16 +49,21 @@
             drawPieChart : function(num, loophole){
                 var data = [];
                 var seriesDatas = [];
+                var html = [];
+                $("#loophole_detail").empty();
                 if(loophole != null && loophole.length > 0){
                     for(var i=0;i<loophole.length;i++){
                         var hole = loophole.get(i);
-                        var nameValue = hole.get("NAME")+":"+hole.get("LOOPHOLE");
+                        var nameValue = hole.get("NAME");
+                        html.push("<li><span class=\"value e_size-l\">"+hole.get("LOOPHOLE")+"</span>");
+                        html.push("<span class=\"label\">"+nameValue+"</span></li>");
                         data.push(nameValue);
                         seriesDatas.push({
                             name:nameValue,
                             value:hole.get("LOOPHOLE")
                         });
                     }
+                    $.insertHtml('beforeend', $("#loophole_detail"), html.join(""));
                 }
                 var chart = echarts.init(document.getElementById("myPieChart"));
 
@@ -73,12 +78,6 @@
                         "data": data,
                         "left": "center"
                     },
-                    grid :{
-                        x:70,
-                        y2:140,
-                        x2:10,
-                        bottom:'50%'
-                    },
                     "tooltip": {
                         "trigger": "item",
                         "formatter": "{b} ({d}%)"
@@ -87,14 +86,9 @@
                         {
                             "avoidLabelOverlap": false,
                             "radius": "55%",
-                            "center":['50%','50%'],
                             "label": {
                                 "normal":{
-                                    "show":true
-                                },
-                                "textStyle": {
-                                    "fontWeight": "bold",
-                                    "fontSize": 9
+                                    "show":false
                                 }
                             },
                             "type": "pie",

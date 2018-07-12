@@ -49,16 +49,21 @@
             drawPieChart : function(houseNum, natureGroup){
                 var data = [];
                 var seriesDatas = [];
+                var html=[];
+                $("#nature_detail").empty();
                 if(natureGroup != null && natureGroup.length > 0){
                     for(var i=0;i<natureGroup.length;i++){
                         var nature = natureGroup.get(i);
-                        var nameValue = nature.get("NATURE_NAME")+":"+nature.get("HOUSES_NUM");
+                        var nameValue = nature.get("NATURE_NAME");
+                        html.push("<li><span class=\"value e_size-l\">"+nature.get("HOUSES_NUM")+"</span>");
+                        html.push("<span class=\"label\">"+nameValue+"</span></li>");
                         data.push(nameValue);
                         seriesDatas.push({
                             name:nameValue,
                             value:nature.get("HOUSES_NUM")
                         });
                     }
+                    $.insertHtml('beforeend', $("#nature_detail"), html.join(""));
                 }
                 var chart = echarts.init(document.getElementById("myPieChart"));
 
@@ -81,6 +86,11 @@
                         {
                             "radius": "55%",
                             "type": "pie",
+                            "label": {
+                                "normal":{
+                                    "show":false
+                                }
+                            },
                             "data": seriesDatas
                         }
                     ],
