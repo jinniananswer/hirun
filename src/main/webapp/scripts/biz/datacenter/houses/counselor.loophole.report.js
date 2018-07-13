@@ -35,7 +35,7 @@
                     var loophole = rst.get("LOOPHOLE");
                     $("#company_name").empty();
                     var html = [];
-                    html.push(name+"家装顾问缺口数统计");
+                    html.push(name+"重点楼盘家装顾问缺口数统计");
                     $.insertHtml('beforeend', $("#company_name"), html.join(""));
                     $("#loophole_num").empty();
                     html = [];

@@ -28,7 +28,7 @@
                             <ul>
                                 <li>
                                     <div class="main">
-                                        <div class="title e_size-l" id="company_name">所有分公司家装顾问缺口数统计</div>
+                                        <div class="title e_size-l" id="company_name">所有分公司重点楼盘家装顾问缺口数统计</div>
                                         <div class="content content-auto">
                                             <span id="loophole_num">缺口总数：0</span>
                                             <div class="e_right">
