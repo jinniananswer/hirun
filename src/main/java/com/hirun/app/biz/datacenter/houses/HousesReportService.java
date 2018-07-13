@@ -14,6 +14,8 @@ import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.*;
+
 public class HousesReportService extends GenericService {
 
     public ServiceResponse reportAllHousesNature(ServiceRequest request) throws Exception{
@@ -126,43 +128,71 @@ public class HousesReportService extends GenericService {
 
 
         if(orgId == null || StringUtils.equals("-1", orgId)){
-            plan = dao.getPlanCounselorNumByCompany();
-            actual = dao.getActualCounselorNumByCompany();
+            plan = dao.getPlanCounselorNumByCompanyAndNature();
+            actual = dao.getActualCounselorNumByCompanyAndNature();
         }
         else{
-            plan = dao.getPlanCounselorNumByShop(orgId);
-            actual = dao.getActualCounselorNumByShop(orgId);
+            plan = dao.getPlanCounselorNumByShopAndNature(orgId);
+            actual = dao.getActualCounselorNumByShopAndNature(orgId);
         }
 
         ServiceResponse response = new ServiceResponse();
         JSONArray jsonArray = new JSONArray();
         int num = 0;
+        Map<String, String> temp = new HashMap<String, String>();
+        Set<String> orgTemp = new TreeSet<String>();
+        Map<String, String> orgNameTemp = new HashMap<String, String>();
         if(plan != null && plan.size() > 0){
             int size = plan.size();
             for(int i=0;i<size;i++){
                 Record planRecord = plan.get(i);
                 int planNum = planRecord.getInt("PLAN_NUM");
+                String planNature = planRecord.get("NATURE");
                 String planOrgId = planRecord.get("ORG_ID");
+                temp.put(planOrgId+"_PLAN_"+planNature, planNum+"");
+                orgTemp.add(planOrgId);
+                orgNameTemp.put(planOrgId, planRecord.get("NAME"));
                 int actualNum = 0;
                 if(actual !=null && actual.size() > 0){
                     int actualSize = actual.size();
                     for(int j=0;j<actualSize;j++){
                         Record actualRecord = actual.get(j);
                         String actualOrgId = actualRecord.get("ORG_ID");
-                        if(StringUtils.equals(planOrgId, actualOrgId)){
+                        String actualNature = actualRecord.get("NATURE");
+
+                        if(StringUtils.equals(planOrgId, actualOrgId) && StringUtils.equals(planNature, actualNature)){
                             actualNum = actualRecord.getInt("ACTUAL_NUM");
                             break;
                         }
                     }
                 }
+                temp.put(planOrgId+"_ACTUAL_"+planNature, actualNum+"");
+            }
+
+            for(String tempOrgId : orgTemp){
                 JSONObject json = new JSONObject();
-                json.put("ORG_ID", planOrgId);
-                json.put("NAME", planRecord.get("NAME"));
-                json.put("LOOPHOLE", planNum-actualNum);
-                num = num+(planNum-actualNum);
+                json.put("ORG_ID", tempOrgId);
+                json.put("NAME", orgNameTemp.get(tempOrgId));
+                int planKeyNoPassCheck = Integer.parseInt(temp.get(tempOrgId+"_PLAN_0"));
+                int actualKeyNoPassCheck = Integer.parseInt(temp.get(tempOrgId+"_ACTUAL_0"));
+                int planKeyPassCheck = Integer.parseInt(temp.get(tempOrgId+"_PLAN_1"));
+                int actualKeyPassCheck = Integer.parseInt(temp.get(tempOrgId+"_ACTUAL_1"));
+
+                int loopholeNoPassCheck = planKeyNoPassCheck - actualKeyNoPassCheck;
+                int loopholePassCheck = planKeyPassCheck - actualKeyPassCheck;
+
+                if(loopholeNoPassCheck > loopholePassCheck) {
+                    json.put("LOOPHOLE", loopholeNoPassCheck);
+                    num = num + (loopholeNoPassCheck);
+                }
+                else{
+                    json.put("LOOPHOLE", loopholePassCheck);
+                    num = num + (loopholePassCheck);
+                }
                 jsonArray.add(json);
             }
         }
+
         response.set("LOOPHOLE", jsonArray);
         response.set("NUM", num);
         if(company != null)
