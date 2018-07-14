@@ -89,7 +89,7 @@ public class LoginService extends GenericService{
             deviceToken = deviceToken.replaceAll("&gt;", "");
             deviceToken = deviceToken.replaceAll(" ", "");
             UserDeviceDAO deviceDAO = DAOFactory.createDAO(UserDeviceDAO.class);
-            Record userDevice = deviceDAO.queryUserDeviceByUserIdAndDevice(user.getUserId(), deviceToken);
+            Record userDevice = deviceDAO.queryUserDeviceByUserId(user.getUserId());
             String os = request.getHeader().getString("OPERATION_SYSTEM");
             int osCode = 0;
             if(StringUtils.equals(os, "IOS"))
@@ -110,7 +110,10 @@ public class LoginService extends GenericService{
                 deviceDAO.insert("ins_user_device", deviceParameter);
             }
             else{
-
+                Map<String, String> deviceParameter = userDevice.getData();
+                deviceParameter.put("DEVICE_TOKEN", deviceToken);
+                deviceParameter.put("OPERATION_SYSTEM", osCode+"");
+                deviceDAO.save("ins_user_device", deviceParameter);
             }
         }
 

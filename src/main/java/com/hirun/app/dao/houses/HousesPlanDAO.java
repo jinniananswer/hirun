@@ -178,6 +178,66 @@ public class HousesPlanDAO extends StrongObjectDAO {
         return this.queryBySql(sb.toString(), null);
     }
 
+    public RecordSet getPlanCounselorNumByShopAndNature(String orgId) throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select a.ORG_ID,b.name, a.nature, sum(a.PLAN_COUNSELOR_NUM) plan_num ");
+        sb.append(" from ins_houses a, ins_org b,ins_org c ");
+        sb.append(" where c.org_id = :ORG_ID ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" and a.nature in ('0','1') ");
+        sb.append(" group by a.ORG_ID,b.name,a.nature ");
+        sb.append(" order by a.ORG_ID asc ");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ORG_ID", orgId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public RecordSet getActualCounselorNumByShopAndNature(String orgId) throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select a.ORG_ID,b.name, d.nature, count(1) actual_num ");
+        sb.append(" from ins_houses_plan a, ins_org b,ins_org c, ins_houses d ");
+        sb.append(" where c.ORG_ID = :ORG_ID ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" and d.houses_id = a.houses_id ");
+        sb.append(" and d.nature in ('0','1') ");
+        sb.append(" group by a.ORG_ID,b.name,d.nature ");
+        sb.append(" order by a.ORG_ID asc ");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ORG_ID", orgId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public RecordSet getPlanCounselorNumByCompanyAndNature() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select c.ORG_ID,c.name, a.nature, sum(a.PLAN_COUNSELOR_NUM) plan_num ");
+        sb.append(" from ins_houses a, ins_org b,ins_org c ");
+        sb.append(" where c.type = '2' ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" and a.nature in ('0','1') ");
+        sb.append(" group by c.ORG_ID,c.name,a.nature ");
+        sb.append(" order by c.ORG_ID asc ");
+
+        return this.queryBySql(sb.toString(), null);
+    }
+
+    public RecordSet getActualCounselorNumByCompanyAndNature() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select c.ORG_ID,c.name, d.nature, count(1) actual_num ");
+        sb.append(" from ins_houses_plan a, ins_org b,ins_org c,ins_houses d ");
+        sb.append(" where c.type = '2' ");
+        sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" and d.houses_id = a.houses_id ");
+        sb.append(" and d.nature in ('0','1') ");
+        sb.append(" group by c.ORG_ID,c.name,d.nature ");
+        sb.append(" order by c.ORG_ID asc ");
+
+        return this.queryBySql(sb.toString(), null);
+    }
+
     public Record queryHousesByEmployeeIdHouseId(String employeeId, String houseId) throws SQLException{
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date,date_format(a.actual_in_date, '%Y-%m-%d') actual_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status, b.tower_no, b.house_num employee_house_num, c.name org_name ");

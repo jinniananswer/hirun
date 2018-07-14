@@ -26,9 +26,9 @@
                     <ul>
                         <li>
                             <div class="main">
-                                <div class="title e_size-l" id="company_name">所有分公司家装顾问计划与实际数</div>
+                                <div class="title e_size-l ">计划分配家装顾问人次与实际人次对比</div>
                                 <div class="content content-auto">
-                                    <span></span>
+                                    <span id="company_name">所有分公司楼盘计划分配家装顾问人次与实际人次对比</span>
                                     <div class="c_space-2"></div>
                                     <div class="e_right">
 

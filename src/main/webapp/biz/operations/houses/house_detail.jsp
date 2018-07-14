@@ -125,6 +125,10 @@
     </div>
     <div class="c_space"></div>
     </div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
 </div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 <div class="c_popup" id="UI-popup">
