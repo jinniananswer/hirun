@@ -12,10 +12,11 @@
 
         submit : function(){
             if($.validate.verifyAll("submitArea")) {
-                var password = $("#PASSWORD");
-                var confirmPassword = $("#CONFIRM_PASSWORD");
+                var password = $("#PASSWORD").val();
+                var confirmPassword = $("#CONFIRM_PASSWORD").val();
                 if(password != confirmPassword){
                     $.TipBox.show(document.getElementById('CONFIRM_PASSWORD'), "新密码两次输入不一致", "red");
+                    return;
                 }
                 var parameter = $.buildJsonData("submitArea");
                 $.ajaxPost('submitChangePassword', parameter, function (data) {
