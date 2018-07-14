@@ -23,15 +23,15 @@
                 <ul id="submitArea">
                     <li class="link required">
                         <div class="label">请输入原密码</div>
-                        <div class="value"><input id="OLD_PASSWORD" name="OLD_PASSWORD" type="password" nullable="no" desc="原密码" onblur="$.org.checkOldPassword()"/></div>
+                        <div class="value"><input id="OLD_PASSWORD" name="OLD_PASSWORD" type="password" nullable="no" datatype="numeric" equsize="6" desc="原密码" onblur="$.org.checkOldPassword()"/></div>
                     </li>
                     <li class="link required">
                         <div class="label">请输入新密码</div>
-                        <div class="value"><input id="PASSWORD" name="PASSWORD" type="password" nullable="no" maxlength="10" desc="新密码"/></div>
+                        <div class="value"><input id="PASSWORD" name="PASSWORD" type="password" nullable="no" datatype="numeric" equsize="6" desc="新密码"/></div>
                     </li>
                     <li class="link required">
                         <div class="label">请确认新密码</div>
-                        <div class="value"><input id="CONFIRM_PASSWORD" name="CONFIRM_PASSWORD" type="password" nullable="no" desc="楼盘名称"/></div>
+                        <div class="value"><input id="CONFIRM_PASSWORD" name="CONFIRM_PASSWORD" type="password" datatype="numeric" equsize="6" nullable="no" desc="确认新密码"/></div>
                     </li>
 
                 </ul>
