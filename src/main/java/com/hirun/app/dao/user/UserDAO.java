@@ -25,6 +25,7 @@ public class UserDAO extends StrongObjectDAO {
     public UserEntity queryUserByUsername(String username) throws SQLException {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("USERNAME", username);
+        parameter.put("STATUS", "0");
         List<UserEntity> users = this.query(UserEntity.class, "ins_user", parameter);
         if(ArrayTool.isEmpty(users))
             return null;
