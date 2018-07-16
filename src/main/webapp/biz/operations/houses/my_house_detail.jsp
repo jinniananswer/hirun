@@ -83,27 +83,27 @@
                 <tbody>
                 <tr>
                     <td>咨询数</td>
-                    <td class="e_orange">8</td>
+                    <td class="e_orange">-</td>
                 </tr>
                 <tr>
                     <td>推送蓝图一数</td>
-                    <td class="e_orange">36</td>
+                    <td class="e_orange">-</td>
                 </tr>
                 <tr>
                     <td>扫码数</td>
-                    <td class="e_orange">30</td>
+                    <td class="e_orange">-</td>
                 </tr>
                 <tr>
                     <td>关注公众号数</td>
-                    <td class="e_orange">130</td>
+                    <td class="e_orange">-</td>
                 </tr>
                 <tr>
                     <td>推送蓝图指导书数</td>
-                    <td class="e_orange">68</td>
+                    <td class="e_orange">-</td>
                 </tr>
                 <tr>
                     <td>加微数</td>
-                    <td class="e_orange">68</td>
+                    <td class="e_orange">-</td>
                 </tr>
                 </tbody>
             </table>
