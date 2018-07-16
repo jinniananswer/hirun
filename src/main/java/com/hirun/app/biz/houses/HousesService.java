@@ -122,7 +122,7 @@ public class HousesService extends GenericService {
 
         EmployeeDAO dao = new EmployeeDAO("ins");
         //查询家装顾问信息
-        List<EmployeeEntity> employees = dao.queryEmployeeByParentOrgJobRole(orgId, "42，58");
+        List<EmployeeEntity> employees = dao.queryEmployeeByParentOrgJobRole(orgId, "42,58");
 
         ServiceResponse response = new ServiceResponse();
         response.set("COUNSELORS", ConvertTool.toJSONArray(employees));
