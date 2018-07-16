@@ -153,7 +153,8 @@ public class CustDAO extends StrongObjectDAO {
         sb.append("select * from ins_customer ");
         sb.append("where house_counselor_id = :EMPLOYEE_ID ");
         sb.append("and house_id = :HOUSE_ID ");
-        sb.append("and (cust_status = 1 or (cust_status = 9 and wx_nick is null)) ");
+        sb.append("and wx_nick is not null ");
+        sb.append("and cust_status not in (8,9) ");
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
     }
 }
