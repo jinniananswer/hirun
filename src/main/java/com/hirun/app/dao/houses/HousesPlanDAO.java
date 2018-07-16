@@ -66,6 +66,9 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" SELECT a.houses_id, a.name, a.city, a.area, a.org_id, a.nature, date_format(a.check_date, '%Y-%m-%d') check_date, a.house_num, date_format(a.plan_in_date, '%Y-%m-%d') plan_in_date,date_format(a.actual_in_date, '%Y-%m-%d') actual_in_date, date_format(a.destroy_date, '%Y-%m-%d') destroy_date, a.status ");
         sb.append(" FROM INS_HOUSES a, INS_HOUSES_PLAN b ");
         sb.append(" WHERE b.houses_id = a.houses_id ");
+        sb.append(" and (now() between a.plan_in_date and a.destroy_date) ");
+        sb.append(" and (now() between b.start_date and b.end_date) ");
+        sb.append(" and a.status = '1' ");
         sb.append(" AND b.employee_id = :EMPLOYEE_ID ");
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("EMPLOYEE_ID", employeeId);
