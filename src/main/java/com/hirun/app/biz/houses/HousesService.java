@@ -558,7 +558,7 @@ public class HousesService extends GenericService {
     public ServiceResponse showHouseDetail(ServiceRequest request) throws Exception {
         ServiceResponse response = this.initChangeHousesPlan(request);
         response.set("HAS_CHANGE", Permission.hasChangeHouse()?"true":"false");
-        response.set("HAS_AUDIT", Permission.hasAuditHouse());
+        response.set("HAS_AUDIT", Permission.hasAuditHouse()?"true":"false");
         return response;
     }
 
