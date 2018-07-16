@@ -170,15 +170,15 @@ public class EmployeeDAO extends StrongObjectDAO{
         return this.queryBySql(sb.toString(), parameter);
     }
 
-    public String queryParentEmployeeIdByEmployeeIdAndJobRole(String employeeId, String jobRole) throws Exception {
+    public String queryParentEmployeeIdByEmployeeIdAndJobRoles(String employeeId, String jobRoles) throws Exception {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT b.PARENT_EMPLOYEE_ID FROM ins_employee a, ins_employee_job_role b ");
         sb.append("WHERE a.employee_id = b.employee_id ");
-        sb.append("AND b.job_role = :JOB_ROLE ");
+        sb.append("AND b.job_role in (JOB_ROLES) ");
         sb.append("AND a.employee_id = :EMPLOYEE_ID ");
 
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("JOB_ROLE", jobRole);
+        parameter.put("JOB_ROLES", jobRoles);
         parameter.put("EMPLOYEE_ID", employeeId);
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
