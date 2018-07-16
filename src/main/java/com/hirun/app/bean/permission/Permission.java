@@ -31,16 +31,43 @@ public class Permission {
         return rst;
     }
 
-    public static boolean hasAllCity() {
-        if (isSuperUser())
+    public static boolean hasAllCity() throws Exception{
+        if(isSuperUser())
+            return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("ALL_CITY"))
             return true;
 
         return false;
     }
 
-    public static boolean hasAllShop() {
-        if (isSuperUser())
+    public static boolean hasAllShop() throws Exception{
+        if(isSuperUser())
             return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("ALL_SHOP"))
+            return true;
+
+        return false;
+    }
+
+    public static boolean hasChangeHouse() throws Exception{
+        if(isSuperUser())
+            return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("CHANGE_HOUSE"))
+            return true;
+
+        return false;
+    }
+
+    public static boolean hasAuditHouse() throws Exception{
+        if(isSuperUser())
+            return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("AUDIT_HOUSE"))
+            return true;
+
         return false;
     }
 

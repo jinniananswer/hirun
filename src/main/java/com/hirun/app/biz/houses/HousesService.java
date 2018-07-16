@@ -7,6 +7,7 @@ import com.hirun.app.bean.authority.AuthorityJudgement;
 import com.hirun.app.bean.houses.HousesBean;
 import com.hirun.app.bean.housesplan.HousesPlanBean;
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.houses.HouseDAO;
@@ -23,6 +24,7 @@ import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
+import com.most.core.app.session.RightsCollection;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.*;
 import com.most.core.pub.tools.datastruct.ArrayTool;
@@ -554,7 +556,10 @@ public class HousesService extends GenericService {
     }
 
     public ServiceResponse showHouseDetail(ServiceRequest request) throws Exception {
-        return this.initChangeHousesPlan(request);
+        ServiceResponse response = this.initChangeHousesPlan(request);
+        response.set("HAS_CHANGE", Permission.hasChangeHouse()?"true":"false");
+        response.set("HAS_AUDIT", Permission.hasAuditHouse());
+        return response;
     }
 
     public ServiceResponse queryHouses(ServiceRequest request) throws Exception {

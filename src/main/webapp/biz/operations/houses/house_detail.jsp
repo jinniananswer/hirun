@@ -120,8 +120,8 @@
     </div>
     <div class="c_space"></div>
     <div class="c_submit c_submit-full">
-        <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.housesPlan.redirectToChange()">修改</button>
-        <button type="button" class="e_button-r e_button-l e_button-navy" ontap="$.housesPlan.initAudit()">审核</button>
+        <button type="button" id="change_button" name="change_button" class="e_button-r e_button-l e_button-green" ontap="$.housesPlan.redirectToChange()" style="display:none">修改</button>
+        <button type="button" id="audit_button" name="audit_button" class="e_button-r e_button-l e_button-navy" ontap="$.housesPlan.initAudit()" style="display:none">审核</button>
     </div>
     <div class="c_space"></div>
     </div>

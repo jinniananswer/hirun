@@ -19,11 +19,25 @@
                 }
             });
 
-            $.ajaxPost('initChangeHousesPlan','&HOUSES_ID='+$("#HOUSES_ID").val(),function(data){
+            $.ajaxPost('showHouseDetail','&HOUSES_ID='+$("#HOUSES_ID").val(),function(data){
                 var rst = new Wade.DataMap(data);
                 var housePlan = rst.get("HOUSES_PLAN");
                 $.housesPlan.drawHouseContent(housePlan);
                 $.housesPlan.drawCounselors(housePlan.get("COUNSELORS"), housePlan.get("PLAN_COUNSELOR_NUM"));
+                var hasChange = rst.get("HAS_CHANGE");
+                if(hasChange == "true"){
+                    $("#change_button").css("display","");
+                }
+                else{
+                    $("#change_button").css("display","none");
+                }
+                var hasAudit = rst.get("HAS_AUDIT")
+                if(hasAudit == "true"){
+                    $("#audit_button").css("display","");
+                }
+                else{
+                    $("#audit_button").css("display","none");
+                }
             });
         },
 
