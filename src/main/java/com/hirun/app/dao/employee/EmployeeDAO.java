@@ -62,6 +62,23 @@ public class EmployeeDAO extends StrongObjectDAO{
         return employees;
     }
 
+    public List<EmployeeEntity> queryEmployeeByParentOrgJobRoleAndMarket(String parentOrgId, String jobRole) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARENT_ORG_ID", parentOrgId);
+        parameter.put("JOB_ROLE", jobRole);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.* from ins_employee a, ins_org b, ins_employee_job_role c ");
+        sb.append("where b.parent_org_id = :PARENT_ORG_ID ");
+        sb.append("and c.employee_id = a.employee_id ");
+        sb.append("and c.org_id = b.org_id ");
+        sb.append("and b.name = '市场部' ");
+        sb.append("and c.job_role in ("+jobRole+") ");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
+    }
+
     public List<EmployeeEntity> querySubordinatesByParentEmployee(String parentEmployeeId) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PARENT_EMPLOYEE_ID", parentEmployeeId);

@@ -232,15 +232,20 @@ public class GenericDAO {
         RecordSet recordset = this.query(tableName, cols, parameter);
         if(recordset == null || recordset.size() <= 0)
             throw new SQLException("根据表"+tableName+"的指定列，没有查询到数据库记录");
-        Record record = recordset.get(0);
-        Map<String, String> data = record.getData();
-        data.putAll(parameter);
-        int num = this.update(tableName, data);
-        long end = System.currentTimeMillis();
-        if(log.isDebugEnabled())
-            log.debug("根据指定列save操作共计耗时："+(end-start)+"ms");
+        int size = recordset.size();
+        int num = 0;
+        for(int i=0;i<size;i++) {
+            Record record = recordset.get(i);
+            Map<String, String> data = record.getData();
+            data.putAll(parameter);
+            this.update(tableName, data);
+            num++;
+            long end = System.currentTimeMillis();
+            if (log.isDebugEnabled())
+                log.debug("根据指定列save操作共计耗时：" + (end - start) + "ms");
+        }
 
-        return num  ;
+        return num;
     }
 
 }

@@ -49,4 +49,28 @@ public class PersonnelController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.personnel.PersonnelService.changePassword", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/initCreateEmployee")
+    public @ResponseBody String initCreateEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.personnel.PersonnelService.initCreateEmployee", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initParentEmployee")
+    public @ResponseBody String initParentEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.personnel.PersonnelService.initParentEmployee", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/createEmployee")
+    public @ResponseBody String createEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.personnel.PersonnelService.createEmployee", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/destroyEmployee")
+    public @ResponseBody String destroyEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.personnel.PersonnelService.destroyEmployee", parameter);
+        return response.toJsonString();
+    }
 }
