@@ -431,15 +431,15 @@ var planSummarize = {
         }
     },
     submit : function() {
+        var errorMessage = planSummarize.checkBeforeSubmit();
+        if(errorMessage && errorMessage != '') {
+            alert(errorMessage);
+            return;
+        }
+
         var message = '确定总结吗';
         MessageBox.success("提示信息",message, function(btn){
             if("ok" == btn) {
-                var errorMessage = planSummarize.checkBeforeSubmit();
-                if(errorMessage && errorMessage != '') {
-                    alert(errorMessage);
-                    return;
-                }
-
                 var param = {};
                 var unfinishSummaryList = [];
                 var addExtraCustActionList = [];
