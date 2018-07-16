@@ -165,6 +165,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
         sb.append("and b.name like concat('%',:SEARCH_TEXT,'%') ");
+        sb.append("and a.user_id not in (69,72) ");
         sb.append("order by user_id ");
         return this.queryBySql(sb.toString(), parameter);
     }
