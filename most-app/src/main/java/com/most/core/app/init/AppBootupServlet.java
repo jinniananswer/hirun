@@ -3,8 +3,10 @@ package com.most.core.app.init;
 import com.most.core.app.database.conn.ConnectionFactory;
 import com.most.core.app.service.register.ServiceRegister;
 import com.most.core.pub.backgroundtask.BackgroundTaskFactory;
+import com.most.core.pub.config.VersionConfig;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sun.misc.Version;
 
 import javax.servlet.*;
 import java.io.IOException;
@@ -35,7 +37,13 @@ public class AppBootupServlet extends GenericServlet{
         //2.完成所有服务注册
         ServiceRegister.register();
 
-        //3.启后台任务
+        //3.获取版本号
+        VersionConfig.init();
+        if(log.isDebugEnabled()){
+            log.debug("***************************版本号:"+VersionConfig.getVersion() +"***************************");
+        }
+
+        //4.启后台任务
         BackgroundTaskFactory.start();
     }
 
