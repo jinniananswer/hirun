@@ -440,7 +440,7 @@ public class HousesService extends GenericService {
         house.putAll(JSON.parseObject(request.getBody().getData().toJSONString(), Map.class));
         String destroyDate = TimeTool.addMonths(house.get("CHECK_DATE"), "yyyy-MM-dd", 24);
         house.put("DESTROY_DATE", destroyDate);
-        house.put("STATUS", "0");
+        //house.put("STATUS", "0");
         String userId = session.getSessionEntity().getUserId();
         house.put("UPDATE_USER_ID", userId);
         house.put("ORG_ID", request.getString("SHOP"));
