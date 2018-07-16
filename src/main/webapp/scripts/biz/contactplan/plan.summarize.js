@@ -431,72 +431,81 @@ var planSummarize = {
         }
     },
     submit : function() {
-        var errorMessage = planSummarize.checkBeforeSubmit();
-        if(errorMessage && errorMessage != '') {
-            alert(errorMessage);
-            return;
-        }
-
-        var param = {};
-        var unfinishSummaryList = [];
-        var addExtraCustActionList = [];
-        var transToFinishList = [];
-        $.each(actionList, function(idx, action){
-            var actionCode = action.ACTION_CODE;
-            $('#FINISH_INFO_' + actionCode + ' ul[tag=FINISH_CUST_LIST]').find('li[li_type=finish]').each(function(idx, finishCust) {
-                var $finishCust = $(finishCust);
-                if($finishCust.attr('oper_code') == '2') {
-                    var actionId = $finishCust.attr('action_id');
-                    if(actionId) {$
-                        var transToFinish = {};
-                        transToFinish.ACTION_ID = actionId;
-                        transToFinishList.push(transToFinish)
-                    } else {
-                        var addExtraCustAction = {};
-                        addExtraCustAction.ACTION_CODE = $finishCust.attr('action_code');
-                        addExtraCustAction.CUST_ID = $finishCust.attr('cust_id');
-                        addExtraCustActionList.push(addExtraCustAction);
-                    }
+        var message = '确定总结吗';
+        MessageBox.success("提示信息",message, function(btn){
+            if("ok" == btn) {
+                var errorMessage = planSummarize.checkBeforeSubmit();
+                if(errorMessage && errorMessage != '') {
+                    alert(errorMessage);
+                    return;
                 }
-            })
 
-            $('#FINISH_INFO_' + actionCode + ' ul[tag=UNFINISH_CUST_LIST]').find('li[li_type=unFinish]').each(function(idx, unFinishCust) {
-                var $unFinishCust = $(unFinishCust);
-                if($unFinishCust.attr('oper_code') == '2') {
-                    var unfinishSummary = {};
-                    unfinishSummary.ACTION_ID = $unFinishCust.attr('action_id');
-                    unfinishSummary.UNFINISH_CAUSE_ID = $unFinishCust.attr('unfinish_cause_id');
-                    unfinishSummary.UNFINISH_CAUSE_DESC = $unFinishCust.attr('unfinish_cause_desc');
-                    unfinishSummaryList.push(unfinishSummary);
-                }
-            })
-        })
+                var param = {};
+                var unfinishSummaryList = [];
+                var addExtraCustActionList = [];
+                var transToFinishList = [];
+                $.each(actionList, function(idx, action){
+                    var actionCode = action.ACTION_CODE;
+                    $('#FINISH_INFO_' + actionCode + ' ul[tag=FINISH_CUST_LIST]').find('li[li_type=finish]').each(function(idx, finishCust) {
+                        var $finishCust = $(finishCust);
+                        if($finishCust.attr('oper_code') == '2') {
+                            var actionId = $finishCust.attr('action_id');
+                            if(actionId) {$
+                                var transToFinish = {};
+                                transToFinish.ACTION_ID = actionId;
+                                transToFinishList.push(transToFinish)
+                            } else {
+                                var addExtraCustAction = {};
+                                addExtraCustAction.ACTION_CODE = $finishCust.attr('action_code');
+                                addExtraCustAction.CUST_ID = $finishCust.attr('cust_id');
+                                addExtraCustActionList.push(addExtraCustAction);
+                            }
+                        }
+                    })
 
-        param.PLAN_ID = planSummarize.planId;
-        param.UNFINISH_SUMMARY_LIST = JSON.stringify(unfinishSummaryList);
-        param.ADD_EXTRA_CUST_ACTION_LIST = JSON.stringify(addExtraCustActionList);
-        param.TRANS_TO_FINISH_LIST = JSON.stringify(transToFinishList);
-        param.IS_ADDITIONAL_RECORD_SUMMARIZE = planSummarize.isAdditionalRecordSummarize;
+                    $('#FINISH_INFO_' + actionCode + ' ul[tag=UNFINISH_CUST_LIST]').find('li[li_type=unFinish]').each(function(idx, unFinishCust) {
+                        var $unFinishCust = $(unFinishCust);
+                        if($unFinishCust.attr('oper_code') == '2') {
+                            var unfinishSummary = {};
+                            unfinishSummary.ACTION_ID = $unFinishCust.attr('action_id');
+                            unfinishSummary.UNFINISH_CAUSE_ID = $unFinishCust.attr('unfinish_cause_id');
+                            unfinishSummary.UNFINISH_CAUSE_DESC = $unFinishCust.attr('unfinish_cause_desc');
+                            unfinishSummaryList.push(unfinishSummary);
+                        }
+                    })
+                })
 
-        $.beginPageLoading("提交总结中。。。");
-        $.ajaxReq({
-            url : 'plan/summarizePlan',
-            data : param,
-            type : 'POST',
-            dataType : 'json',
-            successFunc : function(data) {
-                $.endPageLoading();
-                MessageBox.success("计划总结成功","点击【确定】关闭当前页面", function(btn){
-                    if("ok" == btn) {
-                        $.redirect.closeCurrentPage();
+                param.PLAN_ID = planSummarize.planId;
+                param.UNFINISH_SUMMARY_LIST = JSON.stringify(unfinishSummaryList);
+                param.ADD_EXTRA_CUST_ACTION_LIST = JSON.stringify(addExtraCustActionList);
+                param.TRANS_TO_FINISH_LIST = JSON.stringify(transToFinishList);
+                param.IS_ADDITIONAL_RECORD_SUMMARIZE = planSummarize.isAdditionalRecordSummarize;
+
+                $.beginPageLoading("提交总结中。。。");
+                $.ajaxReq({
+                    url : 'plan/summarizePlan',
+                    data : param,
+                    type : 'POST',
+                    dataType : 'json',
+                    successFunc : function(data) {
+                        $.endPageLoading();
+                        MessageBox.success("计划总结成功","点击【确定】关闭当前页面", function(btn){
+                            if("ok" == btn) {
+                                $.redirect.closeCurrentPage();
+                            }
+                        });
+                    },
+                    errorFunc : function (resultCode, resultInfo) {
+                        alert(resultInfo);
+                        $.endPageLoading();
                     }
-                });
-            },
-            errorFunc : function (resultCode, resultInfo) {
-                alert(resultInfo);
-                $.endPageLoading();
+                })
             }
-        })
+            else {
+
+            }
+        },{"cancel":"取消"})
+
     },
     checkBeforeSubmit : function() {
         var hasUnSummaryCust = false;

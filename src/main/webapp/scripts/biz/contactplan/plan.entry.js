@@ -461,59 +461,68 @@ var planEntry = {
         }
 	},
     submitPlan : function() {
-        var planType = $("#planType").val();
+        var message = '确定提交计划吗';
+        MessageBox.success("提示信息",message, function(btn){
+            if("ok" == btn) {
+                var planType = $("#planType").val();
 
-	    var planList = [];
-	    $('#ACTION_LIST div[tag=PLAN_ACTION]').each(function(idx, item) {
-	        var $item = $(item);
-            var actionPlan = {};
-            actionPlan.ACTION_CODE = $item.attr('action_code');
-            var custList = [];
-            $item.find('li[li_type=cust]').each(function(idx2, cust) {
-                var operCode = $(cust).attr('oper_code');
-                if(operCode == '1') {
-                    return true;
-                }
-                custList.push({CUST_ID : $(cust).attr('cust_id')});
-            });
-            actionPlan.CUSTLIST = custList;
+                var planList = [];
+                $('#ACTION_LIST div[tag=PLAN_ACTION]').each(function(idx, item) {
+                    var $item = $(item);
+                    var actionPlan = {};
+                    actionPlan.ACTION_CODE = $item.attr('action_code');
+                    var custList = [];
+                    $item.find('li[li_type=cust]').each(function(idx2, cust) {
+                        var operCode = $(cust).attr('oper_code');
+                        if(operCode == '1') {
+                            return true;
+                        }
+                        custList.push({CUST_ID : $(cust).attr('cust_id')});
+                    });
+                    actionPlan.CUSTLIST = custList;
 
-            planList.push(actionPlan);
-        })
-        // $.each(planEntry.planActionMap, function(key, item){
-        //     var actionPlan = {};
-        //     actionPlan.ACTION_CODE = key;
-        //     actionPlan.CUSTLIST = item;
-        //     planList.push(actionPlan);
-        // });
+                    planList.push(actionPlan);
+                })
+                // $.each(planEntry.planActionMap, function(key, item){
+                //     var actionPlan = {};
+                //     actionPlan.ACTION_CODE = key;
+                //     actionPlan.CUSTLIST = item;
+                //     planList.push(actionPlan);
+                // });
 
-        var param = {
-            PLANLIST : JSON.stringify(planList),
-            PLAN_DATE : planEntry.planDate,
-            PLAN_EXECUTOR_ID : planEntry.executorId,
-            PLAN_TYPE : $("#planType").val(),
-            WORK_MODE : $('#workMode').val(),
-            IS_ADDITIONAL_RECORD : planEntry.isAdditionalRecord,
-        };
-        $.beginPageLoading("计划录入中。。。");
-        $.ajaxReq({
-            url : "plan/addPlan",
-            data : param,
-            type : 'POST',
-            dataType : 'json',
-            successFunc : function(data) {
-                $.endPageLoading();
-                MessageBox.success("新增计划成功","点击【确定】关闭当前页面", function(btn){
-                    if("ok" == btn) {
-                        $.redirect.closeCurrentPage();
+                var param = {
+                    PLANLIST : JSON.stringify(planList),
+                    PLAN_DATE : planEntry.planDate,
+                    PLAN_EXECUTOR_ID : planEntry.executorId,
+                    PLAN_TYPE : $("#planType").val(),
+                    WORK_MODE : $('#workMode').val(),
+                    IS_ADDITIONAL_RECORD : planEntry.isAdditionalRecord,
+                };
+                $.beginPageLoading("计划录入中。。。");
+                $.ajaxReq({
+                    url : "plan/addPlan",
+                    data : param,
+                    type : 'POST',
+                    dataType : 'json',
+                    successFunc : function(data) {
+                        $.endPageLoading();
+                        MessageBox.success("新增计划成功","点击【确定】关闭当前页面", function(btn){
+                            if("ok" == btn) {
+                                $.redirect.closeCurrentPage();
+                            }
+                        });
+                    },
+                    errorFunc : function(resultCode, resultInfo) {
+                        $.endPageLoading();
+                        alert('计划提交失败:' + resultInfo);
                     }
                 });
-            },
-            errorFunc : function(resultCode, resultInfo) {
-                $.endPageLoading();
-                alert('计划提交失败:' + resultInfo);
             }
-        });
+            else {
+
+            }
+        },{"cancel":"取消"})
+
     },
     checkPlanTarget : function() {
         var scanHouseCounselorNum =  $('#scanHouseCounselorNum').val();
