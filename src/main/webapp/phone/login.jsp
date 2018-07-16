@@ -26,7 +26,7 @@
 <!-- 滚动（替换为 java 组件） 开始 -->
 <div class="c_scroll c_scroll-float m_login" id="loginForm">
     <div class="logo">
-        <img src="../frame/img/logo-phone.png" alt="" />
+        <img src="../frame/img/squirrel.png" alt="" />
     </div>
     <!-- 表单 开始 -->
     <div class="form">
