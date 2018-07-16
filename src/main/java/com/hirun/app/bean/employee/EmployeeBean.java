@@ -110,7 +110,7 @@ public class EmployeeBean {
         int size = subordinates.size();
         for(int i=0;i<size;i++){
             Record subordinate = subordinates.get(i);
-            if(StringUtils.equals("42", subordinate.get("JOB_ROLE"))){
+            if(StringUtils.equals("42", subordinate.get("JOB_ROLE")) || StringUtils.equals("58", subordinate.get("JOB_ROLE"))){
                 rst.add(subordinate);
             }
         }
