@@ -174,7 +174,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT b.PARENT_EMPLOYEE_ID FROM ins_employee a, ins_employee_job_role b ");
         sb.append("WHERE a.employee_id = b.employee_id ");
-        sb.append("and c.job_role in ("+jobRoles+") ");
+        sb.append("and b.job_role in ("+jobRoles+") ");
         sb.append("AND a.employee_id = :EMPLOYEE_ID ");
 //        sb.append("and c.job_role in ('"+jobRole+"') ");
 
