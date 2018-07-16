@@ -25,7 +25,8 @@
 				<div class="label">休假开始时间</div>
 				<div class="value">
 					<span class="e_mix">
-						<input type="text" id="HOLIDAY_START_DATE" name="HOLIDAY_START_DATE" datatype="date" nullable="no" desc="休假开始时间" />
+						<input type="text" id="HOLIDAY_START_DATE" name="HOLIDAY_START_DATE" datatype="date"
+							   nullable="no" desc="休假开始时间" readonly="true"/>
 						<span class="e_ico-date"></span>
 					</span>
 				</div>
@@ -34,7 +35,8 @@
 				<div class="label">休假结束时间</div>
 				<div class="value">
 					<span class="e_mix">
-						<input type="text" id="HOLIDAY_END_DATE" name="HOLIDAY_END_DATE" datatype="date" nullable="no" desc="休假结束时间" />
+						<input type="text" id="HOLIDAY_END_DATE" name="HOLIDAY_END_DATE" datatype="date"
+							   nullable="no" desc="休假结束时间" readonly="true"/>
 						<span class="e_ico-date"></span>
 					</span>
 				</div>
