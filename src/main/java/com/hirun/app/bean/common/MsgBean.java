@@ -3,6 +3,7 @@ package com.hirun.app.bean.common;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.dao.common.MsgDAO;
+import com.hirun.app.push.NotificationServer;
 import com.hirun.pub.domain.entity.common.MsgEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.websocket.MsgWebSocketClient;
@@ -36,6 +37,8 @@ public class MsgBean {
         webSocketMsg.setUserId(recvUserId);
         webSocketMsg.setContent(content);
         MsgWebSocketClient.sendMessage(webSocketMsg);
+
+        NotificationServer.pushMessage(recvUserId, content);
     }
 
     public static JSONArray setDescAndTOJSONArray(List<MsgEntity> msgEntityList) {
