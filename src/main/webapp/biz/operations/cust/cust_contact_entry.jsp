@@ -93,7 +93,7 @@
                                     <div class="value">
                                         <span class="e_mix">
                                             <input type="text" id="CONTACT_DATE" name="CONTACT_DATE"
-                                                   datatype="date" desc="接触日期" nullable="no"/>
+                                                   datatype="date" desc="接触日期" readonly="true" nullable="no"/>
                                             <span class="e_ico-date"></span>
                                         </span>
                                     </div>

@@ -25,7 +25,7 @@
 			<ul>
 				<li>
 					<span class="e_mix">
-						<input type="text" id="PLAN_DATE" name="PLAN_DATE" datatype="date" nullable="no" desc="日期" />
+						<input type="text" id="PLAN_DATE" name="PLAN_DATE" datatype="date" nullable="no" desc="日期" readonly="true"/>
 						<span class="e_ico-date"></span>
 					</span>
 				</li>

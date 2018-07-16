@@ -39,7 +39,7 @@
 				<div class="label">补录计划日期</div>
 				<div class="value">
 					<span class="e_mix">
-						<input type="text" id="PLAN_DATE" name="PLAN_DATE" datatype="date" nullable="no" desc="补录计划日期" />
+						<input type="text" id="PLAN_DATE" name="PLAN_DATE" datatype="date" nullable="no" desc="补录计划日期" readonly="true"/>
 						<span class="e_ico-date"></span>
 					</span>
 				</div>

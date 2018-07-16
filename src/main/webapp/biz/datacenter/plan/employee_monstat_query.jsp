@@ -50,7 +50,7 @@
 						<div class="value">
 							<span class="e_mix">
 								<input type="text" id="MON_DATE_{{employee.EMPLOYEE_ID}}" name="MON_DATE_{{employee.EMPLOYEE_ID}}" datatype="date"
-									   employee_id="{{employee.EMPLOYEE_ID}}" nullable="no" desc="月份" />
+									   employee_id="{{employee.EMPLOYEE_ID}}" nullable="no" desc="月份" readonly="true"/>
 								<span class="e_ico-date"></span>
 							</span>
 						</div>
