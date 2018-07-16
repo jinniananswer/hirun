@@ -218,12 +218,10 @@
                     selectedEmployeeName += counselorName + ",";
                 }
             }
-            if(actualNum <= 0){
-                hidePopup('UI-popup','UI-popup-query');
-                return;
-            }
-            selectedEmployeeId = selectedEmployeeId.substring(0, selectedEmployeeId.length-1);
-            selectedEmployeeName = selectedEmployeeName.substring(0, selectedEmployeeName.length-1);
+            if(selectedEmployeeId.length > 0)
+                selectedEmployeeId = selectedEmployeeId.substring(0, selectedEmployeeId.length-1);
+            if(selectedEmployeeName.length > 0)
+                selectedEmployeeName = selectedEmployeeName.substring(0, selectedEmployeeName.length-1);
             var planNum = $("#PLAN_COUNSELOR_NUM").val();
             if(planNum < actualNum){
                 if(isClear){
@@ -275,6 +273,10 @@
             if(planNum <= 1){
                 return;
             }
+
+            if(selectedEmployeeId.length <= 0)
+                return;
+
             var html=[];
             var employeeIdArray = selectedEmployeeId.split(",");
             var employeeNameArray = selectedEmployeeName.split(",");
