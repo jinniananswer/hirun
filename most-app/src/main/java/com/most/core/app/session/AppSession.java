@@ -105,7 +105,7 @@ public class AppSession{
         return this.createTime;
     }
 
-    protected RightsCollection getRights(){
+    public RightsCollection getRights(){
         return this.rightsCollection;
     }
 
