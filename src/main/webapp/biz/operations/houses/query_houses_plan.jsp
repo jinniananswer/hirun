@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>楼盘规划查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/houses/query.houses.plan.js"></script>
+    <script src="/scripts/biz/houses/query.houses.plan.js?v=201807172343"></script>
 </head>
 <body>
 <div class="c_header">
