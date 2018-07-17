@@ -93,12 +93,12 @@
                 //html.push("<div class=\"right link\" ontap=\"$.redirect.open('redirectToChangeHousesPlan?HOUSES_ID="+data.get("HOUSES_ID")+"','变更楼盘规划');\"><span class=\"e_ico-edit\"></span> 编辑</div>");
                 html.push("</div>");
                 html.push("<div class=\"content\">");
-                if(data.get("PAST_CHECK_DATE") == "true")
+                if(data.get("NATURE") == "0")
                     html.push("<span class=\"e_progress e_progress-red\">");
-                else if(data.get("PAST_RESPONSIBILITY") == true)
-                    html.push("<span class=\"e_progress e_progress-orange\">");
-                else
+                else if(data.get("NATURE") == "1")
                     html.push("<span class=\"e_progress\">");
+                else
+                    html.push("<span class=\"e_progress e_progress-orange\">");
                 html.push("<span class=\"e_progressBar\">");
                 html.push("<span style=\"width:"+data.get("CUR_PROGRESS")+"%\" class=\"e_progressProgress\">发展周期:"+data.get("PAST_DAYS")+"天/"+data.get("ALL_DAYS")+"天</span>");
                 html.push("</span></span>");
@@ -110,10 +110,10 @@
                     html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\">");
                 }
                 else if(data.get("NATURE")=="1"){
-                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\">");
+                    html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\">");
                 }
                 else{
-                    html.push("<span class=\"e_ico-pic-blue e_ico-pic-r e_ico-pic-xs\">");
+                    html.push("<span class=\"e_ico-pic-orange e_ico-pic-r e_ico-pic-xs\">");
                 }
                 html.push(data.get("NATURE_NAME")+"</span></div>");
                 html.push("</div>");
