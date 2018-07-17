@@ -92,6 +92,7 @@ public class PersonnelService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         AppSession session = SessionManager.getSession();
 
+
         Map<String, String> user = new HashMap<String, String>();
         user.put("USERNAME", request.getString("MOBILE_NO"));
         user.put("PASSWORD", "711be3iidqb6lrsln0avp0v21u");
@@ -103,6 +104,13 @@ public class PersonnelService extends GenericService {
         user.put("UPDATE_TIME", session.getCreateTime());
 
         UserDAO dao = DAOFactory.createDAO(UserDAO.class);
+
+        UserEntity userEntity = dao.queryUserByUsername(request.getString("MOBILE_NO"));
+        if(userEntity != null){
+            response.setError("HIRUN_CREATEEMPLOYEE_000001","该手机号码的员工已经存在！");
+            return response;
+        }
+
         long userId = dao.insertAutoIncrement("ins_user", user);
 
         Map<String, String> employee = new HashMap<String, String>();

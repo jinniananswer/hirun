@@ -185,6 +185,31 @@ public class HousesService extends GenericService {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.putAll(JSON.parseObject(request.getBody().getData().toJSONString(), Map.class));
         HousesPlanDAO dao = new HousesPlanDAO("ins");
+
+        boolean needAllShop = AuthorityJudgement.hasAllShop();
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String orgId = OrgBean.getOrgId(sessionEntity);
+        OrgDAO orgDAO = new OrgDAO("ins");
+        OrgEntity org = orgDAO.queryOrgById(orgId);
+        OrgEntity parentOrg = null;
+
+
+        if (needAllShop) {
+
+        } else {
+            if(StringUtils.isNotBlank(org.getParentOrgId())){
+                parentOrg = orgDAO.queryOrgById(org.getParentOrgId());
+            }
+            if (StringUtils.equals("4", org.getType())) {
+                parameter.put("SHOP", orgId);
+            } else if (StringUtils.equals("3", org.getType())) {
+                if (StringUtils.isNotBlank(org.getParentOrgId()) && StringUtils.equals("4", parentOrg.getType())) {
+                    parameter.put("SHOP", parentOrg.getOrgId());
+                }
+            }
+        }
+
         RecordSet recordset = dao.queryHousesPlan(parameter);
         if (recordset == null || recordset.size() <= 0) {
             return new ServiceResponse();
