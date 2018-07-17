@@ -105,8 +105,6 @@ public class PersonnelService extends GenericService {
         UserDAO dao = DAOFactory.createDAO(UserDAO.class);
         long userId = dao.insertAutoIncrement("ins_user", user);
 
-        log.debug("=============userid============"+userId);
-
         Map<String, String> employee = new HashMap<String, String>();
         employee.put("USER_ID", userId+"");
         employee.put("NAME", request.getString("NAME"));
@@ -136,7 +134,7 @@ public class PersonnelService extends GenericService {
         job.put("JOB_ROLE", request.getString("JOB_ROLE"));
         job.put("JOB_ROLE_NATURE", "1");
         job.put("ORG_ID", orgId);
-        job.put("PARENT_EMPLOYEE_ID", request.getString("PARENT_ORG_ID"));
+        job.put("PARENT_EMPLOYEE_ID", request.getString("PARENT_EMPLOYEE_ID"));
         job.put("START_DATE", session.getCreateTime());
         job.put("END_DATE", "3000-12-31 23:59:59");
         job.put("CREATE_DATE", session.getCreateTime());
