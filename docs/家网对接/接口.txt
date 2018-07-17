@@ -58,3 +58,17 @@ http://www.hi-run.net/api/staffs
 	PageNo：当前页
 	PageSize：每页数量
 
+API地址：http://www.hi-run.net/api/wxshare
+输入参数：staff_id:员工ID
+		start：开始时间戳（秒）
+		end：结束时间戳（秒）
+		PageNo：当前页
+		PageSize：每页数量
+输出信息：uid:用户ID
+		staff_id:员工ID
+		share_uid:员工UID
+		role_id:员工角色ID
+		realname:员工姓名
+		openid:用户微信OPENID
+		nick_name:用户微信昵称
+		create_time:分享时间
