@@ -153,7 +153,7 @@ var planSummarize = {
                     {
                         id:"custEditForm_house",
                         name:"HOUSE_ID",
-                        nullable : "no",
+                        nullable : "yes",
                         desc : "楼盘",
                     },
                     options

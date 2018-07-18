@@ -172,7 +172,7 @@
 										<input type="text" id="MOBILE_NO" name="MOBILE_NO" nullable="no" desc="电话号码"/>
 									</div>
 								</li>
-								<li class="required">
+								<li class="">
 									<div class="label">楼盘</div>
 									<div class="value">
 										<span id="custEditForm_house_container"></span>
