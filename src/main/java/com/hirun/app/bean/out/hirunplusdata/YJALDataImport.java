@@ -45,6 +45,10 @@ public class YJALDataImport {
         for(int i = 0, size = jsonDataList.size(); i < size; i++) {
             Map<String, String> dbParam = new HashMap<String, String>();
             JSONObject jsonData = jsonDataList.getJSONObject(i);
+            if(OutBean.isExistData4Yjal(jsonData.getString("openid"), jsonData.getString("staff_id"), jsonData.getString("create_time"))) {
+                //如果已经存在该数据了，则过滤掉
+                continue;
+            }
 
             dbParam.put("UID", jsonData.getString("uid"));
             dbParam.put("SHARE_UID", jsonData.getString("share_uid"));
