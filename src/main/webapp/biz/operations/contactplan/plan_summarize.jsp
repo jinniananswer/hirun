@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>今日计划总结</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/contactplan/plan.summarize.js?a=2"></script>
+	<script src="scripts/biz/contactplan/plan.summarize.js?a=3"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
@@ -172,7 +172,7 @@
 										<input type="text" id="MOBILE_NO" name="MOBILE_NO" nullable="no" desc="电话号码"/>
 									</div>
 								</li>
-								<li class="required">
+								<li class="">
 									<div class="label">楼盘</div>
 									<div class="value">
 										<span id="custEditForm_house_container"></span>
