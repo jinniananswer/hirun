@@ -149,6 +149,12 @@ public class HousesService extends GenericService {
         house.put("CREATE_DATE", session.getCreateTime());
 
         HouseDAO dao = new HouseDAO("ins");
+        List<HousesEntity> houses = dao.queryHousesByName(request.getString("NAME"));
+        if(ArrayTool.isNotEmpty(houses)){
+            ServiceResponse response = new ServiceResponse();
+            response.setError("HIRUN_CREATE_HOUSE_000001","该楼盘名称已经存在，请重新检查楼盘名称！");
+            return response;
+        }
         long houseId = dao.insertAutoIncrement("ins_houses", house);
         String employeeId = request.getString("EMPLOYEE_ID");
         if (StringUtils.isBlank(employeeId))
