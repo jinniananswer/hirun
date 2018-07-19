@@ -40,18 +40,16 @@ public class OutBean {
         sql.append(" and openid = :OPENID");
         RecordSet set = dao.queryBySql(sql.toString(), parameter);
         if(set == null || set.size() == 0) {
-            //不查历史表了，影响性能。
-            //想了想，似乎没必要
             //查历史表
-//            sql = new StringBuilder();
-//            sql.append(" select * from out_his_hirunplus_reg ");
-//            sql.append(" where 1=1 ");
-//            sql.append(" and subscribe_time = :SUBSCRIBE_TIME");
-//            sql.append(" and uid = :UID");
-//            set = dao.queryBySql(sql.toString(), parameter);
-//            if(set != null && set.size() > 0) {
-//                isExist = true;
-//            }
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_reg ");
+            sql.append(" where 1=1 ");
+            sql.append(" and subscribe_time = :SUBSCRIBE_TIME");
+            sql.append(" and openid = :OPENID");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
         } else {
             isExist = true;
         }
@@ -77,7 +75,17 @@ public class OutBean {
         sql.append(" and ADD_TIME = :ADD_TIME");
         RecordSet set = dao.queryBySql(sql.toString(), parameter);
         if(set == null || set.size() == 0) {
-
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_scan ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPENID = :OPENID");
+            sql.append(" and STAFF_ID = :STAFF_ID");
+            sql.append(" and ADD_TIME = :ADD_TIME");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
         } else {
             isExist = true;
         }
@@ -103,7 +111,17 @@ public class OutBean {
         sql.append(" and COMM_TIME = :COMM_TIME");
         RecordSet set = dao.queryBySql(sql.toString(), parameter);
         if(set == null || set.size() == 0) {
-
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_projects ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPENID = :OPENID");
+            sql.append(" and STAFF_ID = :STAFF_ID");
+            sql.append(" and COMM_TIME = :COMM_TIME");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
         } else {
             isExist = true;
         }
@@ -129,7 +147,17 @@ public class OutBean {
         sql.append(" and MODE_TIME = :MODE_TIME");
         RecordSet set = dao.queryBySql(sql.toString(), parameter);
         if(set == null || set.size() == 0) {
-
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_commends ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPENID = :OPENID");
+            sql.append(" and STAFF_ID = :STAFF_ID");
+            sql.append(" and MODE_TIME = :MODE_TIME");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
         } else {
             isExist = true;
         }
@@ -155,7 +183,17 @@ public class OutBean {
         sql.append(" and CREATE_TIME = :CREATE_TIME");
         RecordSet set = dao.queryBySql(sql.toString(), parameter);
         if(set == null || set.size() == 0) {
-
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_yjal ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPENID = :OPENID");
+            sql.append(" and STAFF_ID = :STAFF_ID");
+            sql.append(" and CREATE_TIME = :CREATE_TIME");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
         } else {
             isExist = true;
         }
