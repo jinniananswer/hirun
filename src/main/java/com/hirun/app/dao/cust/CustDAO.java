@@ -90,6 +90,7 @@ public class CustDAO extends StrongObjectDAO {
         sql.append(" WHERE A.WX_NICK IS NULL ");
         sql.append(" AND A.HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
         sql.append(" AND A.FIRST_PLAN_DATE = :FIRST_PLAN_DATE ");
+        sql.append(" AND A.IDENTIFY_CODE IS NULL ");
         this.executeUpdate(sql.toString(), parameter);
     }
 
@@ -100,6 +101,7 @@ public class CustDAO extends StrongObjectDAO {
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
 //        sql.append(" AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = :FIRST_PLAN_DATE) ");
         sql.append(" AND WX_NICK IS NOT NULL ");
+        sql.append(" AND IDENTIFY_CODE IS NOT NULL ");
 
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("HOUSE_COUNSELOR_ID", houseCounselorId);
@@ -114,6 +116,7 @@ public class CustDAO extends StrongObjectDAO {
         sql.append(" AND WX_NICK IS NULL ");
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
         sql.append(" AND FIRST_PLAN_DATE = :FIRST_PLAN_DATE ");
+        sql.append(" AND IDENTIFY_CODE IS NULL ");
 
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("FIRST_PLAN_DATE", firstPlanDate);
@@ -153,7 +156,7 @@ public class CustDAO extends StrongObjectDAO {
         sb.append("select * from ins_customer ");
         sb.append("where house_counselor_id = :EMPLOYEE_ID ");
         sb.append("and house_id = :HOUSE_ID ");
-        sb.append("and wx_nick is not null ");
+        sb.append("and IDENTIFY_CODE is not null ");
         sb.append("and cust_status not in (8,9) ");
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
     }
