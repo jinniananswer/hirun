@@ -36,7 +36,7 @@ public class DataImportTaskService extends GenericService {
             start = now;
         } else {
             String indbTime = dataGetTimeEntity.getIndbTime();
-            start = TimeTool.addTime(indbTime, TimeTool.TIME_PATTERN, ChronoUnit.SECONDS, 1);
+            start = TimeTool.addTime(indbTime, TimeTool.TIME_PATTERN, ChronoUnit.MINUTES, -5);
         }
 
         GZGZHDataImport.dataImport(start, now);

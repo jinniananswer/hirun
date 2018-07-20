@@ -45,6 +45,11 @@ public class SCANDataImport {
         for(int i = 0, size = jsonDataList.size(); i < size; i++) {
             Map<String, String> dbParam = new HashMap<String, String>();
             JSONObject jsonData = jsonDataList.getJSONObject(i);
+            //openId,String staffId, String addTime
+            if(OutBean.isExistData4Scan(jsonData.getString("openid"), jsonData.getString("staff_id"), jsonData.getString("add_time"))) {
+                //如果已经存在该数据了，则过滤掉
+                continue;
+            }
 
             dbParam.put("PROJECT_ID", jsonData.getString("project_id"));
             dbParam.put("UID", jsonData.getString("uid"));
