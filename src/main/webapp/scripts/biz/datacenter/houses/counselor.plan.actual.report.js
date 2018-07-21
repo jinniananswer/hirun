@@ -17,7 +17,7 @@
                             var counselorActual = rst.get("COUNSELOR_ACTUAL");
 
                             var html=[];
-                            html.push("所有分公司楼盘计划分配家装顾问人次与实际人次对比");
+                            html.push("所有分公司楼盘计划分配数与实际分配数对比");
                             $("#company_name").empty();
                             $.insertHtml('beforeend',$("#company_name"), html.join(""));
 
@@ -62,7 +62,7 @@
                     $.counselorReport.drawBarChart(counselorPlan, counselorActual);
                 });
                 var html=[];
-                html.push(name+"楼盘家装顾问计划分配人次与实际人次-按门店");
+                html.push(name+"楼盘家装顾问计划分配数与实际分配数-按门店");
                 $("#company_name").empty();
                 $.insertHtml('beforeend',$("#company_name"), html.join(""));
                 backPopup(document.getElementById("COMPANY"));
@@ -95,8 +95,8 @@
                     "tooltip": {"trigger": "axis","axisPointer": {"type": "shadow"}},
                     legend: {
                         data: [
-                            "计划人次",
-                            "实际人次"
+                            "计划分配数",
+                            "实际分配数"
                         ]
                     },
                     grid :{
@@ -127,10 +127,10 @@
                                     "show": true
                                 }
                             },
-                            "name": "计划人次",
+                            "name": "计划分配数",
                             "type": "bar",
                             "barGap":0,
-                            "stack": "计划人次",
+                            "stack": "计划分配数",
                             "data": plan
                         },
                         {
@@ -139,10 +139,10 @@
                                     "show": true
                                 }
                             },
-                            "name": "实际人次",
+                            "name": "实际分配数",
                             "barGap":0,
                             "type": "bar",
-                            "stack": "实际人次",
+                            "stack": "实际分配数",
                             "data": actual
                         }
                     ],
