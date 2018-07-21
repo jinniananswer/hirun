@@ -88,6 +88,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT count(1) houses_num ");
         sb.append(" FROM INS_HOUSES a ");
+        sb.append(" where now() < a.destroy_date ");
         RecordSet rst = this.queryBySql(sb.toString(), null);
         return rst.getInt(0, "HOUSES_NUM");
     }
@@ -96,6 +97,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         StringBuilder sb = new StringBuilder();
         sb.append(" SELECT nature, count(1) houses_num ");
         sb.append(" FROM INS_HOUSES a ");
+        sb.append(" where now() < a.destroy_date ");
         sb.append(" GROUP BY nature ");
         return this.queryBySql(sb.toString(), null);
     }
@@ -107,6 +109,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" WHERE a.org_id in ( ");
         sb.append(" select b.org_id from ins_org b ");
         sb.append(" where b.parent_org_id = :ORG_ID) ");
+        sb.append(" and now() < a.destroy_date ");
 
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("ORG_ID", orgId);
@@ -121,6 +124,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" WHERE a.org_id in ( ");
         sb.append(" select b.org_id from ins_org b ");
         sb.append(" where b.parent_org_id = :ORG_ID) ");
+        sb.append(" and now() < a.destroy_date ");
         sb.append(" GROUP BY nature ");
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("ORG_ID", orgId);
@@ -133,6 +137,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" from ins_houses a, ins_org b,ins_org c ");
         sb.append(" where c.org_id = :ORG_ID ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and now() < a.destroy_date ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" group by a.ORG_ID,b.name ");
         sb.append(" order by a.ORG_ID asc ");
@@ -147,6 +152,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" from ins_houses_plan a, ins_org b,ins_org c ");
         sb.append(" where c.ORG_ID = :ORG_ID ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and now() < a.end_date ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" group by a.ORG_ID,b.name ");
         sb.append(" order by a.ORG_ID asc ");
@@ -161,6 +167,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" from ins_houses a, ins_org b,ins_org c ");
         sb.append(" where c.type = '2' ");
         sb.append(" and c.org_id = 17 ");
+        sb.append(" and now() < a.destroy_date ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" group by c.ORG_ID,c.name ");
@@ -175,6 +182,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" from ins_houses_plan a, ins_org b,ins_org c ");
         sb.append(" where c.type = '2' ");
         sb.append(" and c.org_id = 17 ");
+        sb.append(" and now() < a.end_date ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" group by c.ORG_ID,c.name ");
@@ -189,6 +197,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" from ins_houses a, ins_org b,ins_org c ");
         sb.append(" where c.org_id = :ORG_ID ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and now() < a.destroy_date ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" and a.nature in ('0','1') ");
         sb.append(" group by a.ORG_ID,b.name,a.nature ");
@@ -205,6 +214,8 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" where c.ORG_ID = :ORG_ID ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
+        sb.append(" and now() < a.end_date ");
+        sb.append(" and now() < d.destroy_date ");
         sb.append(" and d.houses_id = a.houses_id ");
         sb.append(" and d.nature in ('0','1') ");
         sb.append(" group by a.ORG_ID,b.name,d.nature ");
@@ -220,6 +231,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" from ins_houses a, ins_org b,ins_org c ");
         sb.append(" where c.type = '2' ");
         sb.append(" and c.org_id = 17 ");
+        sb.append(" and now() < a.destroy_date ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" and a.nature in ('0','1') ");
@@ -236,6 +248,8 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" where c.type = '2' ");
         sb.append(" and c.org_id = 17 ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
+        sb.append(" and now() < a.end_date ");
+        sb.append(" and now() < d.destroy_date ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" and d.houses_id = a.houses_id ");
         sb.append(" and d.nature in ('0','1') ");
