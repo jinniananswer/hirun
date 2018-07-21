@@ -47,6 +47,7 @@
     <entity name="OperationCenter.plan.PlanService.queryPlanDetail"  class="com.hirun.app.biz.plan.PlanService" method="queryPlanDetail"/>
     <entity name="OperationCenter.plan.PlanService.queryCustUnFinishCause"  class="com.hirun.app.biz.plan.PlanService" method="queryCustUnFinishCause"/>
     <entity name="OperationCenter.plan.PlanService.additionalAddCustAction"  class="com.hirun.app.biz.plan.PlanService" method="additionalAddCustAction"/>
+    <entity name="OperationCenter.plan.PlanService.setMonPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="setMonPlanTarget"/>
 
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>

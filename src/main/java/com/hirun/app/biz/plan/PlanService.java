@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.common.MsgBean;
 import com.hirun.app.bean.employee.EmployeeBean;
-import com.hirun.app.bean.plan.ActionCheckRuleProcess;
-import com.hirun.app.bean.plan.PlanBean;
-import com.hirun.app.bean.plan.PlanRuleProcess;
-import com.hirun.app.bean.plan.PlanStatBean;
+import com.hirun.app.bean.plan.*;
 import com.hirun.app.cache.*;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
@@ -527,6 +524,20 @@ public class PlanService extends GenericService {
             int timeInterval = Integer.parseInt(planTargetLimitEntity.getTimeInterval());
             int limitNum = Integer.parseInt(planTargetLimitEntity.getLimitNum());
             PlanCycleFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(planEntity.getPlanExecutorId(), targetCode);
+            if(cyclePlanFinishInfoEntity == null) {
+                cyclePlanFinishInfoEntity = new PlanCycleFinishInfoEntity();
+                String preCycleEndDate = TimeTool.addTime(planEntity.getPlanDate() + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+                cyclePlanFinishInfoEntity.setExecutorId(planEntity.getPlanExecutorId());
+                cyclePlanFinishInfoEntity.setActionCode(targetCode);
+                cyclePlanFinishInfoEntity.setPreCycleEndDate(preCycleEndDate);
+                cyclePlanFinishInfoEntity.setUnfinishNum("0");
+                cyclePlanFinishInfoEntity.setCurrCycleFinishNum("0");
+                cyclePlanFinishInfoEntity.setCurrCycleImproperDays("0");
+
+                String logId = String.valueOf(cyclePlanFinishInfoDAO.insertAutoIncrement("INS_PLAN_CYCLE_FINISH_INFO", cyclePlanFinishInfoEntity.getContent()));
+                cyclePlanFinishInfoEntity.setLogId(logId);
+            }
+
             int preTotalUnfinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getUnfinishNum());
             int currCycleFinishNum = Integer.parseInt(cyclePlanFinishInfoEntity.getCurrCycleFinishNum());
             int currCycleImproperDays = Integer.parseInt(cyclePlanFinishInfoEntity.getCurrCycleImproperDays());
@@ -1146,6 +1157,19 @@ public class PlanService extends GenericService {
             custOriginalActionEntity.setCreateDate(now);
             custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custOriginalActionEntity.getContent());
         }
+
+        return response;
+    }
+
+    public ServiceResponse setMonPlanTarget(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        JSONObject target = request.getJSONObject("TARGET");
+        String objType = request.getString("OBJ_TYPE");
+        String[] objs = request.getString("OBJS").split(",");
+        String targetTimeValue = request.getString("TARGET_TIME_VALUE");
+        String targetTimeType = request.getString("TARGET_TIME_TYPE");
+
+        MonPlanTargetBean.setMonPlanTarget(target, objType, objs, targetTimeType, targetTimeValue);
 
         return response;
     }

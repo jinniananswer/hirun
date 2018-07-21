@@ -203,4 +203,10 @@ public class PlanController {
         ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.additionalAddCustAction", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/plan/setMonPlanTarget")
+    public String setMonPlanTarget(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.plan.PlanService.setMonPlanTarget", parameter);
+        return response.toJsonString();
+    }
 }
