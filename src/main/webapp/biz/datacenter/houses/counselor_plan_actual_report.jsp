@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>hi-run</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/datacenter/houses/counselor.plan.actual.report.js"></script>
+    <script src="/scripts/biz/datacenter/houses/counselor.plan.actual.report.js?v=201807211122"></script>
 </head>
 <body>
 <div class="c_header">
@@ -26,9 +26,9 @@
                     <ul>
                         <li>
                             <div class="main">
-                                <div class="title e_size-l ">计划分配家装顾问人次与实际人次对比</div>
+                                <div class="title e_size-l ">计划分配数与实际分配数对比</div>
                                 <div class="content content-auto">
-                                    <span id="company_name">所有分公司楼盘计划分配家装顾问人次与实际人次对比</span>
+                                    <span id="company_name">所有分公司楼盘计划分配数与实际分配数对比</span>
                                     <div class="c_space-2"></div>
                                     <div class="e_right">
 
