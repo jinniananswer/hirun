@@ -84,8 +84,13 @@ public class HousesReportService extends GenericService {
         HousesPlanDAO dao = DAOFactory.createDAO(HousesPlanDAO.class);
 
         if(type == null){
-            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
-            company = orgDAO.queryCompany();
+//            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
+//            company = orgDAO.queryCompany();
+            company = new RecordSet();
+            Record cs = new Record();
+            cs.put("NAME","长沙鸿扬");
+            cs.put("ORG_ID","17");
+            company.add(cs);
             type = "0";
         }
 
@@ -119,12 +124,18 @@ public class HousesReportService extends GenericService {
         Record record = new Record();
         record.put("NAME","所有分公司");
         record.put("ORG_ID","-1");
+
+        Record cs = new Record();
+        cs.put("NAME","长沙鸿扬");
+        cs.put("ORG_ID","17");
+
         company.add(record);
-        if(orgId == null){
-            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
-            RecordSet rst = orgDAO.queryCompany();
-            company.addAll(rst);
-        }
+        company.add(cs);
+//        if(orgId == null){
+//            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
+//            RecordSet rst = orgDAO.queryCompany();
+//            company.addAll(rst);
+//        }
 
 
         if(orgId == null || StringUtils.equals("-1", orgId)){

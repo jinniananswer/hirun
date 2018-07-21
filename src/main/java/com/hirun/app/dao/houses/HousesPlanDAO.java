@@ -160,6 +160,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" select c.ORG_ID,c.name, sum(a.PLAN_COUNSELOR_NUM) plan_num ");
         sb.append(" from ins_houses a, ins_org b,ins_org c ");
         sb.append(" where c.type = '2' ");
+        sb.append(" and c.org_id = 17 ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" group by c.ORG_ID,c.name ");
@@ -173,6 +174,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" select c.ORG_ID,c.name, count(1) actual_num ");
         sb.append(" from ins_houses_plan a, ins_org b,ins_org c ");
         sb.append(" where c.type = '2' ");
+        sb.append(" and c.org_id = 17 ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" group by c.ORG_ID,c.name ");
@@ -217,6 +219,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" select c.ORG_ID,c.name, a.nature, sum(a.PLAN_COUNSELOR_NUM) plan_num ");
         sb.append(" from ins_houses a, ins_org b,ins_org c ");
         sb.append(" where c.type = '2' ");
+        sb.append(" and c.org_id = 17 ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" and a.nature in ('0','1') ");
@@ -231,6 +234,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append(" select c.ORG_ID,c.name, d.nature, count(1) actual_num ");
         sb.append(" from ins_houses_plan a, ins_org b,ins_org c,ins_houses d ");
         sb.append(" where c.type = '2' ");
+        sb.append(" and c.org_id = 17 ");
         sb.append(" and b.ORG_ID = a.ORG_ID ");
         sb.append(" and b.PARENT_ORG_ID = c.ORG_ID ");
         sb.append(" and d.houses_id = a.houses_id ");

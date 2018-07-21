@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>hi-run</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/datacenter/houses/counselor.loophole.report.js"></script>
+    <script src="/scripts/biz/datacenter/houses/counselor.loophole.report.js?v=201807202255"></script>
 </head>
 <body>
 <div class="c_header">
