@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>今日计划总结</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/contactplan/plan.summarize.js?a=3"></script>
+	<script src="scripts/biz/contactplan/plan.summarize.js?a=4"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
@@ -429,6 +429,7 @@
 							</label>
 							<div class="content">
 								<span class="e_tag e_tag-s e_tag-red" tag="unfinish_cause_desc">{{cust.UNFINISH_CAUSE_DESC}}</span>
+								<%--<span class="e_tag e_tag-s e_tag-red" tag="unfinish_cause_desc" style="white-space:pre-wrap">{{cust.UNFINISH_CAUSE_DESC}}</span>--%>
 							</div>
 						</div>
 					</li>
