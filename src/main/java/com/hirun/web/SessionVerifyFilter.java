@@ -66,7 +66,7 @@ public class SessionVerifyFilter implements Filter{
             //检查是否有自动登陆
             if(isAutomaticAuth(request)){
                 filterChain.doFilter(servletRequest,servletResponse);
-                response.sendRedirect(request.getContextPath()+"/index");
+                //response.sendRedirect(request.getContextPath()+"/index");
                 return;
             }
 
