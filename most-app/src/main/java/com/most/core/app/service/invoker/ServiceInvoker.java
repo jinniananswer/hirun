@@ -53,7 +53,7 @@ public class ServiceInvoker {
         } catch (Exception e) {
             if(session != null)
                 session.rollback();
-            log.error("异常：",e);
+//            log.error("异常：",e);
             throw(e);
         }
         finally {

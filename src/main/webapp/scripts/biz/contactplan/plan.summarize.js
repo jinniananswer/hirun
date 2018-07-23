@@ -9,6 +9,34 @@ var actionList = [
 	{"ACTION_CODE":"DKCSMU","ACTION_NAME":"带看城市木屋","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
 	{"ACTION_CODE":"YJALTS","ACTION_NAME":"一键案例推送"},
 ];
+
+var relActionMap = {
+    'JW' : [
+        {"ACTION_CODE":'LTZDSTS',"UNFINISH_CAUSE_ID":'29','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'GZHGZ',"UNFINISH_CAUSE_ID":'30','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'HXJC',"UNFINISH_CAUSE_ID":'31','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'SMJRQLC',"UNFINISH_CAUSE_ID":'32','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'XQLTYTS',"UNFINISH_CAUSE_ID":'33','UNFINISH_CAUSE_DESC':'上一动作未完成'}
+    ],
+    'LTZDSTS' : [
+        {"ACTION_CODE":'GZHGZ',"UNFINISH_CAUSE_ID":'30','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'HXJC',"UNFINISH_CAUSE_ID":'31','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'SMJRQLC',"UNFINISH_CAUSE_ID":'32','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'XQLTYTS',"UNFINISH_CAUSE_ID":'33','UNFINISH_CAUSE_DESC':'上一动作未完成'}
+    ],
+    'GZHGZ' : [
+        {"ACTION_CODE":'HXJC',"UNFINISH_CAUSE_ID":'31','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'SMJRQLC',"UNFINISH_CAUSE_ID":'32','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'XQLTYTS',"UNFINISH_CAUSE_ID":'33','UNFINISH_CAUSE_DESC':'上一动作未完成'}
+    ],
+    'HXJC' : [
+        {"ACTION_CODE":'SMJRQLC',"UNFINISH_CAUSE_ID":'32','UNFINISH_CAUSE_DESC':'上一动作未完成'},
+        {"ACTION_CODE":'XQLTYTS',"UNFINISH_CAUSE_ID":'33','UNFINISH_CAUSE_DESC':'上一动作未完成'}
+    ],
+    'SMJRQLC' : [
+        {"ACTION_CODE":'XQLTYTS',"UNFINISH_CAUSE_ID":'33','UNFINISH_CAUSE_DESC':'上一动作未完成'}
+    ]
+};
 var planSummarize = {
     planId : '',
     planDate : '',
@@ -387,6 +415,8 @@ var planSummarize = {
         $liObj.attr('oper_code', '2');
 
         $liObj.find('span[tag=unfinish_cause_desc]').html(cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
+
+        planSummarize._dealSameCustRelAction(actionCode, custId);
     },
     afterBatchSummarizeCust : function(actionCode, custList, cause) {
         for(var i = 0, size = custList.length; i < size; i++) {
@@ -398,9 +428,28 @@ var planSummarize = {
             unfinishCustObj.attr('oper_code', '2');
 
             unfinishCustObj.find('span[tag=unfinish_cause_desc]').html(cause.UNFINISH_CAUSE_DESC ? cause.UNFINISH_CAUSE_DESC : '');
+
+            planSummarize._dealSameCustRelAction(actionCode, custId);
         }
 
         planSummarize.showSingleOper(actionCode);
+    },
+    _dealSameCustRelAction : function(actionCode, custId) {
+        var relActionList = relActionMap[actionCode];
+        if(relActionList) {
+            $.each(relActionList, function(idx, relAction) {
+                var relSelectorStr = '#FINISH_INFO_' + relAction.ACTION_CODE + ' li[tag=UNFINISH_' + custId + ']';
+                var $relLiObj = $(relSelectorStr);
+
+                if($relLiObj.attr('oper_code') != '2' || !$relLiObj.attr('unfinish_cause_id')) {
+                    $relLiObj.attr('unfinish_cause_id', relAction.UNFINISH_CAUSE_ID);
+                    $relLiObj.attr('unfinish_cause_desc', relAction.UNFINISH_CAUSE_DESC);
+                    $relLiObj.attr('oper_code', '2');
+
+                    $relLiObj.find('span[tag=unfinish_cause_desc]').html(relAction.UNFINISH_CAUSE_DESC);
+                }
+            });
+        }
     },
     showCustEditPopup : function(obj) {
         var $obj = $(obj)
@@ -513,6 +562,7 @@ var planSummarize = {
         var errorAction = [];
         $.each(actionList, function(idx, action){
             var actionCode = action.ACTION_CODE;
+            hasUnSummaryCust = false;
             $('#FINISH_INFO_' + actionCode + ' ul[tag=UNFINISH_CUST_LIST]').find('li[li_type=unFinish]').each(function(idx, unFinishCust) {
                 var $unFinishCust = $(unFinishCust);
                 if('2' != $unFinishCust.attr('oper_code')) {
