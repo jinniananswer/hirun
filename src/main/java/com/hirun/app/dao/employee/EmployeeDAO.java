@@ -179,6 +179,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
         sb.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
         sb.append("where b.USER_ID = a.USER_ID ");
+        sb.append("and a.status = '0' ");
         sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
         sb.append("and b.name like concat('%',:SEARCH_TEXT,'%') ");
