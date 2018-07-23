@@ -1,6 +1,7 @@
 package com.most.core.pub.exception;
 
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.tools.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,8 @@ public class GenericExceptionResolver implements HandlerExceptionResolver {
                 serviceResponse.setError("-1",ex.getMessage() != null ? ex.getMessage() : "系统异常");
                 response.getWriter().write(serviceResponse.toJsonString());
             }
-            logger.error("异常:", ex);
+
+            logger.error("异常:", Utility.getBottomException(ex));
         } catch (IOException e) {
             logger.error("与客户端通讯异常\n", e);
         }

@@ -11,10 +11,19 @@ public class GenericException extends RuntimeException {
 
     protected String desc;
 
+    protected String userId;
+
     public GenericException(String code, String desc){
         super(code + ":" + desc);
         this.code = code;
         this.desc = desc;
+    }
+
+    public GenericException(String userId, String code, String desc){
+        super("用户{" + userId + "}执行错误\n" + code + ":" + desc);
+        this.code = code;
+        this.desc = desc;
+        this.userId = userId;
     }
 
     public GenericException(String code, String desc, Throwable e){

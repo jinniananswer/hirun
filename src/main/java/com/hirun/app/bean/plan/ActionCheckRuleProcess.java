@@ -15,6 +15,8 @@ import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.tool.PlanTool;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
@@ -35,6 +37,8 @@ public class ActionCheckRuleProcess {
     public static void checkPlanAction(String executorId, String actionCode, int custNum, String planDate, JSONObject actionMap) throws Exception {
         StringBuilder errorMessage = new StringBuilder();
         PlanDAO planDAO = new PlanDAO("ins");
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
+        String userId = sessionEntity.getUserId();
 
         String actionName = ActionCache.getAction(actionCode).getActionName();
 
@@ -78,7 +82,7 @@ public class ActionCheckRuleProcess {
 //            int currentCycleTotalNum = planActionNumDAO.getPlanActionFinishNumBetweenStartAndEnd(executorId,actionCode,startTime,planDate);
             if(totalLimitNum - currCycleFinishNum > custNum) {
                 errorMessage.append(actionName + "数需至少" + (totalLimitNum - currCycleFinishNum) + "个");
-                throw new GenericException("-1", errorMessage.toString());
+                throw new GenericException(userId, "-1", errorMessage.toString());
             }
 
             if(totalLimitNum > 0) {
