@@ -423,7 +423,7 @@ public class PlanService extends GenericService {
         parameter.put("PLAN_ID", planId);
         List<PlanEntity> list = planDAO.query(PlanEntity.class, "INS_PLAN", parameter);
         if(ArrayTool.isEmpty(list)) {
-            throw new GenericException("-1", "找不到计划");
+            throw new GenericException("-1", "找不到计划【" + planId + "】");
 //            response.setError("-1","找不到计划");
         }
         PlanEntity planEntity = list.get(0);
