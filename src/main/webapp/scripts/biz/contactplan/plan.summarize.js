@@ -385,6 +385,15 @@ var planSummarize = {
             planSummarize.afterSummarizeCust(obj, cause);
         });
     },
+    selectUnEntryCauseCusts : function(actionCode) {
+        checkedAll(actionCode + '_custCheckBox', false);
+        $('#FINISH_INFO_' + actionCode + ' li[li_type=unFinish]').each(function(idx, liItem) {
+            liItem = $(liItem);
+            if(!liItem.attr('unfinish_cause_id')) {
+                liItem.find('input[name='+actionCode+'_custCheckBox]').attr('checked', 'true');
+            }
+        })
+    },
     batchSummarize : function(obj) {
         var $obj = $(obj);
         var actionCode = $obj.attr('action_code');

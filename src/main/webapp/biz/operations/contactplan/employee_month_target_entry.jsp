@@ -55,7 +55,7 @@
 				</button>
 				<button class="e_button" oper_type="batch" style="display: none"
 						type="button" ontap="employeeMonthTargetEntry.cancelBatch()">
-					<span>单个操作</span>
+					<span>取消</span>
 				</button>
 			</div>
 		</div>

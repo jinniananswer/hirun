@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>今日计划总结</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/contactplan/plan.summarize.js?a=5"></script>
+	<script src="scripts/biz/contactplan/plan.summarize.js?a=6"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
@@ -389,6 +389,16 @@
 							</div>
 							<div class="side link" action_code="{{ACTION_CODE}}" ontap="planSummarize.batchOperTextOnClick(this)" tag="singleOper">
 								<span class="text">批量操作</span>
+							</div>
+							<div class="side link" tag="batchOper" action_code="{{ACTION_CODE}}"
+								 ontap="checkedAll('{{ACTION_CODE}}_custCheckBox', true)"
+								 style="display: none">
+								<span class="text">全选</span>
+							</div>
+							<div class="side link" tag="batchOper" action_code="{{ACTION_CODE}}"
+								 ontap="planSummarize.selectUnEntryCauseCusts('{{ACTION_CODE}}')"
+								 style="display: none">
+								<span class="text">未填原因的客户</span>
 							</div>
 							<div class="side link" tag="batchOper" action_code="{{ACTION_CODE}}"
 								 ontap="planSummarize.batchSummarize(this)"
