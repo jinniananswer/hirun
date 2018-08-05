@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>休假填写</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/organization/personnel/holiday.entry.js"></script>
+	<script src="scripts/biz/organization/personnel/holiday.entry.js?a=1"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
