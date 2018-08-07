@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>计划补录</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/contactplan/plan.additional.entry.js"></script>
+	<script src="scripts/biz/contactplan/plan.additional.entry.js?a=1"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>

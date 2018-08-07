@@ -20,7 +20,7 @@ var holidayEntry = {
     },
     okOnclick : function () {
         var param = $.buildJsonData("holidayForm");
-        param.PLAN_EXECUTOR_ID = User.userId;
+        param.PLAN_EXECUTOR_ID = Employee.employeeId;
         if ($.validate.verifyAll("holidayForm")) {
             $.beginPageLoading("休假录入中。。。");
             $.ajaxReq({

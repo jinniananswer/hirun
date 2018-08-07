@@ -16,6 +16,10 @@ var planAdditionalEntry = {
     },
     okOnclick : function () {
         if ($.validate.verifyAll("pre_info_form")) {
+            if(!$('#EMPLOYEE_NAME').attr('employee_id')) {
+                alert('员工不能为空');
+                return;
+            }
             var url = '';
             var param = '';
             var title = '';
