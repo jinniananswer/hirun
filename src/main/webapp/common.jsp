@@ -46,6 +46,7 @@
     <script src="frame/TouchUI/content/js/ui/component/base/ipaddressfield.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/chart/echarts.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/table/table.js"></script>
+    <script src="frame/TouchUI/content/js/ui/component/tree/tree.js"></script>
     <script src="frame/TouchUI/content/js/local.js"></script>
     <script src="frame/js/ajax.js"></script>
     <script src="frame/js/redirect.js"></script>
