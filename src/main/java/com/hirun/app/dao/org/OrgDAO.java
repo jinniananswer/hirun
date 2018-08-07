@@ -58,4 +58,10 @@ public class OrgDAO extends StrongObjectDAO {
             return null;
         return orgs.get(0);
     }
+
+    public List<OrgEntity> queryAllOrgs() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_org");
+        return this.queryBySql(OrgEntity.class, sb.toString(), null);
+    }
 }

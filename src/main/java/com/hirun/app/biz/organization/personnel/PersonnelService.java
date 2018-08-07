@@ -1,17 +1,23 @@
 package com.hirun.app.biz.organization.personnel;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.authority.AuthorityJudgement;
+import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.dao.employee.EmployeeDAO;
+import com.hirun.app.dao.func.FuncDAO;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.ServiceRequest;
-import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.*;
 import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.security.Encryptor;
@@ -60,13 +66,45 @@ public class PersonnelService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         String today = TimeTool.today();
         response.set("TODAY", today);
-        OrgDAO dao = new OrgDAO("ins");
-        List<OrgEntity> orgs = dao.queryOrgByCityAndType("1", "4");
-        response.set("SHOPS", ConvertTool.toJSONArray(orgs));
-        if (ArrayTool.isNotEmpty(orgs)) {
-            response.set("DEFAULT_SHOP_NAME", orgs.get(0).getName());
-            response.set("DEFAULT_SHOP_ID", orgs.get(0).getOrgId());
+        JSONObject orgTree = OrgBean.getOrgTree();
+        response.set("ORG_TREE", orgTree);
+        RecordSet jobRoles = StaticDataTool.getCodeTypeDatas("JOB_ROLE");
+        RecordSet jobs = new RecordSet();
+        if(jobRoles != null && jobRoles.size() > 0){
+            for(int i=0;i<jobRoles.size();i++){
+                Record jobRole = jobRoles.get(i);
+                if(!StringUtils.equals("0", jobRole.get("CODE_VALUE"))){
+                    jobs.add(jobRole);
+                }
+            }
         }
+        response.set("JOB_ROLES", ConvertTool.toJSONArray(jobs));
+
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String orgId = OrgBean.getOrgId(sessionEntity);
+        OrgEntity org = null;
+        if (StringUtils.isNotBlank(orgId)) {
+            OrgDAO dao = new OrgDAO("ins");
+            org = dao.queryOrgById(orgId);
+        }
+        boolean needAllCity = Permission.hasAllCity();
+
+        JSONArray citys = null;
+        if (needAllCity) {
+            citys = ConvertTool.toJSONArray(StaticDataTool.getCodeTypeDatas("BIZ_CITY"));
+        } else {
+            citys = new JSONArray();
+            JSONObject city = new JSONObject();
+            city.put("CODE_VALUE", org.getCity());
+            String cityName = StaticDataTool.getCodeName("BIZ_CITY", org.getCity());
+            city.put("CODE_NAME", cityName);
+            citys.add(city);
+            response.set("DEFAULT_CITY_ID", org.getCity());
+            response.set("DEFAULT_CITY_NAME", cityName);
+
+        }
+        response.set("CITYS", citys);
         return response;
     }
 
@@ -107,7 +145,7 @@ public class PersonnelService extends GenericService {
 
         UserEntity userEntity = dao.queryUserByUsername(request.getString("MOBILE_NO"));
         if(userEntity != null){
-            response.setError("HIRUN_CREATEEMPLOYEE_000001","该手机号码的员工已经存在！");
+            response.setError("HIRUN_CREATEEMPLOYEE_000001","该手机号码的员工已经存在");
             return response;
         }
 
@@ -124,7 +162,7 @@ public class PersonnelService extends GenericService {
         employee.put("NATIVE_REGION", "0");
         employee.put("IN_DATE", request.getString("IN_DATE"));
         employee.put("WORK_NATURE", "1");
-        employee.put("WORK_PLACE", "1");
+        employee.put("WORK_PLACE", request.getString("CITY"));
         employee.put("STATUS", "0");
         employee.put("CREATE_DATE", session.getCreateTime());
         employee.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
@@ -132,16 +170,11 @@ public class PersonnelService extends GenericService {
         employee.put("UPDATE_TIME", session.getCreateTime());
         long employeeId = dao.insertAutoIncrement("ins_employee", employee);
 
-        OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
-        OrgEntity org = orgDAO.queryMarketByShop(request.getString("SHOP"));
-        String orgId = "";
-        if(org != null)
-            orgId = org.getOrgId();
         Map<String, String> job = new HashMap<String, String>();
         job.put("EMPLOYEE_ID", employeeId+"");
         job.put("JOB_ROLE", request.getString("JOB_ROLE"));
         job.put("JOB_ROLE_NATURE", "1");
-        job.put("ORG_ID", orgId);
+        job.put("ORG_ID", request.getString("ORG_ID"));
         job.put("PARENT_EMPLOYEE_ID", request.getString("PARENT_EMPLOYEE_ID"));
         job.put("START_DATE", session.getCreateTime());
         job.put("END_DATE", "3000-12-31 23:59:59");
@@ -151,29 +184,38 @@ public class PersonnelService extends GenericService {
         job.put("UPDATE_TIME", session.getCreateTime());
         dao.insertAutoIncrement("ins_employee_job_role", job);
 
-        String funcs = "";
-        if("42".equals(request.getString("JOB_ROLE")))
-            funcs = "1,3,4,5,17,18,20,22,23";
-        else
-            funcs = "1,2,3,4,5,17,18,20,22,23,13,14,15,16";
-
-        String[] funcsArray = funcs.split(",");
+        FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
+        RecordSet jobFuncs = funcDAO.queryJobFunc(request.getString("JOB_ROLE"));
         List<Map<String, String>> userFuncs = new ArrayList<Map<String, String>>();
-        for(String func : funcsArray){
-            Map<String, String> userFunc = new HashMap<String, String>();
-            userFunc.put("USER_ID", userId+"");
-            userFunc.put("FUNC_ID", func);
-            userFunc.put("START_DATE", session.getCreateTime());
-            userFunc.put("END_DATE", "3000-12-31 23:59:59");
-            userFunc.put("STATUS", "0");
-            userFunc.put("CREATE_DATE", session.getCreateTime());
-            userFunc.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-            userFunc.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-            userFunc.put("UPDATE_TIME", session.getCreateTime());
-            userFuncs.add(userFunc);
+        if(jobFuncs != null && jobFuncs.size() > 0){
+            int jobFuncSize = jobFuncs.size();
+            for(int i=0;i<jobFuncSize;i++){
+                Record jobFunc = jobFuncs.get(i);
+                Map<String, String> userFunc = new HashMap<String, String>();
+                userFunc.put("USER_ID", userId+"");
+                userFunc.put("FUNC_ID", jobFunc.get("FUNC_ID"));
+                userFunc.put("START_DATE", session.getCreateTime());
+                userFunc.put("END_DATE", "3000-12-31 23:59:59");
+                userFunc.put("STATUS", "0");
+                userFunc.put("CREATE_DATE", session.getCreateTime());
+                userFunc.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+                userFunc.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+                userFunc.put("UPDATE_TIME", session.getCreateTime());
+                userFuncs.add(userFunc);
+            }
+            dao.insertBatch("ins_user_func", userFuncs);
         }
 
-        dao.insertBatch("ins_user_func", userFuncs);
+        /** 新增user_contact信息 **/
+        Map<String, String> userContact = new HashMap<String, String>();
+        userContact.put("USER_ID", userId+"");
+        userContact.put("CONTACT_TYPE", "1");
+        userContact.put("CONTACT_NO", request.getString("MOBILE_NO"));
+        userContact.put("CREATE_DATE", session.getCreateTime());
+        userContact.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+        userContact.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        userContact.put("UPDATE_TIME", session.getCreateTime());
+        dao.insert("ins_user_contact", userContact);
 
         return response;
     }

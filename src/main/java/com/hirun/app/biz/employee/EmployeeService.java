@@ -50,6 +50,8 @@ public class EmployeeService extends GenericService {
         int size = recordSet.size();
         for(int i=0;i<size;i++){
             Record record = recordSet.get(i);
+            if(StringUtils.equals("69", record.get("USER_ID")) || StringUtils.equals("72", record.get("USER_ID")))
+                record.put("CONTACT_NO","***********");
             record.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", record.get("JOB_ROLE")));
         }
         response.set("DATAS", ConvertTool.toJSONArray(recordSet));

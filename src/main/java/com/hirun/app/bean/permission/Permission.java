@@ -71,6 +71,16 @@ public class Permission {
         return false;
     }
 
+    public static boolean hasAllOrg() throws Exception{
+        if(isSuperUser())
+            return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("ALL_ORG"))
+            return true;
+
+        return false;
+    }
+
     public static boolean isSuperUser() {
         SessionEntity session = SessionManager.getSession().getSessionEntity();
         BizSessionEntity bizSession = new BizSessionEntity(session);
