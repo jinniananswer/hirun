@@ -1,5 +1,6 @@
 (function($){
     $.extend({employee:{
+            jobs : null,
             init : function(){
                 window["UI-popup"] = new Wade.Popup("UI-popup");
                 $.Select.append(
@@ -17,6 +18,20 @@
                         {TEXT:"女", VALUE:"2"}
                     ]
                 );
+
+                window["orgTree"] = new Wade.Tree("orgTree");
+                $("#orgTree").textAction(function(e, nodeData){
+                    var hasChild = nodeData.haschild;
+                    if(hasChild == "true")
+                        return true;
+
+                    var id = nodeData.id;
+                    var text = nodeData.text;
+                    $("#ORG_TEXT").val(text);
+                    $("#ORG_ID").val(id);
+                    hidePopup('UI-popup','UI-ORG');
+                    return true;
+                });
 
                 $("#SEX").bind("change", function(){
                     $("#SEX").val(this.value); // 当前值
@@ -54,58 +69,139 @@
                     {
                         dropDown:true,
                         format:"yyyy-MM-dd",
-                        useTime:false,
+                        useTime:false
                     }
                 );
 
                 $.ajaxPost('initCreateEmployee',null,function(data){
-                    var obj = new Wade.DataMap(data);
-                    var shops = obj.get("SHOPS");
-                    var today = obj.get("TODAY");
-                    var defaultShopId = obj.get("DEFAULT_SHOP_ID");
-                    var defaultShopName = obj.get("DEFAULT_SHOP_NAME");
-                    if(shops != null){
-                        var length = shops.length;
-                        var html = [];
-                        for(var i=0;i<length;i++){
-                            var shop = shops.get(i);
-                            html.push("<li class=\"link e_center\" ontap=\"$.employee.afterSelectShop(\'"+shop.get("ORG_ID")+"\',\'"+shop.get("NAME")+"\')\"><div class=\"main\">"+shop.get("NAME")+"</div></li>");
-                        }
-                        $.insertHtml('beforeend', $("#BIZ_SHOP"), html.join(""));
-                        if(defaultShopId != "" && defaultShopId != "undefined"){
-                            $.employee.afterSelectShop(defaultShopId, defaultShopName);
-                        }
+                    var trees = data.ORG_TREE;
+                    var today = data.TODAY;
+                    var jobRoles = data.JOB_ROLES;
+                    var citys = data.CITYS;
+                    var defaultCityId = data.DEFAULT_CITY_ID;
+                    var defaultCityName = data.DEFAULT_CITY_NAME;
+                    if(trees != null){
+                        window["orgTree"].data = trees;
+                        window["orgTree"].init();
                     }
                     $("#IN_DATE").val(today);
+                    $.employee.jobs = new $.DatasetList(jobRoles);
+                    $.employee.drawJobRoles();
+                    $.employee.drawCitys(new $.DatasetList(citys), defaultCityId, defaultCityName);
                 });
             },
 
-            afterSelectShop : function(value, text){
-                hidePopup('UI-popup','UI-SHOP');
-                $("#SHOP_TEXT").val(text);
-                $("#SHOP").val(value);
-
-                $.ajaxPost('initParentEmployee','&SHOP='+value+'&JOB_ROLE='+$('#JOB_ROLE').val(),function(data){
-                    var rst = new Wade.DataMap(data);
-                    var parentEmployees = rst.get("PARENT_EMPLOYEES");
-
-                    if(parentEmployees != null){
-                        var length = parentEmployees.length;
-                        var html = [];
-                        $("#BIZ_PARENT").empty();
-                        for(var i=0;i<length;i++){
-                            var parentEmployee = parentEmployees.get(i);
-                            html.push("<li class=\"link e_center\" ontap=\"$.employee.afterSelectParent(\'"+parentEmployee.get("EMPLOYEE_ID")+"\',\'"+parentEmployee.get("NAME")+"\')\"><label class=\"group\" id=\"LABEL_"+parentEmployee.get("EMPLOYEE_ID")+"\"><div class=\"main\">"+parentEmployee.get("NAME")+"</div></label></li>");
-                        }
-                        $.insertHtml('beforeend', $("#BIZ_PARENT"), html.join(""));
-                    }
-                });
+            query : function(){
+                if($.validate.verifyAll("searchArea")) {
+                    var parameter = $.buildJsonData("searchArea");
+                    $.ajaxPost('queryContacts', parameter, function (data) {
+                        var rst = new Wade.DataMap(data);
+                        var datas = rst.get("DATAS");
+                        $.employee.drawEmployees(datas);
+                    });
+                }
             },
 
-            afterSelectParent : function(value, text){
-                $("#PARENT_EMPLOYEE_ID").val(value);
-                $("#PARENT_EMPLOYEE_NAME").val(text);
+            drawEmployees : function(datas){
+                $("#employees").empty();
+                var html = [];
+
+                if(datas == null || datas.length <= 0){
+                    $("#messagebox").css("display","");
+                    return;
+                }
+
+                $("#messagebox").css("display","none");
+
+
+                var length = datas.length;
+                for(var i=0;i<length;i++) {
+                    var data = datas.get(i);
+                    var sex = data.get("SEX");
+                    html.push("<li class='link' ontap=\"$.employee.selectEmployee(\'"+data.get("EMPLOYEE_ID")+"\',\'"+data.get("NAME")+"\')\"><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    if(sex == "1")
+                        html.push("<img src=\"/frame/img/male.png\" class='e_pic-r' style='width:4em;height:4em'/>");
+                    else
+                        html.push("<img src=\"/frame/img/female.png\" class='e_pic-r' style='width:4em;height:4em'/>");
+
+                    html.push("</div></div>");
+                    html.push("<div class=\"main\"><div class=\"title\">");
+                    html.push(data.get("NAME"));
+                    html.push("</div>");
+                    html.push("<div class=\"content\">");
+                    var parentOrgName = data.get("PARENT_ORG_NAME");
+                    if(parentOrgName != null && parentOrgName != "undefined")
+                        html.push(parentOrgName + "-");
+                    html.push(data.get("ORG_NAME"));
+                    html.push("</div><div class='content'>"+data.get("JOB_ROLE_NAME"));
+                    html.push("</div></div>")
+                    html.push("<div class=\"side e_size-m\">"+data.get("CONTACT_NO")+"</div>");
+                    html.push("</div></div></li>");
+                }
+
+                $.insertHtml('beforeend', $("#employees"), html.join(""));
+            },
+
+            selectEmployee : function(employeeId, name){
+                $("#PARENT_EMPLOYEE_ID").val(employeeId);
+                $("#PARENT_EMPLOYEE_NAME").val(name);
                 hidePopup('UI-popup','UI-PARENT');
+            },
+
+            drawCitys : function(citys, defaultCityId, defaultCityName){
+                if(citys != null){
+                    var length = citys.length;
+                    var html=[];
+                    for(var i=0;i<length;i++){
+                        var city = citys.get(i);
+                        html.push("<li class=\"link e_center\" ontap=\"$.employee.afterSelectCity(\'"+city.get("CODE_VALUE")+"\',\'"+city.get("CODE_NAME")+"\')\"><div class=\"main\">"+city.get("CODE_NAME")+"</div></li>");
+                    }
+                    $.insertHtml('beforeend', $("#citys"), html.join(""));
+
+                    if(defaultCityId != null && defaultCityId != "undefined"){
+                        $.employee.afterSelectCity(defaultCityId,defaultCityName);
+                    }
+                }
+            },
+
+            afterSelectCity : function(cityId, cityName){
+                $("#CITY_TEXT").val(cityName);
+                $("#CITY").val(cityId);
+                hidePopup('UI-popup','UI-CITY');
+            },
+
+            drawJobRoles : function(){
+                if(this.jobs == null || this.jobs == "undefined")
+                    return;
+
+                var length = this.jobs.length;
+                var html = [];
+                $("#jobRoles").empty();
+                for(var i=0;i<length;i++){
+                    var jobRole = this.jobs.get(i);
+                    html.push("<li class=\"link e_center\" ontap=\"$.employee.afterSelectJob(\'"+jobRole.get("CODE_VALUE")+"\',\'"+jobRole.get("CODE_NAME")+"\')\"><label class=\"group\" ><div class=\"main\">"+jobRole.get("CODE_NAME")+"</div></label></li>");
+                }
+                $.insertHtml('beforeend', $("#jobRoles"), html.join(""));
+            },
+
+            afterSelectJob : function(value, name){
+                $("#JOB_TEXT").val(name);
+                $("#JOB_ROLE").val(value);
+                hidePopup('UI-popup','UI-JOB');
+            },
+
+            queryJobs : function(){
+                var searchText = $("#JOB_SEARCH_TEXT").val();
+                $("#jobRoles").empty();
+                var length = this.jobs.length;
+                var html = [];
+                for(var i=0;i<length;i++){
+                    var jobRole = this.jobs.get(i);
+                    var name = jobRole.get("CODE_NAME");
+                    if(name.indexOf(searchText) >= 0 || searchText == "")
+                        html.push("<li class=\"link e_center\" ontap=\"$.employee.afterSelectJob(\'"+jobRole.get("CODE_VALUE")+"\',\'"+jobRole.get("CODE_NAME")+"\')\"><label class=\"group\" ><div class=\"main\">"+jobRole.get("CODE_NAME")+"</div></label></li>");
+                }
+                $.insertHtml('beforeend', $("#jobRoles"), html.join(""));
             },
 
             submit : function(){
