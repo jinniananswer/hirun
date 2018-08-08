@@ -161,5 +161,45 @@ public class OrgBean {
         return orgLine;
     }
 
+    public static OrgEntity getAssignTypeOrg(String orgId, String type) throws Exception{
+        OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
+        List<OrgEntity> orgs = dao.queryAllOrgs();
+        return getParentOrg(orgId, type, orgs);
+    }
+
+    public static OrgEntity getParentOrg(String orgId, String type, List<OrgEntity> orgs) throws Exception{
+        if(ArrayTool.isEmpty(orgs))
+            return null;
+
+        for(OrgEntity org : orgs){
+
+            if(StringUtils.equals(orgId, org.getOrgId())){
+                if(StringUtils.equals("1", type)){
+                    //查自身
+                    return org;
+                }
+                else if(StringUtils.equals("2", type)){
+                    //查店面
+                    if(StringUtils.equals("4", org.getType())){
+                        return org;
+                    }
+                    else{
+                        return getParentOrg(org.getParentOrgId(), type, orgs);
+                    }
+                }
+                else if(StringUtils.equals("3", type)){
+                    //查分公司
+                    if(StringUtils.equals("2", org.getType())){
+                        return org;
+                    }
+                    else{
+                        return getParentOrg(org.getParentOrgId(), type, orgs);
+                    }
+                }
+            }
+
+        }
+        return null;
+    }
 
 }
