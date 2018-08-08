@@ -3,11 +3,12 @@
     <entity name="OrgCenter.login.LoginService.login"  class="com.hirun.app.biz.login.LoginService" method="login"/>
     <entity name="OrgCenter.menu.MenuService.loadMenus"  class="com.hirun.app.biz.menu.MenuService" method="loadMenus"/>
     <entity name="OrgCenter.personnel.PersonnelService.changePassword"  class="com.hirun.app.biz.organization.personnel.PersonnelService" method="changePassword"/>
-    <entity name="OrgCenter.personnel.PersonnelService.initCreateEmployee"  class="com.hirun.app.biz.organization.personnel.PersonnelService" method="initCreateEmployee"/>
-    <entity name="OrgCenter.personnel.PersonnelService.initParentEmployee"  class="com.hirun.app.biz.organization.personnel.PersonnelService" method="initParentEmployee"/>
-    <entity name="OrgCenter.personnel.PersonnelService.createEmployee"  class="com.hirun.app.biz.organization.personnel.PersonnelService" method="createEmployee"/>
-    <entity name="OrgCenter.personnel.PersonnelService.destroyEmployee"  class="com.hirun.app.biz.organization.personnel.PersonnelService" method="destroyEmployee"/>
-    <entity name="OrgCenter.personnel.EmployeeService.queryContacts"  class="com.hirun.app.biz.employee.EmployeeService" method="queryContacts"/>
+    <entity name="OrgCenter.employee.EmployeeService.initCreateEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="initCreateEmployee"/>
+    <entity name="OrgCenter.employee.EmployeeService.initParentEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="initParentEmployee"/>
+    <entity name="OrgCenter.employee.EmployeeService.createEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="createEmployee"/>
+    <entity name="OrgCenter.employee.EmployeeService.hasSubordinates"  class="com.hirun.app.biz.employee.EmployeeService" method="hasSubordinates"/>
+    <entity name="OrgCenter.employee.EmployeeService.destroyEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="destroyEmployee"/>
+    <entity name="OrgCenter.employee.EmployeeService.queryContacts"  class="com.hirun.app.biz.employee.EmployeeService" method="queryContacts"/>
     <entity name="OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors"  class="com.hirun.app.biz.employee.EmployeeService" method="getAllSubordinatesCounselors"/>
     <entity name="OrgCenter.employee.EmployeeService.entryHoliday"  class="com.hirun.app.biz.employee.EmployeeService" method="entryHoliday"/>
 
