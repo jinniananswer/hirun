@@ -1,5 +1,6 @@
 package com.hirun.app.bean.employee;
 
+import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
@@ -135,5 +136,15 @@ public class EmployeeBean {
     public static String queryParentEmployeeIdByEmployeeIdAndJobRoles(String employeeId, String jobRoles) throws Exception {
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
         return employeeDAO.queryParentEmployeeIdByEmployeeIdAndJobRoles(employeeId, jobRoles);
+    }
+
+    public static List<EmployeeEntity> queryCounselorByOrgId(String orgId) throws Exception{
+        String orgLine = OrgBean.getOrgLine(orgId);
+        if(StringUtils.isBlank(orgLine))
+            return null;
+
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        List<EmployeeEntity> counselors = dao.queryCounselorsByOrgIds(orgLine);
+        return counselors;
     }
 }

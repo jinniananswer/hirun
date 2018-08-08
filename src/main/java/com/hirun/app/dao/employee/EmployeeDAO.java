@@ -181,6 +181,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("where b.USER_ID = a.USER_ID ");
         sb.append("and a.status = '0' ");
         sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
+        sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
         sb.append("and b.name like concat('%',:SEARCH_TEXT,'%') ");
         sb.append("order by user_id ");
@@ -213,5 +214,17 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append(" where parent_employee_id = "+originalParent);
         int num = this.executeUpdate(sb.toString(), null);
         return num;
+    }
+
+    public List<EmployeeEntity> queryCounselorsByOrgIds(String orgIds) throws Exception{
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.* ");
+        sb.append("from ins_employee a, ins_employee_job_role b ");
+        sb.append("where b.employee_id = a.employee_id ");
+        sb.append("and b.job_role in ('42','58') ");
+        sb.append("and b.org_id in ("+orgIds+") ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
+        return this.queryBySql(EmployeeEntity.class, sb.toString(), null);
     }
 }
