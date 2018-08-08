@@ -206,4 +206,12 @@ public class EmployeeDAO extends StrongObjectDAO{
 
         return null;
     }
+
+    public int changeEmployeeParent(String originalParent, String newParent) throws Exception{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" update ins_employee_job_role set parent_employee_id = "+newParent);
+        sb.append(" where parent_employee_id = "+originalParent);
+        int num = this.executeUpdate(sb.toString(), null);
+        return num;
+    }
 }
