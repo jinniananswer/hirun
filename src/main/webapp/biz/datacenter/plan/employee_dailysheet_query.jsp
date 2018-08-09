@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>家装顾问日报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/plan/employee.dailysheet.query.js"></script>
+	<script src="scripts/biz/datacenter/plan/employee.dailysheet.query.js?a=2"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
@@ -35,7 +35,7 @@
 		</div>
 	</div>
 	<div class="c_space"></div>
-	<div id="dailysheetTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10" style="height: 36em;">
+	<div id="dailysheetTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10" style="height: 34em;">
 		<div class="body">
 			<div class="wrapper">
 				<table>

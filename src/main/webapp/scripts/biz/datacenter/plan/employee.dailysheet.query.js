@@ -11,6 +11,7 @@ var EmployeeDailySheetQuery = {
 
         window["dailysheetTable"] = new Wade.Table("dailysheetTable", {
             fixedMode:true,
+            fixedLeftCols:1,
             editMode:false
         });
 
@@ -34,6 +35,7 @@ var EmployeeDailySheetQuery = {
             },
             successFunc : function(data) {
                 $.endPageLoading();
+                $('#dailysheetTable tbody').html('');
                 $.each(data.EMPLOYEE_DAILYSHEET_LIST, function(idx, employeeDailySheet) {
                     employeeDailySheet._className = "no";
                     dailysheetTable.addRow(employeeDailySheet);
