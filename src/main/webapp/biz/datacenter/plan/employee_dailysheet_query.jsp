@@ -35,31 +35,31 @@
 		</div>
 	</div>
 	<div class="c_space"></div>
-	<div id="dailysheetTable" class="c_table c_table-hasGrid c_table-lite c_table-border">
+	<div id="dailysheetTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10" style="height: 36em;">
 		<div class="body">
 			<div class="wrapper">
 				<table>
 					<thead>
 					<tr>
 						<th col="EMPLOYEE_NAME">家装顾问</th>
-						<th col="PLAN_JW">加微</th>
-						<th col="PLAN_LTZDSTS">蓝图指导书</th>
-						<th col="PLAN_GZHGZ">关注公众号</th>
-						<th col="PLAN_HXJC">核心接触</th>
-						<th col="PLAN_SMJRQLC">扫码</th>
-						<th col="PLAN_XQLTYTS">需求蓝图一</th>
-						<th col="PLAN_ZX">咨询</th>
-						<th col="PLAN_YJALTS">一件案例</th>
-						<th col="PLAN_DKCSMU">城市木屋</th>
-						<th col="FINISH_JW">加微</th>
-						<th col="FINISH_LTZDSTS">蓝图指导书</th>
-						<th col="FINISH_GZHGZ">关注公众号</th>
-						<th col="FINISH_HXJC">核心接触</th>
-						<th col="FINISH_SMJRQLC">扫码</th>
-						<th col="FINISH_XQLTYTS">需求蓝图一</th>
-						<th col="FINISH_ZX">咨询</th>
-						<th col="FINISH_YJALTS">一件案例</th>
-						<th col="FINISH_DKCSMU">城市木屋</th>
+						<th col="PLAN_JW">加微计划数</th>
+						<th col="PLAN_LTZDSTS">蓝图指导书计划数</th>
+						<th col="PLAN_GZHGZ">关注公众号计划数</th>
+						<th col="PLAN_HXJC">核心接触计划数</th>
+						<th col="PLAN_SMJRQLC">扫码计划数</th>
+						<th col="PLAN_XQLTYTS">需求蓝图一计划数</th>
+						<th col="PLAN_ZX">咨询计划数</th>
+						<th col="PLAN_YJALTS">一键案例计划数</th>
+						<th col="PLAN_DKCSMU">城市木屋计划数</th>
+						<th class="e_red" col="FINISH_JW">加微完成数</th>
+						<th class="e_red" col="FINISH_LTZDSTS">蓝图指导书完成数</th>
+						<th class="e_red" col="FINISH_GZHGZ">关注公众号完成数</th>
+						<th class="e_red" col="FINISH_HXJC">核心接触完成数</th>
+						<th class="e_red" col="FINISH_SMJRQLC">扫码完成数</th>
+						<th class="e_red" col="FINISH_XQLTYTS">需求蓝图一完成数</th>
+						<th class="e_red" col="FINISH_ZX">咨询完成数</th>
+						<th class="e_red" col="FINISH_YJALTS">一键案例完成数</th>
+						<th class="e_red" col="FINISH_DKCSMU">城市木屋完成数</th>
 					</tr>
 					</thead>
 					<tbody>
