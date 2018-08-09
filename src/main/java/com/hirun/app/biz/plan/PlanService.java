@@ -22,10 +22,7 @@ import com.hirun.pub.domain.entity.param.ActionEntity;
 import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
-import com.hirun.pub.domain.entity.plan.PlanCycleFinishInfoEntity;
-import com.hirun.pub.domain.entity.plan.PlanEntity;
-import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
-import com.hirun.pub.domain.entity.plan.PlanWorkEntity;
+import com.hirun.pub.domain.entity.plan.*;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
@@ -184,6 +181,24 @@ public class PlanService extends GenericService {
             planWorkEntity.setEndDate(planDate + " 18:00:00");
             planWorkDAO.insertAutoIncrement("INS_PLAN_WORK", planWorkEntity.getContent());
         }
+
+        //统计计划数
+        PlanDayEntity planDayEntity = new PlanDayEntity();
+        planDayEntity.setStatDay(planDate);
+        planDayEntity.setStatType("EMPLOYEE_PLAN");
+        planDayEntity.setObjectId(planExecutorId);
+        JSONObject statResult = new JSONObject();
+        for(int i = 0, size = planList.size(); i < size; i++) {
+            JSONObject plan = planList.getJSONObject(i);
+            String actionCode = plan.getString("ACTION_CODE");
+            JSONArray custList = plan.getJSONArray("CUSTLIST");
+            if(custList == null) {
+                custList = new JSONArray();
+            }
+            statResult.put(actionCode, custList.size());
+        }
+        planDayEntity.setStatResult(statResult.toJSONString());
+        PlanStatBean.saveStatPlanDayEntity(planDayEntity);
 
         return response;
     }
@@ -620,7 +635,23 @@ public class PlanService extends GenericService {
         }
 
         //更新统计信息
-        PlanStatBean.statMonPlanFinishActionByPlanEntity(planEntity);
+        List<CustActionEntity> custActionList = custActionDAO.queryCustFinishActionListByPlanId(planEntity.getPlanId());
+        JSONObject jsonFinishInfo = new JSONObject();
+        for(CustActionEntity custActionEntity : custActionList) {
+            String actionCode = custActionEntity.getActionCode();
+            if(!jsonFinishInfo.containsKey(actionCode)) {
+                jsonFinishInfo.put(actionCode, 0);
+            }
+            jsonFinishInfo.put(actionCode, jsonFinishInfo.getIntValue(actionCode)+1);
+        }
+        PlanStatBean.statMonPlanFinishActionByPlanEntity(planEntity, jsonFinishInfo);
+
+        PlanDayEntity planDayEntity = new PlanDayEntity();
+        planDayEntity.setStatDay(planEntity.getPlanDate());
+        planDayEntity.setStatType("EMPLOYEE_FINISH");
+        planDayEntity.setObjectId(planEntity.getPlanExecutorId());
+        planDayEntity.setStatResult(jsonFinishInfo.toJSONString());
+        PlanStatBean.saveStatPlanDayEntity(planDayEntity);
 
         return response;
     }
