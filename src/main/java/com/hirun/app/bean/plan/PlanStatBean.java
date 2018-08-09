@@ -9,6 +9,7 @@ import com.hirun.app.dao.plan.PlanDayDAO;
 import com.hirun.app.dao.stat.PlanFinishMonDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.plan.PlanDayEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
@@ -69,9 +70,47 @@ public class PlanStatBean {
                     jsonStatResult.put(key, jsonNewStatResult.getIntValue(key));
                 }
             }
-            planDayEntity.setStatResult(jsonStatResult.toJSONString());
-            planDayDAO.insert("STAT_PLAN_DAY", planDayEntity.getContent());
+            oldPlanDayEntity.setStatResult(jsonStatResult.toJSONString());
+            planDayDAO.update("STAT_PLAN_DAY", oldPlanDayEntity.getContent());
         }
+    }
+
+    public static void saveStatPlanDayEntityByEmployee(PlanDayEntity employeePlanDayEntity) throws Exception {
+        //员工天
+        employeePlanDayEntity.setStatType("EMPLOYEE_FINISH");
+        saveStatPlanDayEntity(employeePlanDayEntity);
+
+        String employeeId = employeePlanDayEntity.getObjectId();
+
+        //分公司
+        OrgEntity shopOrgEntity = EmployeeBean.queryOrgByEmployee(employeeId, "2");
+        if(shopOrgEntity != null) {
+            PlanDayEntity shopPlanDayEntity = new PlanDayEntity();
+            shopPlanDayEntity.setStatDay(employeePlanDayEntity.getStatDay());
+            shopPlanDayEntity.setStatResult(employeePlanDayEntity.getStatResult());
+            shopPlanDayEntity.setStatType("SHOP_FINISH");
+            shopPlanDayEntity.setObjectId(shopOrgEntity.getOrgId());
+            saveStatPlanDayEntity(shopPlanDayEntity);
+        }
+
+        //分公司
+        OrgEntity filialeOrgEntity = EmployeeBean.queryOrgByEmployee(employeeId, "3");
+        if(filialeOrgEntity != null) {
+            PlanDayEntity filialePlanDayEntity = new PlanDayEntity();
+            filialePlanDayEntity.setStatDay(employeePlanDayEntity.getStatDay());
+            filialePlanDayEntity.setStatResult(employeePlanDayEntity.getStatResult());
+            filialePlanDayEntity.setStatType("FILIALE_FINISH");
+            filialePlanDayEntity.setObjectId(filialeOrgEntity.getOrgId());
+            saveStatPlanDayEntity(filialePlanDayEntity);
+        }
+
+        //家装事业部
+        PlanDayEntity buPlanDayEntity = new PlanDayEntity();
+        buPlanDayEntity.setStatDay(employeePlanDayEntity.getStatDay());
+        buPlanDayEntity.setStatResult(employeePlanDayEntity.getStatResult());
+        buPlanDayEntity.setStatType("BU_FINISH");
+        buPlanDayEntity.setObjectId("7");
+        saveStatPlanDayEntity(buPlanDayEntity);
     }
 
     public static JSONArray queryEmployeeDailySheetList(String queryType, String queryId, String date) throws Exception {

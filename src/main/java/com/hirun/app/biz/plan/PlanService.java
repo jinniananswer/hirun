@@ -646,12 +646,12 @@ public class PlanService extends GenericService {
         }
         PlanStatBean.statMonPlanFinishActionByPlanEntity(planEntity, jsonFinishInfo);
 
-        PlanDayEntity planDayEntity = new PlanDayEntity();
-        planDayEntity.setStatDay(planEntity.getPlanDate());
-        planDayEntity.setStatType("EMPLOYEE_FINISH");
-        planDayEntity.setObjectId(planEntity.getPlanExecutorId());
-        planDayEntity.setStatResult(jsonFinishInfo.toJSONString());
-        PlanStatBean.saveStatPlanDayEntity(planDayEntity);
+        PlanDayEntity employeePlanDayEntity = new PlanDayEntity();
+        employeePlanDayEntity.setStatDay(planEntity.getPlanDate());
+        employeePlanDayEntity.setStatType("EMPLOYEE_FINISH");
+        employeePlanDayEntity.setObjectId(planEntity.getPlanExecutorId());
+        employeePlanDayEntity.setStatResult(jsonFinishInfo.toJSONString());
+        PlanStatBean.saveStatPlanDayEntityByEmployee(employeePlanDayEntity);
 
         return response;
     }
