@@ -2,9 +2,11 @@ package com.hirun.app.biz.common;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.cust.CustBean;
+import com.hirun.app.bean.plan.PlanStatBean;
 import com.hirun.app.dao.common.HisPerformDueTaskDAO;
 import com.hirun.app.dao.common.PerformDueTaskDAO;
 import com.hirun.pub.domain.entity.common.PerformDueTaskEntity;
+import com.hirun.pub.domain.entity.plan.PlanDayEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.pub.data.ServiceRequest;
@@ -29,9 +31,16 @@ public class PerformDueTaskService extends GenericService{
                     if(entity.getTaskType().equals("CUST_REMIND")) {
                         String custContactId = params.getString("CUST_CONTACT_ID");
                         CustBean.remind(custContactId);
-                    } else {
+                    } else if(entity.getTaskType().equals("CUST_RESTORE")){
                         String custId = params.getString("CUST_ID");
                         CustBean.restore(custId);
+                    } else if(entity.getTaskType().equals("PLAN_FINISH_STAT")) {
+                        PlanDayEntity employeePlanDayEntity = new PlanDayEntity();
+                        employeePlanDayEntity.setStatDay(params.getString("STAT_DAY"));
+                        employeePlanDayEntity.setStatType("EMPLOYEE_FINISH");
+                        employeePlanDayEntity.setObjectId(params.getString("EMPLOYEE_ID"));
+                        employeePlanDayEntity.setStatResult(params.getString("PLAN_FINISH_INFO"));
+                        PlanStatBean.saveStatPlanDayEntityByEmployee(employeePlanDayEntity);
                     }
 
                     entity.setDealTag("1");

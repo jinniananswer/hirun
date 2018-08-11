@@ -3,6 +3,7 @@ package com.hirun.app.biz.plan;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.common.MsgBean;
+import com.hirun.app.bean.common.PerformDueTaskBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.plan.*;
 import com.hirun.app.cache.*;
@@ -15,6 +16,7 @@ import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.app.dao.plan.PlanWorkDAO;
 import com.hirun.app.dao.stat.PlanFinishMonDAO;
 import com.hirun.app.dao.user.UserDAO;
+import com.hirun.pub.domain.entity.common.PerformDueTaskEntity;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustOriginalActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
@@ -646,12 +648,26 @@ public class PlanService extends GenericService {
         }
         PlanStatBean.statMonPlanFinishActionByPlanEntity(planEntity, jsonFinishInfo);
 
-        PlanDayEntity employeePlanDayEntity = new PlanDayEntity();
-        employeePlanDayEntity.setStatDay(planEntity.getPlanDate());
-        employeePlanDayEntity.setStatType("EMPLOYEE_FINISH");
-        employeePlanDayEntity.setObjectId(planEntity.getPlanExecutorId());
-        employeePlanDayEntity.setStatResult(jsonFinishInfo.toJSONString());
-        PlanStatBean.saveStatPlanDayEntityByEmployee(employeePlanDayEntity);
+//        PlanDayEntity employeePlanDayEntity = new PlanDayEntity();
+//        employeePlanDayEntity.setStatDay(planEntity.getPlanDate());
+//        employeePlanDayEntity.setStatType("EMPLOYEE_FINISH");
+//        employeePlanDayEntity.setObjectId(planEntity.getPlanExecutorId());
+//        employeePlanDayEntity.setStatResult(jsonFinishInfo.toJSONString());
+//        PlanStatBean.saveStatPlanDayEntityByEmployee(employeePlanDayEntity);
+        PerformDueTaskEntity performDueTaskEntity = new PerformDueTaskEntity();
+        performDueTaskEntity.setTaskType("PLAN_FINISH_STAT");
+        performDueTaskEntity.setObjectId(planEntity.getPlanExecutorId());
+        performDueTaskEntity.setObjectType("EMPLOYEE");
+        performDueTaskEntity.setExecTime(sysdate);
+        performDueTaskEntity.setDealTag("0");
+        performDueTaskEntity.setCreateUserId(userId);
+        performDueTaskEntity.setCreateDate(sysdate);
+        JSONObject taskParam = new JSONObject();
+        taskParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
+        taskParam.put("STAT_DAY", planEntity.getPlanDate());
+        taskParam.put("PLAN_FINISH_INFO", jsonFinishInfo.toJSONString());
+        performDueTaskEntity.setParams(taskParam.toJSONString());
+        PerformDueTaskBean.addPerformDueTask(performDueTaskEntity);
 
         return response;
     }
