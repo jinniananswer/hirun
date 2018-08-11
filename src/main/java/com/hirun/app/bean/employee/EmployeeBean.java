@@ -141,13 +141,23 @@ public class EmployeeBean {
         return employeeDAO.queryParentEmployeeIdByEmployeeIdAndJobRoles(employeeId, jobRoles);
     }
 
-    public static List<EmployeeEntity> queryCounselorByOrgId(String orgId) throws Exception{
+    public static RecordSet queryCounselorByOrgId(String orgId) throws Exception{
         String orgLine = OrgBean.getOrgLine(orgId);
         if(StringUtils.isBlank(orgLine))
             return null;
 
         EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
-        List<EmployeeEntity> counselors = dao.queryCounselorsByOrgIds(orgLine);
+        RecordSet counselors = dao.queryCounselorsByOrgIds(orgLine);
+        return counselors;
+    }
+
+    public static RecordSet queryCounselorgByOrgId(String orgId, List<OrgEntity> orgs) throws Exception{
+        String orgLine = OrgBean.getOrgLine(orgId, orgs);
+        if(StringUtils.isBlank(orgLine))
+            return null;
+
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        RecordSet counselors = dao.queryCounselorsByOrgIds(orgLine);
         return counselors;
     }
 
@@ -159,5 +169,9 @@ public class EmployeeBean {
 
         EmployeeJobRoleEntity jobRole = jobRoles.get(0);
         return OrgBean.getAssignTypeOrg(jobRole.getOrgId(), type);
+    }
+
+    public static OrgEntity queryOrgByOrgId(String orgId, String type, List<OrgEntity> orgs) throws Exception{
+        return OrgBean.getAssignTypeOrg(orgId, type, orgs);
     }
 }
