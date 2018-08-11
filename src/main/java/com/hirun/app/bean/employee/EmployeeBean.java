@@ -151,7 +151,7 @@ public class EmployeeBean {
         return counselors;
     }
 
-    public static RecordSet queryCounselorgByOrgId(String orgId, List<OrgEntity> orgs) throws Exception{
+    public static RecordSet queryCounselorByOrgId(String orgId, List<OrgEntity> orgs) throws Exception{
         String orgLine = OrgBean.getOrgLine(orgId, orgs);
         if(StringUtils.isBlank(orgLine))
             return null;
@@ -173,5 +173,25 @@ public class EmployeeBean {
 
     public static OrgEntity queryOrgByOrgId(String orgId, String type, List<OrgEntity> orgs) throws Exception{
         return OrgBean.getAssignTypeOrg(orgId, type, orgs);
+    }
+
+    public static RecordSet queryAllCounselors(String orgId, List<OrgEntity> orgs) throws Exception{
+        RecordSet counselors = queryCounselorByOrgId(orgId, orgs);
+        if(counselors == null || counselors.size() <= 0)
+            return null;
+
+        int size = counselors.size();
+        for(int i=0;i<size;i++){
+            Record counselor = counselors.get(i);
+            String counselorOrgId = counselor.get("ORG_ID");
+            OrgEntity shop = queryOrgByOrgId(counselorOrgId, "2", orgs);
+            if(shop != null)
+                counselor.put("SHOP", shop.getOrgId());
+
+            OrgEntity company = queryOrgByOrgId(counselorOrgId, "3", orgs);
+            if(company != null)
+                counselor.put("COMPANY", company.getOrgId());
+        }
+        return counselors;
     }
 }
