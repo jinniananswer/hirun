@@ -146,6 +146,14 @@ public class OrgBean {
 
     }
 
+    public static String getOrgLine(String rootOrgId, List<OrgEntity> orgs) throws Exception{
+        if(ArrayTool.isEmpty(orgs))
+            return null;
+
+        String orgLine = buildSubOrg(rootOrgId, orgs, rootOrgId);
+        return orgLine;
+    }
+
     public static String buildSubOrg(String rootOrgId, List<OrgEntity> orgs, String orgLine) throws Exception{
         if(ArrayTool.isEmpty(orgs))
             return orgLine;
@@ -164,6 +172,10 @@ public class OrgBean {
     public static OrgEntity getAssignTypeOrg(String orgId, String type) throws Exception{
         OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
         List<OrgEntity> orgs = dao.queryAllOrgs();
+        return getParentOrg(orgId, type, orgs);
+    }
+
+    public static OrgEntity getAssignTypeOrg(String orgId, String type, List<OrgEntity> orgs) throws Exception{
         return getParentOrg(orgId, type, orgs);
     }
 
@@ -202,4 +214,9 @@ public class OrgBean {
         return null;
     }
 
+    public List<OrgEntity> getAllOrgs() throws Exception{
+        OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
+        List<OrgEntity> orgs = dao.queryAllOrgs();
+        return orgs;
+    }
 }
