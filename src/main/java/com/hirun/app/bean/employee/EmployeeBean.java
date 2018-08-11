@@ -185,12 +185,16 @@ public class EmployeeBean {
             Record counselor = counselors.get(i);
             String counselorOrgId = counselor.get("ORG_ID");
             OrgEntity shop = queryOrgByOrgId(counselorOrgId, "2", orgs);
-            if(shop != null)
+            if(shop != null) {
                 counselor.put("SHOP", shop.getOrgId());
+                counselor.put("SHOP_NAME",shop.getName());
+            }
 
             OrgEntity company = queryOrgByOrgId(counselorOrgId, "3", orgs);
-            if(company != null)
+            if(company != null) {
                 counselor.put("COMPANY", company.getOrgId());
+                counselor.put("COMPANY_NAME", company.getName());
+            }
         }
         return counselors;
     }
