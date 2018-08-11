@@ -5,6 +5,7 @@ import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.tools.datastruct.ArrayTool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -216,15 +217,62 @@ public class EmployeeDAO extends StrongObjectDAO{
         return num;
     }
 
-    public List<EmployeeEntity> queryCounselorsByOrgIds(String orgIds) throws Exception{
+    public RecordSet queryCounselorsByOrgIds(String orgIds) throws Exception{
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.* ");
+        sb.append("select a.*, b.org_id ");
         sb.append("from ins_employee a, ins_employee_job_role b ");
         sb.append("where b.employee_id = a.employee_id ");
         sb.append("and b.job_role in ('42','58') ");
         sb.append("and b.org_id in ("+orgIds+") ");
         sb.append("and a.status = '0' ");
         sb.append("and now() < b.end_date ");
-        return this.queryBySql(EmployeeEntity.class, sb.toString(), null);
+        return this.queryBySql(sb.toString(), null);
+    }
+
+    public RecordSet queryEmployees(String name, String sex, String city, String mobileNo, String identityNo, String orgId, String jobRole, String parentEmployeeId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, f.NAME parent_org_name ");
+        sb.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
+        sb.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
+        sb.append("where b.USER_ID = a.USER_ID ");
+        sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
+        sb.append("and a.status = '0' ");
+        sb.append("and b.status = '0' " );
+        sb.append("and now() < d.end_date ");
+        sb.append("and e.ORG_ID = d.ORG_ID ");
+        if(StringUtils.isNotBlank(name)) {
+            sb.append("and b.name like concat('%',:NAME,'%') ");
+            parameter.put("NAME", name);
+        }
+        if(StringUtils.isNotBlank(city)){
+            sb.append("and d.city = :CITY ");
+            parameter.put("CITY", city);
+        }
+        if(StringUtils.isNotBlank(mobileNo)){
+            sb.append("and a.mobile_no like concat('%',:MOBILE_NO,'%') ");
+            parameter.put("MOBILE_NO", mobileNo);
+        }
+        if(StringUtils.isNotBlank(sex)){
+            sb.append("and b.sex = :SEX ");
+            parameter.put("SEX", sex);
+        }
+        if(StringUtils.isNotBlank(identityNo)){
+            sb.append("and b.IDENTITY_NO like concat('%',:IDENTITY_NO,'%') ");
+            parameter.put("IDENTITY_NO", identityNo);
+        }
+        if(StringUtils.isNotBlank(orgId)){
+            sb.append("and d.org_id in ( "+orgId+") ");
+        }
+        if(StringUtils.isNotBlank(jobRole)){
+            sb.append("and d.job_role = :JOB_ROLE ");
+            parameter.put("JOB_ROLE", jobRole);
+        }
+        if(StringUtils.isNotBlank(parentEmployeeId)){
+            sb.append("and d.parent_employee_id = :PARENT_EMPLOYEE_ID ");
+            parameter.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
+        }
+        return this.queryBySql(sb.toString(), parameter);
     }
 }
