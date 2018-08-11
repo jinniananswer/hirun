@@ -214,7 +214,7 @@ public class OrgBean {
         return null;
     }
 
-    public List<OrgEntity> getAllOrgs() throws Exception{
+    public static List<OrgEntity> getAllOrgs() throws Exception{
         OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
         List<OrgEntity> orgs = dao.queryAllOrgs();
         return orgs;
