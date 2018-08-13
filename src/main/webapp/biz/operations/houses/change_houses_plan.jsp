@@ -42,11 +42,11 @@
                         </div>
                         <div class="more"></div>
                     </li>
-                    <li class="required link" ontap="$('#AREA_TEXT').focus();$('#AREA_TEXT').blur();showPopup('UI-popup','UI-AREA')">
+                    <li class="link" ontap="$('#AREA_TEXT').focus();$('#AREA_TEXT').blur();showPopup('UI-popup','UI-AREA')">
                         <div class="label">归属区域</div>
                         <div class="value">
-                            <input type="text" id="AREA_TEXT" name="AREA_TEXT" nullable="no" readonly="true" desc="归属区域" />
-                            <input type="hidden" name="AREA" id="AREA" nullable="no" desc="归属区域" />
+                            <input type="text" id="AREA_TEXT" name="AREA_TEXT" nullable="yes" readonly="true" desc="归属区域" />
+                            <input type="hidden" name="AREA" id="AREA" nullable="yes" desc="归属区域" />
                         </div>
                         <div class="more"></div>
                     </li>
