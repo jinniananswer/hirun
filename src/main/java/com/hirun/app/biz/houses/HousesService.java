@@ -97,16 +97,9 @@ public class HousesService extends GenericService {
             orgs = dao.queryOrgByCityAndType(cityId, "4");
         } else {
             orgs = new ArrayList<OrgEntity>();
-            if(StringUtils.isNotBlank(org.getParentOrgId())){
-                parentOrg = dao.queryOrgById(org.getParentOrgId());
-            }
-            if (StringUtils.equals("4", org.getType())) {
-                orgs.add(org);
-            } else if (StringUtils.equals("3", org.getType())) {
-                if (StringUtils.isNotBlank(org.getParentOrgId()) && StringUtils.equals("4", parentOrg.getType())) {
-                    orgs.add(parentOrg);
-                }
-            }
+            OrgEntity shop = OrgBean.getAssignTypeOrg(orgId, "2");
+            if(shop != null)
+                orgs.add(shop);
         }
 
         ServiceResponse response = new ServiceResponse();
@@ -193,6 +186,7 @@ public class HousesService extends GenericService {
         HousesPlanDAO dao = new HousesPlanDAO("ins");
 
         boolean needAllShop = AuthorityJudgement.hasAllShop();
+        boolean needAllCity = Permission.hasAllCity();
         AppSession session = SessionManager.getSession();
         SessionEntity sessionEntity = session.getSessionEntity();
         String orgId = OrgBean.getOrgId(sessionEntity);
@@ -204,16 +198,13 @@ public class HousesService extends GenericService {
         if (needAllShop) {
 
         } else {
-            if(StringUtils.isNotBlank(org.getParentOrgId())){
-                parentOrg = orgDAO.queryOrgById(org.getParentOrgId());
-            }
-            if (StringUtils.equals("4", org.getType())) {
-                parameter.put("SHOP", orgId);
-            } else if (StringUtils.equals("3", org.getType())) {
-                if (StringUtils.isNotBlank(org.getParentOrgId()) && StringUtils.equals("4", parentOrg.getType())) {
-                    parameter.put("SHOP", parentOrg.getOrgId());
-                }
-            }
+            OrgEntity shop = OrgBean.getAssignTypeOrg(orgId, "2");
+            if(shop != null)
+                parameter.put("SHOP", shop.getOrgId());
+        }
+
+        if(!needAllCity){
+            parameter.put("CITY", org.getCity());
         }
 
         RecordSet recordset = dao.queryHousesPlan(parameter);
@@ -265,7 +256,10 @@ public class HousesService extends GenericService {
                 housesPlan.put("PAST_DAYS", planMinusNow);
                 housesPlan.put("STATUS", record.get("STATUS"));
                 housesPlan.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", record.get("CITY")));
-                housesPlan.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA")));
+                String areaName = StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA"));
+                if(StringUtils.isBlank(areaName))
+                    areaName = " ";
+                housesPlan.put("AREA_NAME", areaName);
                 housesPlan.put("ORG_NAME", record.get("ORG_NAME"));
                 housesPlan.put("STATUS_NAME", StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
                 String nature = record.get("NATURE");
@@ -418,7 +412,10 @@ public class HousesService extends GenericService {
                 housesPlan.put("PLAN_COUNSELOR_NUM", record.get("PLAN_COUNSELOR_NUM"));
                 housesPlan.put("STATUS", record.get("STATUS"));
                 housesPlan.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", record.get("CITY")));
-                housesPlan.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA")));
+                String areaName = StaticDataTool.getCodeName("BIZ_AREA", record.get("AREA"));
+                if(StringUtils.isBlank(areaName))
+                    areaName = "";
+                housesPlan.put("AREA_NAME", areaName);
                 housesPlan.put("ORG_ID", record.get("ORG_ID"));
                 housesPlan.put("ORG_NAME", record.get("ORG_NAME"));
                 housesPlan.put("STATUS_NAME", StaticDataTool.getCodeName("AUDIT_STATUS", record.get("STATUS")));
@@ -610,7 +607,10 @@ public class HousesService extends GenericService {
             return response;
 
         house.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", house.get("CITY")));
-        house.put("AREA_NAME", StaticDataTool.getCodeName("BIZ_AREA", house.get("AREA")));
+        String areaName = StaticDataTool.getCodeName("BIZ_AREA", house.get("AREA"));
+        if(StringUtils.isBlank(areaName))
+            areaName = "";
+        house.put("AREA_NAME", areaName);
         house.put("STATUS_NAME", StaticDataTool.getCodeName("AUDIT_STATUS", house.get("STATUS")));
         house.put("NATURE_NAME", StaticDataTool.getCodeName("HOUSE_NATURE", house.get("NATURE")));
         response.set("HOUSE", JSONObject.parseObject(JSON.toJSONString(house.getData())));
