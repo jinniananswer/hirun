@@ -24,11 +24,10 @@ import java.util.Map;
  * @Description:
  */
 @Controller
-@ResponseBody
 public class EmployeeController extends RootController {
 
     @RequestMapping(value = "/employee/getAllSubordinatesCounselors", method = RequestMethod.POST)
-    public String editCust(@RequestParam Map pageData) throws Exception {
+    public @ResponseBody String editCust(@RequestParam Map pageData) throws Exception {
         ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors", pageData);
         return response.toJsonString();
     }
@@ -74,6 +73,35 @@ public class EmployeeController extends RootController {
     @RequestMapping("/destroyEmployee")
     public @ResponseBody String destroyEmployee(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.destroyEmployee", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initQueryEmployees")
+    public @ResponseBody String initQueryEmployees(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.initQueryEmployees", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/queryEmployees")
+    public @ResponseBody String queryEmployees(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.queryEmployees", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectChangeEmployee")
+    public String redirectChangeEmployee() throws Exception{
+        return "/biz/organization/personnel/change_employee";
+    }
+
+    @RequestMapping("/initChangeEmployee")
+    public @ResponseBody String initChangeEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.initChangeEmployee", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/changeEmployee")
+    public @ResponseBody String changeEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.changeEmployee", parameter);
         return response.toJsonString();
     }
 }

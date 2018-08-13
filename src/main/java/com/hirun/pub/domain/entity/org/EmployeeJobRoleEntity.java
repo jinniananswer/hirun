@@ -51,12 +51,12 @@ public class EmployeeJobRoleEntity extends GenericEntity {
         this.set("ORG_ID", orgId);
     }
 
-    public String getOrgName(){
-        return this.get("ORG_NAME");
+    public String getParentEmployeeId(){
+        return this.get("PARENT_EMPLOYEE_ID");
     }
 
-    public void setOrgName(String orgName){
-        this.set("ORG_NAME", orgName);
+    public void setParentEmployeeId(String parentEmployeeId){
+        this.set("PARENT_EMPLOYEE_ID", parentEmployeeId);
     }
 
     public String getStartDate(){

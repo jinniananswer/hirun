@@ -7,10 +7,12 @@ import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.dao.employee.EmployeeDAO;
+import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
 import com.hirun.app.dao.func.FuncDAO;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -25,6 +27,7 @@ import com.most.core.pub.tools.transform.ConvertTool;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.xml.ws.Service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -304,5 +307,218 @@ public class EmployeeService extends GenericService {
         parameter.put("USER_ID", userId);
         dao.delete("ins_user_func", new String[]{"USER_ID"}, parameter);
         return new ServiceResponse();
+    }
+
+    public ServiceResponse initQueryEmployees(ServiceRequest request) throws Exception{
+        ServiceResponse response = this.initCreateEmployee(request);
+        response.remove("TODAY");
+        JSONArray citys = response.getJSONArray("CITYS");
+        if(Permission.hasAllCity()){
+            JSONArray allCitys = new JSONArray();
+            JSONObject allCity = new JSONObject();
+            allCity.put("CODE_VALUE", "");
+            allCity.put("CODE_NAME", "所有城市");
+            allCitys.add(allCity);
+            allCitys.addAll(citys);
+            response.set("CITYS", allCitys);
+        }
+        return response;
+    }
+
+    public ServiceResponse queryEmployees(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        String orgId = request.getString("ORG_ID");
+        if(StringUtils.isNotBlank(orgId))
+            orgId = OrgBean.getOrgLine(orgId);
+        RecordSet employees = dao.queryEmployees(request.getString("NAME"), request.getString("SEX"), request.getString("CITY"), request.getString("MOBILE_NO"), request.getString("IDENTITY_NO"), orgId, request.getString("JOB_ROLE"), request.getString("PARENT_EMPLOYEE_ID"));
+        if(employees == null || employees.size() <= 0)
+            return response;
+
+        int size = employees.size();
+        for(int i=0;i<size;i++){
+            Record employee = employees.get(i);
+            if(StringUtils.equals("69", employee.get("USER_ID")) || StringUtils.equals("72", employee.get("USER_ID"))) {
+                employee.put("CONTACT_NO", "***********");
+            }
+            employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
+        }
+        response.set("DATAS", ConvertTool.toJSONArray(employees));
+        return response;
+    }
+
+    public ServiceResponse initChangeEmployee(ServiceRequest request) throws Exception{
+        ServiceResponse response = this.initCreateEmployee(request);
+        String employeeId = request.getString("EMPLOYEE_ID");
+
+        JSONObject employeeInfo = new JSONObject();
+        response.set("EMPLOYEE", employeeInfo);
+
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        EmployeeEntity employee = dao.queryEmployeeByEmployeeId(employeeId);
+
+        if(employee == null)
+            return response;
+
+        employeeInfo.put("NAME", employee.getName());
+        employeeInfo.put("SEX", employee.getSex());
+        employeeInfo.put("IDENTITY_NO", employee.getIdentityNo());
+        String inDate = employee.getInDate();
+        if(StringUtils.isNotBlank(inDate)){
+            inDate = TimeTool.formatLocalDateTimeToString(TimeTool.stringToLocalDateTime(inDate,TimeTool.TIME_PATTERN),TimeTool.DATE_FMT_3);
+        }
+        employeeInfo.put("IN_DATE", inDate);
+        employeeInfo.put("HOME_ADDRESS", employee.getHomeAddress());
+        employeeInfo.put("USER_ID", employee.getUserId());
+        employeeInfo.put("CITY", employee.getWorkPlace());
+        employeeInfo.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", employee.getWorkPlace()));
+
+        UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
+        UserEntity user = userDAO.queryUserByPk(employee.getUserId());
+        employeeInfo.put("MOBILE_NO", user.getMobileNo());
+
+        EmployeeJobRoleDAO jobDAO = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
+        List<EmployeeJobRoleEntity> jobRoles = jobDAO.queryJobRoleByEmployeeId(employeeId);
+
+        if(ArrayTool.isNotEmpty(jobRoles)) {
+            EmployeeJobRoleEntity jobRole = jobRoles.get(0);
+            employeeInfo.put("JOB_ROLE", jobRole.getJobRole());
+            employeeInfo.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", jobRole.getJobRole()));
+            employeeInfo.put("ORG_ID", jobRole.getOrgId());
+            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
+            OrgEntity org = orgDAO.queryOrgById(jobRole.getOrgId());
+            employeeInfo.put("ORG_NAME", org.getName());
+
+            String parentEmployeeId = jobRole.getParentEmployeeId();
+            if(StringUtils.isNotBlank(parentEmployeeId)){
+                employeeInfo.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
+                EmployeeEntity parentEmployee = dao.queryEmployeeByEmployeeId(parentEmployeeId);
+                employeeInfo.put("PARENT_EMPLOYEE_NAME", parentEmployee.getName());
+            }
+
+        }
+        return response;
+    }
+
+    public ServiceResponse changeEmployee(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+
+        String employeeId = request.getString("EMPLOYEE_ID");
+
+        UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
+        UserEntity user = userDAO.queryUserByEmployeeId(employeeId);
+
+        String mobileNo = request.getString("MOBILE_NO");
+        if(!StringUtils.equals(mobileNo, user.getMobileNo())){
+
+            //更新用户信息
+            Map<String, String> parameter = new HashMap<String, String>();
+            parameter.put("USER_ID", user.getUserId());
+            parameter.put("USERNAME", mobileNo);
+            parameter.put("MOBILE_NO", mobileNo);
+            parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+            parameter.put("UPDATE_TIME", session.getCreateTime());
+            userDAO.save("ins_user", parameter);
+
+            parameter.clear();
+            parameter.put("USER_ID", user.getUserId());
+            parameter.put("CONTACT_TYPE", "1");
+            parameter.put("CONTACT_NO", mobileNo);
+            parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+            parameter.put("UPDATE_TIME", session.getCreateTime());
+            userDAO.save("ins_user_contact", new String[]{"USER_ID", "CONTACT_TYPE"}, parameter);
+        }
+
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        EmployeeEntity employee = employeeDAO.queryEmployeeByEmployeeId(employeeId);
+        String name = request.getString("NAME");
+        String sex = request.getString("SEX");
+        String city = request.getString("CITY");
+        String identityNo = request.getString("IDENTITY_NO");
+        String homeAddress = request.getString("HOME_ADDRESS");
+        String inDate = request.getString("IN_DATE");
+
+        if(!StringUtils.equals(name, employee.getName())
+                || !StringUtils.equals(sex, employee.getSex())
+                || !StringUtils.equals(city, employee.getWorkPlace())
+                || !StringUtils.equals(identityNo, employee.getIdentityNo())
+                || !StringUtils.equals(homeAddress, employee.getHomeAddress())
+                || !StringUtils.equals(inDate+" 00:00:00", employee.getInDate())){
+            //修改了员工信息，更新员工表
+            Map<String, String> parameter = new HashMap<String, String>();
+            parameter.put("EMPLOYEE_ID", employeeId);
+            parameter.put("NAME", name);
+            parameter.put("SEX", sex);
+            parameter.put("WORKPLACE", city);
+            parameter.put("IDENTITY_NO", identityNo);
+            parameter.put("HOME_ADDRESS", homeAddress);
+            parameter.put("IN_DATE", inDate);
+            parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+            parameter.put("UPDATE_TIME", session.getCreateTime());
+            employeeDAO.save("ins_employee", parameter);
+        }
+
+        EmployeeJobRoleDAO jobRoleDAO = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
+        List<EmployeeJobRoleEntity> jobRoles = jobRoleDAO.queryJobRoleByEmployeeId(employeeId);
+        if(ArrayTool.isNotEmpty(jobRoles)){
+            EmployeeJobRoleEntity jobRoleEntity = jobRoles.get(0);
+            String jobRole = request.getString("JOB_ROLE");
+            String orgId = request.getString("ORG_ID");
+            String parentEmployeeId = request.getString("PARENT_EMPLOYEE_ID");
+            if(!StringUtils.equals(jobRole, jobRoleEntity.getJobRole()) || !StringUtils.equals(orgId, jobRoleEntity.getOrgId()) || !StringUtils.equals(parentEmployeeId, jobRoleEntity.getParentEmployeeId())){
+                Map<String, String> parameter = new HashMap<String, String>();
+                parameter.put("EMPLOYEE_ID", employeeId);
+                parameter.put("END_DATE", session.getCreateTime());
+                parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+                parameter.put("UPDATE_TIME", session.getCreateTime());
+                jobRoleDAO.save("ins_employee_job_role", new String[]{"EMPLOYEE_ID"}, parameter);
+
+                parameter.clear();
+                parameter.put("EMPLOYEE_ID", employeeId);
+                parameter.put("JOB_ROLE", jobRole);
+                parameter.put("JOB_ROLE_NATURE", "1");
+                parameter.put("ORG_ID", orgId);
+                parameter.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
+                parameter.put("START_DATE", session.getCreateTime());
+                parameter.put("END_DATE", "3000-12-31 23:59:59");
+                parameter.put("CREATE_DATE", session.getCreateTime());
+                parameter.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+                parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+                parameter.put("UPDATE_TIME", session.getCreateTime());
+
+                jobRoleDAO.insertAutoIncrement("ins_employee_job_role", parameter);
+
+                if(!StringUtils.equals(jobRole, jobRoleEntity.getJobRole())){
+                    //重新导入权限
+                    parameter.clear();
+                    parameter.put("USER_ID", user.getUserId());
+                    userDAO.delete("ins_user_func", new String[]{"USER_ID"}, parameter);
+
+                    FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
+                    RecordSet jobFuncs = funcDAO.queryJobFunc(jobRole);
+                    List<Map<String, String>> userFuncs = new ArrayList<Map<String, String>>();
+                    if(jobFuncs != null && jobFuncs.size() > 0){
+                        int jobFuncSize = jobFuncs.size();
+                        for(int i=0;i<jobFuncSize;i++){
+                            Record jobFunc = jobFuncs.get(i);
+                            Map<String, String> userFunc = new HashMap<String, String>();
+                            userFunc.put("USER_ID", user.getUserId()+"");
+                            userFunc.put("FUNC_ID", jobFunc.get("FUNC_ID"));
+                            userFunc.put("START_DATE", session.getCreateTime());
+                            userFunc.put("END_DATE", "3000-12-31 23:59:59");
+                            userFunc.put("STATUS", "0");
+                            userFunc.put("CREATE_DATE", session.getCreateTime());
+                            userFunc.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+                            userFunc.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+                            userFunc.put("UPDATE_TIME", session.getCreateTime());
+                            userFuncs.add(userFunc);
+                        }
+                        userDAO.insertBatch("ins_user_func", userFuncs);
+                    }
+                }
+            }
+        }
+        return response;
     }
 }

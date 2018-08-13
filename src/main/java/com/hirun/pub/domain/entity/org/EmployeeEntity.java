@@ -51,7 +51,7 @@ public class EmployeeEntity extends GenericEntity{
         this.set("SEX", sex);
     }
 
-    public String getIndentityNo(){
+    public String getIdentityNo(){
         return this.get("IDENTITY_NO");
     }
 

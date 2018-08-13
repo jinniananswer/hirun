@@ -24,6 +24,11 @@ public class EmployeeJobRoleDAO extends StrongObjectDAO {
     public List<EmployeeJobRoleEntity> queryJobRoleByEmployeeId(String employeeId) throws SQLException{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("EMPLOYEE_ID", employeeId);
-        return this.query(EmployeeJobRoleEntity.class, "ins_employee_job_role", parameter);
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_employee_job_role ");
+        sb.append("where now() < end_date ");
+        sb.append("and employee_id = :EMPLOYEE_ID ");
+        return this.queryBySql(EmployeeJobRoleEntity.class, sb.toString(), parameter);
     }
+
 }
