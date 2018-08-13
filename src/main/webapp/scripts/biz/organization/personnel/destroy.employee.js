@@ -127,8 +127,9 @@
                 var param = '&USER_ID='+userId;
                 if(parentEmployeeId != null && parentEmployeeId != "" && parentEmployeeId != "undefined")
                     param+="&PARENT_EMPLOYEE_ID="+parentEmployeeId;
-
+                $.beginPageLoading();
                 $.ajaxPost('destroyEmployee', param, function (data) {
+                    $.endPageLoading();
                     MessageBox.success("注销员工档案成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
                         if("ok" == btn) {
                             document.location.reload();

@@ -182,7 +182,9 @@
             submit : function(){
                 if($.validate.verifyAll("submitArea")) {
                     var parameter = $.buildJsonData("submitArea");
+                    $.beginPageLoading();
                     $.ajaxPost('createEmployee', parameter, function (data) {
+                        $.endPageLoading();
                         MessageBox.success("新增员工成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
                             if("ok" == btn) {
                                 document.location.reload();
