@@ -14,6 +14,7 @@
                     },
                     // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
                     [
+                        {TEXT:"不限", VALUE:""},
                         {TEXT:"男", VALUE:"1"},
                         {TEXT:"女", VALUE:"2"}
                     ]
@@ -21,15 +22,12 @@
 
                 window["orgTree"] = new Wade.Tree("orgTree");
                 $("#orgTree").textAction(function(e, nodeData){
-                    var hasChild = nodeData.haschild;
-                    if(hasChild == "true")
-                        return true;
-
                     var id = nodeData.id;
                     var text = nodeData.text;
                     $("#ORG_TEXT").val(text);
                     $("#ORG_ID").val(id);
-                    hidePopup('UI-popup','UI-ORG');
+
+                    backPopup(document.getElementById('UI-ORG'));
                     return true;
                 });
 
@@ -37,20 +35,10 @@
                     $("#SEX").val(this.value); // 当前值
                 });
 
-                $("#SEX").val("1");
+                $("#SEX").val("");
 
-                window["IN_DATE"] = new Wade.DateField(
-                    "IN_DATE",
-                    {
-                        dropDown:true,
-                        format:"yyyy-MM-dd",
-                        useTime:false
-                    }
-                );
-
-                $.ajaxPost('initCreateEmployee',null,function(data){
+                $.ajaxPost('initQueryEmployees',null,function(data){
                     var trees = data.ORG_TREE;
-                    var today = data.TODAY;
                     var jobRoles = data.JOB_ROLES;
                     var citys = data.CITYS;
                     var defaultCityId = data.DEFAULT_CITY_ID;
@@ -59,7 +47,6 @@
                         window["orgTree"].data = trees;
                         window["orgTree"].init();
                     }
-                    $("#IN_DATE").val(today);
                     $.employee.jobs = new $.DatasetList(jobRoles);
                     $.employee.drawJobRoles();
                     $.employee.drawCitys(new $.DatasetList(citys), defaultCityId, defaultCityName);
@@ -67,18 +54,80 @@
             },
 
             query : function(){
-                if($.validate.verifyAll("searchArea")) {
-                    var parameter = $.buildJsonData("searchArea");
-                    $.ajaxPost('queryContacts', parameter, function (data) {
+                if($.validate.verifyAll("queryArea")) {
+                    $.beginPageLoading();
+                    var parameter = $.buildJsonData("queryArea");
+                    $.ajaxPost('queryEmployees', parameter, function (data) {
                         var rst = new Wade.DataMap(data);
                         var datas = rst.get("DATAS");
                         $.employee.drawEmployees(datas);
+                        hidePopup('UI-popup','UI-popup-query-cond');
                     });
                 }
             },
 
             drawEmployees : function(datas){
+                $.endPageLoading();
                 $("#employees").empty();
+                var html = [];
+
+                if(datas == null || datas.length <= 0){
+                    $("#queryMessage").css("display","");
+                    $("#tip").css("display","none");
+                    return;
+                }
+
+                $("#queryMessage").css("display","none");
+                $("#tip").css("display","");
+
+                var length = datas.length;
+
+                $("#tip").empty();
+                $.insertHtml('beforeend', $("#tip"), "共查询到"+length+"条数据");
+                for(var i=0;i<length;i++) {
+                    var data = datas.get(i);
+                    var sex = data.get("SEX");
+                    html.push("<li class='link' ontap=\"$.employee.changeEmployee(\'"+data.get("EMPLOYEE_ID")+"\',\'"+data.get("NAME")+"\')\"><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    if(sex == "1")
+                        html.push("<img src=\"/frame/img/male.png\" class='e_pic-r' style='width:4em;height:4em'/>");
+                    else
+                        html.push("<img src=\"/frame/img/female.png\" class='e_pic-r' style='width:4em;height:4em'/>");
+
+                    html.push("</div></div>");
+                    html.push("<div class=\"main\"><div class=\"title\">");
+                    html.push(data.get("NAME"));
+                    html.push("</div>");
+                    html.push("<div class=\"content\">");
+                    var parentOrgName = data.get("PARENT_ORG_NAME");
+                    if(parentOrgName != null && parentOrgName != "undefined")
+                        html.push(parentOrgName + "-");
+                    html.push(data.get("ORG_NAME"));
+                    html.push("</div><div class='content'>"+data.get("JOB_ROLE_NAME"));
+                    html.push("</div></div>")
+                    html.push("<div class=\"side e_size-m\">"+data.get("CONTACT_NO")+"</div>");
+                    html.push("</div></div></li>");
+                }
+
+                $.insertHtml('beforeend', $("#employees"), html.join(""));
+            },
+
+            changeEmployee : function(employeeId, name){
+                $.redirect.open('redirectChangeEmployee?EMPLOYEE_ID='+employeeId,'修改'+name+'员工档案');
+            },
+
+            queryParent : function(){
+                if($.validate.verifyAll("searchArea")) {
+                    var parameter = $.buildJsonData("searchArea");
+                    $.ajaxPost('queryContacts', parameter, function (data) {
+                        var rst = new Wade.DataMap(data);
+                        var datas = rst.get("DATAS");
+                        $.employee.drawParentEmployees(datas);
+                    });
+                }
+            },
+
+            drawParentEmployees : function(datas){
+                $("#parent_employees").empty();
                 var html = [];
 
                 if(datas == null || datas.length <= 0){
@@ -114,13 +163,13 @@
                     html.push("</div></div></li>");
                 }
 
-                $.insertHtml('beforeend', $("#employees"), html.join(""));
+                $.insertHtml('beforeend', $("#parent_employees"), html.join(""));
             },
 
             selectEmployee : function(employeeId, name){
                 $("#PARENT_EMPLOYEE_ID").val(employeeId);
                 $("#PARENT_EMPLOYEE_NAME").val(name);
-                hidePopup('UI-popup','UI-PARENT');
+                backPopup(document.getElementById('UI-PARENT'));
             },
 
             drawCitys : function(citys, defaultCityId, defaultCityName){
@@ -142,7 +191,7 @@
             afterSelectCity : function(cityId, cityName){
                 $("#CITY_TEXT").val(cityName);
                 $("#CITY").val(cityId);
-                hidePopup('UI-popup','UI-CITY');
+                backPopup(document.getElementById('UI-CITY'));
             },
 
             drawJobRoles : function(){
@@ -162,7 +211,7 @@
             afterSelectJob : function(value, name){
                 $("#JOB_TEXT").val(name);
                 $("#JOB_ROLE").val(value);
-                hidePopup('UI-popup','UI-JOB');
+                backPopup(document.getElementById('UI-JOB'));
             },
 
             queryJobs : function(){
@@ -177,22 +226,6 @@
                         html.push("<li class=\"link e_center\" ontap=\"$.employee.afterSelectJob(\'"+jobRole.get("CODE_VALUE")+"\',\'"+jobRole.get("CODE_NAME")+"\')\"><label class=\"group\" ><div class=\"main\">"+jobRole.get("CODE_NAME")+"</div></label></li>");
                 }
                 $.insertHtml('beforeend', $("#jobRoles"), html.join(""));
-            },
-
-            submit : function(){
-                if($.validate.verifyAll("submitArea")) {
-                    var parameter = $.buildJsonData("submitArea");
-                    $.ajaxPost('createEmployee', parameter, function (data) {
-                        MessageBox.success("新增员工成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
-                            if("ok" == btn) {
-                                document.location.reload();
-                            }
-                            else {
-                                $.rediret.closeCurrentPage();
-                            }
-                        },{"cancel":"取消"})
-                    });
-                }
             }
         }});
 })($);

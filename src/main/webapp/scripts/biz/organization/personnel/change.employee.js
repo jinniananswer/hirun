@@ -37,8 +37,6 @@
                     $("#SEX").val(this.value); // 当前值
                 });
 
-                $("#SEX").val("1");
-
                 window["IN_DATE"] = new Wade.DateField(
                     "IN_DATE",
                     {
@@ -48,21 +46,43 @@
                     }
                 );
 
-                $.ajaxPost('initCreateEmployee',null,function(data){
+                $.beginPageLoading();
+                $.ajaxPost('initChangeEmployee','&EMPLOYEE_ID='+$("#EMPLOYEE_ID").val(),function(data){
                     var trees = data.ORG_TREE;
-                    var today = data.TODAY;
                     var jobRoles = data.JOB_ROLES;
                     var citys = data.CITYS;
-                    var defaultCityId = data.DEFAULT_CITY_ID;
-                    var defaultCityName = data.DEFAULT_CITY_NAME;
+                    var employeeInfo = data.EMPLOYEE;
+
+                    if(employeeInfo != null){
+                        $("#NAME").val(employeeInfo.NAME);
+                        $("#SEX").val(employeeInfo.SEX);
+                        $("#CITY").val(employeeInfo.CITY);
+                        $("#CITY_TEXT").val(employeeInfo.CITY_NAME);
+                        $("#MOBILE_NO").val(employeeInfo.MOBILE_NO);
+                        $("#IDENTITY_NO").val(employeeInfo.IDENTITY_NO);
+                        $("#HOME_ADDRESS").val(employeeInfo.HOME_ADDRESS);
+                        $("#IN_DATE").val(employeeInfo.IN_DATE);
+                        $("#ORG_ID").val(employeeInfo.ORG_ID);
+                        $("#ORG_TEXT").val(employeeInfo.ORG_NAME);
+                        var jobRole = employeeInfo.JOB_ROLE;
+                        if(jobRole != null && jobRole != "undefined"){
+                            $("#JOB_ROLE").val(jobRole);
+                            $("#JOB_TEXT").val(employeeInfo.JOB_ROLE_NAME);
+                        }
+                        var parentEmployeeId = employeeInfo.PARENT_EMPLOYEE_ID;
+                        if(parentEmployeeId != null && parentEmployeeId != "undefined"){
+                            $("#PARENT_EMPLOYEE_ID").val(parentEmployeeId);
+                            $("#PARENT_EMPLOYEE_NAME").val(employeeInfo.PARENT_EMPLOYEE_NAME);
+                        }
+                    }
                     if(trees != null){
                         window["orgTree"].data = trees;
                         window["orgTree"].init();
                     }
-                    $("#IN_DATE").val(today);
                     $.employee.jobs = new $.DatasetList(jobRoles);
                     $.employee.drawJobRoles();
-                    $.employee.drawCitys(new $.DatasetList(citys), defaultCityId, defaultCityName);
+                    $.employee.drawCitys(new $.DatasetList(citys));
+                    $.endPageLoading();
                 });
             },
 
@@ -123,7 +143,7 @@
                 hidePopup('UI-popup','UI-PARENT');
             },
 
-            drawCitys : function(citys, defaultCityId, defaultCityName){
+            drawCitys : function(citys){
                 if(citys != null){
                     var length = citys.length;
                     var html=[];
@@ -132,10 +152,6 @@
                         html.push("<li class=\"link e_center\" ontap=\"$.employee.afterSelectCity(\'"+city.get("CODE_VALUE")+"\',\'"+city.get("CODE_NAME")+"\')\"><div class=\"main\">"+city.get("CODE_NAME")+"</div></li>");
                     }
                     $.insertHtml('beforeend', $("#citys"), html.join(""));
-
-                    if(defaultCityId != null && defaultCityId != "undefined"){
-                        $.employee.afterSelectCity(defaultCityId,defaultCityName);
-                    }
                 }
             },
 
@@ -182,15 +198,12 @@
             submit : function(){
                 if($.validate.verifyAll("submitArea")) {
                     var parameter = $.buildJsonData("submitArea");
-                    $.ajaxPost('createEmployee', parameter, function (data) {
-                        MessageBox.success("新增员工成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
-                            if("ok" == btn) {
-                                document.location.reload();
-                            }
-                            else {
-                                $.rediret.closeCurrentPage();
-                            }
-                        },{"cancel":"取消"})
+                    $.beginPageLoading();
+                    $.ajaxPost('changeEmployee', parameter, function (data) {
+                        $.endPageLoading();
+                        MessageBox.success("修改员工档案成功","点击确定返回页面，点击取消关闭当前页面", function(btn){
+                            $.redirect.closeCurrentPage();
+                        });
                     });
                 }
             }
