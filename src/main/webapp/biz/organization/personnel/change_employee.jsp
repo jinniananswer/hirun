@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>新增楼盘规划</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/personnel/create.employee.js?v=20180813221400"></script>
+    <script src="/scripts/biz/organization/personnel/change.employee.js"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header e_show">
-    <div class="back" ontap="$.redirect.closeCurrentPage();">新建员工档案</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">修改员工档案</div>
 </div>
 <!-- 标题栏 结束 -->
 <!-- 滚动（替换为 java 组件） 开始 -->
@@ -23,7 +23,10 @@
                 <ul id="submitArea">
                     <li class="link required">
                         <div class="label">姓名</div>
-                        <div class="value"><input id="NAME" name="NAME" type="text" nullable="no" desc="姓名"/></div>
+                        <div class="value">
+                            <input id="NAME" name="NAME" type="text" nullable="no" desc="姓名"/>
+                            <input type="hidden" name="EMPLOYEE_ID" id="EMPLOYEE_ID" nullable="no" value="${pageContext.request.getParameter("EMPLOYEE_ID") }" desc="员工ID/" />
+                        </div>
                     </li>
                     <li class="link required">
                         <div class="label">性别</div>
@@ -89,7 +92,7 @@
         <div class="c_space"></div>
         <!-- 提交 开始 -->
         <div class="c_submit c_submit-full">
-            <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.employee.submit()">提交</button>
+            <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.employee.submit()">修改员工档案</button>
         </div>
         <!-- 提交 结束 -->
         <div class="c_space"></div>

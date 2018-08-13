@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>密码修改</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/personnel/destroy.employee.js?v=20180808093700"></script>
+    <script src="/scripts/biz/organization/personnel/destroy.employee.js?v=20180808133700"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
