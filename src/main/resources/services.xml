@@ -9,6 +9,10 @@
     <entity name="OrgCenter.employee.EmployeeService.hasSubordinates"  class="com.hirun.app.biz.employee.EmployeeService" method="hasSubordinates"/>
     <entity name="OrgCenter.employee.EmployeeService.destroyEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="destroyEmployee"/>
     <entity name="OrgCenter.employee.EmployeeService.queryContacts"  class="com.hirun.app.biz.employee.EmployeeService" method="queryContacts"/>
+    <entity name="OrgCenter.employee.EmployeeService.initQueryEmployees"  class="com.hirun.app.biz.employee.EmployeeService" method="initQueryEmployees"/>
+    <entity name="OrgCenter.employee.EmployeeService.queryEmployees"  class="com.hirun.app.biz.employee.EmployeeService" method="queryEmployees"/>
+    <entity name="OrgCenter.employee.EmployeeService.initChangeEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="initChangeEmployee"/>
+    <entity name="OrgCenter.employee.EmployeeService.changeEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="changeEmployee"/>
     <entity name="OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors"  class="com.hirun.app.biz.employee.EmployeeService" method="getAllSubordinatesCounselors"/>
     <entity name="OrgCenter.employee.EmployeeService.entryHoliday"  class="com.hirun.app.biz.employee.EmployeeService" method="entryHoliday"/>
 
