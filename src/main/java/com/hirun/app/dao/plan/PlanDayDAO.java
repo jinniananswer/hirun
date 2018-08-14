@@ -33,4 +33,22 @@ public class PlanDayDAO extends StrongObjectDAO {
             return null;
         }
     }
+
+    public List<PlanDayEntity> queryPlanDayListByStartAndEndAndStatTypeAndOid(String startDate, String endDate, String statType, String objectId) throws Exception{
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("START_DATE", startDate);
+        parameter.put("END_DATE", endDate);
+        parameter.put("STAT_TYPE", statType);
+        parameter.put("OBJECT_ID", objectId);
+
+        sql.append(" SELECT * FROM stat_plan_day ");
+        sql.append(" where 1=1 ");
+        sql.append(" and stat_day BETWEEN :START_DATE AND :END_DATE ");
+        sql.append(" AND stat_type = :STAT_TYPE ");
+        sql.append(" AND OBJECT_ID = :OBJECT_ID ");
+        List<PlanDayEntity> list = this.queryBySql(PlanDayEntity.class, sql.toString(), parameter);
+
+        return list;
+    }
 }

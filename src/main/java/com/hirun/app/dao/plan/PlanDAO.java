@@ -73,4 +73,20 @@ public class PlanDAO extends StrongObjectDAO {
             return null;
         }
     }
+
+    public PlanEntity getLastestPlanEntity(String planExecutorId) throws Exception {
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_EXECUTOR_ID", planExecutorId);
+
+        sql.append(" SELECT * FROM INS_PLAN A ");
+        sql.append(" WHERE A.PLAN_EXECUTOR_ID = :PLAN_EXECUTOR_ID ");
+        sql.append(" ORDER BY plan_date DESC LIMIT 1 ");
+        List<PlanEntity> list = this.queryBySql(PlanEntity.class, sql.toString(), parameter);
+        if(ArrayTool.isNotEmpty(list)) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
 }

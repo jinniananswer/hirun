@@ -20,4 +20,10 @@ public class PlanReportController extends RootController {
         ServiceResponse response = ServiceClient.call("DataCenter.plan.PlanReportService.queryEmployeeDailySheet", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/datacenter/plan/queryEmployeeDaillySheet2")
+    public @ResponseBody String queryEmployeeDaillySheet2(@RequestParam Map paramter) throws Exception{
+        ServiceResponse response = ServiceClient.call("DataCenter.plan.PlanReportService.queryEmployeeDailySheet2", paramter);
+        return response.toJsonString();
+    }
 }

@@ -1,7 +1,20 @@
 var EmployeeDailySheetQuery = {
 	init : function() {
-        window["QUERY_DATE"] = new Wade.DateField(
-            "QUERY_DATE",
+        window["UI-popup"] = new Wade.Popup("UI-popup",{
+            visible:false,
+            mask:true
+        });
+
+        window["COND_START_DATE"] = new Wade.DateField(
+            "COND_START_DATE",
+            {
+                dropDown:true,
+                format:"yyyy-MM-dd",
+                useTime:false,
+            }
+        );
+        window["COND_END_DATE"] = new Wade.DateField(
+            "COND_END_DATE",
             {
                 dropDown:true,
                 format:"yyyy-MM-dd",
@@ -16,22 +29,19 @@ var EmployeeDailySheetQuery = {
         });
 
         var now = $.date.now();
-        $('#QUERY_DATE').val(now);
+        $('#COND_START_DATE').val(now);
+        $('#COND_END_DATE').val(now);
 
-        $("#QUERY_DATE").bind("afterAction", function(){
-            var $obj = $(this);
-            EmployeeDailySheetQuery.queryEmployeeDailySheetList($obj.val());
-        });
-
-        EmployeeDailySheetQuery.queryEmployeeDailySheetList(now);
+        // EmployeeDailySheetQuery.queryEmployeeDailySheetList(now);
     },
-    queryEmployeeDailySheetList : function(date) {
+    queryEmployeeDailySheetList : function(startDate, endDate) {
 	    $.beginPageLoading("查询中。。。");
         $.ajaxReq({
-            url : 'datacenter/plan/queryEmployeeDaillySheet',
+            url : 'datacenter/plan/queryEmployeeDaillySheet2',
             data : {
-                TOP_EMPLOYEE_ID : Employee.employeeId,
-                QUERY_DATE : date
+                EMPLOYEE_ID : Employee.employeeId,
+                START_DATE : startDate,
+                END_DATE : endDate
             },
             successFunc : function(data) {
                 $.endPageLoading();
@@ -45,27 +55,28 @@ var EmployeeDailySheetQuery = {
                 $.endPageLoading();
             }
         });
-        // var employeeDailySheet = {};
-        // employeeDailySheet.EMPLOYEE_NAME = '安文轩';
-        // employeeDailySheet.PLAN_JW = '安文轩';
-        // employeeDailySheet.PLAN_LTZDSTS = '安文轩';
-        // employeeDailySheet.PLAN_GZHGZ = '安文轩';
-        // employeeDailySheet.PLAN_HXJC = '安文轩';
-        // employeeDailySheet.PLAN_SMJRQLC = '安文轩';
-        // employeeDailySheet.PLAN_XQLTYTS = '安文轩';
-        // employeeDailySheet.PLAN_ZX = '安文轩';
-        // employeeDailySheet.PLAN_YJALTS = '安文轩';
-        // employeeDailySheet.PLAN_DKCSMU = '安文轩';
-        // employeeDailySheet.FINISH_JW = '安文轩';
-        // employeeDailySheet.FINISH_LTZDSTS = '安文轩';
-        // employeeDailySheet.FINISH_GZHGZ = '安文轩';
-        // employeeDailySheet.FINISH_HXJC = '安文轩';
-        // employeeDailySheet.FINISH_SMJRQLC = '安文轩';
-        // employeeDailySheet.FINISH_XQLTYTS = '安文轩';
-        // employeeDailySheet.FINISH_ZX = '安文轩';
-        // employeeDailySheet.FINISH_YJALTS = '安文轩';
-        // employeeDailySheet.FINISH_DKCSMU = '安文轩';
-        // dailysheetTable.addRow(employeeDailySheet);
-        // dailysheetTable.addRow(employeeDailySheet);
     },
+    clickQueryButton : function() {
+        QueryCondPopup.showQueryCond(function(startDate, endDate) {
+            $('#QUERY_COND_TEXT').val(startDate + "~" + endDate);
+            EmployeeDailySheetQuery.queryEmployeeDailySheetList(startDate, endDate);
+        });
+    }
+};
+
+var QueryCondPopup = {
+    callback : '',
+    showQueryCond : function(callback) {
+        if(callback) QueryCondPopup.callback = callback;
+
+        showPopup('UI-popup','QueryCondPopupItem');
+    },
+    confirm : function(obj) {
+        var startDate = $('#COND_START_DATE').val();
+        var endDate = $('#COND_END_DATE').val();
+        hidePopup(obj);
+        if(QueryCondPopup.callback) {
+            QueryCondPopup.callback(startDate, endDate);
+        }
+    }
 };
