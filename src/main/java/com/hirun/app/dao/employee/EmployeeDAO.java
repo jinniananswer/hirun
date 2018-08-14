@@ -247,7 +247,7 @@ public class EmployeeDAO extends StrongObjectDAO{
             parameter.put("NAME", name);
         }
         if(StringUtils.isNotBlank(city)){
-            sb.append("and d.city = :CITY ");
+            sb.append("and e.city = :CITY ");
             parameter.put("CITY", city);
         }
         if(StringUtils.isNotBlank(mobileNo)){
