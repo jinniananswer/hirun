@@ -187,7 +187,7 @@ public class EmployeeService extends GenericService {
         employee.put("NATIVE_REGION", "0");
         employee.put("IN_DATE", request.getString("IN_DATE"));
         employee.put("WORK_NATURE", "1");
-        employee.put("WORK_PLACE", request.getString("CITY"));
+        employee.put("WORKPLACE", request.getString("CITY"));
         employee.put("STATUS", "0");
         employee.put("CREATE_DATE", session.getCreateTime());
         employee.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
