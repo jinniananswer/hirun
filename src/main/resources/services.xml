@@ -13,6 +13,8 @@
     <entity name="OrgCenter.employee.EmployeeService.queryEmployees"  class="com.hirun.app.biz.employee.EmployeeService" method="queryEmployees"/>
     <entity name="OrgCenter.employee.EmployeeService.initChangeEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="initChangeEmployee"/>
     <entity name="OrgCenter.employee.EmployeeService.changeEmployee"  class="com.hirun.app.biz.employee.EmployeeService" method="changeEmployee"/>
+    <entity name="OrgCenter.employee.EmployeeService.queryEmployeeFuncs"  class="com.hirun.app.biz.employee.EmployeeService" method="queryEmployeeFuncs"/>
+    <entity name="OrgCenter.employee.EmployeeService.assignPermission"  class="com.hirun.app.biz.employee.EmployeeService" method="assignPermission"/>
     <entity name="OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors"  class="com.hirun.app.biz.employee.EmployeeService" method="getAllSubordinatesCounselors"/>
     <entity name="OrgCenter.employee.EmployeeService.entryHoliday"  class="com.hirun.app.biz.employee.EmployeeService" method="entryHoliday"/>
 
