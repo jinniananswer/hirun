@@ -3,6 +3,7 @@ package com.hirun.app.dao.employee;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
+import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import org.apache.commons.lang3.StringUtils;
@@ -274,5 +275,27 @@ public class EmployeeDAO extends StrongObjectDAO{
             parameter.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
         }
         return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public Record queryEmployee(String employeeId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, f.NAME parent_org_name ");
+        sb.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
+        sb.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
+        sb.append("where b.USER_ID = a.USER_ID ");
+        sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
+        sb.append("and a.status = '0' ");
+        sb.append("and b.status = '0' " );
+        sb.append("and now() < d.end_date ");
+        sb.append("and e.ORG_ID = d.ORG_ID ");
+        sb.append("and b.employee_id = :EMPLOYEE_ID ");
+
+        RecordSet employees = this.queryBySql(sb.toString(), parameter);
+        if(employees == null || employees.size() <= 0)
+            return null;
+        return employees.get(0);
     }
 }

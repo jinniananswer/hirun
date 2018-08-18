@@ -1,5 +1,6 @@
 package com.hirun.app.biz.employee;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.employee.EmployeeBean;
@@ -9,6 +10,7 @@ import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
 import com.hirun.app.dao.func.FuncDAO;
+import com.hirun.app.dao.func.UserFuncDAO;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
@@ -24,6 +26,7 @@ import com.most.core.pub.data.*;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import io.netty.util.internal.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
@@ -520,5 +523,87 @@ public class EmployeeService extends GenericService {
             }
         }
         return response;
+    }
+
+    public ServiceResponse queryEmployeeFuncs(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        Record employee = dao.queryEmployee(request.getString("EMPLOYEE_ID"));
+        if(employee == null || employee.size() <= 0)
+            return response;
+
+        if(StringUtils.equals("69", employee.get("USER_ID")) || StringUtils.equals("72", employee.get("USER_ID"))) {
+            employee.put("CONTACT_NO", "***********");
+        }
+        employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
+        response.set("EMPLOYEE", JSONObject.parseObject(JSON.toJSONString(employee.getData())));
+
+        if(StringUtils.equals("0", employee.get("JOB_ROLE")))
+            return response;
+
+        String userId = employee.get("USER_ID");
+        UserFuncDAO userFuncDAO = DAOFactory.createDAO(UserFuncDAO.class);
+        RecordSet userFuncs = userFuncDAO.queryUserFuncs(userId);
+        if(userFuncs == null || userFuncs.size() <= 0)
+            userFuncs = new RecordSet();
+
+        int size = userFuncs.size();
+        String funcIds = "";
+        for(int i=0;i<size;i++){
+            Record record = userFuncs.get(i);
+            if(i != size -1)
+                funcIds += record.get("FUNC_ID")+",";
+            else
+                funcIds += record.get("FUNC_ID");
+            record.put("TYPE_NAME", StaticDataTool.getCodeName("FUNC_TYPE", record.get("TYPE")));
+        }
+
+        FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
+        if(StringUtils.isBlank(funcIds))
+            funcIds = "-1";
+        RecordSet restFuncs = funcDAO.queryRestFunc(funcIds);
+        if(restFuncs != null && restFuncs.size() > 0){
+            int restSize = restFuncs.size();
+            for(int i=0;i<restSize;i++){
+                Record record = restFuncs.get(i);
+                record.put("TYPE_NAME", StaticDataTool.getCodeName("FUNC_TYPE", record.get("TYPE")));
+            }
+            response.set("REST_FUNCS", ConvertTool.toJSONArray(restFuncs));
+        }
+
+        response.set("USER_FUNCS", ConvertTool.toJSONArray(userFuncs));
+        return response;
+    }
+
+    public ServiceResponse assignPermission(ServiceRequest request) throws Exception{
+        String userId = request.getString("USER_ID");
+        String addFuncs = request.getString("ADD_FUNCS");
+        String delFuncs = request.getString("DEL_FUNCS");
+        AppSession session = SessionManager.getSession();
+
+        UserFuncDAO dao = DAOFactory.createDAO(UserFuncDAO.class);
+        if(StringUtils.isNotBlank(addFuncs)){
+            String[] addFuncsArray = addFuncs.split(",");
+            List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
+            for(String funcId : addFuncsArray){
+                Map<String, String> parameter = new HashMap<String, String>();
+                parameter.put("USER_ID", userId);
+                parameter.put("FUNC_ID", funcId);
+                parameter.put("START_DATE", session.getCreateTime());
+                parameter.put("END_DATE", "3000-12-31 23:59:59");
+                parameter.put("STATUS", "0");
+                parameter.put("CREATE_DATE", session.getCreateTime());
+                parameter.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+                parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+                parameter.put("UPDATE_TIME", session.getCreateTime());
+                parameters.add(parameter);
+            }
+            dao.insertBatch("ins_user_func", parameters);
+        }
+
+        if(StringUtils.isNotBlank(delFuncs)){
+            dao.deleteUserFuncs(userId, delFuncs);
+        }
+        return new ServiceResponse();
     }
 }

@@ -19,4 +19,12 @@ public class FuncDAO extends GenericDAO {
         parameter.put("JOB_ROLE", jobRole);
         return this.query("sys_job_func", parameter);
     }
+
+    public RecordSet queryRestFunc(String existsFuncIds) throws Exception{
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from sys_func ");
+        sb.append("where func_id not in ("+existsFuncIds+") ");
+
+        return this.queryBySql(sb.toString(), null);
+    }
 }
