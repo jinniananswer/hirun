@@ -45,5 +45,15 @@ public class PlanDayEntity extends GenericEntity{
 	public void setStatResult(String statResult){
 		this.set("STAT_RESULT", statResult);
 	}
+
+	public PlanMonthEntity transToPlanMonthEntity() {
+		PlanMonthEntity planMonthEntity = new PlanMonthEntity();
+		planMonthEntity.setObjectId(this.getObjectId());
+		planMonthEntity.setStatMonth(this.getStatDay().substring(0,4) + this.getStatDay().substring(5,7));
+		planMonthEntity.setStatType(this.getStatType());
+		planMonthEntity.setStatResult(this.getStatResult());
+
+		return planMonthEntity;
+	}
 	
 }
