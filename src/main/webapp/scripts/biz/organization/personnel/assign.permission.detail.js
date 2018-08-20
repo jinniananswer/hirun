@@ -1,5 +1,6 @@
 (function($){
     $.extend({user:{
+            restFuncs : null,
             init : function(){
                 window["UI-popup"] = new Wade.Popup("UI-popup");
                 $.beginPageLoading();
@@ -73,6 +74,7 @@
                 if(datas == null || datas == "undefined" || datas.length <= 0)
                     return;
 
+                this.restFuncs = datas;
                 $("#rest_funcs").empty();
                 var html = [];
                 var size = datas.length;
@@ -201,6 +203,31 @@
                     }
                 }
                 showPopup('UI-popup','UI-popup-rest-func');
+            },
+
+            queryRestFuncs : function(){
+                var searchText = $("#SEARCH_TEXT").val();
+                if(this.restFuncs == null || this.restFuncs.length <= 0)
+                    return;
+                var length = this.restFuncs.length;
+                var html = [];
+                $("#rest_funcs").empty();
+                for(var i=0;i<length;i++){
+                    var data = this.restFuncs.get(i);
+                    var name = data.get("FUNC_DESC");
+                    if(name.indexOf(searchText) >= 0 || searchText == ""){
+                        html.push("<li ontap=\"$.user.clickRestFunc(this)\" funcId='"+data.get("FUNC_ID")+"' typeName='"+data.get("TYPE_NAME")+"' funcDesc='"+data.get("FUNC_DESC")+"'>");
+                        html.push("<label class='group link'>");
+                        html.push("<div class='main'>");
+                        html.push(data.get("FUNC_DESC")+"["+data.get("TYPE_NAME")+"]");
+                        html.push("</div>");
+                        html.push("<div class='fn'>");
+                        html.push("</div>");
+                        html.push("</label>");
+                        html.push("</li>");
+                    }
+                }
+                $.insertHtml('beforeend', $("#rest_funcs"), html.join(""));
             },
 
             submit : function(){
