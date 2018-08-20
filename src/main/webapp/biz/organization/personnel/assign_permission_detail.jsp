@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>员工权限分配</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/personnel/assign.permission.detail.js"></script>
+    <script src="/scripts/biz/organization/personnel/assign.permission.detail.js?v=20180820165300"></script>
 </head>
 <body>
 <div class="c_header">
@@ -91,6 +91,12 @@
                         </div>
                         <!-- 列表 结束 -->
                         <div class="c_line"></div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
                     </div>
                     <div class="l_bottom">
                         <div class="c_submit c_submit-full">
