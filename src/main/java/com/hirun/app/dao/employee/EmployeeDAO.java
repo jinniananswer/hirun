@@ -58,6 +58,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("where b.parent_org_id = :PARENT_ORG_ID ");
         sb.append("and c.employee_id = a.employee_id ");
         sb.append("and c.org_id = b.org_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < c.end_date ");
         sb.append("and c.job_role in ("+jobRole+") ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
@@ -74,6 +76,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("where b.parent_org_id = :PARENT_ORG_ID ");
         sb.append("and c.employee_id = a.employee_id ");
         sb.append("and c.org_id = b.org_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < c.end_date ");
         sb.append("and b.name = '市场部' ");
         sb.append("and c.job_role in ("+jobRole+") ");
 
@@ -89,6 +93,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("select a.* from ins_employee a, ins_employee_job_role b ");
         sb.append("where b.parent_employee_id = :PARENT_EMPLOYEE_ID ");
         sb.append("and b.employee_id = a.employee_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
         return employees;
@@ -100,6 +106,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("select a.* from ins_employee a, ins_employee_job_role b ");
         sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), new HashMap<String, String>());
         return employees;
@@ -116,6 +124,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("where b.parent_employee_id = :PARENT_EMPLOYEE_ID ");
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and b.job_role = :JOB_ROLE ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
         return employees;
@@ -131,6 +141,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and b.job_role = :JOB_ROLE ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
         return employees;
@@ -144,6 +156,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and b.job_role in ("+jobRoles+") ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), new HashMap<String, String>());
         return employees;
@@ -157,6 +171,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("select a.*,b.job_role from ins_employee a, ins_employee_job_role b ");
         sb.append("where b.parent_employee_id = :PARENT_EMPLOYEE_ID ");
         sb.append("and b.employee_id = a.employee_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 
         RecordSet employees = this.queryBySql(sb.toString(), parameter);
         return employees;
@@ -168,6 +184,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("select a.*,b.job_role from ins_employee a, ins_employee_job_role b ");
         sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 
         RecordSet employees = this.queryBySql(sb.toString(), new HashMap<String, String>());
         return employees;
@@ -196,6 +214,8 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("WHERE a.employee_id = b.employee_id ");
         sb.append("and b.job_role in ("+jobRoles+") ");
         sb.append("AND a.employee_id = :EMPLOYEE_ID ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
 //        sb.append("and c.job_role in ('"+jobRole+"') ");
 
         Map<String, String> parameter = new HashMap<String, String>();
