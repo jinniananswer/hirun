@@ -6,6 +6,7 @@ import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.cache.EmployeeCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.plan.PlanDayDAO;
+import com.hirun.app.dao.plan.PlanMonthDAO;
 import com.hirun.app.dao.stat.PlanFinishMonDAO;
 import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
@@ -13,6 +14,7 @@ import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.plan.PlanDayEntity;
 import com.hirun.pub.domain.entity.plan.PlanEntity;
 import com.hirun.pub.domain.entity.plan.PlanFinishMonEntity;
+import com.hirun.pub.domain.entity.plan.PlanMonthEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
@@ -76,10 +78,37 @@ public class PlanStatBean {
         }
     }
 
+    public static void saveStatPlanMonthEntity(PlanDayEntity planDayEntity) throws Exception {
+        PlanMonthDAO planMonthDAO = DAOFactory.createDAO(PlanMonthDAO.class);
+
+        PlanMonthEntity planMonthEntity = planDayEntity.transToPlanMonthEntity();
+        PlanMonthEntity oldPlanMonthEntity = planMonthDAO.getPlanMonthByStatMonthAndStatTypeAndOid(planMonthEntity.getStatMonth(), planMonthEntity.getStatType(), planMonthEntity.getObjectId());
+        if(oldPlanMonthEntity == null) {
+            planMonthDAO.insert("STAT_PLAN_MONTH", planMonthEntity.getContent());
+        } else {
+            JSONObject jsonStatResult = JSONObject.parseObject(oldPlanMonthEntity.getStatResult());
+            JSONObject jsonNewStatResult = JSONObject.parseObject(planMonthEntity.getStatResult());
+            Iterator<String> iter = jsonNewStatResult.keySet().iterator();
+            while(iter.hasNext()) {
+                String key = iter.next();
+                if(jsonStatResult.containsKey(key)) {
+                    int oldValue = jsonStatResult.getIntValue(key);
+                    int newValue = oldValue + jsonNewStatResult.getIntValue(key);
+                    jsonStatResult.put(key, newValue);
+                } else {
+                    jsonStatResult.put(key, jsonNewStatResult.getIntValue(key));
+                }
+            }
+            oldPlanMonthEntity.setStatResult(jsonStatResult.toJSONString());
+            planMonthDAO.update("STAT_PLAN_MONTH", oldPlanMonthEntity.getContent());
+        }
+    }
+
     public static void saveStatPlanDayEntityByEmployee(PlanDayEntity employeePlanDayEntity) throws Exception {
         //员工天
         employeePlanDayEntity.setStatType("EMPLOYEE_FINISH");
         saveStatPlanDayEntity(employeePlanDayEntity);
+        saveStatPlanMonthEntity(employeePlanDayEntity);
 
         String employeeId = employeePlanDayEntity.getObjectId();
 
@@ -92,6 +121,7 @@ public class PlanStatBean {
             shopPlanDayEntity.setStatType("SHOP_FINISH");
             shopPlanDayEntity.setObjectId(shopOrgEntity.getOrgId());
             saveStatPlanDayEntity(shopPlanDayEntity);
+            saveStatPlanMonthEntity(shopPlanDayEntity);
         }
 
         //分公司
@@ -103,6 +133,7 @@ public class PlanStatBean {
             filialePlanDayEntity.setStatType("FILIALE_FINISH");
             filialePlanDayEntity.setObjectId(filialeOrgEntity.getOrgId());
             saveStatPlanDayEntity(filialePlanDayEntity);
+            saveStatPlanMonthEntity(filialePlanDayEntity);
         }
 
         //家装事业部
@@ -112,6 +143,7 @@ public class PlanStatBean {
         buPlanDayEntity.setStatType("BU_FINISH");
         buPlanDayEntity.setObjectId("7");
         saveStatPlanDayEntity(buPlanDayEntity);
+        saveStatPlanMonthEntity(buPlanDayEntity);
     }
 
     public static JSONArray queryEmployeeDailySheetList(String queryType, String queryId, String date) throws Exception {

@@ -48,8 +48,16 @@ public class PerformDueTaskService extends GenericService{
                     dao.delete("INS_PERFORM_DUE_TASK", entity.getContent());
                 } catch(Exception e) {
                     e.printStackTrace();
-                    entity.setResultInfo(e.getMessage());
+                    String errorMessage = e.getMessage();
+                    if(errorMessage != null) {
+                        if(errorMessage.length() < 2000) {
+                            entity.setResultInfo(errorMessage);
+                        } else {
+                            entity.setResultInfo(errorMessage.substring(0,1999));
+                        }
+                    }
                     entity.setResultCode("-1");
+                    entity.setDealTag("-1");
                     dao.update("INS_PERFORM_DUE_TASK", entity.getContent());
                 }
             }
