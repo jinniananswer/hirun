@@ -2,15 +2,17 @@ package com.hirun.app.biz.datacenter.houses;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.dao.houses.HousesPlanDAO;
 import com.hirun.app.dao.org.OrgDAO;
+import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
-import com.most.core.pub.data.Record;
-import com.most.core.pub.data.RecordSet;
-import com.most.core.pub.data.ServiceRequest;
-import com.most.core.pub.data.ServiceResponse;
+import com.most.core.app.session.AppSession;
+import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.*;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,20 +23,35 @@ public class HousesReportService extends GenericService {
     public ServiceResponse reportAllHousesNature(ServiceRequest request) throws Exception{
         HousesPlanDAO dao = DAOFactory.createDAO(HousesPlanDAO.class);
 
-        int housesNum = dao.getAllHousesNum();
-        RecordSet natureGroups = dao.getGroupCountByHouseNature();
+        boolean hasAllCity = Permission.hasAllCity();
+        int housesNum = 0;
+        RecordSet natureGroups = new RecordSet();
+        RecordSet companys = new RecordSet();
+        if(hasAllCity) {
+            housesNum = dao.getAllHousesNum();
+            natureGroups = dao.getGroupCountByHouseNature();
+            Record comany = new Record();
+            comany.put("ORG_ID","-1");
+            comany.put("NAME","所有分公司");
+            companys.add(comany);
+
+            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
+            RecordSet orgs = orgDAO.queryCompany();
+            companys.addAll(orgs);
+        }
+        else{
+            AppSession session = SessionManager.getSession();
+            SessionEntity sessionEntity = session.getSessionEntity();
+            String employeeOrgId = OrgBean.getOrgId(sessionEntity);
+            OrgEntity companyOrg = OrgBean.getAssignTypeOrg(employeeOrgId, "3");
+            housesNum = dao.getCompanyHousesNum(companyOrg.getOrgId());
+            natureGroups = dao.getGroupCountByCompanyHouseNature(companyOrg.getOrgId());
+
+            Record record = new Record(companyOrg.getContent());
+            companys.add(record);
+        }
 
         this.translateNature(natureGroups);
-
-        OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
-        RecordSet companys = new RecordSet();
-        Record comany = new Record();
-        comany.put("ORG_ID","-1");
-        comany.put("NAME","所有分公司");
-        companys.add(comany);
-
-        RecordSet orgs = orgDAO.queryCompany();
-        companys.addAll(orgs);
 
         ServiceResponse response = new ServiceResponse();
         response.set("HOUSE_NUM", housesNum);
@@ -83,21 +100,41 @@ public class HousesReportService extends GenericService {
         RecordSet company = null;
         HousesPlanDAO dao = DAOFactory.createDAO(HousesPlanDAO.class);
 
+        boolean hasAllCity = Permission.hasAllCity();
         if(type == null){
-//            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
-//            company = orgDAO.queryCompany();
-            company = new RecordSet();
-            Record cs = new Record();
-            cs.put("NAME","长沙鸿扬");
-            cs.put("ORG_ID","17");
-            company.add(cs);
-            type = "0";
+            if(hasAllCity) {
+                OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
+                company = orgDAO.queryCompany();
+            }
+            else{
+                AppSession session = SessionManager.getSession();
+                SessionEntity sessionEntity = session.getSessionEntity();
+                String orgId = OrgBean.getOrgId(sessionEntity);
+                OrgEntity companyOrg = OrgBean.getAssignTypeOrg(orgId, "3");
+                if(companyOrg != null){
+                    company = new RecordSet();
+                    company.add(new Record(companyOrg.getContent()));
+                }
+            }
         }
 
 
-        if(StringUtils.equals("0", type)){
-            plan = dao.getPlanCounselorNumByCompany();
-            actual = dao.getActualCounselorNumByCompany();
+        if(StringUtils.equals("0", type) || type == null){
+            if(hasAllCity) {
+                plan = dao.getPlanCounselorNumByCompany();
+                actual = dao.getActualCounselorNumByCompany();
+            }
+            else{
+                AppSession session = SessionManager.getSession();
+                SessionEntity sessionEntity = session.getSessionEntity();
+                String orgId = OrgBean.getOrgId(sessionEntity);
+                OrgEntity companyOrg = OrgBean.getAssignTypeOrg(orgId, "3");
+                if(companyOrg != null){
+                    String companyId = companyOrg.getOrgId();
+                    plan = dao.getPlanCounselorNumByCompany(companyId);
+                    actual = dao.getActualCounselorNumByCompany(companyId);
+                }
+            }
         }
         else{
             String orgId = request.getString("ORG_ID");
@@ -121,26 +158,45 @@ public class HousesReportService extends GenericService {
         HousesPlanDAO dao = DAOFactory.createDAO(HousesPlanDAO.class);
 
         RecordSet company = new RecordSet();
-        Record record = new Record();
-        record.put("NAME","所有分公司");
-        record.put("ORG_ID","-1");
 
-        Record cs = new Record();
-        cs.put("NAME","长沙鸿扬");
-        cs.put("ORG_ID","17");
+        boolean hasAllCity = Permission.hasAllCity();
+        if(hasAllCity) {
+            Record record = new Record();
+            record.put("NAME","所有分公司");
+            record.put("ORG_ID","-1");
 
-        company.add(record);
-        company.add(cs);
-//        if(orgId == null){
-//            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
-//            RecordSet rst = orgDAO.queryCompany();
-//            company.addAll(rst);
-//        }
+            company.add(record);
+            OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
+            RecordSet rst = orgDAO.queryCompany();
+            if(rst != null && rst.size() > 0)
+                company.addAll(rst);
+
+        }
+        else{
+            AppSession session = SessionManager.getSession();
+            SessionEntity sessionEntity = session.getSessionEntity();
+            String employeeOrgId = OrgBean.getOrgId(sessionEntity);
+            OrgEntity companyOrg = OrgBean.getAssignTypeOrg(employeeOrgId, "3");
+            if(companyOrg != null){
+                company = new RecordSet();
+                company.add(new Record(companyOrg.getContent()));
+            }
+        }
 
 
         if(orgId == null || StringUtils.equals("-1", orgId)){
-            plan = dao.getPlanCounselorNumByCompanyAndNature();
-            actual = dao.getActualCounselorNumByCompanyAndNature();
+            if(hasAllCity) {
+                plan = dao.getPlanCounselorNumByCompanyAndNature();
+                actual = dao.getActualCounselorNumByCompanyAndNature();
+            }
+            else{
+                AppSession session = SessionManager.getSession();
+                SessionEntity sessionEntity = session.getSessionEntity();
+                String employeeOrgId = OrgBean.getOrgId(sessionEntity);
+                OrgEntity companyOrg = OrgBean.getAssignTypeOrg(employeeOrgId, "3");
+                plan = dao.getPlanCounselorNumByCompanyAndNature(companyOrg.getOrgId());
+                actual = dao.getActualCounselorNumByCompanyAndNature(companyOrg.getOrgId());
+            }
         }
         else{
             plan = dao.getPlanCounselorNumByShopAndNature(orgId);
