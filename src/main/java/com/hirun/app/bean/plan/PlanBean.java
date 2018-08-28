@@ -186,6 +186,11 @@ public class PlanBean {
             return false;
         }
 
+        if(isSignToDone(originalData)) {
+            //是否直接移历史表
+            return true;
+        }
+
         String houseCounselorId = staffId;
         String now = TimeTool.now();
 
@@ -374,5 +379,23 @@ public class PlanBean {
                 cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", planCycleFinishInfoEntity.getContent());
             }
         }
+    }
+
+    private static boolean isSignToDone(JSONObject originalData) throws Exception{
+        boolean result = false;
+
+        String nickName = originalData.getString("NICKNAME");
+        String operTime = originalData.getString("OPER_TIME");
+        String staffId = originalData.getString("STAFF_ID");
+        String openId = originalData.getString("OPENID");
+        String id = originalData.getString("ID");
+
+        boolean isChangeSha = EmployeeBean.isChangshaEmployee(staffId);
+        String compareTime = "2018-08-31 00:00:00";
+        if(TimeTool.compareTwoTime(operTime,compareTime) <= 0 && !isChangeSha) {
+            result = true;
+        }
+
+        return result;
     }
 }
