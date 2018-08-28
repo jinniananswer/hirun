@@ -3,6 +3,7 @@ package com.hirun.app.bean.employee;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
+import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
@@ -197,5 +198,27 @@ public class EmployeeBean {
             }
         }
         return counselors;
+    }
+
+    public static boolean isChangshaEmployee(String employeeId) throws Exception{
+        EmployeeJobRoleDAO jobRoleDAO = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
+        List<EmployeeJobRoleEntity> jobRoles = jobRoleDAO.queryJobRoleByEmployeeId(employeeId);
+
+        if(ArrayTool.isEmpty(jobRoles))
+            return false;
+
+        EmployeeJobRoleEntity jobRole = jobRoles.get(0);
+        String orgId = jobRole.getOrgId();
+
+        OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
+        OrgEntity org = orgDAO.queryOrgById(orgId);
+        if(org == null)
+            return false;
+
+        String enterpriseId = org.getEnterpriseId();
+        if(StringUtils.equals("2", enterpriseId))
+            return true;
+        else
+            return false;
     }
 }
