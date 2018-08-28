@@ -66,7 +66,7 @@
                     var mobile_no = customer.get("MOBILE_NO");
                     var houseDetail  = customer.get("HOUSE_DETAIL");
                     if(mobile_no != null && mobile_no != "undefined")
-                        html.push("<a href='tel:'"+mobile_no+"'>"+mobile_no+"</a>");
+                        html.push("<a href='tel:"+mobile_no+"'>"+mobile_no+"</a>");
                     html.push("; 楼栋位置：");
                     if(houseDetail != null && houseDetail != "undefined")
                         html.push(houseDetail);
