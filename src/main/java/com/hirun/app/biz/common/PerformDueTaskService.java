@@ -9,6 +9,7 @@ import com.hirun.pub.domain.entity.common.PerformDueTaskEntity;
 import com.hirun.pub.domain.entity.plan.PlanDayEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
+import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 
@@ -46,7 +47,10 @@ public class PerformDueTaskService extends GenericService{
                     entity.setDealTag("1");
                     hisDao.insert("INS_HIS_PERFORM_DUE_TASK", entity.getContent());
                     dao.delete("INS_PERFORM_DUE_TASK", entity.getContent());
+
+                    SessionManager.getSession().commit();
                 } catch(Exception e) {
+                    SessionManager.getSession().rollback();
                     e.printStackTrace();
                     String errorMessage = e.getMessage();
                     if(errorMessage != null) {
@@ -59,6 +63,7 @@ public class PerformDueTaskService extends GenericService{
                     entity.setResultCode("-1");
                     entity.setDealTag("-1");
                     dao.update("INS_PERFORM_DUE_TASK", entity.getContent());
+                    SessionManager.getSession().commit();
                 }
             }
         } catch (Exception e) {
