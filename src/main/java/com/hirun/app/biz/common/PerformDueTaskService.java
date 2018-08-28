@@ -7,13 +7,16 @@ import com.hirun.app.dao.common.HisPerformDueTaskDAO;
 import com.hirun.app.dao.common.PerformDueTaskDAO;
 import com.hirun.pub.domain.entity.common.PerformDueTaskEntity;
 import com.hirun.pub.domain.entity.plan.PlanDayEntity;
+import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by awx on 2018/7/6/006.
@@ -44,9 +47,10 @@ public class PerformDueTaskService extends GenericService{
                         PlanStatBean.saveStatPlanDayEntityByEmployee(employeePlanDayEntity);
                     }
 
-                    entity.setDealTag("1");
-                    hisDao.insert("INS_HIS_PERFORM_DUE_TASK", entity.getContent());
-                    dao.delete("INS_PERFORM_DUE_TASK", entity.getContent());
+//                    entity.setDealTag("1");
+//                    hisDao.insert("INS_HIS_PERFORM_DUE_TASK", entity.getContent());
+//                    dao.delete("INS_PERFORM_DUE_TASK", entity.getContent());
+                    signToDone(entity.getTaskId());
 
                     SessionManager.getSession().commit();
                 } catch(Exception e) {
@@ -71,5 +75,29 @@ public class PerformDueTaskService extends GenericService{
         }
 
         return response;
+    }
+
+    public void signToDone(String taskId) throws Exception {
+        GenericDAO dao = new GenericDAO("ins");
+        Map<String, String> dbParam = new HashMap<String, String>();
+        dbParam.put("TASK_ID", taskId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append(" UPDATE ").append("ins_perform_due_task").append(" ");
+        sql.append(" SET DEAL_TAG = '1'");
+        sql.append(" WHERE TASK_ID = :TASK_ID ");
+        dao.executeUpdate(sql.toString(), dbParam);
+
+        //移历史表
+        sql = new StringBuilder();
+        sql.append(" INSERT INTO ").append("ins_his_perform_due_task").append(" ");
+        sql.append(" SELECT * FROM ").append("ins_perform_due_task").append(" WHERE TASK_ID = :TASK_ID");
+        dao.executeUpdate(sql.toString(), dbParam);
+
+        //删除在线表
+        sql = new StringBuilder();
+        sql.append(" DELETE FROM ").append("ins_perform_due_task").append(" ");
+        sql.append(" WHERE TASK_ID = :TASK_ID");
+        dao.executeUpdate(sql.toString(), dbParam);
     }
 }
