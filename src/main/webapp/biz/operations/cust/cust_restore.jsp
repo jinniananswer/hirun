@@ -9,13 +9,13 @@
     <base href="<%=basePath%>"></base>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>客户清理</title>
+    <title>客户恢复</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="scripts/biz/cust/cust.delete.js"></script>
+    <script src="scripts/biz/cust/cust.restore.js"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
-    <jsp:param value="客户清理" name="headerName"/>
+    <jsp:param value="客户恢复" name="headerName"/>
 </jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4.4em;">
     <div class="c_space"></div>
@@ -62,7 +62,7 @@
                                 <li>
                                     <div class="label">楼盘</div>
                                     <div class="value">
-                                        <span class="e_mix" ontap="custDelete.selectHouses(this)">
+                                        <span class="e_mix" ontap="custRestore.selectHouses(this)">
                                             <input type="text" id="HOUSES_NAME" name="HOUSES_NAME" datatype="text"
                                                    houses_id=""
                                                    nullable="no" desc="楼盘" value="" readonly="true"/>
@@ -73,7 +73,7 @@
                                 <li>
                                     <div class="label">家装顾问</div>
                                     <div class="value">
-                                        <span class="e_mix" ontap="custDelete.selectCounselor(this)">
+                                        <span class="e_mix" ontap="custRestore.selectCounselor(this)">
                                             <input type="text" id="EMPLOYEE_NAMES" name="EMPLOYEE_NAMES" datatype="text"
                                                    employee_ids=""
                                                    nullable="no" desc="家装顾问" value="" readonly="true"/>
@@ -86,7 +86,7 @@
                         <!-- 客户列表 结束 -->
                         <div class="c_space"></div>
                         <div class="c_submit c_submit-full">
-                            <button type="button" class="e_button-l e_button-green" ontap="custDelete.queryCustList4Cond(this)">查询</button>
+                            <button type="button" class="e_button-l e_button-green" ontap="custRestore.queryCustList4Cond(this)">查询</button>
                         </div>
                     </div>
                 </div>
@@ -149,14 +149,14 @@
                     <div class="title">{{cust.CUST_NAME}}</div>
                     <div class="content">家装顾问：{{cust.HOUSE_COUNSELOR_NAME}}</div>
                 </div>
-                <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
-                     ontap="custDelete.showCustDetail(this)">
-                    查看详情
+                <div class="link side" cust_id="{{cust.CUST_ID}}"
+                     ontap="custRestore.restoreCust($(this).attr('cust_id'))">
+                    恢复
                 </div>
 
-                <div class="fn" cust_id="{{cust.CUST_ID}}" ontap="custDelete.deleteCust($(this).attr('cust_id'))">
-                    <span class="e_ico-delete"></span>
-                </div>
+                <%--<div class="fn" cust_id="{{cust.CUST_ID}}" ontap="custRestore.deleteCust($(this).attr('cust_id'))">--%>
+                    <%--<span class="e_ico-add"></span>--%>
+                <%--</div>--%>
             </li>
             {{/each}}
         </ul>
@@ -186,7 +186,7 @@
 
 <script type="text/javascript">
     Wade.setRatio();
-    custDelete.init();
+    custRestore.init();
 </script>
 </body>
 </html>

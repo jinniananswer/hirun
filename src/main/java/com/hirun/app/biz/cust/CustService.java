@@ -104,8 +104,13 @@ public class CustService extends GenericService{
 
         CustDAO dao = new CustDAO("ins");
         List<CustomerEntity> customerList = dao.queryCustList(parameter);
+        JSONArray arrayCustList = ConvertTool.toJSONArray(customerList);
+        for(int i = 0, size = arrayCustList.size(); i < size; i++) {
+            JSONObject jsonCust = arrayCustList.getJSONObject(i);
+            jsonCust.put("HOUSE_COUNSELOR_NAME", EmployeeCache.getEmployeeNameEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")));
+        }
 
-        response.set("CUSTOMERLIST", ConvertTool.toJSONArray(customerList));
+        response.set("CUSTOMERLIST", arrayCustList);
 
         return response;
     }
@@ -243,6 +248,12 @@ public class CustService extends GenericService{
         return response;
     }
 
+    /**
+     * 暂停的客户恢复
+     * @param request
+     * @return
+     * @throws Exception
+     */
     public ServiceResponse restore(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         String custId = request.getString("CUST_ID");
@@ -297,6 +308,31 @@ public class CustService extends GenericService{
             EmployeeEntity employeeEntity = EmployeeBean.getEmployeeByEmployeeId(custContactEntity.getEmployeeId());
             MsgBean.sendMsg(employeeEntity.getUserId(), msgContent.toString(), "0", now, MsgType.sys);
         }
+
+        return response;
+    }
+
+    /**
+     * 删除的客户恢复
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public ServiceResponse restoreCustById(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String custId = requestData.getString("CUST_ID");
+
+        String userId = SessionManager.getSession().getSessionEntity().getUserId();
+        String now = TimeTool.now();
+
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        Map<String, String> dbParam = new HashMap<String, String>();
+        dbParam.put("CUST_ID", custId);
+        dbParam.put("CUST_STATUS", CustStatus.normal.getValue());
+        dbParam.put("UPDATE_USER_ID", userId);
+        dbParam.put("UPDATE_TIME", now);
+        custDAO.save("INS_CUSTOMER", dbParam);
 
         return response;
     }

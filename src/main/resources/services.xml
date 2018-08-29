@@ -67,6 +67,7 @@
     <entity name="CustCenter.cust.CustService.changeCounselor"  class="com.hirun.app.biz.cust.CustService" method="changeCounselor"/>
     <entity name="CustCenter.cust.CustService.queryCustContact"  class="com.hirun.app.biz.cust.CustService" method="queryCustContact"/>
     <entity name="CustCenter.cust.CustService.queryCustContact"  class="com.hirun.app.biz.cust.CustService" method="queryCustContact"/>
+    <entity name="CustCenter.cust.CustService.restoreCustById"  class="com.hirun.app.biz.cust.CustService" method="restoreCustById"/>
 
 
     <!--数据中心服务-->
@@ -83,4 +84,6 @@
     <entity name="Common.msg.MsgService.getUnReadMsgCount"  class="com.hirun.app.biz.common.MsgService" method="getUnReadMsgCount"/>
     <entity name="Common.msg.MsgService.setMsgListToRead"  class="com.hirun.app.biz.common.MsgService" method="setMsgListToRead"/>
     <entity name="Common.common.PerformDueTaskService.deal"  class="com.hirun.app.biz.common.PerformDueTaskService" method="deal"/>
+
+    <!--<entity name="OperationCenter.plan.PlanTaskService.test"  class="com.hirun.app.biz.task.plan.PlanTaskService" method="test"/>-->
 </service>
