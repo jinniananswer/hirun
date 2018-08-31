@@ -86,4 +86,10 @@ public class CustController extends RootController{
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustContact", map);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/cust/restoreCustById", method = RequestMethod.POST)
+    public String restoreCustById(@RequestParam Map map) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.restoreCustById", map);
+        return response.toJsonString();
+    }
 }
