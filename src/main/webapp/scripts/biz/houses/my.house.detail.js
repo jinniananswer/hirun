@@ -16,7 +16,6 @@
                 $.insertHtml('beforeend', $("#HOUSE_NAME"), html.join(""));
                 html = [];
                 html.push("<li><span class='label'>归属城市：</span><span class='value'>"+house.get("CITY_NAME")+"</span></li>");
-                html.push("<li><span class='label'>归属区域：</span><span class='value'>"+house.get("AREA_NAME")+"</span></li>");
                 html.push("<li><span class='label'>责任店面：</span><span class='value'>"+house.get("ORG_NAME")+"</span></li>");
                 html.push("<li><span class='label'>楼盘性质：</span><span class='value'>"+house.get("NATURE_NAME")+"</span></li>");
                 html.push("<li><span class='label'>交房时间：</span><span class='value'>"+house.get("CHECK_DATE")+"</span></li>");
