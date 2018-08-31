@@ -337,6 +337,11 @@ var planSummarize = {
                     var unFinishCustList = planSummarize.getCustListByActionCode(actionCode, planSummarize.unFinishActionList);
 
                     planCustNum = planCustList.length;
+                    $.each(planCustList, function(idx, planCust) {
+                        if(planCust.CUST_ID == '0') {
+                            planCustNum += parseInt(planCust.CUST_NUM) - 1;
+                        }
+                    })
                     finishCustNum = finishCustList.length;
 
                     //插入html

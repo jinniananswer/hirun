@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
+import com.hirun.app.biz.common.PerformDueTaskService;
 import com.hirun.app.cache.HirunPlusStaffDataCache;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
@@ -104,7 +105,6 @@ public class PlanTaskService extends GenericService {
             } else if("11".equals(roleId)) {
                 //需要处理
                 CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
-                //TODO 暂时不根据WX_NICK查了
                 if(customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
                     jsonProject.put("STAFF_ID", customerEntity.getHouseCounselorId());
                     isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "ZX");
@@ -200,5 +200,14 @@ public class PlanTaskService extends GenericService {
         sql.append(" DELETE FROM ").append(tableName).append(" ");
         sql.append(" WHERE ID = :ID");
         dao.executeUpdate(sql.toString(), dbParam);
+    }
+
+    public ServiceResponse test(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        PerformDueTaskService service = new PerformDueTaskService();
+
+        service.signToDone("1");
+
+        return response;
     }
 }

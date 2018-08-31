@@ -286,6 +286,7 @@ public class PlanService extends GenericService {
         CustActionDAO custActionDAO = new CustActionDAO("ins");
         CustDAO custDAO = new CustDAO("ins");
         List<CustActionEntity> custActionEntityList = custActionDAO.queryCustActionListByPlanId(planId);
+        List<ActionEntity> actionEntityList = ActionCache.getActionListByType("1");
         if(ArrayTool.isNotEmpty(custActionEntityList)) {
             //存计划action对应的custList，格式为{actionCode, custList}，后续再遍历成list
             JSONObject planCustActionMap = new JSONObject();
@@ -295,6 +296,8 @@ public class PlanService extends GenericService {
             JSONObject unFinishCustActionMap = new JSONObject();
             //存客户信息
             JSONObject custMap = new JSONObject();//{custId, cust}
+            //存每个动作的虚拟新客户数量及返回到前台的名称
+            JSONObject virtualCustActionMap = new JSONObject();
 
             //遍历custAction，存到planCustActionMap和finishCustActionMap中
             for(CustActionEntity custActionEntity : custActionEntityList) {
@@ -307,8 +310,19 @@ public class PlanService extends GenericService {
                     if(customerEntity == null) {
                         //TODO 如果为NULL怎么处理？？？
                     }
-                    custMap.put(custId, customerEntity.toJSON(new String[] {"CUST_ID", "CUST_NAME"}));
+                    custMap.put(custId, customerEntity.toJSON(new String[] {"CUST_ID", "CUST_NAME","IDENTIFY_CODE"}));
                 }
+
+                String identifyCode = custMap.getJSONObject(custId).getString("IDENTIFY_CODE");
+                if(StringUtils.isBlank(identifyCode)) {
+                    if(virtualCustActionMap.containsKey(actionCode)) {
+                        virtualCustActionMap.put(actionCode, virtualCustActionMap.getIntValue(actionCode)+1);
+                    } else {
+                        virtualCustActionMap.put(actionCode, 1);
+                    }
+                    continue;
+                }
+
 
                 JSONObject jsonAction = custActionEntity.toJSON(new String[] {"ACTION_ID","CUST_ID"});
                 jsonAction.putAll(custMap.getJSONObject(custId));
@@ -334,6 +348,8 @@ public class PlanService extends GenericService {
                         }
                     } else {
                         //计划中未完成的
+//                        String identifyCode = jsonAction.getString("IDENTIFY_CODE");
+//                        if(StringUtils.isNotBlank(identifyCode)) {
                         if(unFinishCustActionMap.containsKey(actionCode)) {
                             unFinishCustActionMap.getJSONArray(actionCode).add(jsonAction);
                         } else {
@@ -341,6 +357,7 @@ public class PlanService extends GenericService {
                             custList.add(jsonAction);
                             unFinishCustActionMap.put(actionCode, custList);
                         }
+//                        }
                     }
                 } else {
                     //计划外且完成的
@@ -356,13 +373,49 @@ public class PlanService extends GenericService {
 
             //从planCustActionMap和finishCustActionMap中遍历key，变成jsonArray
             Iterator planIter = planCustActionMap.keySet().iterator();
+            for(ActionEntity actionEntity : actionEntityList) {
+                String actionCode = actionEntity.getActionCode();
+                JSONArray planCustActionList = new JSONArray();
+                if(planCustActionMap.containsKey(actionCode)) {
+                    planCustActionList = planCustActionMap.getJSONArray(actionCode);
+                }
+
+                if(virtualCustActionMap.containsKey(actionCode)) {
+                    JSONObject virtualPlanCustAction = new JSONObject();
+                    virtualPlanCustAction.put("CUST_ID", "0");//虚拟的没用
+                    virtualPlanCustAction.put("ACTION_ID", "0");//虚拟的没用
+                    virtualPlanCustAction.put("CUST_NAME", "新客户*" + virtualCustActionMap.getString(actionCode));
+                    virtualPlanCustAction.put("CUST_NUM", virtualCustActionMap.getString(actionCode));
+                    planCustActionList.add(virtualPlanCustAction);
+                }
+
+                if(planCustActionList.size() > 0) {
+                    JSONObject plan = new JSONObject();
+                    plan.put("ACTION_CODE", actionCode);
+                    plan.put("CUSTLIST", planCustActionList);
+                    planList.add(plan);
+                }
+            }
+
+            /*
             while(planIter.hasNext()) {
                 String actionCode = (String)planIter.next();
                 JSONObject plan = new JSONObject();
                 plan.put("ACTION_CODE", actionCode);
-                plan.put("CUSTLIST", planCustActionMap.getJSONArray(actionCode));
+                JSONArray planCustActionList = planCustActionMap.getJSONArray(actionCode);
+                if(virtualCustActionMap.containsKey(actionCode)) {
+                    JSONObject virtualPlanCustAction = new JSONObject();
+                    virtualPlanCustAction.put("CUST_ID", "0");//虚拟的没用
+                    virtualPlanCustAction.put("ACTION_ID", "0");//虚拟的没用
+                    virtualPlanCustAction.put("CUST_NAME", "新客户*" + virtualCustActionMap.getString(actionCode));
+                    virtualPlanCustAction.put("CUST_NUM", virtualCustActionMap.getString(actionCode));
+                    planCustActionList.add(virtualPlanCustAction);
+                }
+                plan.put("CUSTLIST", planCustActionList);
                 planList.add(plan);
             }
+            */
+
             Iterator finishIter = finishCustActionMap.keySet().iterator();
             while(finishIter.hasNext()) {
                 String actionCode = (String)finishIter.next();
