@@ -14,13 +14,14 @@ import java.util.Map;
  */
 public class OutBean {
 
-    public static void insertDataGetInfo(String api, String requestData, String indbTime) throws Exception{
+    public static void insertDataGetInfo(String api, String requestData, String indbTime, int totalNum) throws Exception{
         DataGetInfoDAO dataGetInfoDAO = DAOFactory.createDAO(DataGetInfoDAO.class);
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("API", api);
         JSONObject reqestData = new JSONObject();
         parameter.put("REQUEST_DATA", requestData);
         parameter.put("INDB_TIME", indbTime);
+        parameter.put("TOTAL_NUM", String.valueOf(totalNum));
         dataGetInfoDAO.insert("OUT_DATA_GET_INFO", parameter);
     }
 

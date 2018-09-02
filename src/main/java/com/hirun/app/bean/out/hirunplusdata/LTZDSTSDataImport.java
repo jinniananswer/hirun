@@ -88,7 +88,7 @@ public class LTZDSTSDataImport {
         JSONObject reqestData = new JSONObject();
         reqestData.put("start", String.valueOf(TimeTool.strToTime4DateTime(start, TimeTool.TIME_PATTERN)));
         reqestData.put("end", String.valueOf(TimeTool.strToTime4DateTime(end, TimeTool.TIME_PATTERN)));
-        OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end);
+        OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end, dbList.size());
     }
 
     public static long getTotal(CloseableHttpClient httpclient, String start, String end) throws Exception{
