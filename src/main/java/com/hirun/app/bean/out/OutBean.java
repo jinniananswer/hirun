@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class OutBean {
 
-    public static void insertDataGetInfo(String api, String requestData, String indbTime, int totalNum) throws Exception{
+    public static void insertDataGetInfo(String api, String requestData, String indbTime, long totalNum) throws Exception{
         DataGetInfoDAO dataGetInfoDAO = DAOFactory.createDAO(DataGetInfoDAO.class);
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("API", api);
