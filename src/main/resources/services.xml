@@ -77,6 +77,7 @@
     <entity name="DataCenter.houses.HousesReportService.reportCounselorLoophole"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportCounselorLoophole"/>
     <entity name="DataCenter.plan.PlanReportService.queryEmployeeDailySheet"  class="com.hirun.app.biz.datacenter.plan.PlanReportService" method="queryEmployeeDailySheet"/>
     <entity name="DataCenter.plan.PlanReportService.queryEmployeeDailySheet2"  class="com.hirun.app.biz.datacenter.plan.PlanReportService" method="queryEmployeeDailySheet2"/>
+    <entity name="DataCenter.plan.PlanReportService.queryUnEntryPlanList"  class="com.hirun.app.biz.datacenter.plan.PlanReportService" method="queryUnEntryPlanList"/>
 
     <!--公共-->
     <entity name="Common.static.StaticDataService.getCodeTypeDatas"  class="com.hirun.app.biz.common.StaticDataService" method="getCodeTypeDatas"/>

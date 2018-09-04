@@ -318,4 +318,19 @@ public class EmployeeDAO extends StrongObjectDAO{
             return null;
         return employees.get(0);
     }
+
+    public List<EmployeeEntity> queryUnEntryPlanEmployeeList(String planDate) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_DATE", planDate);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT a.name,a.employee_id FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
+        sb.append("AND b.`JOB_ROLE` IN ('42','58') ");
+        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.`EMPLOYEE_ID` NOT IN (SELECT c.`PLAN_EXECUTOR_ID` FROM ins_plan c WHERE c.`PLAN_DATE` = :PLAN_DATE) ");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
+    }
 }

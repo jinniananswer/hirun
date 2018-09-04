@@ -221,4 +221,9 @@ public class EmployeeBean {
         else
             return false;
     }
+
+    public static List<EmployeeEntity> queryUnEntryPlanEmployeeList(String planDate) throws Exception{
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryUnEntryPlanEmployeeList(planDate);
+    }
 }
