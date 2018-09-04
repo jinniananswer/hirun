@@ -74,21 +74,30 @@ var custDelete = {
         // $.redirect.popupPageByUrl($obj.attr('cust_name'),url);
     },
     deleteCust : function(custId) {
-        $.beginPageLoading('客户删除中');
-        $.ajaxReq({
-            url : 'cust/deleteCustById',
-            data : {
-                CUST_ID : custId
-            },
-            type : 'POST',
-            successFunc : function(data) {
-                $.endPageLoading();
-                $('#CUST_ID_' + custId).remove();
-            },
-            errorFunc : function (resultCode, reusltInfo) {
-                $.endPageLoading();
+        var message = "确认删除吗？";
+        MessageBox.success("提示信息",message, function(btn){
+            if("ok" == btn) {
+                $.beginPageLoading('客户删除中');
+                $.ajaxReq({
+                    url : 'cust/deleteCustById',
+                    data : {
+                        CUST_ID : custId
+                    },
+                    type : 'POST',
+                    successFunc : function(data) {
+                        $.endPageLoading();
+                        $('#CUST_ID_' + custId).remove();
+                    },
+                    errorFunc : function (resultCode, reusltInfo) {
+                        $.endPageLoading();
+                    }
+                })
             }
-        })
+            else {
+
+            }
+        },{"cancel":"取消"})
+
     },
     selectCounselor : function(obj) {
         counselorPopup.initCounselorPopup(obj, function(selectedEmployeeList) {
