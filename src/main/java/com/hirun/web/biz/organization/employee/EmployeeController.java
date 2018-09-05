@@ -3,15 +3,19 @@ package com.hirun.web.biz.organization.employee;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.security.Encryptor;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
+import com.most.core.web.session.HttpSessionManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -28,6 +32,16 @@ public class EmployeeController extends RootController {
 
     @RequestMapping(value = "/employee/getAllSubordinatesCounselors", method = RequestMethod.POST)
     public @ResponseBody String editCust(@RequestParam Map pageData) throws Exception {
+        String employeeIds = (String)pageData.get("EMPLOYEE_IDS");
+        if(StringUtils.isBlank(employeeIds)) {
+            logger.info("/employee/getAllSubordinatesCounselors没有取到EMPLOYEE_IDS");
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            employeeIds = sessionEntity.get("EMPLOYEE_ID");
+            logger.info("/employee/getAllSubordinatesCounselors从session里取EMPLOYEE_ID，值为" + employeeIds);
+            pageData.put("EMPLOYEE_IDS", employeeIds);
+        }
+
         ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors", pageData);
         return response.toJsonString();
     }

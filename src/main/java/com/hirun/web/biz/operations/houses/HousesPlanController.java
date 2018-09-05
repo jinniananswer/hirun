@@ -97,9 +97,11 @@ public class HousesPlanController extends RootController{
     public @ResponseBody String queryHousesByEmployeeId(@RequestParam Map condition) throws Exception{
         String employeeId = (String)condition.get("EMPLOYEE_ID");
         if(StringUtils.isBlank(employeeId)) {
+            logger.info("queryHousesByEmployeeId没有取到EMPLOYEE_ID");
             HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
             SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
             employeeId = sessionEntity.get("EMPLOYEE_ID");
+            logger.info("/queryHousesByEmployeeId从session里取EMPLOYEE_ID，值为" + employeeId);
         }
 
         condition.put("EMPLOYEE_ID", employeeId);
