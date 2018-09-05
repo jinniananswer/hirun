@@ -29,7 +29,7 @@ public class UnEntryPlanEmployeeListVO {
         JSONArray ret = new JSONArray();
 
         Iterator<String> iter = unEntryPlanMap.keySet().iterator();
-        if(iter.hasNext()) {
+        while(iter.hasNext()) {
             String key = iter.next();
             UnEntryPlanEmployeeVO unEntryPlanEmployeeVO = unEntryPlanMap.get(key);
             ret.add(unEntryPlanEmployeeVO.toJSONObeject());
