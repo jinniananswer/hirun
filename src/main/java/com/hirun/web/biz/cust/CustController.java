@@ -5,6 +5,7 @@ import com.most.core.pub.data.SessionEntity;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
 import com.most.core.web.session.HttpSessionManager;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -90,6 +91,36 @@ public class CustController extends RootController{
     @RequestMapping(value = "/cust/restoreCustById", method = RequestMethod.POST)
     public String restoreCustById(@RequestParam Map map) throws Exception {
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.restoreCustById", map);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/cust/queryCustList4TopEmployeeId", method = RequestMethod.GET)
+    public String queryCustList4TopEmployeeId(@RequestParam Map pageData) throws Exception {
+        String employeeId = (String)pageData.get("TOP_EMPLOYEE_ID");
+        if(StringUtils.isBlank(employeeId)) {
+            logger.info("/cust/queryCustList4TopEmployeeId没有取到TOP_EMPLOYEE_ID");
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            employeeId = sessionEntity.get("EMPLOYEE_ID");
+            logger.info("/cust/queryCustList4TopEmployeeId从session里【"+session.getId()+"】取EMPLOYEE_ID，值为" + employeeId);
+            pageData.put("TOP_EMPLOYEE_ID", employeeId);
+        }
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustList", pageData);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/cust/queryCustList4HouseCounselorId", method = RequestMethod.GET)
+    public String queryCustList4HouseCounselorId(@RequestParam Map pageData) throws Exception {
+        String employeeId = (String)pageData.get("HOUSE_COUNSELOR_ID");
+        if(StringUtils.isBlank(employeeId)) {
+            logger.info("/cust/queryCustList4HouseCounselorId没有取到HOUSE_COUNSELOR_ID");
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            employeeId = sessionEntity.get("EMPLOYEE_ID");
+            logger.info("/cust/queryCustList4HouseCounselorId从session里【"+session.getId()+"】取EMPLOYEE_ID，值为" + employeeId);
+            pageData.put("HOUSE_COUNSELOR_ID", employeeId);
+        }
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustList", pageData);
         return response.toJsonString();
     }
 }

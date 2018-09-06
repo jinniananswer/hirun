@@ -38,7 +38,7 @@ public class EmployeeController extends RootController {
             HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
             SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
             employeeIds = sessionEntity.get("EMPLOYEE_ID");
-            logger.info("/employee/getAllSubordinatesCounselors从session里取EMPLOYEE_ID，值为" + employeeIds);
+            logger.info("/employee/getAllSubordinatesCounselors从session里【"+session.getId()+"】取EMPLOYEE_ID，值为" + employeeIds);
             pageData.put("EMPLOYEE_IDS", employeeIds);
         }
 

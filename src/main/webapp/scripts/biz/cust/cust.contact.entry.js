@@ -39,7 +39,7 @@ var custContactEntry = {
     queryCustList : function(param) {
         param.CUST_STATUS = '1,7';
         $.ajaxReq({
-            url : 'cust/queryCustList',
+            url : 'cust/queryCustList4HouseCounselorId',
             data : param,
             type : 'GET',
             successFunc : function(data) {
