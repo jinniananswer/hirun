@@ -328,6 +328,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
         sb.append("AND b.`JOB_ROLE` IN ('42','58') ");
         sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.status = '0' ");
         sb.append("AND a.`EMPLOYEE_ID` NOT IN (SELECT c.`PLAN_EXECUTOR_ID` FROM ins_plan c WHERE c.`PLAN_DATE` = :PLAN_DATE) ");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
