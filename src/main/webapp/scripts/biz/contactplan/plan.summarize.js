@@ -81,6 +81,9 @@ var planSummarize = {
             param.PLAN_DATE = planDate;
             param.PLAN_EXECUTOR_ID = executorId;
         }
+
+        var exit = 'false';
+
         $.ajaxReq({
             url:'plan/getSummarizeInitData',
             data: param,
@@ -126,9 +129,15 @@ var planSummarize = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
+                exit = 'true';
                 $.redirect.closeCurrentPage();
             },
         });
+
+
+        if(exit == 'true') {
+            return;
+        }
 
         //客户查询条件初始化 开始
         $.ajaxReq({
