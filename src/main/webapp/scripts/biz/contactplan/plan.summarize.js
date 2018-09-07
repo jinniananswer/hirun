@@ -132,7 +132,7 @@ var planSummarize = {
 
         //客户查询条件初始化 开始
         $.ajaxReq({
-            url : 'queryHousesByEmployeeId',
+            url : 'queryHousesByEmployeeId2',
             data : {
                 EMPLOYEE_ID : planSummarize.executorId,
             },
@@ -167,7 +167,7 @@ var planSummarize = {
         });
 
         $.ajaxReq({
-            url : 'queryHousesByEmployeeId',
+            url : 'queryHousesByEmployeeId2',
             data : {
                 EMPLOYEE_ID : planSummarize.executorId,
             },
