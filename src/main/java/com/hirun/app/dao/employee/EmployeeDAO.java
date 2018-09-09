@@ -352,4 +352,25 @@ public class EmployeeDAO extends StrongObjectDAO{
         }
         return employees.get(0);
     }
+
+    public RecordSet queryEmployeeByEnterpriseIdAndName(String enterpriseId, String name) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("ENTERPRISE_ID", enterpriseId);
+        parameter.put("NAME", name);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, f.NAME parent_org_name ");
+        sb.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
+        sb.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
+        sb.append("where b.USER_ID = a.USER_ID ");
+        sb.append("and a.status = '0' ");
+        sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
+        sb.append("and now() < d.end_date ");
+        sb.append("and e.ORG_ID = d.ORG_ID ");
+        sb.append("and b.name like concat('%',:NAME,'%') ");
+        sb.append("and e.enterprise_id = :ENTERPRISE_ID ");
+        sb.append("order by user_id ");
+
+        return this.queryBySql(sb.toString(), parameter);
+    }
 }
