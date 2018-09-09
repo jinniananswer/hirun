@@ -334,4 +334,22 @@ public class EmployeeDAO extends StrongObjectDAO{
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
         return employees;
     }
+
+    public EmployeeEntity getEmployeeByMobileNo(String mobileNo) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("MOBILE_NO", mobileNo);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT a.* FROM ins_employee a, ins_user b ");
+        sb.append("WHERE a.user_id = b.user_id ");
+        sb.append("AND a.`STATUS` = '0' ");
+        sb.append("AND b.`STATUS` = '0' ");
+        sb.append("AND b.`MOBILE_NO` = :MOBILE_NO ");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        if(ArrayTool.isEmpty(employees)) {
+            return null;
+        }
+        return employees.get(0);
+    }
 }
