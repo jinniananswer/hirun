@@ -17,6 +17,8 @@
     <entity name="OrgCenter.employee.EmployeeService.assignPermission"  class="com.hirun.app.biz.employee.EmployeeService" method="assignPermission"/>
     <entity name="OrgCenter.employee.EmployeeService.getAllSubordinatesCounselors"  class="com.hirun.app.biz.employee.EmployeeService" method="getAllSubordinatesCounselors"/>
     <entity name="OrgCenter.employee.EmployeeService.entryHoliday"  class="com.hirun.app.biz.employee.EmployeeService" method="entryHoliday"/>
+    <entity name="OrgCenter.employee.EmployeeService.queryEnterpriseEmployees"  class="com.hirun.app.biz.employee.EmployeeService" method="queryEnterpriseEmployees"/>
+    <entity name="OrgCenter.employee.EmployeeService.resetPassword"  class="com.hirun.app.biz.employee.EmployeeService" method="resetPassword"/>
 
     <!--运营管理中心服务-->
     <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>
