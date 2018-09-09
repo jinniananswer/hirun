@@ -81,6 +81,9 @@ var planSummarize = {
             param.PLAN_DATE = planDate;
             param.PLAN_EXECUTOR_ID = executorId;
         }
+
+        var exit = 'false';
+
         $.ajaxReq({
             url:'plan/getSummarizeInitData',
             data: param,
@@ -126,13 +129,19 @@ var planSummarize = {
             },
             errorFunc:function(resultCode, resultInfo) {
                 alert(resultInfo);
+                exit = 'true';
                 $.redirect.closeCurrentPage();
             },
         });
 
+
+        if(exit == 'true') {
+            return;
+        }
+
         //客户查询条件初始化 开始
         $.ajaxReq({
-            url : 'queryHousesByEmployeeId',
+            url : 'queryHousesByEmployeeId2',
             data : {
                 EMPLOYEE_ID : planSummarize.executorId,
             },
@@ -167,7 +176,7 @@ var planSummarize = {
         });
 
         $.ajaxReq({
-            url : 'queryHousesByEmployeeId',
+            url : 'queryHousesByEmployeeId2',
             data : {
                 EMPLOYEE_ID : planSummarize.executorId,
             },
@@ -337,6 +346,11 @@ var planSummarize = {
                     var unFinishCustList = planSummarize.getCustListByActionCode(actionCode, planSummarize.unFinishActionList);
 
                     planCustNum = planCustList.length;
+                    $.each(planCustList, function(idx, planCust) {
+                        if(planCust.CUST_ID == '0') {
+                            planCustNum += parseInt(planCust.CUST_NUM) - 1;
+                        }
+                    })
                     finishCustNum = finishCustList.length;
 
                     //插入html

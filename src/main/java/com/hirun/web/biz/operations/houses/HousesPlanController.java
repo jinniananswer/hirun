@@ -97,9 +97,27 @@ public class HousesPlanController extends RootController{
     public @ResponseBody String queryHousesByEmployeeId(@RequestParam Map condition) throws Exception{
         String employeeId = (String)condition.get("EMPLOYEE_ID");
         if(StringUtils.isBlank(employeeId)) {
+            logger.info("/queryHousesByEmployeeId没有取到EMPLOYEE_ID");
             HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
             SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
             employeeId = sessionEntity.get("EMPLOYEE_ID");
+            logger.info("/queryHousesByEmployeeId从session里【"+session.getId()+"】取EMPLOYEE_ID，值为" + employeeId);
+        }
+
+        condition.put("EMPLOYEE_ID", employeeId);
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryHousesByEmployeeId", condition);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/queryHousesByEmployeeId2")
+    public @ResponseBody String queryHousesByEmployeeId2(@RequestParam Map condition) throws Exception{
+        String employeeId = (String)condition.get("EMPLOYEE_ID");
+        if(StringUtils.isBlank(employeeId)) {
+            logger.info("/queryHousesByEmployeeId2没有取到EMPLOYEE_ID");
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            employeeId = sessionEntity.get("EMPLOYEE_ID");
+            logger.info("/queryHousesByEmployeeId2从session里【"+session.getId()+"】取EMPLOYEE_ID，值为" + employeeId);
         }
 
         condition.put("EMPLOYEE_ID", employeeId);

@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户清理</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="scripts/biz/cust/cust.delete.js"></script>
+    <script src="scripts/biz/cust/cust.delete.js?a=3"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">

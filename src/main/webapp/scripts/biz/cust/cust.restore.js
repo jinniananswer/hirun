@@ -20,7 +20,7 @@ var custRestore = {
         }
 
         $.ajaxReq({
-            url : 'cust/queryCustList',
+            url : 'cust/queryCustList4TopEmployeeId',
             data : param,
             type : 'GET',
             successFunc : function(data) {

@@ -9,6 +9,7 @@ import com.hirun.app.bean.plan.PlanStatBean;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
+import com.hirun.pub.domain.vo.UnEntryPlanEmployeeListVO;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.pub.data.Record;
@@ -168,6 +169,22 @@ public class PlanReportService extends GenericService{
         }
 
         response.set("EMPLOYEE_DAILYSHEET_LIST", sheetList);
+
+        return response;
+    }
+
+    public ServiceResponse queryUnEntryPlanList(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String planDate = request.getString("PLAN_DATE");
+
+        UnEntryPlanEmployeeListVO unEntryPlanEmployeeListVO = new UnEntryPlanEmployeeListVO();
+        List<EmployeeEntity> employeeList = EmployeeBean.queryUnEntryPlanEmployeeList(planDate);
+        for(EmployeeEntity employee : employeeList) {
+            OrgEntity org = EmployeeBean.queryOrgByEmployee(employee.getEmployeeId(), "3");
+            unEntryPlanEmployeeListVO.addEmployeeName(org.getName(), employee.getName());
+        }
+
+        response.set("COMPANY_LIST", unEntryPlanEmployeeListVO.toJSONArray());
 
         return response;
     }

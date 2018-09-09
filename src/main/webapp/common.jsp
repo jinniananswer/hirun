@@ -2,24 +2,35 @@
 <%@ page import="com.alibaba.fastjson.JSONObject" %>
 <%@ page import="com.hirun.pub.domain.entity.user.UserEntity" %>
 <%@ page import="com.hirun.pub.domain.entity.org.EmployeeEntity" %>
+<%@ page import="com.most.core.pub.data.SessionEntity" %>
+<%@ page import="com.most.core.web.session.HttpSessionManager" %>
 <!DOCTYPE HTML>
 <%@ page contentType="text/html;charset=UTF-8" language="java"  pageEncoding="UTF-8"  %>
 <%
     String path = request.getContextPath();
     String basePath = request.getScheme()+"://" +request.getServerName()+":" +request.getServerPort()+path+"/" ;
 
-    UserEntity userEntity = (UserEntity) session.getAttribute("USER");
+    Object user = session.getAttribute("USER");
     String userId = "";
-    if(userEntity != null) {
+    if(user != null) {
+        UserEntity userEntity = (UserEntity)user;
         userId = userEntity.getUserId();
     }
 
+    /*
     EmployeeEntity employeeEntity = (EmployeeEntity)session.getAttribute("EMPLOYEE");
     String employeeId = "";
     String employeeName = "";
     if(employeeEntity != null) {
         employeeId = employeeEntity.getEmployeeId();
         employeeName = employeeEntity.getName();
+    }*/
+    String employeeId = "";
+    String employeeName = "";
+    SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+    if(sessionEntity != null) {
+        employeeId = sessionEntity.get("EMPLOYEE_ID");
+        employeeName = sessionEntity.get("EMPLOYEE_NAME");
     }
 %>
 <html size="s">

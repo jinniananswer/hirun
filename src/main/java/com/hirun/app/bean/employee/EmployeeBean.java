@@ -30,15 +30,15 @@ public class EmployeeBean {
      * @throws Exception
      */
     public static EmployeeEntity getEmployeeByMobileNo(String mobileNo) throws Exception {
-        UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
+//        UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
 
-        UserEntity userEntity = userDAO.queryUserByMobileNo(mobileNo);
-        if(userEntity == null) {
-            return null;
-        }
+//        UserEntity userEntity = userDAO.queryUserByMobileNo(mobileNo);
+//        if(userEntity == null) {
+//            return null;
+//        }
 
-        EmployeeEntity employeeEntity = employeeDAO.queryEmployeeByUserId(userEntity.getUserId());
+        EmployeeEntity employeeEntity = employeeDAO.getEmployeeByMobileNo(mobileNo);
         return employeeEntity;
     }
 
@@ -220,5 +220,10 @@ public class EmployeeBean {
             return true;
         else
             return false;
+    }
+
+    public static List<EmployeeEntity> queryUnEntryPlanEmployeeList(String planDate) throws Exception{
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryUnEntryPlanEmployeeList(planDate);
     }
 }

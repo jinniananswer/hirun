@@ -31,6 +31,8 @@ import java.util.regex.Pattern;
  */
 public class SessionVerifyFilter implements Filter{
 
+    protected static Logger logger = LogManager.getLogger(SessionVerifyFilter.class);
+
     private Pattern excepUrlPattern;
 
     private String forwardUrl;
@@ -116,7 +118,7 @@ public class SessionVerifyFilter implements Filter{
             response = ServiceClient.call("OrgCenter.login.LoginService.login", parameter, session);
         }
         catch(Exception e){
-            e.printStackTrace();
+            logger.error("SessionVerifyFilter自动登录失败-----------", e);
             return false;
         }
 
