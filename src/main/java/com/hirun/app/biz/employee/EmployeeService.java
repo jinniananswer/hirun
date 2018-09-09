@@ -604,4 +604,38 @@ public class EmployeeService extends GenericService {
         }
         return new ServiceResponse();
     }
+
+    public ServiceResponse queryEnterpriseEmployees(ServiceRequest request) throws Exception{
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String orgId = OrgBean.getOrgId(sessionEntity);
+        OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
+        OrgEntity org = dao.queryOrgById(orgId);
+        String enterpriseId = org.getEnterpriseId();
+
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        RecordSet employees = employeeDAO.queryEmployeeByEnterpriseIdAndName(enterpriseId, request.getString("SEARCH_TEXT"));
+
+        if(employees != null && employees.size() > 0){
+            for(int i=0;i<employees.size();i++){
+                Record record = employees.get(i);
+                record.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", record.get("JOB_ROLE")));
+            }
+        }
+        ServiceResponse response = new ServiceResponse();
+        response.set("DATAS", ConvertTool.toJSONArray(employees));
+        return response;
+    }
+
+    public ServiceResponse resetPassword(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+
+        String userId = request.getString("USER_ID");
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("USER_ID", userId);
+        parameter.put("PASSWORD", "711be3iidqb6lrsln0avp0v21u");
+        UserDAO dao = DAOFactory.createDAO(UserDAO.class);
+        dao.save("ins_user", parameter);
+        return response;
+    }
 }
