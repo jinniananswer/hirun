@@ -136,4 +136,16 @@ public class EmployeeController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.assignPermission", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/queryEnterpriseEmployees")
+    public @ResponseBody String queryEnterpriseEmployees(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.queryEnterpriseEmployees", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/resetPassword")
+    public @ResponseBody String resetPassword(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.resetPassword", parameter);
+        return response.toJsonString();
+    }
 }
