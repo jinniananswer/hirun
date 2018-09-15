@@ -7,34 +7,36 @@
 <html size="s">
 <head>
 	<base href="<%=basePath%>"></base>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>家装顾问日报表</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+	<title>家装顾问月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/plan/employee.dailysheet.query.js?a=3"></script>
+	<script src="scripts/biz/datacenter/plan/employee.monstat.query.new.js?a=3"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
-	<%--<div class="back" ontap="back();"><span>家装顾问日报表</span></div>--%>
+<%--<div class="back" ontap="back();"><span>家装顾问日报表</span></div>--%>
 <%--</div>--%>
 <jsp:include page="/header.jsp">
-	<jsp:param value="家装顾问日报表" name="headerName"/>
+	<jsp:param value="家装顾问月报表" name="headerName"/>
 </jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
-	<div class="c_form">
-		<ul>
-			<li>
-				<div class="value">
-					<div class="e_mix">
-						<input type="text" id="QUERY_COND_TEXT" disabled="true"/>
-						<button class="e_button-blue" type="button" ontap="EmployeeDailySheetQuery.clickQueryButton();">
-							<span class="e_ico-search"></span>
-						</button>
+	<div class="l_padding l_padding-u">
+		<div class="c_form">
+			<ul>
+				<li class="required">
+					<div class="label">查询月份：</div>
+					<div class="value">
+						<span class="e_mix">
+							<input type="text" id="MON_DATE" name="MON_DATE" datatype="date"
+								   nullable="no" desc="月份" readonly="true"/>
+							<span class="e_ico-date"></span>
+						</span>
 					</div>
-				</div>
-			</li>
-		</ul>
+				</li>
+			</ul>
+		</div>
 	</div>
 	<div class="c_space"></div>
 	<div id="dailysheetTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10" style="height: 34em;">
@@ -44,15 +46,15 @@
 					<thead>
 					<tr>
 						<th col="EMPLOYEE_NAME">家装顾问</th>
-						<%--<th col="PLAN_JW">加微计划数</th>--%>
-						<%--<th col="PLAN_LTZDSTS">蓝图指导书计划数</th>--%>
-						<%--<th col="PLAN_GZHGZ">关注公众号计划数</th>--%>
-						<%--<th col="PLAN_HXJC">核心接触计划数</th>--%>
-						<%--<th col="PLAN_SMJRQLC">扫码计划数</th>--%>
-						<%--<th col="PLAN_XQLTYTS">需求蓝图一计划数</th>--%>
-						<%--<th col="PLAN_ZX">咨询计划数</th>--%>
-						<%--<th col="PLAN_YJALTS">一键案例计划数</th>--%>
-						<%--<th col="PLAN_DKCSMU">城市木屋计划数</th>--%>
+						<th col="PLAN_JW">加微计划数</th>
+						<th col="PLAN_LTZDSTS">蓝图指导书计划数</th>
+						<th col="PLAN_GZHGZ">关注公众号计划数</th>
+						<th col="PLAN_HXJC">核心接触计划数</th>
+						<th col="PLAN_SMJRQLC">扫码计划数</th>
+						<th col="PLAN_XQLTYTS">需求蓝图一计划数</th>
+						<th col="PLAN_ZX">咨询计划数</th>
+						<th col="PLAN_YJALTS">一键案例计划数</th>
+						<th col="PLAN_DKCSMU">城市木屋计划数</th>
 						<th class="e_red" col="FINISH_JW">加微完成数</th>
 						<th class="e_red" col="FINISH_LTZDSTS">蓝图指导书完成数</th>
 						<th class="e_red" col="FINISH_GZHGZ">关注公众号完成数</th>
@@ -90,6 +92,7 @@
 </div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 
+<!--
 <div class="c_popup" id="UI-popup">
 	<div class="c_popupBg" id="UI-popup_bg"></div>
 	<div class="c_popupBox">
@@ -120,7 +123,6 @@
 								</li>
 							</ul>
 						</div>
-						<!-- 客户列表 结束 -->
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
 							<button type="button" class="e_button-l e_button-green" ontap="QueryCondPopup.confirm(this)">查询</button>
@@ -131,10 +133,11 @@
 		</div>
 	</div>
 </div>
+-->
 
 <script type="text/javascript">
-	Wade.setRatio();
-    EmployeeDailySheetQuery.init();
+    Wade.setRatio();
+    EmployeeMonStatQueryNew.init();
 </script>
 </body>
 </html>

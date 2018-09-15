@@ -49,4 +49,19 @@ public class PlanReportController extends RootController {
         ServiceResponse response = ServiceClient.call("DataCenter.plan.PlanReportService.queryUnEntryPlanList", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/datacenter/plan/queryEmployeeMonthSheet2")
+    public @ResponseBody String queryEmployeeMonthSheet2(@RequestParam Map paramter) throws Exception{
+        String employeeId = (String)paramter.get("EMPLOYEE_ID");
+        if(StringUtils.isBlank(employeeId)) {
+            logger.info("/datacenter/plan/queryEmployeeMonthSheet2没有取到EMPLOYEE_ID");
+            HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+            SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+            employeeId = sessionEntity.get("EMPLOYEE_ID");
+            logger.info("/datacenter/plan/queryEmployeeMonthSheet2从session里取EMPLOYEE_ID，值为" + employeeId);
+            paramter.put("EMPLOYEE_ID", employeeId);
+        }
+        ServiceResponse response = ServiceClient.call("DataCenter.plan.PlanReportService.queryEmployeeMonthSheet2", paramter);
+        return response.toJsonString();
+    }
 }
