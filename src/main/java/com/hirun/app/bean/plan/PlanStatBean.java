@@ -285,4 +285,71 @@ public class PlanStatBean {
 
         return dailySheet;
     }
+
+    public static JSONObject queryEmployeeMonSheetByEmployeeId2(String employeeId, String month) throws Exception {
+        PlanMonthDAO planMonthDAODAO = DAOFactory.createDAO(PlanMonthDAO.class);
+
+        List<PlanMonthEntity> employeePlanList = planMonthDAODAO.queryPlanMonthListByMonthAndStatTypeAndOid(month, "EMPLOYEE_PLAN", employeeId);
+        List<PlanMonthEntity> employeeFinishList = planMonthDAODAO.queryPlanMonthListByMonthAndStatTypeAndOid(month, "EMPLOYEE_FINISH", employeeId);
+
+        JSONObject jsonEmployeePlan = new JSONObject();
+        if(ArrayTool.isEmpty(employeePlanList)) {
+            jsonEmployeePlan.put("PLAN_JW",48);
+            jsonEmployeePlan.put("PLAN_LTZDSTS",48);
+            jsonEmployeePlan.put("PLAN_GZHGZ",36);
+            jsonEmployeePlan.put("PLAN_HXJC",24);
+            jsonEmployeePlan.put("PLAN_SMJRQLC",24);
+            jsonEmployeePlan.put("PLAN_XQLTYTS",24);
+            jsonEmployeePlan.put("PLAN_ZX",8);
+            jsonEmployeePlan.put("PLAN_YJALTS",48);
+            jsonEmployeePlan.put("PLAN_DKCSMU",8);
+        } else {
+            for(PlanMonthEntity employeePlan : employeePlanList) {
+                JSONObject tmp = JSONObject.parseObject(employeePlan.getStatResult());
+                jsonEmployeePlan.put("PLAN_JW",jsonEmployeePlan.getIntValue("PLAN_JW") + tmp.getIntValue("JW"));
+                jsonEmployeePlan.put("PLAN_LTZDSTS",jsonEmployeePlan.getIntValue("PLAN_LTZDSTS") + tmp.getIntValue("LTZDSTS"));
+                jsonEmployeePlan.put("PLAN_GZHGZ",jsonEmployeePlan.getIntValue("PLAN_GZHGZ") + tmp.getIntValue("GZHGZ"));
+                jsonEmployeePlan.put("PLAN_HXJC",jsonEmployeePlan.getIntValue("PLAN_HXJC") + tmp.getIntValue("HXJC"));
+                jsonEmployeePlan.put("PLAN_SMJRQLC",jsonEmployeePlan.getIntValue("PLAN_SMJRQLC") + tmp.getIntValue("SMJRQLC"));
+                jsonEmployeePlan.put("PLAN_XQLTYTS",jsonEmployeePlan.getIntValue("PLAN_XQLTYTS") + tmp.getIntValue("XQLTYTS"));
+                jsonEmployeePlan.put("PLAN_ZX",jsonEmployeePlan.getIntValue("PLAN_ZX") + tmp.getIntValue("ZX"));
+                jsonEmployeePlan.put("PLAN_YJALTS",jsonEmployeePlan.getIntValue("PLAN_YJALTS") + tmp.getIntValue("YJALTS"));
+                jsonEmployeePlan.put("PLAN_DKCSMU",jsonEmployeePlan.getIntValue("PLAN_DKCSMU") + tmp.getIntValue("DKCSMU"));
+            }
+        }
+
+        JSONObject jsonEmployeeFinish = new JSONObject();
+        if(ArrayTool.isEmpty(employeeFinishList)) {
+            jsonEmployeeFinish.put("FINISH_JW",0);
+            jsonEmployeeFinish.put("FINISH_LTZDSTS",0);
+            jsonEmployeeFinish.put("FINISH_GZHGZ",0);
+            jsonEmployeeFinish.put("FINISH_HXJC",0);
+            jsonEmployeeFinish.put("FINISH_SMJRQLC",0);
+            jsonEmployeeFinish.put("FINISH_XQLTYTS",0);
+            jsonEmployeeFinish.put("FINISH_ZX",0);
+            jsonEmployeeFinish.put("FINISH_YJALTS",0);
+            jsonEmployeeFinish.put("FINISH_DKCSMU",0);
+        } else {
+            for(PlanMonthEntity employeeFinish : employeeFinishList) {
+                JSONObject tmp = JSONObject.parseObject(employeeFinish.getStatResult());
+                jsonEmployeeFinish.put("FINISH_JW",jsonEmployeeFinish.getIntValue("FINISH_JW") + tmp.getIntValue("JW"));
+                jsonEmployeeFinish.put("FINISH_LTZDSTS",jsonEmployeeFinish.getIntValue("FINISH_LTZDSTS") + tmp.getIntValue("LTZDSTS"));
+                jsonEmployeeFinish.put("FINISH_GZHGZ",jsonEmployeeFinish.getIntValue("FINISH_GZHGZ") + tmp.getIntValue("GZHGZ"));
+                jsonEmployeeFinish.put("FINISH_HXJC",jsonEmployeeFinish.getIntValue("FINISH_HXJC") + tmp.getIntValue("HXJC"));
+                jsonEmployeeFinish.put("FINISH_SMJRQLC",jsonEmployeeFinish.getIntValue("FINISH_SMJRQLC") + tmp.getIntValue("SMJRQLC"));
+                jsonEmployeeFinish.put("FINISH_XQLTYTS",jsonEmployeeFinish.getIntValue("FINISH_XQLTYTS") + tmp.getIntValue("XQLTYTS"));
+                jsonEmployeeFinish.put("FINISH_ZX",jsonEmployeeFinish.getIntValue("FINISH_ZX") + tmp.getIntValue("ZX"));
+                jsonEmployeeFinish.put("FINISH_YJALTS",jsonEmployeeFinish.getIntValue("FINISH_YJALTS") + tmp.getIntValue("YJALTS"));
+                jsonEmployeeFinish.put("FINISH_DKCSMU",jsonEmployeeFinish.getIntValue("FINISH_DKCSMU") + tmp.getIntValue("DKCSMU"));
+            }
+        }
+
+        JSONObject dailySheet = new JSONObject();
+        dailySheet.putAll(jsonEmployeePlan);
+        dailySheet.putAll(jsonEmployeeFinish);
+        dailySheet.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(employeeId));
+        dailySheet.put("EMPLOYEE_ID", employeeId);
+
+        return dailySheet;
+    }
 }

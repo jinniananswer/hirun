@@ -32,17 +32,16 @@ public class PlanMonthDAO extends StrongObjectDAO {
         }
     }
 
-    public List<PlanMonthEntity> queryPlanMonthListByStartAndEndAndStatTypeAndOid(String startMonth, String endMonth, String statType, String objectId) throws Exception{
+    public List<PlanMonthEntity> queryPlanMonthListByMonthAndStatTypeAndOid(String statMonth, String statType, String objectId) throws Exception{
         StringBuilder sql = new StringBuilder();
         Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("START_DATE", startMonth);
-        parameter.put("END_DATE", endMonth);
+        parameter.put("STAT_MONTH", statMonth);
         parameter.put("STAT_TYPE", statType);
         parameter.put("OBJECT_ID", objectId);
 
         sql.append(" SELECT * FROM stat_plan_month ");
         sql.append(" where 1=1 ");
-        sql.append(" and stat_momth BETWEEN :START_MONTH AND :END_MONTH ");
+        sql.append(" and stat_month = :STAT_MONTH ");
         sql.append(" AND stat_type = :STAT_TYPE ");
         sql.append(" AND OBJECT_ID = :OBJECT_ID ");
         List<PlanMonthEntity> list = this.queryBySql(PlanMonthEntity.class, sql.toString(), parameter);
