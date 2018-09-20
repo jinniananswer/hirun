@@ -186,8 +186,10 @@ public class CustService extends GenericService{
         //mobile_no模糊化
         String custRelaUserId = EmployeeBean.getEmployeeByEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")).getUserId();
         if(!userId.equals(custRelaUserId)) {
+            String mobileNo = jsonCust.getString("MOBILE_NO");
+            if(StringUtils.isNotBlank(mobileNo) && mobileNo.length() > 3)
 //            String mobileNo = jsonCust.getString("MOBILE_NO");
-            jsonCust.put("MOBILE_NO", "***");
+            jsonCust.put("MOBILE_NO", mobileNo.substring(0,3) + "***");
         }
 
         response.setBody(new Body(jsonCust));
