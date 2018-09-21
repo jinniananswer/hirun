@@ -173,4 +173,17 @@ public class HousesPlanController extends RootController{
     public String redirectToMyDetail() throws Exception{
         return "/biz/operations/houses/my_house_detail";
     }
+
+    @RequestMapping("/initCreateScatterHouses")
+    public @ResponseBody String initCreateScatterHouses() throws Exception{
+        ServiceRequest request = new ServiceRequest();
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.initCreateScatterHouses", request);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/submitScatterHouses")
+    public @ResponseBody String submitScatterHouses(@RequestParam Map submitData) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.submitScatterHouses", submitData);
+        return response.toJsonString();
+    }
 }
