@@ -15,7 +15,8 @@
                 [
                     {TEXT:"重点期盘", VALUE:"0"},
                     {TEXT:"重点现盘", VALUE:"1"},
-                    {TEXT:"责任楼盘", VALUE:"2"}
+                    {TEXT:"责任楼盘", VALUE:"2"},
+                    {TEXT:"散盘", VALUE:"3"}
                 ]
             );
 
