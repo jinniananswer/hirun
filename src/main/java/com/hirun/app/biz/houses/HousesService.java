@@ -13,9 +13,6 @@ import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.houses.HouseDAO;
 import com.hirun.app.dao.houses.HousesPlanDAO;
 import com.hirun.app.dao.org.OrgDAO;
-import com.hirun.app.push.AndroidMsgPushServer;
-import com.hirun.app.push.IOSMsgPushServer;
-import com.hirun.app.push.NotificationServer;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.houses.HousesEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
@@ -24,7 +21,6 @@ import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
-import com.most.core.app.session.RightsCollection;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.*;
 import com.most.core.pub.tools.datastruct.ArrayTool;
@@ -630,5 +626,66 @@ public class HousesService extends GenericService {
         response.set("HOUSES_LIST", ConvertTool.toJSONArray(housesEntityList, new String[] {"HOUSES_ID","NAME"}));
 
         return response;
+    }
+
+    public ServiceResponse initCreateScatterHouses(ServiceRequest request) throws Exception{
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String orgId = OrgBean.getOrgId(sessionEntity);
+        OrgEntity org = null;
+        if (StringUtils.isNotBlank(orgId)) {
+            OrgDAO dao = new OrgDAO("ins");
+            org = dao.queryOrgById(orgId);
+        }
+        boolean needAllCity = AuthorityJudgement.hasAllCity();
+
+        JSONArray citys = null;
+        if (needAllCity) {
+            citys = ConvertTool.toJSONArray(StaticDataTool.getCodeTypeDatas("BIZ_CITY"));
+        } else {
+            citys = new JSONArray();
+            JSONObject city = new JSONObject();
+            city.put("CODE_VALUE", org.getCity());
+            city.put("CODE_NAME", StaticDataTool.getCodeName("BIZ_CITY", org.getCity()));
+            citys.add(city);
+        }
+
+        ServiceResponse response = new ServiceResponse();
+
+        response.set("CITYS", citys);
+
+        if (org != null) {
+            response.set("DEFAULT_CITY_ID", org.getCity());
+            response.set("DEFAULT_CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", org.getCity()));
+        }
+        return response;
+    }
+
+    public ServiceResponse submitScatterHouses(ServiceRequest request) throws Exception{
+        Map<String, String> house = new HashMap<String, String>();
+        AppSession session = SessionManager.getSession();
+        String now = TimeTool.now();
+
+        house.put("NAME", request.getString("NAME"));
+        house.put("CITY", request.getString("CITY"));
+        house.put("NATURE", "3");//责任楼盘
+        house.put("PLAN_IN_DATE", now);
+        house.put("DESTROY_DATE", "3000-12-31 23:59:59");
+        house.put("STATUS", "1");
+        String userId = session.getSessionEntity().getUserId();
+        house.put("CREATE_USER_ID", userId);
+        house.put("UPDATE_USER_ID", userId);
+        house.put("UPDATE_TIME", session.getCreateTime());
+        house.put("CREATE_DATE", session.getCreateTime());
+
+        HouseDAO dao = new HouseDAO("ins");
+        List<HousesEntity> houses = dao.queryHousesByName(request.getString("NAME"));
+        if(ArrayTool.isNotEmpty(houses)){
+            ServiceResponse response = new ServiceResponse();
+            response.setError("HIRUN_CREATE_HOUSE_000001","该楼盘名称已经存在，请重新检查楼盘名称！");
+            return response;
+        }
+        long houseId = dao.insertAutoIncrement("ins_houses", house);
+        return new ServiceResponse();
     }
 }
