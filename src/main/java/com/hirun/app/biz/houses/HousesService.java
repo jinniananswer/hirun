@@ -688,4 +688,10 @@ public class HousesService extends GenericService {
         long houseId = dao.insertAutoIncrement("ins_houses", house);
         return new ServiceResponse();
     }
+
+    public ServiceResponse autoUpdateNature(ServiceRequest request) throws Exception{
+        HousesPlanDAO dao = DAOFactory.createDAO(HousesPlanDAO.class);
+        dao.autoUpdateHouseNature();
+        return new ServiceResponse();
+    }
 }
