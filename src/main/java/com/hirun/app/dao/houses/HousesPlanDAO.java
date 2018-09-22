@@ -6,6 +6,7 @@ import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSessionException;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -344,5 +345,23 @@ public class HousesPlanDAO extends StrongObjectDAO {
             return null;
 
         return recordSet.get(0);
+    }
+
+    public void autoUpdateHouseNature() throws SQLException{
+        StringBuilder sb = new StringBuilder();
+        sb.append(" update ins_houses ");
+        sb.append(" set nature = '1' ");
+        sb.append(" where nature = '0' ");
+        sb.append(" and now() >= check_date ");
+        sb.append(" and now() < destroy_date ");
+        this.executeUpdate(sb.toString(), null);
+
+        sb = new StringBuilder();
+        sb.append(" update ins_houses ");
+        sb.append(" set nature = '2' ");
+        sb.append(" where nature = '1' ");
+        sb.append(" and now() >= (DATE_ADD(CHECK_DATE,INTERVAL 18 MONTH)) ");
+        sb.append(" and now() < destroy_date ");
+        this.executeUpdate(sb.toString(), null);
     }
 }
