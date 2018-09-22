@@ -14,7 +14,7 @@ import java.util.Map;
 @ResponseBody
 public class HirunPlusController {
 
-    @RequestMapping(value = "/api/hirunplus/syncSubscription", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/hirunplus/syncSubscription")
     public String addCust(@RequestParam Map requestData) throws Exception {
         ServiceResponse response = ServiceClient.call("OutCenter.hirunplus.HirunPlusService.syncSubscription", requestData);
         return response.toJsonString();
