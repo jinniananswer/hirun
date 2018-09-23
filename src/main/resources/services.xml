@@ -73,7 +73,7 @@
     <entity name="CustCenter.cust.CustService.queryCustContact"  class="com.hirun.app.biz.cust.CustService" method="queryCustContact"/>
     <entity name="CustCenter.cust.CustService.queryCustContact"  class="com.hirun.app.biz.cust.CustService" method="queryCustContact"/>
     <entity name="CustCenter.cust.CustService.restoreCustById"  class="com.hirun.app.biz.cust.CustService" method="restoreCustById"/>
-
+    <entity name="CustCenter.cust.CustService.queryCustAction4HouseCounselor"  class="com.hirun.app.biz.cust.CustService" method="queryCustAction4HouseCounselor"/>
 
     <!--数据中心服务-->
     <entity name="DataCenter.houses.HousesReportService.reportAllHousesNature"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportAllHousesNature"/>

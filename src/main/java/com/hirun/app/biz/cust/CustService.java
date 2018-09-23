@@ -15,17 +15,16 @@ import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
 import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.hirun.pub.domain.entity.param.ActionEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.hirun.pub.domain.enums.cust.Sex;
+import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.Body;
-import com.most.core.pub.data.ServiceRequest;
-import com.most.core.pub.data.ServiceResponse;
-import com.most.core.pub.data.SessionEntity;
+import com.most.core.pub.data.*;
 import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
@@ -344,6 +343,68 @@ public class CustService extends GenericService{
         dbParam.put("UPDATE_TIME", now);
         custDAO.save("INS_CUSTOMER", dbParam);
 
+        return response;
+    }
+
+    public ServiceResponse queryCustAction4HouseCounselor(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        JSONObject requestData = request.getBody().getData();
+        String houseCounselorIds = requestData.getString("HOUSE_COUNSELOR_IDS");
+        String topEmployeeId = requestData.getString("TOP_EMPLOYEE_ID");
+
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        if(StringUtils.isNotBlank(houseCounselorIds)) {
+//            custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"));
+        } else if(StringUtils.isNotBlank(topEmployeeId)) {
+            StringBuilder tmpHouseCounselorIds = new StringBuilder();
+            List<EmployeeEntity> employeeEntityList = EmployeeBean.getAllSubordinatesCounselors(topEmployeeId);
+            if(ArrayTool.isNotEmpty(employeeEntityList)) {
+                for(EmployeeEntity employeeEntity : employeeEntityList) {
+                    tmpHouseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
+                }
+            }
+//            tmpHouseCounselorIds.append(topEmployeeId);
+            if(tmpHouseCounselorIds.length() > 0) {
+                houseCounselorIds = tmpHouseCounselorIds.substring(0, tmpHouseCounselorIds.length() - 1);
+            }
+        }
+
+        List<CustomerEntity> custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"));
+        JSONArray result = new JSONArray();
+        GenericDAO insDao = new GenericDAO("ins");
+        for(CustomerEntity customerEntity : custList) {
+            JSONObject object = customerEntity.toJSON(new String[] {"CUST_ID", "CUST_NAME"});
+
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT cust_id, action_code, COUNT(action_code) action_num, DATE_FORMAT(MAX(finish_time), '%Y-%m-%d %H:%i:%s') last_finish_time ");
+            sql.append("FROM ins_cust_original_action ");
+            sql.append("WHERE cust_id = :CUST_ID ");
+            sql.append("GROUP BY action_code ");
+            Map<String, String> parameter = new HashMap<String, String>();
+            parameter.put("CUST_ID", customerEntity.getCustId());
+
+            RecordSet recordSet = insDao.queryBySql(sql.toString(), parameter);
+
+            for(int i = 0, size = recordSet.size(); i <size; i++) {
+                Record record = recordSet.get(i);
+                String actionCode = record.get("ACTION_CODE");
+                String actionNum = record.get("ACTION_NUM");
+                String lastFinishTime = record.get("LAST_FINISH_TIME");
+                object.put(actionCode + "_NUM",actionNum);
+                object.put(actionCode + "_LAST_TIME",lastFinishTime);
+            }
+
+            List<ActionEntity> actionEntityList = ActionCache.getActionListByType("1");
+            for(ActionEntity actionEntity : actionEntityList) {
+                if(!object.containsKey(actionEntity.getActionCode() + "_LAST_TIME")) {
+                    object.put(actionEntity.getActionCode() + "_NUM", 0);
+                }
+            }
+
+            result.add(object);
+        }
+
+        response.set("RESULT", result);
         return response;
     }
 }

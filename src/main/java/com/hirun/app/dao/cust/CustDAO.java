@@ -160,4 +160,36 @@ public class CustDAO extends StrongObjectDAO {
         sb.append("and cust_status not in (8,9) ");
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
     }
+
+    public List<CustomerEntity> queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("START_DATE", startDate);
+        parameter.put("END_DATE", endDate);
+        parameter.put("FINISH_ACTION", finishAction);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT customer.CUST_ID,CUST_NAME FROM ins_customer customer, ");
+        sb.append("(SELECT cust_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action " +
+                "GROUP BY cust_id) tmp_actions, ");
+        sb.append("(SELECT cust_id, MIN(finish_time) finish_time FROM ins_cust_original_action " +
+                "WHERE action_code = 'JW' " +
+                "GROUP BY cust_id) tmp_time ");
+        sb.append("WHERE customer.CUST_ID = tmp_actions.CUST_ID ");
+        sb.append("AND tmp_actions.CUST_ID = tmp_time.CUST_ID ");
+        sb.append("AND customer.`CUST_STATUS` != '9' ");
+        if(StringUtils.isNotBlank(houseCounselorIds)) {
+            sb.append("AND customer.HOUSE_COUNSELOR_ID IN (").append(houseCounselorIds).append(") ");
+        }
+        if(StringUtils.isNotBlank(startDate)) {
+            sb.append("AND tmp_time.finish_time >= :START_DATE ");
+        }
+        if(StringUtils.isNotBlank(endDate)) {
+            sb.append("AND tmp_time.finish_time <= :END_DATE ");
+        }
+        if(StringUtils.isNotBlank(finishAction)) {
+            sb.append("AND finish_actions like CONCAT('%', :FINISH_ACTION, '%') ");
+        }
+        sb.append(" LIMIT 300");
+        return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
+    }
 }

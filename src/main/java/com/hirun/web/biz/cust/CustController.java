@@ -123,4 +123,13 @@ public class CustController extends RootController{
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustList", pageData);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/cust/queryCustAction4HouseCounselor", method = RequestMethod.GET)
+    public String queryCustAction4HouseCounselor(@RequestParam Map pageData) throws Exception {
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+        SessionEntity sessionEntity = HttpSessionManager.getSessionEntity(session.getId());
+        pageData.put("TOP_EMPLOYEE_ID", sessionEntity.get("EMPLOYEE_ID"));
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustAction4HouseCounselor", pageData);
+        return response.toJsonString();
+    }
 }
