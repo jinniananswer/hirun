@@ -1,6 +1,7 @@
 package com.hirun.app.biz.out.hirunplus;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.out.OutBean;
 import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.app.service.GenericService;
 import com.most.core.pub.data.ServiceRequest;
@@ -37,7 +38,9 @@ public class HirunPlusService extends GenericService{
 
         dbParam.put("INDB_TIME", now);
         dbParam.put("DEAL_TAG", "0");
-        dao.insert("out_hirunplus_reg_2",ConvertTool.toMap(dbParam));
+        if(!OutBean.isExistData4Reg(requestData.getString("openid"))) {
+            dao.insert("out_hirunplus_reg",ConvertTool.toMap(dbParam));
+        }
 
         return response;
     }
