@@ -161,11 +161,12 @@ public class CustDAO extends StrongObjectDAO {
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
     }
 
-    public List<CustomerEntity> queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction) throws Exception{
+    public List<CustomerEntity> queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction, String custName) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("START_DATE", startDate);
         parameter.put("END_DATE", endDate);
         parameter.put("FINISH_ACTION", finishAction);
+        parameter.put("CUST_NAME", custName);
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT customer.CUST_ID,CUST_NAME FROM ins_customer customer, ");
@@ -188,6 +189,9 @@ public class CustDAO extends StrongObjectDAO {
         }
         if(StringUtils.isNotBlank(finishAction)) {
             sb.append("AND finish_actions like CONCAT('%', :FINISH_ACTION, '%') ");
+        }
+        if(StringUtils.isNotBlank(custName)) {
+            sb.append("AND customer.cust_name like CONCAT('%', :CUST_NAME, '%') ");
         }
         sb.append(" LIMIT 300");
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);

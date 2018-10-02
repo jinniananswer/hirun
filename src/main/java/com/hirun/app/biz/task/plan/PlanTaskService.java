@@ -2,6 +2,8 @@ package com.hirun.app.biz.task.plan;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.out.hirunplusdata.DataImportUtil;
+import com.hirun.app.bean.out.hirunplusdata.YJALDataImport;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
 import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.biz.common.PerformDueTaskService;
@@ -204,9 +206,11 @@ public class PlanTaskService extends GenericService {
 
     public ServiceResponse test(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
-        PerformDueTaskService service = new PerformDueTaskService();
 
-        service.signToDone("1");
+        String host = "www.hi-run.net";
+        String path = "/api/subscribe";
+        JSONArray jsonArray = DataImportUtil.getDataByApi(host, path, "2018-09-29 16:25:00", "2018-09-29 17:00:00");
+//        YJALDataImport.dataImport("2018-09-29 16:25:00", "2018-09-29 17:00:00");
 
         return response;
     }

@@ -3,19 +3,8 @@ package com.hirun.app.bean.out.hirunplusdata;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.out.OutBean;
-import com.hirun.app.dao.out.DataGetInfoDAO;
 import com.most.core.app.database.dao.GenericDAO;
-import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.pub.tools.time.TimeTool;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,21 +17,11 @@ public class GZGZHDataImport {
 
     private static String host = "www.hi-run.net";
     private static String path = "/api/subscribe";
-    private static String pageSize = "100";
 
     public static void dataImport(String start, String end) throws Exception {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
         List<Map<String, String>> dbList = new ArrayList<Map<String, String>>();
 
-        long total = getTotal(httpclient, start, end);
-
-        int totalPageSize = 0;
-        if(total % 100 == 0) {
-            totalPageSize = (int)total/100;
-        } else {
-            totalPageSize = (int)total/100 + 1;
-        }
-        JSONArray jsonDataList = getData(httpclient, totalPageSize, start, end);
+        JSONArray jsonDataList = DataImportUtil.getDataByApi(host, path, start, end);
         GenericDAO dao = new GenericDAO("out");
         for(int i = 0, size = jsonDataList.size(); i < size; i++) {
             Map<String, String> dbParam = new HashMap<String, String>();
@@ -78,9 +57,10 @@ public class GZGZHDataImport {
         JSONObject reqestData = new JSONObject();
         reqestData.put("start", String.valueOf(TimeTool.strToTime4DateTime(start, TimeTool.TIME_PATTERN)));
         reqestData.put("end", String.valueOf(TimeTool.strToTime4DateTime(end, TimeTool.TIME_PATTERN)));
-        OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end, total);
+        OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end, jsonDataList.size());
     }
 
+    /*
     public static long getTotal(CloseableHttpClient httpclient, String start, String end) throws Exception{
         URI uri = new URIBuilder()
                 .setScheme("http")
@@ -116,7 +96,9 @@ public class GZGZHDataImport {
 
         return total;
     }
+    */
 
+    /*
     public static JSONArray getData(CloseableHttpClient httpclient, int totalPageSize, String start, String end) throws Exception{
         JSONArray jsonDataList = new JSONArray();
         for(int pageNo = 1; pageNo <= totalPageSize; pageNo++) {
@@ -153,4 +135,5 @@ public class GZGZHDataImport {
 
         return jsonDataList;
     }
+    */
 }

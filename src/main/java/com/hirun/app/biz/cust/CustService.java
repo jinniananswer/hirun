@@ -369,7 +369,7 @@ public class CustService extends GenericService{
             }
         }
 
-        List<CustomerEntity> custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"));
+        List<CustomerEntity> custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"), requestData.getString("CUST_NAME"));
         JSONArray result = new JSONArray();
         GenericDAO insDao = new GenericDAO("ins");
         for(CustomerEntity customerEntity : custList) {
