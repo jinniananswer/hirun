@@ -3,6 +3,7 @@ package com.hirun.app.dao.houses;
 import com.hirun.pub.domain.entity.houses.HousesEntity;
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,29 @@ public class HouseDAO extends StrongObjectDAO {
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("NAME", housesName);
+
+        return this.queryBySql(HousesEntity.class, sql.toString(), param);
+    }
+
+    public List<HousesEntity> queryScatterHouses(String housesName, String city) throws Exception {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT * ");
+        sql.append(" FROM INS_HOUSES ");
+        sql.append(" WHERE 1=1 ");
+        sql.append(" AND now() < DESTROY_DATE ");
+        sql.append(" AND nature = '3' ");
+
+        if (StringUtils.isNotBlank(city)) {
+            sql.append(" AND CITY = :CITY ");
+        }
+
+        if (StringUtils.isNotBlank(housesName)) {
+            sql.append(" AND NAME LIKE CONCAT('%', :NAME, '%') ");
+        }
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("NAME", housesName);
+        param.put("CITY", city);
 
         return this.queryBySql(HousesEntity.class, sql.toString(), param);
     }
