@@ -80,14 +80,15 @@ public class CustDAO extends StrongObjectDAO {
         return this.queryByPk(CustomerEntity.class, "INS_CUSTOMER", parameter);
     }
 
-    public void deleteByWxNickisNullAndFirstPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
+    public void deleteByIdentifyIsNullAndFirstPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("HOUSE_COUNSELOR_ID", houseCounselorId);
         parameter.put("FIRST_PLAN_DATE", firstPlanDate);
 
         StringBuilder sql = new StringBuilder();
         sql.append(" DELETE A FROM INS_CUSTOMER A");
-        sql.append(" WHERE A.WX_NICK IS NULL ");
+        sql.append(" WHERE 1=1 ");
+//        sql.append(" WHERE A.WX_NICK IS NULL ");
         sql.append(" AND A.HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
         sql.append(" AND A.FIRST_PLAN_DATE = :FIRST_PLAN_DATE ");
         sql.append(" AND A.IDENTIFY_CODE IS NULL ");
@@ -99,8 +100,7 @@ public class CustDAO extends StrongObjectDAO {
         sql.append(" SELECT * FROM INS_CUSTOMER ");
         sql.append(" WHERE CUST_STATUS = '9' ");
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
-//        sql.append(" AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = :FIRST_PLAN_DATE) ");
-        sql.append(" AND WX_NICK IS NOT NULL ");
+//        sql.append(" AND WX_NICK IS NOT NULL ");
         sql.append(" AND IDENTIFY_CODE IS NOT NULL ");
 
         Map<String, String> parameter = new HashMap<String, String>();
@@ -113,7 +113,7 @@ public class CustDAO extends StrongObjectDAO {
         StringBuilder sql = new StringBuilder(200);
         sql.append(" SELECT * FROM INS_CUSTOMER ");
         sql.append(" WHERE CUST_STATUS = '9' ");
-        sql.append(" AND WX_NICK IS NULL ");
+//        sql.append(" AND WX_NICK IS NULL ");
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
         sql.append(" AND FIRST_PLAN_DATE = :FIRST_PLAN_DATE ");
         sql.append(" AND IDENTIFY_CODE IS NULL ");
@@ -158,6 +158,42 @@ public class CustDAO extends StrongObjectDAO {
         sb.append("and house_id = :HOUSE_ID ");
         sb.append("and IDENTIFY_CODE is not null ");
         sb.append("and cust_status not in (8,9) ");
+        return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
+    }
+
+    public List<CustomerEntity> queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction, String custName) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("START_DATE", startDate);
+        parameter.put("END_DATE", endDate);
+        parameter.put("FINISH_ACTION", finishAction);
+        parameter.put("CUST_NAME", custName);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT customer.CUST_ID,CUST_NAME FROM ins_customer customer, ");
+        sb.append("(SELECT cust_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action " +
+                "GROUP BY cust_id) tmp_actions, ");
+        sb.append("(SELECT cust_id, MIN(finish_time) finish_time FROM ins_cust_original_action " +
+                "WHERE action_code = 'JW' " +
+                "GROUP BY cust_id) tmp_time ");
+        sb.append("WHERE customer.CUST_ID = tmp_actions.CUST_ID ");
+        sb.append("AND tmp_actions.CUST_ID = tmp_time.CUST_ID ");
+        sb.append("AND customer.`CUST_STATUS` != '9' ");
+        if(StringUtils.isNotBlank(houseCounselorIds)) {
+            sb.append("AND customer.HOUSE_COUNSELOR_ID IN (").append(houseCounselorIds).append(") ");
+        }
+        if(StringUtils.isNotBlank(startDate)) {
+            sb.append("AND tmp_time.finish_time >= :START_DATE ");
+        }
+        if(StringUtils.isNotBlank(endDate)) {
+            sb.append("AND tmp_time.finish_time <= :END_DATE ");
+        }
+        if(StringUtils.isNotBlank(finishAction)) {
+            sb.append("AND finish_actions like CONCAT('%', :FINISH_ACTION, '%') ");
+        }
+        if(StringUtils.isNotBlank(custName)) {
+            sb.append("AND customer.cust_name like CONCAT('%', :CUST_NAME, '%') ");
+        }
+        sb.append(" LIMIT 300");
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
     }
 }

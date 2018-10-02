@@ -81,7 +81,7 @@ public class PlanBean {
         CustOriginalActionDAO custOriginalActionDAO = DAOFactory.createDAO(CustOriginalActionDAO.class);
         PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
 
-        Map<String, String> doCustResult = CustBean.isCreateOrBindNewCust(nickName, identifyCode, planDate, executorId);
+        Map<String, String> doCustResult = CustBean.isCreateOrBindNewCust(identifyCode, planDate, executorId);
         String doCust = doCustResult.get("DO_CUST");
         String custId = doCustResult.get("CUST_ID");
         String now = TimeTool.now();

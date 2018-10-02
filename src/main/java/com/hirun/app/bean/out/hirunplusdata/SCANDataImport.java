@@ -26,12 +26,13 @@ public class SCANDataImport {
 
     private static String host = "www.hi-run.net";
     private static String path = "/api/scans";
-    private static String pageSize = "100";
+//    private static String pageSize = "100";
 
     public static void dataImport(String start, String end) throws Exception {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+//        CloseableHttpClient httpclient = HttpClients.createDefault();
         List<Map<String, String>> dbList = new ArrayList<Map<String, String>>();
 
+        /*
         long total = getTotal(httpclient, start, end);
 
         int totalPageSize = 0;
@@ -41,6 +42,8 @@ public class SCANDataImport {
             totalPageSize = (int)total/100 + 1;
         }
         JSONArray jsonDataList = getData(httpclient, totalPageSize, start, end);
+        */
+        JSONArray jsonDataList = DataImportUtil.getDataByApi(host, path, start, end);
         GenericDAO dao = new GenericDAO("out");
         for(int i = 0, size = jsonDataList.size(); i < size; i++) {
             Map<String, String> dbParam = new HashMap<String, String>();
@@ -90,9 +93,10 @@ public class SCANDataImport {
         JSONObject reqestData = new JSONObject();
         reqestData.put("start", String.valueOf(TimeTool.strToTime4DateTime(start, TimeTool.TIME_PATTERN)));
         reqestData.put("end", String.valueOf(TimeTool.strToTime4DateTime(end, TimeTool.TIME_PATTERN)));
-        OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end, total);
+        OutBean.insertDataGetInfo("http://" + host + path,reqestData.toJSONString(),end, jsonDataList.size());
     }
 
+    /*
     public static long getTotal(CloseableHttpClient httpclient, String start, String end) throws Exception{
         URI uri = new URIBuilder()
                 .setScheme("http")
@@ -128,7 +132,9 @@ public class SCANDataImport {
 
         return total;
     }
+    */
 
+    /*
     public static JSONArray getData(CloseableHttpClient httpclient, int totalPageSize, String start, String end) throws Exception{
         JSONArray jsonDataList = new JSONArray();
         for(int pageNo = 1; pageNo <= totalPageSize; pageNo++) {
@@ -165,4 +171,5 @@ public class SCANDataImport {
 
         return jsonDataList;
     }
+    */
 }

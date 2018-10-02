@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class CustBean {
 
-    public static Map<String, String> isCreateOrBindNewCust(String wxNick, String identifyCode, String planDate, String executorId) throws Exception {
+    public static Map<String, String> isCreateOrBindNewCust(String identifyCode, String planDate, String executorId) throws Exception {
         Map<String, String> result = new HashMap<String, String>();
         CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
         CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(identifyCode);

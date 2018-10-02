@@ -58,6 +58,36 @@ public class OutBean {
         return isExist;
     }
 
+    public static boolean isExistData4Reg(String openid) throws Exception{
+        boolean isExist = false;
+        GenericDAO dao = new GenericDAO("out");
+
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("OPENID", openid);
+
+        //查在线表
+        sql.append(" select * from out_hirunplus_reg ");
+        sql.append(" where 1=1 ");
+        sql.append(" and openid = :OPENID");
+        RecordSet set = dao.queryBySql(sql.toString(), parameter);
+        if(set == null || set.size() == 0) {
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_reg ");
+            sql.append(" where 1=1 ");
+            sql.append(" and openid = :OPENID");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
+        } else {
+            isExist = true;
+        }
+
+        return isExist;
+    }
+
     public static boolean isExistData4Scan(String openId,String staffId, String addTime) throws Exception{
         boolean isExist = false;
         GenericDAO dao = new GenericDAO("out");
