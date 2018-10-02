@@ -132,7 +132,7 @@ public class CustService extends GenericService{
         //删除今天添加的新客户
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("FIRST_PLAN_DATE", firstPlanDate);
-        dao.deleteByWxNickisNullAndFirstPlanDate(houseCounselorId, firstPlanDate);
+        dao.deleteByIdentifyIsNullAndFirstPlanDate(houseCounselorId, firstPlanDate);
 
         List<Map<String, String>> listCust = new ArrayList<Map<String, String>>();
         for(int i = 0; i < newCustNew; i++) {

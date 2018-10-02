@@ -80,14 +80,15 @@ public class CustDAO extends StrongObjectDAO {
         return this.queryByPk(CustomerEntity.class, "INS_CUSTOMER", parameter);
     }
 
-    public void deleteByWxNickisNullAndFirstPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
+    public void deleteByIdentifyIsNullAndFirstPlanDate(String houseCounselorId, String firstPlanDate) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("HOUSE_COUNSELOR_ID", houseCounselorId);
         parameter.put("FIRST_PLAN_DATE", firstPlanDate);
 
         StringBuilder sql = new StringBuilder();
         sql.append(" DELETE A FROM INS_CUSTOMER A");
-        sql.append(" WHERE A.WX_NICK IS NULL ");
+        sql.append(" WHERE 1=1 ");
+//        sql.append(" WHERE A.WX_NICK IS NULL ");
         sql.append(" AND A.HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
         sql.append(" AND A.FIRST_PLAN_DATE = :FIRST_PLAN_DATE ");
         sql.append(" AND A.IDENTIFY_CODE IS NULL ");
@@ -99,8 +100,7 @@ public class CustDAO extends StrongObjectDAO {
         sql.append(" SELECT * FROM INS_CUSTOMER ");
         sql.append(" WHERE CUST_STATUS = '9' ");
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
-//        sql.append(" AND (WX_NICK IS NOT NULL OR FIRST_PLAN_DATE = :FIRST_PLAN_DATE) ");
-        sql.append(" AND WX_NICK IS NOT NULL ");
+//        sql.append(" AND WX_NICK IS NOT NULL ");
         sql.append(" AND IDENTIFY_CODE IS NOT NULL ");
 
         Map<String, String> parameter = new HashMap<String, String>();
@@ -113,7 +113,7 @@ public class CustDAO extends StrongObjectDAO {
         StringBuilder sql = new StringBuilder(200);
         sql.append(" SELECT * FROM INS_CUSTOMER ");
         sql.append(" WHERE CUST_STATUS = '9' ");
-        sql.append(" AND WX_NICK IS NULL ");
+//        sql.append(" AND WX_NICK IS NULL ");
         sql.append(" AND HOUSE_COUNSELOR_ID = :HOUSE_COUNSELOR_ID ");
         sql.append(" AND FIRST_PLAN_DATE = :FIRST_PLAN_DATE ");
         sql.append(" AND IDENTIFY_CODE IS NULL ");
