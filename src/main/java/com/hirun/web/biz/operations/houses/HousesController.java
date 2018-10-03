@@ -33,4 +33,11 @@ public class HousesController extends RootController{
 
         return response.toJsonString();
     }
+
+    @RequestMapping("/houses/queryScatterHouses")
+    public @ResponseBody String queryScatterHouses(@RequestParam Map condition) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryScatterHouses", condition);
+
+        return response.toJsonString();
+    }
 }

@@ -673,4 +673,14 @@ public class HousesService extends GenericService {
         dao.autoUpdateHouseNature();
         return new ServiceResponse();
     }
+
+    public ServiceResponse queryScatterHouses(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        String housesName = request.getString("HOUSES_NAME");
+        List<HousesEntity> housesEntityList = HousesBean.queryScatterHouses(housesName);
+
+        response.set("HOUSES_LIST", ConvertTool.toJSONArray(housesEntityList));
+
+        return response;
+    }
 }
