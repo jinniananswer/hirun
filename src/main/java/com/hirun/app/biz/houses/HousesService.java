@@ -662,31 +662,10 @@ public class HousesService extends GenericService {
     }
 
     public ServiceResponse submitScatterHouses(ServiceRequest request) throws Exception{
-        Map<String, String> house = new HashMap<String, String>();
-        AppSession session = SessionManager.getSession();
-        String now = TimeTool.now();
-
-        house.put("NAME", request.getString("NAME"));
-        house.put("CITY", request.getString("CITY"));
-        house.put("NATURE", "3");//责任楼盘
-        house.put("PLAN_IN_DATE", now);
-        house.put("DESTROY_DATE", "3000-12-31 23:59:59");
-        house.put("STATUS", "1");
-        String userId = session.getSessionEntity().getUserId();
-        house.put("CREATE_USER_ID", userId);
-        house.put("UPDATE_USER_ID", userId);
-        house.put("UPDATE_TIME", session.getCreateTime());
-        house.put("CREATE_DATE", session.getCreateTime());
-
-        HouseDAO dao = new HouseDAO("ins");
-        List<HousesEntity> houses = dao.queryHousesByName(request.getString("NAME"));
-        if(ArrayTool.isNotEmpty(houses)){
-            ServiceResponse response = new ServiceResponse();
-            response.setError("HIRUN_CREATE_HOUSE_000001","该楼盘名称已经存在，请重新检查楼盘名称！");
-            return response;
-        }
-        long houseId = dao.insertAutoIncrement("ins_houses", house);
-        return new ServiceResponse();
+        long houseId = HousesBean.createScatterHouse(request.getString("NAME"), request.getString("CITY"));
+        ServiceResponse response = new ServiceResponse();
+        response.set("HOUSE_ID", houseId + "");
+        return response;
     }
 
     public ServiceResponse autoUpdateNature(ServiceRequest request) throws Exception{
