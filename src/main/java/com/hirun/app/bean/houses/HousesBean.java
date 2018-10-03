@@ -54,14 +54,13 @@ public class HousesBean {
         return houseDAO.queryScatterHouses(name, city);
     }
 
-    public static long createScatterHouse(String name) throws Exception {
+    public static long createScatterHouse(String name, String city) throws Exception {
         Map<String, String> house = new HashMap<String, String>();
         AppSession session = SessionManager.getSession();
         String now = TimeTool.now();
-        String city = null;
         String orgId = OrgBean.getOrgId(session.getSessionEntity());
         OrgEntity org = null;
-        if (StringUtils.isNotBlank(orgId)) {
+        if (StringUtils.isBlank(city) && StringUtils.isNotBlank(orgId)) {
             OrgDAO dao = new OrgDAO("ins");
             org = dao.queryOrgById(orgId);
             city = org.getCity();
