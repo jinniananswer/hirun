@@ -185,12 +185,13 @@ var planSummarize = {
                 $.each(data.HOUSES_LIST, function(idx, house) {
                     options.push({TEXT : house.NAME, VALUE : house.HOUSES_ID})
                 })
+                options.push({TEXT : '散盘', VALUE : 'sanpan'})
                 $.Select.append(
                     "custEditForm_house_container",
                     {
                         id:"custEditForm_house",
                         name:"HOUSE_ID",
-                        nullable : "yes",
+                        nullable : "no",
                         desc : "楼盘",
                     },
                     options
@@ -200,6 +201,9 @@ var planSummarize = {
 
             }
         })
+        $("#custEditForm_house_container").unbind('change').bind("change", function(){
+            custEditPopup.onChangeHouses(this.value);
+        });
 
         $.ajaxReq({
             url : 'common/getCodeTypeDatas',
@@ -777,6 +781,11 @@ var custEditPopup = {
     submitCustInfo : function (obj) {
         if ($.validate.verifyAll("custForm")) {
             var param = $.buildJsonData("custForm");
+            var housesId = $('#custEditForm_house').val();
+            if(housesId == 'sanpan') {
+                param.HOUSE_ID = $('#SCATTER_HOUSE').attr('houses_id');
+            }
+
             var url = '';
             param.CUST_STATUS = "1";
             if (param.CUST_ID) {
@@ -786,6 +795,8 @@ var custEditPopup = {
                 param.FIRST_PLAN_DATE = planSummarize.planDate;
                 param.HOUSE_COUNSELOR_ID = planSummarize.executorId;
             }
+            // debugger;
+            // return;
             $.beginPageLoading("客户资料补录中。。。");
             $.ajaxReq({
                 url: url,
@@ -804,9 +815,24 @@ var custEditPopup = {
                 },
                 errorFunc: function (resultCode, resultInfo) {
                     $.endPageLoading();
+                    alert(resultInfo);
                 }
             });
         }
+    },
+    onChangeHouses : function(housesId) {
+        $('#liScatter').hide();
+        $('#SCATTER_HOUSE').attr('nullable', 'yes');
+        if(housesId == 'sanpan') {
+            $('#liScatter').css('display', '-webkit-box');
+            $('#SCATTER_HOUSE').attr('nullable', 'no');
+        }
+    },
+    onClickSelectScatterHousesButton : function(obj) {
+        scatterHousesPopup.showHousesPopup(obj, function(housesId, housesName) {
+            $('#SCATTER_HOUSE').val(housesName);
+            $('#SCATTER_HOUSE').attr('houses_id', housesId);
+        })
     }
 }
 
@@ -905,5 +931,74 @@ var summaryPopup = {
             summaryPopup.cancelCallback();
         }
         backPopup(obj);
+    }
+}
+
+var scatterHousesPopup = {
+    callback : '',
+    showHousesPopup : function(obj, callback) {
+        scatterHousesPopup.searchHouses();
+        if(callback) scatterHousesPopup.callback = callback;
+
+        forwardPopup(obj,'scatterHousesPopupItem');
+    },
+    searchHouses : function(housesName) {
+        $.ajaxReq({
+            url : 'houses/queryScatterHouses',
+            data : {
+                HOUSES_NAME : housesName
+            },
+            successFunc : function (data) {
+                $('#BIZ_SCATTER_HOUSES').html(template('scatter_houses_template', data))
+            }
+        })
+    },
+    clickHouses : function(obj) {
+        var $obj = $(obj);
+        var housesId = $obj.attr('houses_id');
+        var housesName = $obj.attr('houses_name');
+
+        if(scatterHousesPopup.callback) scatterHousesPopup.callback(housesId, housesName);
+
+        backPopup(obj);
+    },
+    onClickAddScatterHousesButton : function(obj) {
+        createScatterHousesPopup.showCreateScatterHousesPopup(obj, function(housesId, housesName) {
+            if(scatterHousesPopup.callback) scatterHousesPopup.callback(housesId, housesName);
+            backPopup(obj);
+        })
+    }
+}
+
+var createScatterHousesPopup = {
+    callback : '',
+    showCreateScatterHousesPopup : function(obj, callback) {
+        if(callback) createScatterHousesPopup.callback = callback;
+
+        forwardPopup(obj,'createScatterHousesPopupItem');
+    },
+    submitScatterHouses : function(obj) {
+        if ($.validate.verifyAll("createScatterHousesForm")) {
+            var param = $.buildJsonData("createScatterHousesForm");
+            param.NAME = param.createScatterHousesForm_SCATTER_HOUSES_NAME;
+            $.beginPageLoading("散盘新增中。。。");
+            $.ajaxReq({
+                url: 'submitScatterHouses',
+                data: param,
+                type: 'POST',
+                dataType: 'json',
+                successFunc: function (data) {
+                    $.endPageLoading();
+
+                    createScatterHousesPopup.callback ? createScatterHousesPopup.callback(data.HOUSE_ID, param.NAME) : '';
+
+                    backPopup(obj);
+                },
+                errorFunc: function (resultCode, resultInfo) {
+                    $.endPageLoading();
+                    alert("散盘新增失败，原因是:" + resultInfo);
+                }
+            });
+        }
     }
 }

@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>今日计划总结</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/contactplan/plan.summarize.js?a=9"></script>
+	<script src="scripts/biz/contactplan/plan.summarize.js?a=10"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
@@ -172,12 +172,23 @@
 										<input type="text" id="MOBILE_NO" name="MOBILE_NO" nullable="no" desc="电话号码"/>
 									</div>
 								</li>
-								<li class="">
+								<li class="link required">
 									<div class="label">楼盘</div>
 									<div class="value">
 										<span id="custEditForm_house_container"></span>
 										<%--<span>--请选择--</span>--%>
 										<%--<input type="hidden" id="HOUSE_ID" name="HOUSE_ID" value="" nullable="yes" desc="楼盘" />--%>
+									</div>
+								</li>
+								<li class="link required" style="display: none" id="liScatter">
+									<div class="label">散盘名称</div>
+									<div class="value">
+										<span class="e_mix" ontap="custEditPopup.onClickSelectScatterHousesButton(this)">
+											<input type="text" id="SCATTER_HOUSE" name="SCATTER_HOUSE" datatype="text"
+												   houses_id=""
+												   nullable="yes" desc="散盘名称" value="" readonly="true"/>
+											<span class="e_ico-check"></span>
+										</span>
 									</div>
 								</li>
 								<li class="required">
@@ -213,6 +224,66 @@
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
 							<button type="button" class="e_button-l e_button-green" ontap="custEditPopup.submitCustInfo(this)">提交</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="c_popupGroup">
+				<div class="c_popupItem" id="scatterHousesPopupItem">
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this)">请选择散盘</div>
+						<div class="right">
+							<div class="fn">
+								<button type="button" class="e_button-blue"
+										ontap="scatterHousesPopup.onClickAddScatterHousesButton(this)">
+									<span class="e_ico-add"></span>
+									<span>新增散盘</span>
+								</button>
+
+							</div>
+
+						</div>
+					</div>
+					<div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+						<div class="c_list c_list-form">
+							<ul>
+								<li>
+									<div class="value">
+                                        <span class="e_mix">
+                                            <input id="scatterHousesPopupItem_HOUSE_SEARCH_TEXT" name="scatterHousesPopupItem_HOUSE_SEARCH_TEXT" type="text" placeholder="散盘名称（模糊搜索）" nullable="no" desc="查询条件">
+                                            <button type="button" class="e_button-blue" ontap="scatterHousesPopup.searchHouses($('#scatterHousesPopupItem_HOUSE_SEARCH_TEXT').val())"><span class="e_ico-search"></span><span>查询</span></button>
+                                        </span>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="c_list c_list-col-1 c_list-line c_list-border c_list-fixWrapSpace">
+							<ul id="BIZ_SCATTER_HOUSES">
+
+							</ul>
+						</div>
+						<div class="c_line"></div>
+					</div>
+				</div>
+			</div>
+			<div class="c_popupGroup">
+				<div class="c_popupItem" id="createScatterHousesPopupItem">
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this)">新增散盘</div>
+					</div>
+						<div class="c_list c_list-form" id="createScatterHousesForm">
+							<ul>
+								<li>
+									<div class="label">散盘名称</div>
+									<div class="value">
+										<input type="text" id="createScatterHousesForm_SCATTER_HOUSES_NAME" name="createScatterHousesForm_SCATTER_HOUSES_NAME" desc="散盘名称" nullable="no"/>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div class="c_space"></div>
+						<div class="c_submit c_submit-full">
+							<button type="button" class="e_button-l e_button-green" ontap="createScatterHousesPopup.submitScatterHouses(this)">新增</button>
 						</div>
 					</div>
 				</div>
@@ -523,6 +594,16 @@
 	<li>
 		<span class="label">{{action.ACTION_NAME}}：</span>
 		<span class="value">{{action.FINISH_TIME}}</span>
+	</li>
+	{{/each}}
+</script>
+<script id="scatter_houses_template" rel_id="SCATTER_HOUSES" type="text/html">
+	{{each HOUSES_LIST houses idx}}
+	<li class="link e_center" houses_name="{{houses.NAME}}" houses_id="{{houses.HOUSES_ID}}"
+		ontap="scatterHousesPopup.clickHouses(this)">
+		<label class="group">
+			<div class="main">{{houses.NAME}}</div>
+		</label>
 	</li>
 	{{/each}}
 </script>
