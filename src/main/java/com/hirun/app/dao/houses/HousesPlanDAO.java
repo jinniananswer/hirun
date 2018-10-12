@@ -33,7 +33,7 @@ public class HousesPlanDAO extends StrongObjectDAO {
         sb.append("LEFT JOIN ins_org d ON d.org_id = a.org_id ");
         sb.append("WHERE 1=1 ");
         sb.append("AND now() < a.destroy_date ");
-        sb.append("AND b.nature in ('0', '1', '2' ) ");
+        sb.append("AND a.nature in ('0', '1', '2' ) ");
         if(StringUtils.isNotBlank(parameter.get("HOUSES_ID")))
             sb.append("AND a.houses_id = :HOUSES_ID ");
         if(StringUtils.isNotBlank(parameter.get("NAME")))
