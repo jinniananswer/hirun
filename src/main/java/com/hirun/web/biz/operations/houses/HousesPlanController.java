@@ -186,4 +186,10 @@ public class HousesPlanController extends RootController{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.submitScatterHouses", submitData);
         return response.toJsonString();
     }
+
+    @RequestMapping("/queryScatterHousesByCond")
+    public @ResponseBody String queryScatterHousesByCond(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryScatterHousesByCond", parameter);
+        return response.toJsonString();
+    }
 }
