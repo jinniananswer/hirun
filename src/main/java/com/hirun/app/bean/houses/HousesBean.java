@@ -56,6 +56,27 @@ public class HousesBean {
         return houseDAO.queryScatterHouses(name, city);
     }
 
+    public static List<HousesEntity> queryMyScatterHouses(String name) throws Exception {
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String employeeId = sessionEntity.get("EMPLOYEE_ID");
+        String orgId = OrgBean.getOrgId(sessionEntity);
+        OrgEntity org = null;
+        if (StringUtils.isNotBlank(orgId)) {
+            OrgDAO dao = new OrgDAO("ins");
+            org = dao.queryOrgById(orgId);
+        }
+
+        String city = null;
+        boolean hasAllCity = Permission.hasAllCity();
+        if (org != null && !hasAllCity) {
+            city = org.getCity();
+        }
+
+        HouseDAO houseDAO = DAOFactory.createDAO(HouseDAO.class);
+        return houseDAO.queryMyScatterHouses(name, city, employeeId);
+    }
+
     public static long createScatterHouse(String name, String city) throws Exception {
         Map<String, String> house = new HashMap<String, String>();
         AppSession session = SessionManager.getSession();
