@@ -1,6 +1,7 @@
 package com.hirun.app.bean.houses;
 
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.dao.houses.HouseDAO;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.pub.domain.entity.houses.HousesEntity;
@@ -46,7 +47,8 @@ public class HousesBean {
         }
 
         String city = null;
-        if (org != null) {
+        boolean hasAllCity = Permission.hasAllCity();
+        if (org != null && !hasAllCity) {
             city = org.getCity();
         }
 
