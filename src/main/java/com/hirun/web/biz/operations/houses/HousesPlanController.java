@@ -192,4 +192,43 @@ public class HousesPlanController extends RootController{
         ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryScatterHousesByCond", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/queryMyScatterHouses")
+    public @ResponseBody String queryMyScatterHouses(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.queryMyScatterHouses", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initChangeScatterHouses")
+    public @ResponseBody String initChangeScatterHouses(HttpServletRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("HOUSES_ID", request.getParameter("HOUSES_ID"));
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.initChangeScatterHouses", parameter);
+
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToChangeScatter")
+    public String redirectToChangeScatter() throws Exception {
+        return "/biz/operations/houses/change_scatter_houses";
+    }
+
+    @RequestMapping("/changeScatterHouse")
+    public @ResponseBody String changeScatterHouse(@RequestParam Map parameter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.changeScatterHouse", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToScatterDetail")
+    public String redirectToScatterDetail() throws Exception{
+        return "/biz/operations/houses/my_scatter_house_detail";
+    }
+
+    @RequestMapping("/showMyScatterHouseDetail")
+    public @ResponseBody String showMyScatterHouseDetail(HttpServletRequest request) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("HOUSES_ID", request.getParameter("HOUSES_ID"));
+        ServiceResponse response = ServiceClient.call("OperationCenter.house.HousesService.showMyScatterHouseDetail", parameter);
+        return response.toJsonString();
+    }
 }
