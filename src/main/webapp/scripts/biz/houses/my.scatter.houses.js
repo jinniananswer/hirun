@@ -3,7 +3,7 @@
             initQuery: function(){
                 window["UI-popup"] = new Wade.Popup("UI-popup");
 
-                $.ajaxPost('queryScatterHousesByCond',null,function(data){
+                $.ajaxPost('queryMyScatterHouses',null,function(data){
                     var rst = new Wade.DataMap(data);
                     var dataset = rst.get("DATA");
                     $.housesPlan.drawHousesPlan(dataset);
@@ -20,7 +20,7 @@
                 var size = dataset.length;
                 for(var i=0;i<size;i++){
                     var data = dataset.get(i);
-                    html.push("<li class='link' ontap=\"$.redirect.open('redirectToChangeScatter?HOUSES_ID="+data.get("HOUSES_ID")+"','修改"+data.get("NAME")+"详情');\">");
+                    html.push("<li class='link' ontap=\"$.redirect.open('redirectToScatterDetail?HOUSES_ID="+data.get("HOUSES_ID")+"','"+data.get("NAME")+"规划详情');\">");
                     html.push("<div class=\"content\">");
                     html.push("<div class=\"group\">");
                     html.push("<div class=\"content\">");
@@ -54,7 +54,7 @@
                 }
                 var parameter = $.buildJsonData("queryArea");
                 hidePopup('UI-popup','UI-popup-query-cond');
-                $.ajaxPost('queryScatterHousesByCond', parameter, function (data) {
+                $.ajaxPost('queryMyScatterHouses', parameter, function (data) {
                     var rst = new Wade.DataMap(data);
                     var dataset = rst.get("DATA");
                     $.housesPlan.drawHousesPlan(dataset);
