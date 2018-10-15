@@ -683,4 +683,22 @@ public class HousesService extends GenericService {
 
         return response;
     }
+
+    public ServiceResponse queryScatterHousesByCond(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        String name = request.getString("NAME");
+        List<HousesEntity> houses = HousesBean.queryScatterHouses(name);
+        if (ArrayTool.isEmpty(houses)) {
+            return response;
+        }
+
+        JSONArray housesJsonArray = ConvertTool.toJSONArray(houses);
+        for (Object temp : housesJsonArray) {
+            JSONObject house = (JSONObject)temp;
+            house.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", house.getString("CITY")));
+            house.put("NATURE_NAME", "散");
+        }
+        response.set("DATA", housesJsonArray);
+        return response;
+    }
 }
