@@ -701,4 +701,67 @@ public class HousesService extends GenericService {
         response.set("DATA", housesJsonArray);
         return response;
     }
+
+    public ServiceResponse queryMyScatterHouses(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String name = request.getString("NAME");
+        List<HousesEntity> houses = HousesBean.queryMyScatterHouses(name);
+
+        if (ArrayTool.isEmpty(houses)) {
+            return response;
+        }
+
+        JSONArray housesJsonArray = ConvertTool.toJSONArray(houses);
+        for (Object temp : housesJsonArray) {
+            JSONObject house = (JSONObject)temp;
+            house.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", house.getString("CITY")));
+            house.put("NATURE_NAME", "散");
+        }
+        response.set("DATA", housesJsonArray);
+        return response;
+    }
+
+    public ServiceResponse initChangeScatterHouses(ServiceRequest request) throws Exception {
+        ServiceResponse response = this.initCreateScatterHouses(request);
+        HouseDAO dao = DAOFactory.createDAO(HouseDAO.class);
+        HousesEntity house = dao.getHousesEntityById(request.getString("HOUSES_ID"));
+        JSONObject houseJSON = JSONObject.parseObject(JSON.toJSONString(house.getContent()));
+        houseJSON.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", house.getCity()));
+        response.set("HOUSE", houseJSON);
+        return response;
+    }
+
+    public ServiceResponse changeScatterHouse(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        HouseDAO dao = DAOFactory.createDAO(HouseDAO.class);
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("NAME", request.getString("NAME"));
+        parameter.put("CITY", request.getString("CITY"));
+        parameter.put("HOUSES_ID", request.getString("HOUSES_ID"));
+        dao.save("ins_houses", parameter);
+        return response;
+    }
+
+    public ServiceResponse showMyScatterHouseDetail(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        HouseDAO dao = DAOFactory.createDAO(HouseDAO.class);
+        HousesEntity house = dao.getHousesEntityById(request.getString("HOUSES_ID"));
+        if(house == null)
+            return response;
+
+        JSONObject houseJSON = JSONObject.parseObject(JSON.toJSONString(house.getContent()));
+
+        houseJSON.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", house.get("CITY")));
+        houseJSON.put("NATURE_NAME", "散盘");
+        response.set("HOUSE", houseJSON);
+
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String employeeId = sessionEntity.get("EMPLOYEE_ID");
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+        List<CustomerEntity> customers = custDAO.getCustomersByEmployeeIdHouseId(employeeId, request.getString("HOUSES_ID"));
+        response.set("CUSTOMERS", ConvertTool.toJSONArray(customers));
+        return response;
+    }
 }
