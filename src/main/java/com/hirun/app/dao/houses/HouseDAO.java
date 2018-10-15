@@ -77,4 +77,29 @@ public class HouseDAO extends StrongObjectDAO {
 
         return this.queryBySql(HousesEntity.class, sql.toString(), param);
     }
+
+    public List<HousesEntity> queryMyScatterHouses(String housesName, String city, String employeeId) throws Exception {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT a.* ");
+        sql.append(" FROM INS_HOUSES a ");
+        sql.append(" WHERE 1=1 ");
+        sql.append(" AND now() < a.DESTROY_DATE ");
+        sql.append(" AND a.nature = '3' ");
+
+        if (StringUtils.isNotBlank(city)) {
+            sql.append(" AND a.CITY = :CITY ");
+        }
+
+        if (StringUtils.isNotBlank(housesName)) {
+            sql.append(" AND a.NAME LIKE CONCAT('%', :NAME, '%') ");
+        }
+        sql.append(" and exists (select 1 from ins_customer c where c.house_id = a.houses_id and house_counselor_id = :EMPLOYEE_ID and IDENTIFY_CODE is not null and cust_status not in (8,9) ) ");
+
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("NAME", housesName);
+        param.put("CITY", city);
+        param.put("EMPLOYEE_ID", employeeId);
+
+        return this.queryBySql(HousesEntity.class, sql.toString(), param);
+    }
 }
