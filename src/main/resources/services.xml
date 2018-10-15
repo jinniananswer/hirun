@@ -40,6 +40,10 @@
     <entity name="OperationCenter.house.HousesService.autoUpdateNature"  class="com.hirun.app.biz.houses.HousesService" method="autoUpdateNature"/>
     <entity name="OperationCenter.house.HousesService.queryScatterHouses"  class="com.hirun.app.biz.houses.HousesService" method="queryScatterHouses"/>
     <entity name="OperationCenter.house.HousesService.queryScatterHousesByCond"  class="com.hirun.app.biz.houses.HousesService" method="queryScatterHousesByCond"/>
+    <entity name="OperationCenter.house.HousesService.queryMyScatterHouses"  class="com.hirun.app.biz.houses.HousesService" method="queryMyScatterHouses"/>
+    <entity name="OperationCenter.house.HousesService.initChangeScatterHouses"  class="com.hirun.app.biz.houses.HousesService" method="initChangeScatterHouses"/>
+    <entity name="OperationCenter.house.HousesService.changeScatterHouse"  class="com.hirun.app.biz.houses.HousesService" method="changeScatterHouse"/>
+    <entity name="OperationCenter.house.HousesService.showMyScatterHouseDetail"  class="com.hirun.app.biz.houses.HousesService" method="showMyScatterHouseDetail"/>
 
 
     <entity name="OperationCenter.plan.PlanService.addPlan"  class="com.hirun.app.biz.plan.PlanService" method="addPlan"/>
