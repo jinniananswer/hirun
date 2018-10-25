@@ -112,6 +112,7 @@ var custEditPopup = {
             url : 'cust/getCustById',
             data : {
                 CUST_ID : custId,
+                REAL_INFO_FLAG : "true",
             },
             type: 'GET',
             successFunc : function(data) {

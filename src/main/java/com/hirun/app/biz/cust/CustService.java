@@ -160,6 +160,7 @@ public class CustService extends GenericService{
         JSONObject requestData = request.getBody().getData();
         String custId = requestData.getString("CUST_ID");
         String userId = SessionManager.getSession().getSessionEntity().getUserId();
+        String realInfoFlag = requestData.getString("REAL_INFO_FLAG");
 
         CustDAO custDAO = new CustDAO("ins");
         Map<String, String> parameter = new HashMap<String, String>();
@@ -184,7 +185,7 @@ public class CustService extends GenericService{
 
         //mobile_no模糊化
         String custRelaUserId = EmployeeBean.getEmployeeByEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")).getUserId();
-        if(!userId.equals(custRelaUserId)) {
+        if(!userId.equals(custRelaUserId) && "true".equals(realInfoFlag)) {
             String mobileNo = jsonCust.getString("MOBILE_NO");
             if(StringUtils.isNotBlank(mobileNo) && mobileNo.length() > 3)
 //            String mobileNo = jsonCust.getString("MOBILE_NO");
