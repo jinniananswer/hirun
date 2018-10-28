@@ -20,6 +20,8 @@
     <entity name="OrgCenter.employee.EmployeeService.queryEnterpriseEmployees"  class="com.hirun.app.biz.employee.EmployeeService" method="queryEnterpriseEmployees"/>
     <entity name="OrgCenter.employee.EmployeeService.resetPassword"  class="com.hirun.app.biz.employee.EmployeeService" method="resetPassword"/>
     <entity name="OrgCenter.course.CourseService.initPreworkCourseUpload" class="com.hirun.app.biz.organization.course.CourseService" method="initPreworkCourseUpload"/>
+    <entity name="OrgCenter.course.CourseService.initPreworkCourseQuery" class="com.hirun.app.biz.organization.course.CourseService" method="initPreworkCourseQuery"/>
+    <entity name="OrgCenter.course.CourseService.queryPreworkCourse" class="com.hirun.app.biz.organization.course.CourseService" method="queryPreworkCourse"/>
     <entity name="OrgCenter.course.CourseService.uploadPreworkCourse" class="com.hirun.app.biz.organization.course.CourseService" method="uploadPreworkCourse"/>
 
     <!--运营管理中心服务-->
