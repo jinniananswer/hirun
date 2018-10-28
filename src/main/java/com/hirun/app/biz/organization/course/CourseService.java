@@ -54,4 +54,28 @@ public class CourseService extends GenericService {
         dao.insertAutoIncrement("ins_course_file", parameter);
         return response;
     }
+
+    public ServiceResponse initPreworkCourseQuery(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
+        RecordSet courseTypes = dao.queryCoursesByType("1");
+
+        response.set("COURSE", ConvertTool.toJSONArray(courseTypes));
+
+        CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
+        RecordSet courseList = fileDAO.queryCourseFilesByCourseType("1");
+        response.set("COURSE_LIST", ConvertTool.toJSONArray(courseList));
+
+        return response;
+    }
+
+    public ServiceResponse queryPreworkCourse(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
+        RecordSet courseList = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"));
+        response.set("COURSE_LIST", ConvertTool.toJSONArray(courseList));
+        return response;
+    }
 }
