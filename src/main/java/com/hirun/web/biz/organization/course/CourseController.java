@@ -25,7 +25,7 @@ import java.util.Map;
 public class CourseController extends RootController {
 
     @RequestMapping("/initPreworkCourseUpload")
-    public @ResponseBody String queryContacts(HttpServletRequest request) throws Exception {
+    public @ResponseBody String initPreworkCourseUpload(HttpServletRequest request) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initPreworkCourseUpload", parameter);
         return response.toJsonString();
@@ -48,5 +48,25 @@ public class CourseController extends RootController {
         parameter.put("FILE_TYPE", fileType);
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.uploadPreworkCourse", parameter);
         return response.toJsonString();
+    }
+
+    @RequestMapping("/initPreworkCourseQuery")
+    public @ResponseBody String initPreworkCourseQuery(HttpServletRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initPreworkCourseQuery", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/queryPreworkCourse")
+    public @ResponseBody String queryPreworkCourse(HttpServletRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("COURSE_ID", request.getParameter("COURSE_ID"));
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryPreworkCourse", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToViewFile")
+    public String redirectToViewFile() throws Exception {
+        return "/biz/organization/course/view_courseware";
     }
 }
