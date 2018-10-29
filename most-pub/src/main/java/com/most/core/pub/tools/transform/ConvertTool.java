@@ -98,6 +98,11 @@ public class ConvertTool {
         return jsonObject;
     }
 
+    public static JSONObject toJSONObject(Record record) {
+        JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(record.getData()));
+        return jsonObject;
+    }
+
     public static void copy(JSONObject source, String[] sourceCols, JSONObject dest, String[] destCols) {
         for(int i = 0, size = sourceCols.length; i <size; i++) {
             dest.put(destCols[i], source.getString(sourceCols[i]));
