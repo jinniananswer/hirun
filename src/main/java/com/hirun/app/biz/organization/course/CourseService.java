@@ -6,6 +6,7 @@ import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
@@ -38,7 +39,7 @@ public class CourseService extends GenericService {
         AppSession session = SessionManager.getSession();
 
         String newFileName = request.getString("NEW_FILE_NAME");
-        String storagePath = "http://localhost:8080/doc/"+newFileName;
+        String storagePath = "http%3A%2F%2F139.129.29.141%3A8080%2Fdoc%2F"+newFileName;
 
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("COURSE_ID", request.getString("COURSE_ID"));
@@ -76,6 +77,19 @@ public class CourseService extends GenericService {
         CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
         RecordSet courseList = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"));
         response.set("COURSE_LIST", ConvertTool.toJSONArray(courseList));
+        return response;
+    }
+
+    public ServiceResponse queryCourseFile(ServiceRequest request) throws Exception{
+        String fileId = request.getString("FILE_ID");
+        Map<String, String> parameter = new HashMap<String, String>();
+
+        parameter.put("FILE_ID", fileId);
+        CourseFileDAO dao = DAOFactory.createDAO(CourseFileDAO.class);
+        Record file = dao.queryByPk("ins_course_file", parameter);
+
+        ServiceResponse response = new ServiceResponse();
+        response.set("FILE", ConvertTool.toJSONObject(file));
         return response;
     }
 }
