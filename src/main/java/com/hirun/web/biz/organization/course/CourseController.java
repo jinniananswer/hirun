@@ -72,7 +72,7 @@ public class CourseController extends RootController {
         parameter.put("FILE_ID", request.getParameter("FILE_ID"));
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryCourseFile", parameter);
         JSONObject file = response.getJSONObject("FILE");
-        String filePath = "http://api.idocv.com/view/url?url=" + file.getString("STORAGE_PATH");
+        String filePath = "https://view.officeapps.live.com/op/view.aspx?src=" + file.getString("STORAGE_PATH");
         request.setAttribute("PATH", filePath);
         return "/biz/organization/course/view_courseware";
     }
