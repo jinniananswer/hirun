@@ -35,7 +35,7 @@
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
                     var sex = data.get("SEX");
-                    html.push("<li class='link' ontap=\"$.redirect.open('redirectToViewFile?HOUSES_ID="+data.get("FILE_ID")+"','资料详情');><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    html.push("<li class='link' ontap=\"$.redirect.open('redirectToViewFile?FILE_ID="+data.get("FILE_ID")+"','资料详情');\"><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     html.push("</div></div>");
                     html.push("<div class=\"main\"><div class=\"title\">");
                     html.push(data.get("NAME"));
