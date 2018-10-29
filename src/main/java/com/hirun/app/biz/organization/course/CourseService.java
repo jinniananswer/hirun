@@ -39,7 +39,7 @@ public class CourseService extends GenericService {
         AppSession session = SessionManager.getSession();
 
         String newFileName = request.getString("NEW_FILE_NAME");
-        String storagePath = "http%3A%2F%2F139.129.29.141%3A8080%2Fdoc%2F"+newFileName;
+        String storagePath = "http%3A%2F%2Fwww.hi-run.net%3A8080%2Fdoc%2F"+newFileName;
 
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("COURSE_ID", request.getString("COURSE_ID"));
