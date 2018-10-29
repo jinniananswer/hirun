@@ -1,5 +1,6 @@
 package com.hirun.web.biz.organization.course;
 
+import com.alibaba.fastjson.JSONObject;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.web.RootController;
@@ -66,7 +67,13 @@ public class CourseController extends RootController {
     }
 
     @RequestMapping("/redirectToViewFile")
-    public String redirectToViewFile() throws Exception {
+    public String redirectToViewFile(HttpServletRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("FILE_ID", request.getParameter("FILE_ID"));
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryCourseFile", parameter);
+        JSONObject file = response.getJSONObject("FILE");
+        String filePath = "http://api.idocv.com/view/url?url=" + file.getString("STORAGE_PATH");
+        request.setAttribute("PATH", filePath);
         return "/biz/organization/course/view_courseware";
     }
 }
