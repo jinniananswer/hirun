@@ -25,7 +25,7 @@
 </div>
 <div class="c_scroll c_scroll-float c_scroll-header c_scroll-white">
     <div class="main">
-        <iframe id="view_frame" src="${pageContext.request.getAttribute("PATH")}" title="在线阅读" frameborder="0"></iframe>
+        <iframe id="view_frame" src="${pageContext.request.getAttribute("PATH")}" title="在线阅读" frameborder="1"></iframe>
     </div>
 </div>
 
