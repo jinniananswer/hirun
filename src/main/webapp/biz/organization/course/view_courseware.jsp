@@ -17,14 +17,14 @@
 </head>
 <body>
 <!-- 标题栏 开始 -->
-<div class="c_header e_show" style="z-index: 2;">
+<div class="c_header e_show">
     <div class="back" ontap="$.redirect.closeCurrentPage();">岗前学习资料</div>
     <div class="fn">
         <input type="hidden" name="FILE_ID" id="FILE_ID" nullable="no" value="${pageContext.request.getParameter("FILE_ID") }" desc="文件ID" />
     </div>
 </div>
-<div class="c_scroll c_scroll-float c_scroll-header c_scroll-white" style="z-index: 2;">
-    <div class="main" style="z-index: 1;">
+<div class="c_scroll c_scroll-float c_scroll-header c_scroll-white">
+    <div class="main">
         <iframe id="view_frame" src="${pageContext.request.getAttribute("PATH")}" title="在线阅读" frameborder="0"></iframe>
     </div>
 </div>
