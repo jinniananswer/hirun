@@ -80,7 +80,7 @@
                     }
                     else if($.os.android) {
                         $("#android").attr("href", "office://courseware?FILE_URL="+url);
-                        $("#android").trigger("click");
+                        document.getElementById("android").click();
                     }
 
                 }
