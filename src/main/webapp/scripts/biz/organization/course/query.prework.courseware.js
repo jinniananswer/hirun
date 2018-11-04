@@ -79,7 +79,8 @@
                         }
                     }
                     else if($.os.android) {
-                        $.redirect.open("office://courseware?FILE_URL="+url,'资料详情');
+                        $("#android").attr("href", "office://courseware?FILE_URL="+url);
+                        $("#android").trigger("click");
                     }
 
                 }
