@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>岗前课堂学习资料</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/course/query.prework.courseware.js?v=20181105000000"></script>
+    <script src="/scripts/biz/organization/course/query.prework.courseware.js?v=20181105002300"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -34,6 +34,9 @@
                     <div class="text">
                         <div class="title">提示信息</div>
                         <div class="content">sorry,没有找到您想要的信息~</div>
+                    </div>
+                    <div class="text" style="display:none">
+                        <a id="android" name="android" href="">android</a>
                     </div>
                 </div>
             </div>
