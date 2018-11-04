@@ -79,8 +79,7 @@
                         }
                     }
                     else if($.os.android) {
-                        $("#android").attr("href", "office://courseware?FILE_URL="+url);
-                        document.getElementById("android").click();
+                        document.location = "office://courseware?FILE_URL="+url;
                     }
 
                 }
