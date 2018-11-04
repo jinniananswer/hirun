@@ -79,7 +79,7 @@
                         }
                     }
                     else if($.os.android) {
-                        document.location = "office://courseware?FILE_URL="+url;
+                        $.redirect.open("office://courseware?FILE_URL="+url,'资料详情');
                     }
 
                 }
