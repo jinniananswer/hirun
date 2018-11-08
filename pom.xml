@@ -219,6 +219,11 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <version>2.3</version>
         </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.3</version>
+        </dependency>
 
         <!-- most相关的依赖包-->
         <dependency>
@@ -323,6 +328,7 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+
 
 
         <!--测试时用到的 end-->
