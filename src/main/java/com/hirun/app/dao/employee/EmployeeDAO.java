@@ -334,6 +334,22 @@ public class EmployeeDAO extends StrongObjectDAO{
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
         return employees;
     }
+    public List<EmployeeEntity> queryEmployeeListByPlanType(String planDate, String planType) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_DATE", planDate);
+        parameter.put("PLAN_TYPE", planType);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT a.name,a.employee_id FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
+        sb.append("AND b.`JOB_ROLE` IN ('42','58') ");
+        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.status = '0' ");
+        sb.append("AND EXISTS (SELECT 1 FROM ins_plan c WHERE c.`PLAN_DATE` = :PLAN_DATE AND c.plan_type = :PLAN_TYPE) ");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
+    }
 
     public EmployeeEntity getEmployeeByMobileNo(String mobileNo) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();

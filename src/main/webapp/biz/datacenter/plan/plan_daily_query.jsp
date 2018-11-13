@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>家装顾问计划录入情况</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/plan/plan.daily.query.js?a=1"></script>
+	<script src="scripts/biz/datacenter/plan/plan.daily.query.js?a=2"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
@@ -19,14 +19,48 @@
 </jsp:include>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
-	<div id="unEntryPlanList">
+	<div class="c_tab c_tab-level-2" id="myTab">
+		<div class="tab">
+			<div class="list">
+				<ul></ul>
+			</div>
+		</div>
+		<div class="page">
+			<div class="content" title="没有录计划">
+				<div id="unEntryPlanList">
 
+				</div>
+			</div>
+			<div class="content" title="参加活动">
+				<div id="activitiPlanList">
+
+				</div>
+			</div>
+			<div class="content" title="休假">
+				<div id="holidayPlanList">
+
+				</div>
+			</div>
+		</div>
 	</div>
-
 </div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 
-<script id="unEntryPlanListTemplate" type="text/html">
+<script id="noResultTemplate" type="text/html">
+	<div class="l_queryMsg" id="UI-queryMsg">
+		<div class="c_msg">
+			<div class="wrapper">
+				<div class="emote"></div>
+				<div class="info">
+					<div class="text">
+						<div class="title">暂时没有数据</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<script id="planListTemplate" type="text/html">
 	{{each COMPANY_LIST company idx}}
 	<div class="c_box c_box-border c_box-gray">
 		<div class="c_title" ontap="$(this).next().toggle();">

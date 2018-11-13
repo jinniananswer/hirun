@@ -8,19 +8,41 @@ var PlanDailyQuery = {
         // data.COMPANY_LIST = companyList;
         //
         // $('#unEntryPlanList').html(template('unEntryPlanListTemplate', data));
+        window["myTab"] = new Wade.Tabset("myTab");
+        PlanDailyQuery.queryPlanEmployeeList(0);
 
-        PlanDailyQuery.queryUnEntryPlanEmployeeList();
+        $("#myTab").afterSwitchAction(function(e, idx){
+            PlanDailyQuery.queryPlanEmployeeList(idx);
+        });
     },
-    queryUnEntryPlanEmployeeList : function() {
+    queryPlanEmployeeList : function(idx) {
 	    $.beginPageLoading("查询中。。。");
+	    var url;
+	    if(idx == 1) {
+	        url = 'datacenter/plan/queryActivitiPlanList';
+        } else if(idx == 2) {
+	        url = 'datacenter/plan/queryHolidayPlanList';
+        } else {
+            url = 'datacenter/plan/queryUnEntryPlanList';
+        }
         $.ajaxReq({
-            url : 'datacenter/plan/queryUnEntryPlanList',
+            url : url,
             data : {
 
             },
             successFunc : function(data) {
                 $.endPageLoading();
-                $('#unEntryPlanList').html(template('unEntryPlanListTemplate', data));
+                var id;
+                if(idx == 1) {
+                    id = 'activitiPlanList';
+                } else if(idx == 2) {
+                    id = 'holidayPlanList';
+                } else {
+                    id = 'unEntryPlanList';
+                }
+
+                var templateId = data.COMPANY_LIST.length ? 'planListTemplate' : 'noResultTemplate';
+                $('#'+id).html(template(templateId, data));
             },
             errorFunc : function(resultCode, resultInfo) {
                 $.endPageLoading();

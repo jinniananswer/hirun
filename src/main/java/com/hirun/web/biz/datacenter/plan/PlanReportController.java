@@ -1,5 +1,6 @@
 package com.hirun.web.biz.datacenter.plan;
 
+import com.hirun.pub.domain.enums.plan.PlanType;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.time.TimeTool;
@@ -47,6 +48,22 @@ public class PlanReportController extends RootController {
     public @ResponseBody String queryUnEntryPlanList(@RequestParam Map paramter) throws Exception{
         paramter.put("PLAN_DATE", TimeTool.today());
         ServiceResponse response = ServiceClient.call("DataCenter.plan.PlanReportService.queryUnEntryPlanList", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/datacenter/plan/queryHolidayPlanList")
+    public @ResponseBody String queryHolidayPlanList(@RequestParam Map paramter) throws Exception{
+        paramter.put("PLAN_DATE", TimeTool.today());
+        paramter.put("PLAN_TYPE", PlanType.holiday.getValue());
+        ServiceResponse response = ServiceClient.call("DataCenter.plan.PlanReportService.queryEmployeeListByPlanType", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/datacenter/plan/queryActivitiPlanList")
+    public @ResponseBody String queryActivitiPlanList(@RequestParam Map paramter) throws Exception{
+        paramter.put("PLAN_DATE", TimeTool.today());
+        paramter.put("PLAN_TYPE", PlanType.active.getValue());
+        ServiceResponse response = ServiceClient.call("DataCenter.plan.PlanReportService.queryEmployeeListByPlanType", paramter);
         return response.toJsonString();
     }
 

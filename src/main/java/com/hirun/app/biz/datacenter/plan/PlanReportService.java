@@ -189,6 +189,23 @@ public class PlanReportService extends GenericService{
         return response;
     }
 
+    public ServiceResponse queryEmployeeListByPlanType(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String planDate = request.getString("PLAN_DATE");
+        String planType = request.getString("PLAN_TYPE");
+
+        UnEntryPlanEmployeeListVO unEntryPlanEmployeeListVO = new UnEntryPlanEmployeeListVO();
+        List<EmployeeEntity> employeeList = EmployeeBean.queryEmployeeListByPlanType(planDate, planType);
+        for(EmployeeEntity employee : employeeList) {
+            OrgEntity org = EmployeeBean.queryOrgByEmployee(employee.getEmployeeId(), "3");
+            unEntryPlanEmployeeListVO.addEmployeeName(org.getName(), employee.getName());
+        }
+
+        response.set("COMPANY_LIST", unEntryPlanEmployeeListVO.toJSONArray());
+
+        return response;
+    }
+
     public ServiceResponse queryEmployeeMonthSheet2(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
 
