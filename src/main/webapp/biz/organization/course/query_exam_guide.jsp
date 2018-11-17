@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: jinnian
-  Date: 2018/10/28
-  Time: 下午10:58
+  Date: 2018/11/13
+  Time: 下午9:47
   To change this template use File | Settings | File Templates.
 --%>
 <!DOCTYPE HTML>
@@ -13,12 +13,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>岗前课堂学习资料</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/course/query.prework.courseware.js?v=20181105004200"></script>
+    <script src="/scripts/biz/organization/course/query.exam.guide.js"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header e_show">
-    <div class="back" ontap="$.redirect.closeCurrentPage();">岗前学习资料</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">考试指南</div>
     <div class="fn">
         <button class="e_button-blue" type="button" ontap="showPopup('UI-popup','UI-popup-query-cond')"><span class="e_ico-search"></span></button>
     </div>
@@ -40,7 +40,7 @@
         </div>
         <div class="c_box">
             <div class="c_list c_list-line">
-                <ul id="courses">
+                <ul id="exams">
 
                 </ul>
             </div>
@@ -69,14 +69,6 @@
                         <!-- 列表 开始 -->
                         <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
                             <ul id="queryArea">
-                                <li class="link" ontap="forwardPopup(this,'UI-COURSE')">
-                                    <div class="label">课程</div>
-                                    <div class="value">
-                                        <input type="text" id="NAME" name="NAME" readonly="true" nullable="yes" desc="课程名称" />
-                                        <input type="hidden" name="COURSE_ID" id="COURSE_ID" nullable="yes" desc="课程ID" />
-                                    </div>
-                                    <div class="more"></div>
-                                </li>
                                 <li class="link">
                                     <div class="label">资料名称</div>
                                     <div class="value">
@@ -90,27 +82,10 @@
                     </div>
                     <div class="l_bottom">
                         <div class="c_submit c_submit-full">
-                            <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.courseware.query();" class="e_button-l e_button-green">确定</button>
+                            <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.exam.query();" class="e_button-l e_button-green">确定</button>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
-                </div>
-            </div>
-            <div class="c_popupGroup">
-                <div class="c_popupItem" id="UI-COURSE">
-                    <div class="c_header">
-                        <div class="back" ontap="backPopup(this)">请选择课程</div>
-                    </div>
-                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
-                        <!-- 列表 开始 -->
-                        <div class="c_list c_list-col-2 c_list-line c_list-border c_list-fixWrapSpace">
-                            <ul id="COURSE_LIST">
-
-                            </ul>
-                        </div>
-                        <!-- 列表 结束 -->
-                        <div class="c_line"></div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -118,8 +93,8 @@
 </div>
 <!-- 弹窗 结束 -->
 <script>
+    $.exam.init();
     Wade.setRatio();
-    $.courseware.init();
 </script>
 </body>
 </html>
