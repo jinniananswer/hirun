@@ -25,6 +25,7 @@ import java.util.Map;
 @Controller
 public class CourseController extends RootController {
 
+
     @RequestMapping("/initPreworkCourseUpload")
     public @ResponseBody String initPreworkCourseUpload(HttpServletRequest request) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
@@ -62,6 +63,7 @@ public class CourseController extends RootController {
     public @ResponseBody String queryPreworkCourse(HttpServletRequest request) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("COURSE_ID", request.getParameter("COURSE_ID"));
+        parameter.put("FILE_NAME", request.getParameter("FILE_NAME"));
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryPreworkCourse", parameter);
         return response.toJsonString();
     }
