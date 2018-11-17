@@ -42,7 +42,7 @@
     <script src="frame/TouchUI/content/js/jcl.js"></script>
     <script src="frame/TouchUI/content/js/i18n/code.zh_CN.js"></script>
     <script src="frame/TouchUI/content/js/jcl-plugins.js"></script>
-    <script src="frame/TouchUI/content/js/jcl-ui.js"></script>
+    <script src="frame/TouchUI/content/js/jcl-ui.js?a=1"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/popup.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/frame.js"></script>
     <script src="frame/TouchUI/content/js/ui/component/base/segment.js"></script>
