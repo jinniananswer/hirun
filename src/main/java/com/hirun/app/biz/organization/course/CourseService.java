@@ -75,7 +75,7 @@ public class CourseService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
-        RecordSet courseList = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"));
+        RecordSet courseList = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"), request.getString("FILE_NAME"), "1");
         response.set("COURSE_LIST", ConvertTool.toJSONArray(courseList));
         return response;
     }
