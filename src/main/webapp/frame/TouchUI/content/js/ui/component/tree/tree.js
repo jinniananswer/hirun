@@ -4,4 +4,866 @@
  * auth:xiedx@asiainfo.com
  * Copyright 2015, WADE
  */
-!function(e,t,a){"use strict";if(e&&"undefined"==typeof e.Tree){var n=Array.prototype.splice,i=("undefined"!=typeof e.hasTouch?e.hasTouch:"ontouchstart"in t,function(t,n){var i=this;i.el=t&&1==t.nodeType?t:a.getElementById(t),i.el&&i.el.nodeType&&(i.id=e.attr(i.el,"id"))&&(n&&e.isObject(n)&&e.extend(i,n),e.attr(i.el,"x-wade-uicomponent")||e.attr(i.el,"x-wade-uicomponent","tree"),i._init(),i.constructor.call(i))});i.prototype=e.extend(new e.UIComponent,{setParam:function(e,t){var a=this;a.params||(a.params={}),a.params[e]=t},getCheckedNodeIds:function(t){var a=this;if(a.isShowCheckBox){var n=[];if(e("input[name="+a.checkBoxName+"]:checked",a.el).each(function(){n.push(e.attr(this.parentNode.parentNode,"id"))}),n.length>1&&t){n.sort(function(e,t){return e.lastIndexOf("●")-t.lastIndexOf("●")});for(var i,d,o=n.length-1;o>-1;o--)(i=a._getDataIdByNodeId(n[o]))&&(d=a._getParentNodeDataByDataId(i),d&&e.inArray(treeId+"○"+d.dataid,n)>-1&&n.splice(o,1))}return n}},init:function(){var t=this;if(t.data)t.draw(),t.expandPath&&t.expandByPath(t.expandPath);else{if(!(t.clazz||t.method||t.listener||t.componentId))return void MessageBox.error(e.lang.get("ui.component.tree.tip.msg-title"),e.lang.get("ui.component.tree.tip.invalid-parameter",t.id));e(t.el).append('<span id="'+t.id+'_loading" class="e_ico-loading"></span>');var a=function(a){e("#"+t.id+"_loading").remove();var n=a.context;return"0"!=n.x_resultcode?void MessageBox.error(e.lang.get("ui.component.tree.tip.msg-title"),n.x_resultinfo):(t.data=a.data,t.draw(),t.expandPath&&t.expandByPath(t.expandPath),void e.event.trigger("afterAction",null,t.el))},n=t._buildParams();t.clazz&&t.method?e.httphandler.post(t.clazz,t.method,n,a,null,{dataType:"json",simple:!0}):e.ajax.post(t.page?t.page:null,t.listener,n,t.componentId?t.componentId:null,a,null,{dataType:"json",simple:!0})}},insert:function(t,a,n,i,d,o,r){var l=this,s=e.isPlainObject(a);if(void 0!=a&&null!=a&&(s||void 0!=n&&null!=n)){s&&void 0==o&&(o=n,n=null);var c;if(!o||(c=l._getNodeDataByDataId(o))){var u=e.extend({showcheck:"false",haschild:"false",complete:"false",expand:"false",groupid:null,href:null,checked:"false",disabled:"false"},s?a:{id:a,text:n,value:i,showcheck:d?"true":"false",haschild:r?"true":"false"});if(u.dataid=c?c.dataid+"●"+u.id:u.id,c){if(c.childNodes||(c.childNodes={}),"true"!=c.haschild&&(c.haschild="true"),"undefined"!=typeof c.childNodes[u.id])return;c.childNodes[u.id]=u}else{if(l.data||(l.data={}),"undefined"!=typeof l.data[u.id])return;l.data[u.id]=u}var p=l._buildNode(u);if(c){var h=e("#"+l.id+"○"+o),f=h.children("ul:first"),g=""+h.attr("className");if((" "+g+" ").indexOf(" leaf ")>-1&&(g=e.trim((" "+g+" ").replace(/ leaf /g," unfold ")),h.attr("className",g)),f&&f.length)switch(t){case"prepend":f.prepend(p);break;case"append":default:var v=f.children("li[class!=leaf]:last");r&&v&&v.length?v.after(p):f.append(p)}else h.prepend("<ul>\n"+p+"</ul>\n");h=f=null}else{var f=e(l.el).children("ul:first");if(f&&f.length)switch(t){case"prepend":f.prepend(p);break;case"append":default:var v=f.children("li[class!=leaf]:last");r&&v&&v.length?v.after(p):f.append(p)}else e(l.el).html("<ul>\n"+p+"</ul>\n");f=null}p=null}}},append:function(e,t,a,n,i,d){var o=this;o.insert("append",e,t,a,n,i,d)},prepend:function(e,t,a,n,i,d){var o=this;o.insert("prepend",e,t,a,n,i,d)},remove:function(t,a){var n=this;if(t&&e.isString(t)){var i=n._getNodeDataByDataId(t);if(i){var d=i.id,o=n._getParentNodeDataByDataId(t);if(o){if(delete o.childNodes[d],e.isEmptyObject(o.childNodes)&&!a){o.haschild="false";var r=e("#"+n.id+"○"+o.dataid),l=r.children("ul:first");"leaf"!=r.attr("className")&&r.attr("className","leaf"),r=l=null}}else delete n.data[d];e("#"+n.id+"○"+t).remove(),i=null}}},empty:function(){var t=this;if(t.data){e(t.el).empty();var a=function(e){for(var t in e)"childNodes"==t&&a(e[t]),delete e[t]};a(t.data),delete t.data,t.data=null,t.lastActiveTapNodeId=null,t.lastExpandNodeId=null,t.lastCheckedNodeId=null,e.browser.msie&&CollectGarbage()}},draw:function(){var t=this;if(t.data){var a=[];a.push("<ul>\n");var n=[];for(var i in t.data)t.data[i]&&e.isObject(t.data[i])&&n.push([i,t.data[i].order]);n.sort(function(e,t){return parseInt(e[1])-parseInt(t[1])});for(var d=0;d<n.length;d++)a.push(t._buildNode(t.data[n[d][0]])),n.splice(d--,1);n=null,a.push("</ul>\n"),e(t.el).html(a.join(""))}},expand:function(t){var n=this,i=n._getNodeDataByNodeId(t);if(i){var d="true"==""+i.haschild,o="true"==""+i.complete;if(!1!==e.event.trigger("expandAction",i,n.el)){if(d&&!o){if(n.isAsync&&n.asyncLoading)return void MessageBox.alert(e.lang.get("ui.component.tree.tip.msg-title"),e.lang.get("ui.component.tree.tip.node-loading-uncompleted"));if(n.isAsync&&!i.childNodes){var r=n._buildParams();r+="&Tree_Parent_NodeID="+encodeURIComponent(i.id),r+="&Tree_Parent_DataID="+encodeURIComponent(i.dataid),r+="&Tree_Parent_GroupID="+(null!=i.groupid&&void 0!=i.groupid?encodeURIComponent(i.groupid):""),r+="&Tree_Parent_isChecked="+encodeURIComponent(i.checked),n.asyncLoading=!0;var l=function(a){n.asyncLoading=!1,e("#"+t+"_loading").remove();var d=a.context;return"0"!=d.x_resultcode?(n.queue.length=[],void MessageBox.error(e.lang.get("ui.component.tree.tip.msg-title"),d.x_resultinfo)):a.data&&e.isObject(a.data)?(i.childNodes=a.data,void n.expand(t)):void 0};return e("#"+t+" div[class=text]").prepend('<span id="'+t+'_loading" class="e_ico-loading"></span>'),void(n.clazz&&n.method?e.httphandler.post(n.clazz,n.method,r,l,null,{dataType:"json",simple:!0}):(n.listener||n.componentId)&&e.ajax.post(n.page?n.page:null,n.listener,r,n.componentId?n.componentId:null,l,null,{dataType:"json",simple:!0}))}var s=[],c=i.childNodes;if(c&&e.isObject(c)){var u=[];for(var p in c)c[p]&&e.isObject(c[p])&&u.push([p,c[p].order]);u.sort(function(e,t){return parseInt(e[1])-parseInt(t[1])});for(var h=0;h<u.length;h++)s.push(n._buildNode(c[u[h][0]])),u.splice(h--,1);u=null,e("#"+t+" ul:first").html(s.join("")),s=null,i.complete="true"}else!1!==n.isNodataWarning&&MessageBox.alert(e.lang.get("ui.component.tree.tip.msg-title"),e.lang.get("ui.component.tree.tip.childnode-no-data"))}if(d){var f=a.getElementById(t);if(f&&1==f.nodeType){var g=f.className?f.className:"";(" "+g+" ").indexOf(" leaf ")<0&&(f.className=e.trim((" "+g+" ").replace(/ fold /gi," "))+" unfold")}f=null,n._autoRefreshScroller()}n.queue.splice(e.inArray(t,n.queue),1)}}},expandQueue:function(){var e=this;e.queue.length?(e.asyncLoading||e.expand(e.queue[0]),e.timer=setTimeout("window['"+e.id+"'].expandQueue();",500)):e.timer&&clearTimeout(e.timer)},expandByPath:function(t,a,n){var i=this;if(e.isFunction(a)&&(n=a,a=null),!t||!e.isString(t))return void MessageBox.alert(e.lang.get("ui.component.tree.tip.msg-title"),e.lang.get("ui.component.tree.tip.invalid-expandpath"));a&&e.isString(a)||(a="-"),e.isFunction(n)&&(i.expandByPathCallback=n);for(var d,o=t.split(a),r=[],l=0;l<o.length;l++)r.push(o[l]),d=i.id+"○"+r.join("●"),l==o.length-1&&(i.lastExpandNodeId=d),i.isAsync?i.queue.push(d):i.expand(d);o=r=null,i.isAsync&&i.expandQueue()},collapse:function(t){var n=this,i=a.getElementById(t);if(i&&1==i.nodeType){var d=i.className?i.className:"";(" "+d+" ").indexOf(" leaf ")<0&&(i.className=e.trim((" "+d+" ").replace(/ unfold /gi," "))+" fold")}i=null,n._autoRefreshScroller()},destroy:function(){var t=this;if(t.data)for(var a in t.data)delete t.data[a];if(t.data=null,e.isObject(t.params)){for(var i in t.params)delete t.params[i];t.params=null}for(var d=0;d<t.queue.length;d++)n.call(t.queue,d--,1);t.queue=null,t.el=null},_init:function(){var t=this;this.queue=[],e(t.el).tap(function(a){a.originalEvent&&(a=e.event.fix(a.originalEvent));var n=a.target;if(n&&1!=!n.nodeType){var i,d,o,r,l,s=n.className?n.className:"";if(e.nodeName(n,"input")&&e.attr(n,"type")==t.checkBoxType&&(i=n.parentNode)&&(i=i.parentNode)&&1==i.nodeType&&e.nodeName(i,"li")&&(o=e.attr(i,"id"))){if(t._activeNode(o),!1===e.event.trigger("checkBoxAction",t._getNodeDataByNodeId(o),t.el))return n.checked=!n.checked,void(i=d=s=null);t._checkNode(o,n.checked)}else if(e.nodeName(n,"div")&&(i=n.parentNode)&&1==i.nodeType&&e.nodeName(i,"li")&&(o=e.attr(i,"id")))if(l=i.className?i.className:"",r=(" "+l+" ").indexOf(" unfold ")>-1,t._activeNode(o),(" "+s+" ").indexOf(" text ")>-1){if(!1===e.event.trigger("textAction",t._getNodeDataByNodeId(o),t.el))return void(i=d=s=l=null);var c=!1;if(t.isShowCheckBox){for(var u=0,p=n.previousSibling,h=!1;u<3&&p;){if(1==p.nodeType&&e.nodeName(p,"div")&&(" "+p.className+" ").indexOf(" checkbox ")>-1){h=!0;break}p=p.previousSibling,u++}if(!0===h){var f=p.getElementsByTagName("input")[0];if(f&&1==f.nodeType&&e.attr(f,"type")==t.checkBoxType){if(c=!0,!1===e.event.trigger("checkBoxAction",t._getNodeDataByNodeId(o),t.el))return void(i=d=s=l=null);t._checkNode(o,!f.checked,!1)}}}c||t._triggerNode(o,r)}else(" "+s+" ").indexOf(" ico ")>-1&&t._triggerNode(o,r);i=d=s=l=null}})},_autoRefreshScroller:function(){for(var n,i=this,d=i.el.parentNode,o=0;o<50&&d&&d.nodeType&&d!=a.body;)1==d.nodeType&&"scroller"==e.attr(d,"x-wade-uicomponent")&&(n=e.attr(d,"id"))&&t[n]&&t[n]instanceof e.Scroller&&t[n].refresh(),d=d.parentNode,o++;d=null},_getDataIdByNodeId:function(t){if(t&&e.isString(t)){var a=t.lastIndexOf("○");return t.substring(a+1,t.length)}},_getNodeDataByDataId:function(t){var a=this;if(t&&e.isString(t)&&a.data&&e.isObject(a.data)){var n,i=t.split("●");if(i&&i.length)for(var n,d,o=0;o<i.length&&(0==o?n=a.data[i[o]]:n&&(d=n.childNodes,d&&e.isObject(d)&&(n=d[i[o]])),n);o++);return i=null,n}},_getParentNodeDataByDataId:function(t){var a=this;if(t&&e.isString(t)){var n,i=t.split("●");return i&&i.length>=2&&(i.splice(i.length-1,1),n=a._getNodeDataByDataId(i.join("●"))),i=null,n}},_getNodeDataByNodeId:function(t){var a=this;if(t&&e.isString(t)){var n=t.lastIndexOf("○"),i=t.substring(n+1,t.length);return a._getNodeDataByDataId(i)}},_buildParams:function(){var t=this,a=[];if(a.push("Tree_ID="+encodeURIComponent(t.id)),a.push("Tree_IsShowCheckBox="+t.isShowCheckBox),a.push("Tree_IsSearch="+t.isSearch),a.push("Tree_IsFolder="+t.isFolder),a.push("Tree_IsAsync="+t.isAsync),t.checkBoxName&&a.push("Tree_CheckBoxName="+encodeURIComponent(t.checkBoxName)),t.checkBoxType&&a.push("Tree_CheckBoxType="+encodeURIComponent(t.checkBoxType)),t.iconDir&&a.push("Tree_IconDir="+encodeURIComponent(t.iconDir)),!e.isEmptyObject(t.params))for(var n in t.params)a.push(encodeURIComponent(n)+"="+encodeURIComponent(t.params[n]));return a.join("&")},_buildNode:function(t){var a=this;if(t&&e.isObject(t)){var n=[],i=t.dataid,d=a.id+"○"+i,o="true"==""+t.haschild,r=("true"==""+t.complete,t.icon),l=(t.href,o?"fold":"leaf");return n.push('<li id="'+d+'" class="'+l+'">\n'),n.push('<div class="ico"></div>\n'),"true"==t.showcheck&&(n.push('<div class="checkbox">'),n.push('<input name="'+a.checkBoxName+'" type="'+("radio"==a.checkBoxType?"radio":"checkbox")+'" value="'+t.value+'" '+("true"==""+t.checked?"checked":"")+" "+("true"==""+t.disabled?"disabled":"")+" />"),n.push("</div>\n")),n.push('<div class="text" title="'+t.text+'" >'),r&&n.push('<span class="'+r+'"></span>'),n.push(t.text),n.push("</div>\n"),o&&n.push("<ul></ul>"),n.push("</li>\n"),n.join("")}},_triggerNode:function(e,t){var a=this;e&&(t?a.collapse(e):a.expand(e))},_checkNode:function(t,a,n){var i=this;if(i.isShowCheckBox){var d=i._getNodeDataByNodeId(t);if(d){if("radio"==i.checkBoxType)d.checked="true",i.lastCheckedNodeId&&t!=i.lastCheckedNodeId&&(d=i._getNodeDataByNodeId(i.lastCheckedNodeId))&&(d.checked="false",0==n&&e("#"+i.lastCheckedNodeId+" input[type=radio]:first").attr("checked",!!a)),0==n&&t!=i.lastCheckedNodeId&&e("#"+t+" input[type=radio]:first").attr("checked",!!a);else if("checkbox"==i.checkBoxType&&(d.checked=a?"true":"false",0==n&&e("#"+t+" input[type=checkbox]:first").attr("checked",!!a),"true"==d.haschild)){var o=d.childNodes;if(o&&e.isObject(o)){var r;for(var l in o)r=o[l],e.isObject(r)&&i._checkNode(i.id+"○"+r.dataid,a,!1)}}i.lastCheckedNodeId=t}}},_activeNode:function(t){var n,i,d=this;t&&e.isString(t)&&t!=d.lastActiveTapNodeId&&(n=a.getElementById(t),i=d.lastActiveTapNodeId?a.getElementById(d.lastActiveTapNodeId):null,i&&1==i.nodeType&&(i.className=e.trim((" "+i.className+" ").replace(/ on /gi," "))),n&&1==n.nodeType&&(n.className=e.trim((n.className?n.className:"")+" on"),d.lastActiveTapNodeId=t)),n=i=null}}),t.Tree=e.Tree=i}}(Wade,window,document);
+(function ($, window, doc) {
+	"use strict";
+	
+	if( !$ || typeof $.Tree != "undefined" )
+		return;
+	
+	var splice  = Array.prototype.splice;
+	
+	var hasTouch  = typeof $.hasTouch != "undefined" ? $.hasTouch : "ontouchstart" in window;
+	
+	var Tree = function(el, settings){
+		var that = this;
+
+		that.el = el && el.nodeType == 1 ? el : doc.getElementById(el);
+		if( !that.el || !that.el.nodeType || !(that.id = $.attr(that.el, "id")) )
+			return;
+		
+		if(settings && $.isObject(settings))
+			$.extend(that, settings);
+		
+		if(!$.attr(that.el, "x-wade-uicomponent")){
+			$.attr(that.el, "x-wade-uicomponent", "tree");	
+		}
+		
+		that._init();		
+		
+		that.constructor.call(that);
+	};
+	
+	Tree.prototype = $.extend(new $.UIComponent(), {
+		setParam: function(key, val){
+			var that = this;
+			
+			if(!that.params)
+				that.params = {};
+				
+			that.params[key] = val;
+		},
+		getCheckedNodeIds: function(doFilter) {  //doFilter = true ,过滤父节点已被勾选的子节点
+            var that = this;
+            
+            if (!that.isShowCheckBox) 
+            	return;
+            
+            var ret = [];
+            $("input[name=" + that.checkBoxName + "]:checked", that.el).each(function() {
+                ret.push($.attr(this.parentNode.parentNode, "id"));
+            });
+            
+            if (ret.length > 1 && doFilter) { //过滤
+                //按分隔符个数从少到多排序
+                ret.sort(function(nodeId1, nodeId2) {
+                    return nodeId1.lastIndexOf("●") - nodeId2.lastIndexOf("●");
+                });
+                
+                //倒序从最长的nodeId开始遍历
+                var dataid, pdata;
+                for (var i = ret.length - 1; i > -1; i--) {
+                    if( !( dataid = that._getDataIdByNodeId(ret[i]) ) ) continue;
+                    pdata = that._getParentNodeDataByDataId(dataid);
+                    if (pdata && $.inArray(treeId + "○" + pdata.dataid, ret) > -1) {
+                        ret.splice(i, 1);
+                    }
+                }
+            }
+            return ret;
+        },
+		init: function(){
+			var that = this;
+			
+			if(!that.data){ //加载数据
+				if("normal" != $.DATA_INTERACTION_MODE && !that.clazz && !that.method && !that.listener && !that.componentId){
+					MessageBox.error($.lang.get("ui.component.tree.tip.msg-title"), $.lang.get("ui.component.tree.tip.invalid-parameter", that.id));
+					return;
+				}
+				
+				//添加loading
+				$(that.el).append("<span id=\"" + that.id + "_loading\" class=\"e_ico-loading\"></span>");
+				
+				//callback
+				var callback = function(data){
+					$("#" + that.id + "_loading").remove();
+					if("normal" == $.DATA_INTERACTION_MODE){
+						that.data = data;
+					}else{
+						var ctx = data.context;
+						if("0" != ctx.x_resultcode){
+							MessageBox.error($.lang.get("ui.component.tree.tip.msg-title"), ctx.x_resultinfo);
+							return;
+						}
+						that.data = data.data;
+					}
+					that.draw();
+					
+					if(that.expandPath){
+						that.expandByPath(that.expandPath);
+					}
+					$.event.trigger("afterAction", null, that.el);
+				}
+				
+				var params = that._buildParams();
+				if("normal" == $.DATA_INTERACTION_MODE && that.dataurl){
+					$.ajax.post(that.dataurl, params, null, callback, null, {
+						dataType : "json"
+					});
+				}else if(that.clazz && that.method){
+					$.httphandler.post(that.clazz, that.method, params, callback ,null, {
+						dataType:"json",
+						simple:true
+					});
+				}else{
+					$.ajax.post((that.page ? that.page : null), that.listener, params, (that.componentId ? that.componentId : null), callback, null, {
+						dataType:"json",
+						simple:true
+					});
+				}
+			}else{
+				that.draw();
+				if(that.expandPath){
+					that.expandByPath(that.expandPath);
+				}
+				//this.triggerInitAfterAction();
+			}
+		},
+		insert: function(dir, id, text, value, showcheck, pdataid, haschild){
+			var that = this;
+			var plainObj = $.isPlainObject(id);
+			
+			if( undefined == id || null == id )
+				return;
+			if( !plainObj && (undefined == text || null == text) )
+				return;
+			
+			if(plainObj && undefined == pdataid){
+				pdataid = text;
+				text = null;
+			}
+
+			var pData;
+			if(pdataid){
+				pData = that._getNodeDataByDataId(pdataid);
+				if(!pData) return;
+			}
+
+			var nodeData = $.extend({"showcheck": "false", "haschild": "false", "complete": "false", 
+										"expand": "false", "groupid": null, "href": null, "checked": "false","disabled": "false"}, 
+										plainObj ? id : {"id": id, "text": text, "value": value, "showcheck": showcheck ? "true": "false", "haschild": haschild ? "true" : "false"});
+			//设置dataid
+			nodeData.dataid = pData ? pData.dataid + "●" + nodeData.id : nodeData.id;
+			
+			//合并数据
+			if(pData){
+				if(!pData.childNodes)
+					pData.childNodes = {};
+				if("true" != pData.haschild)
+					pData.haschild = "true";
+					
+				if(typeof pData.childNodes[nodeData.id] != "undefined")
+					return;
+				else
+					pData.childNodes[nodeData.id] = nodeData;
+			}else{
+				if(!that.data)
+					that.data = {};
+				if(typeof that.data[nodeData.id] != "undefined")
+					return;
+				else
+					that.data[nodeData.id] = nodeData;
+			}
+			
+			var html = that._buildNode( nodeData );
+			if(pData){				
+				var pli = $("#" + that.id + "○" + pdataid), ul = pli.children("ul:first");
+				var className = ("" + pli.attr("className"));
+				if( (" " + className + " ").indexOf(" leaf ") > -1){ //叶子节点样式判断
+					className = $.trim( (" " + className + " ").replace(/ leaf /g, " unfold ") );
+					pli.attr("className", className);
+				}
+				if(ul && ul.length){
+					switch(dir){
+						case "prepend":
+							ul.prepend(html);
+							break;	
+						case "append":
+						default:
+							//如果父级是枝干节点，且新增的是枝干节点，则插入到最后一个枝干节点之后
+							var foldLi = ul.children("li[class!=leaf]:last");
+							if(haschild && foldLi && foldLi.length){
+								foldLi.after(html);
+							}else{
+								ul.append(html);	
+							}
+							break;
+					}
+				}else{
+					pli.append("<ul>\n" + html + "</ul>\n");
+				}
+				pli = ul = null;
+			}else{
+				var ul = $(that.el).children("ul:first");
+				if(ul && ul.length){
+					switch(dir){
+						case "prepend":
+							ul.prepend(html);
+							break;	
+						case "append":
+						default:
+							//如果父级是枝干节点，且新增的是枝干节点，则插入到最后一个枝干节点之后
+							var foldLi = ul.children("li[class!=leaf]:last");
+							if(haschild && foldLi && foldLi.length){
+								foldLi.after(html);
+							}else{
+								ul.append(html);	
+							}
+							break;
+					}
+				}else{
+					$(that.el).html("<ul>\n" + html + "</ul>\n");
+				}
+				ul = null;
+			}
+			html = null;
+		},
+		append: function(id, text, value, showcheck, pdataid, haschild){
+			var that = this;
+			that.insert("append", id, text, value, showcheck, pdataid, haschild);
+		},
+		prepend: function(id, text, value, showcheck, pdataid, haschild){
+			var that = this;
+			that.insert("prepend", id, text, value, showcheck, pdataid, haschild);
+		},
+		remove: function(dataid, haschild){
+			var that = this;
+			
+			if(!dataid || !$.isString(dataid))
+				return;
+			
+			var nodeData = that._getNodeDataByDataId(dataid);
+			if(!nodeData)
+				return;
+				
+			var nodeId = nodeData.id;
+			var pData = that._getParentNodeDataByDataId(dataid);
+
+			//删除数据
+			if(pData){
+				delete pData.childNodes[nodeId];
+				
+				//处理节点样式
+				if($.isEmptyObject(pData.childNodes) && !haschild){
+					pData.haschild = "false";
+					var pli = $("#" + that.id + "○" + pData.dataid), ul = pli.children("ul:first");
+					if("leaf" != pli.attr("className")){ //节点样式判断
+						pli.attr("className", "leaf");
+					}
+					pli = ul = null;
+				}
+			}else{
+				delete that.data[nodeId];
+			}
+			
+			//删除DOM结构
+			$("#" + that.id + "○" + dataid).remove();
+			
+			nodeData = null;
+		},
+		empty: function(){
+			var that = this;
+			if(!that.data) return;
+			
+			$(that.el).empty();
+
+			//递归删除元素
+			var deleteData = function(data){
+				for(var p in data){
+					if("childNodes" == p){
+						deleteData(data[p]);
+					}
+					delete data[p];
+				}
+			};
+			deleteData(that.data);
+			
+			delete that.data;
+			that.data = null;
+			
+			//清除标记变量
+			that.lastActiveTapNodeId = null;
+			that.lastExpandNodeId = null;
+			that.lastCheckedNodeId = null;
+			
+			if($.browser.msie){
+				CollectGarbage();
+			}
+		},
+		draw: function(){
+			var that = this;
+			
+			if(!that.data) return;
+			
+			var buffer = [];
+			
+			buffer.push("<ul>\n");
+			
+			var tmpArray = [];
+			for(var nid in that.data){
+				if(that.data[nid] && $.isObject(that.data[nid])){
+					tmpArray.push([nid, that.data[nid].order]);
+				}
+			}
+			//排序
+			tmpArray.sort(function(n1, n2){
+				return parseInt(n1[1]) - parseInt(n2[1]);
+			});
+			//生成节点
+			for(var i = 0;i < tmpArray.length; i++){
+				buffer.push( that._buildNode( that.data[ tmpArray[i][0] ] ) );
+				tmpArray.splice(i--, 1);
+			}
+			tmpArray = null;
+			
+			buffer.push("</ul>\n");
+			
+			$(that.el).html(buffer.join(''));
+		},
+		expand: function(nodeId){
+			var that = this;
+			var ndata = that._getNodeDataByNodeId(nodeId);
+			if(!ndata) return;
+			
+			var hasChild = "true" == ("" + ndata["haschild"]),
+				complete = "true" == ("" + ndata["complete"]);
+			
+			if( false === $.event.trigger("expandAction", ndata, that.el) )
+				return;
+				
+			if( hasChild && !complete ){ //判断有子节点且未加载
+				
+				//禁止同时加载多个节点
+				if(that.isAsync && that.asyncLoading){
+					MessageBox.alert($.lang.get("ui.component.tree.tip.msg-title"), $.lang.get("ui.component.tree.tip.node-loading-uncompleted"));
+					return;
+				}
+				
+				if(that.isAsync && !ndata["childNodes"]){
+					
+					var params = that._buildParams();
+					params += "&Tree_Parent_NodeID=" + encodeURIComponent(ndata["id"]);
+					params += "&Tree_Parent_DataID=" + encodeURIComponent(ndata["dataid"]);
+					params += "&Tree_Parent_GroupID=" + (ndata["groupid"] != null && ndata["groupid"] != undefined ? encodeURIComponent(ndata["groupid"]) : "");
+					params += "&Tree_Parent_isChecked=" + encodeURIComponent(ndata["checked"]);
+					
+					that.asyncLoading = true;
+
+					var callback = function(data){	
+						that.asyncLoading=false;
+						$("#" + nodeId + "_loading").remove();
+						if("normal" == $.DATA_INTERACTION_MODE){
+							if(data && $.isObject(data)){
+								ndata["childNodes"] = data;
+								that.expand(nodeId);
+								return;	
+							}
+						}else{
+							var ctx = data.context;
+							if("0" != ctx.x_resultcode){
+								that.queue.length = [];
+								MessageBox.error($.lang.get("ui.component.tree.tip.msg-title"), ctx.x_resultinfo);
+								return;
+							}else{
+								if(data.data && $.isObject(data.data)){
+									ndata["childNodes"] = data.data;
+									that.expand(nodeId);
+									return;				
+								}
+							}
+						}
+					};
+					
+					//增加loading
+					$("#" + nodeId + " div[class=text]").prepend("<span id=\"" + nodeId + "_loading\" class=\"e_ico-loading\"></span>");
+					if("normal" == $.DATA_INTERACTION_MODE && that.dataurl){
+						$.ajax.post(that.dataurl, params, null, callback, null, {
+							dataType : "json"
+						});
+					}else if(that.clazz && that.method){
+						$.httphandler.post(that.clazz, that.method, params, callback, null, {
+							dataType : "json",
+							simple : true
+						});
+					}else if(that.listener || that.componentId){
+						$.ajax.post((that.page ? that.page : null), that.listener, params, (that.componentId ? that.componentId : null), callback, null,{
+							dataType:"json",
+							simple : true
+						});
+					}
+					
+					//返回
+					return;
+				}
+				
+				var buffer = [], childNodes = ndata["childNodes"];
+				
+				if(childNodes && $.isObject(childNodes)){
+					
+					var tmpArray = [];
+					for(var nid in childNodes){
+						if(childNodes[nid] && $.isObject(childNodes[nid])){
+							tmpArray.push( [ nid, childNodes[nid].order ] );
+						}
+					}
+					//排序
+					tmpArray.sort(function(n1, n2){
+						return parseInt( n1[1] ) - parseInt( n2[1] );
+					});
+					//生成节点
+					for(var i = 0; i < tmpArray.length; i++){
+						buffer.push( that._buildNode( childNodes[ tmpArray[i][0] ] ) );
+						tmpArray.splice(i--, 1);
+					}
+					tmpArray = null;
+					
+				 	$("#" + nodeId + " ul:first").html( buffer.join('') );
+				 	
+				 	buffer = null;
+				 	
+				 	ndata["complete"] = "true";
+				 	
+				}else{
+					if(false !== that.isNodataWarning){
+						MessageBox.alert($.lang.get("ui.component.tree.tip.msg-title"), $.lang.get("ui.component.tree.tip.childnode-no-data"));
+					}
+				}	
+			}
+			
+			if(hasChild){
+			
+				var li = doc.getElementById(nodeId);
+				if(li && li.nodeType == 1){
+					var className = li.className ? li.className : "";
+					if( (" " + className + " ").indexOf(" leaf ") < 0){ 
+						li.className = $.trim( (" " + className + " ").replace(/ fold /ig, " ") ) + " unfold";
+					}
+				}
+				li = null;
+				
+				//适配滚动组件高度
+				that._autoRefreshScroller();
+			}
+			
+			that.queue.splice( $.inArray(nodeId, that.queue), 1 );	
+		},
+		expandQueue: function(){
+			var that = this;
+			
+			if(that.queue.length){
+				//展开queue中的节点
+				if(!that.asyncLoading){
+					that.expand( that.queue[0] );
+				}
+				that.timer = setTimeout("window['" + that.id + "'].expandQueue();", 500);
+			}else{
+				if(that.timer){
+					clearTimeout(that.timer);
+				}
+			}
+		},
+		expandByPath: function(path, separator, callback){
+			var that = this;
+			
+			if($.isFunction(separator)){
+				callback = separator;
+				separator = null;
+			}
+			
+			if(!path || !$.isString(path)){
+				MessageBox.alert($.lang.get("ui.component.tree.tip.msg-title"), $.lang.get("ui.component.tree.tip.invalid-expandpath"));
+				return;
+			}
+			
+			if(!separator || !$.isString(separator)){
+				separator = "-";
+			}
+			
+			if($.isFunction(callback)){
+				that.expandByPathCallback = callback;
+			}
+			
+			//分解path
+			var nodes = path.split(separator);
+			var arr = [], nid;
+			for(var i = 0; i < nodes.length; i++){
+				arr.push( nodes[i] );
+				nid = that.id + "○" + arr.join("●");
+				
+				if(i == (nodes.length - 1)) //记录展开的最后一级节点
+					that.lastExpandNodeId = nid;
+					
+				if(that.isAsync){
+					//如果是异步树，插入节点唯一id到队列数组
+					that.queue.push(nid);
+				}else{
+					that.expand(nid);
+				}
+			}
+			nodes = arr = null;
+			
+			//异步树才使用队列展开
+			if(that.isAsync){
+				that.expandQueue();		
+			}	
+		},
+		collapse: function(nodeId){
+			var that = this;
+			
+			var li = doc.getElementById(nodeId);
+			if(li && li.nodeType == 1){
+				var className = li.className ? li.className : "";
+				if( (" " + className + " ").indexOf(" leaf ") < 0){ 
+					li.className = $.trim( (" " + className + " ").replace(/ unfold /ig, " ") ) + " fold";
+				}
+			}
+			li = null;
+			
+			//适配滚动组件高度
+			that._autoRefreshScroller();
+		},
+		destroy: function(){
+			var that = this;
+
+			if(that.data){
+				for(var id in that.data){
+					delete that.data[id];
+				}
+			}
+			that.data = null;
+			
+			if($.isObject(that.params)){
+				for(var key in that.params){
+					delete that.params[key];
+				}
+				that.params = null;
+			}
+			
+			for(var i = 0; i < that.queue.length; i++){
+				splice.call(that.queue, i--, 1);
+			}
+			that.queue = null;
+			
+			that.el = null;
+		},
+		_init: function(){
+			var that = this;
+			
+			this.queue = [];
+			
+			/*************** 绑定事件  ******************/
+
+			$(that.el).tap(function(e){	
+				if(e.originalEvent)
+					e = $.event.fix(e.originalEvent);
+								
+				var el = e.target;
+				if(!el || !el.nodeType == 1) return;
+				
+				var className = el.className ? el.className : "";
+				var li, prevLi, nodeId, isExpand, liClassName;
+				
+				if( $.nodeName(el, "input") && $.attr(el, "type") == that.checkBoxType
+					&& (li = el.parentNode) && (li = li.parentNode) && li.nodeType == 1
+					&& $.nodeName(li, "li") && (nodeId = $.attr(li, "id")) ){ //checkbox
+					
+					//if(hasTouch) return; //触摸设备不支持直接选择复选框
+										
+					that._activeNode(nodeId); //设置 active样式
+						
+					//执行checkBoxAction事件
+					if(false === $.event.trigger("checkBoxAction", that._getNodeDataByNodeId(nodeId), that.el)){
+						el.checked = !el.checked; //还原checked状态
+						li = prevLi = className = null;
+						return;
+					}
+
+					//由于tap事件延迟处理， el.checked实际是已完成check的状态
+					that._checkNode(nodeId, el.checked);
+					
+				}else if( $.nodeName(el, "div") && (li = el.parentNode) && li.nodeType == 1 
+					&& $.nodeName(li, "li") && (nodeId = $.attr(li, "id")) ){
+					
+					liClassName = li.className ? li.className : "";
+					isExpand = (" " + liClassName + " ").indexOf(" unfold ") > -1;
+	
+					that._activeNode(nodeId); //设置 active样式
+												
+					if( (" " + className + " ").indexOf(" text ") > -1 ){ //text
+
+						//判断是否叶子节点
+						//if( (" " + liClassName + " ").indexOf(" leaf ") > -1){	}
+						
+						//执行textAction事件
+						if(false === $.event.trigger("textAction", that._getNodeDataByNodeId(nodeId), that.el)){
+							li = prevLi = className = liClassName = null;
+							return;
+						}
+						
+						var triggerCheck = false;
+						if(that.isShowCheckBox){
+							//查找 div .checkbox
+							var n = 0, pre = el.previousSibling, f = false;
+							while(n < 3 && pre){
+								if(pre.nodeType == 1 && $.nodeName(pre, "div") 
+									&& (" " + pre.className + " ").indexOf(" checkbox ") > -1){
+									f = true;
+									break;
+								}
+								pre = pre.previousSibling;
+								n ++;
+							}
+							
+							if(true === f){
+								var cbx = pre.getElementsByTagName("input")[0];
+								if(cbx && cbx.nodeType == 1 && $.attr(cbx, "type") == that.checkBoxType){
+									triggerCheck = true;
+									//执行checkBoxAction
+									if(false === $.event.trigger("checkBoxAction", that._getNodeDataByNodeId(nodeId), that.el)){
+										li = prevLi = className = liClassName = null;
+										return;
+									}
+									
+									that._checkNode(nodeId, !cbx.checked, false);
+								}
+							}
+						}
+						
+						if(!triggerCheck){
+							that._triggerNode(nodeId, isExpand); //展开或收缩节点
+						}
+					}else if( (" " + className + " ").indexOf(" ico ") > -1 ){	//图标
+						that._triggerNode(nodeId, isExpand); //展开或收缩节点
+					}	
+				}
+				
+				li = prevLi = className = liClassName = null;
+			});
+			
+			/*************** 绑定事件  ******************/
+		},
+		_autoRefreshScroller: function(){ //如果树组件上级有Scroller组件，则进行高度宽度匹配
+			var that = this;
+			
+			var p = that.el.parentNode;
+			var i = 0, id, scroller;
+			while(i < 50 && p && p.nodeType && p != doc.body){ //递归刷新所有scroller
+				if(p.nodeType == 1 && "scroller" == $.attr(p, "x-wade-uicomponent")
+					&& (id = $.attr(p, "id")) && window[id] && window[id] instanceof $.Scroller){
+					window[id].refresh(); 
+				}
+				p = p.parentNode;
+				i ++;
+			}
+			p = null; 
+		},
+		_getDataIdByNodeId: function(nodeid) {
+            if (!nodeid || !$.isString(nodeid)) return;
+            var lidx = nodeid.lastIndexOf("○");
+            return nodeid.substring(lidx + 1, nodeid.length);
+        },
+		_getNodeDataByDataId: function(dataId){
+			var that = this;
+			if(!dataId || !$.isString(dataId)) return;
+			if(!that.data || !$.isObject(that.data)) return;
+			
+			var data, arr = dataId.split("●");
+			if(arr && arr.length){
+				var data, childNodes;
+				for(var i = 0; i < arr.length; i++){
+					if(i == 0){
+						data = that.data[ arr[i] ];
+					}else if(data){
+						childNodes = data["childNodes"];
+						if(childNodes && $.isObject(childNodes)){
+							data = childNodes[ arr[i] ];
+						}
+					}
+					if(!data) break;
+				}
+			}
+			arr = null;
+			return data;
+		},
+		_getParentNodeDataByDataId: function(dataId){
+			var that = this;
+			if(!dataId || !$.isString(dataId)) return;
+			
+			var data, arr = dataId.split("●");
+			if(arr && arr.length >= 2 ){
+				//删除最后一个节点
+				arr.splice(arr.length - 1, 1);
+				data = that._getNodeDataByDataId( arr.join("●") );
+			}
+			arr = null;
+			
+			return data;
+		},
+		_getNodeDataByNodeId: function(nodeId){
+			var that = this;
+			if(!nodeId || !$.isString(nodeId))return;
+			
+			var idx = nodeId.lastIndexOf("○");
+			var dataId = nodeId.substring(idx + 1, nodeId.length);
+
+			return that._getNodeDataByDataId(dataId);
+		},
+		_buildParams: function(){	
+			var that = this;
+			var buffer = [];
+			
+			buffer.push("Tree_ID=" + encodeURIComponent(that.id));
+			//buffer.push("Tree_IsExpandRoot=" + that.isExpandRoot);
+			buffer.push("Tree_IsShowCheckBox=" + that.isShowCheckBox);
+			//buffer.push("Tree_IsExpandAll=" + that.isExpandAll);
+			buffer.push("Tree_IsSearch=" + that.isSearch);
+			buffer.push("Tree_IsFolder=" + that.isFolder);
+			buffer.push("Tree_IsAsync=" +  that.isAsync);
+			
+			if(that.checkBoxName){
+				buffer.push("Tree_CheckBoxName=" + encodeURIComponent(that.checkBoxName));
+			}
+			if(that.checkBoxType){
+				buffer.push("Tree_CheckBoxType=" + encodeURIComponent(that.checkBoxType));
+			}
+			if(that.iconDir){
+				buffer.push("Tree_IconDir=" + encodeURIComponent(that.iconDir));
+			}
+			if(!$.isEmptyObject(that.params)){
+				for(var key in that.params){
+					buffer.push(encodeURIComponent(key) + "=" + encodeURIComponent(that.params[key]));
+				}
+			}
+			
+			return buffer.join("&");
+		},
+		_buildNode: function(nodeData){
+			var that = this;
+			
+			if(!nodeData || !$.isObject(nodeData)) return;
+			
+			var buffer = [];
+			var dataId = nodeData["dataid"],
+				nodeId = that.id + "○" + dataId,
+				hasChild = ( "true" == ("" + nodeData["haschild"]) ),
+				complete = ("true" == ("" + nodeData["complete"]) ),
+				icon = nodeData["icon"],
+				href = nodeData["href"],
+				cls = hasChild ? "fold" : "leaf";
+
+			buffer.push("<li id=\"" + nodeId + "\" class=\"" + cls + "\">\n");
+			buffer.push("<div class=\"ico\"></div>\n");
+			
+			if("true" == nodeData["showcheck"]){
+				//checkBoxAction 只在当前选择节点触发
+				buffer.push("<div class=\"checkbox\">");
+				buffer.push("<input name=\"" + that.checkBoxName + "\" type=\"" + (that.checkBoxType == "radio" ? "radio" : "checkbox") + "\" value=\"" + nodeData["value"] + "\" " + ("true" == ("" + nodeData["checked"]) ? "checked" : "") + " " + ("true" == ("" + nodeData["disabled"]) ? "disabled" : "") + " />");
+				buffer.push("</div>\n");
+			}
+			
+			//var isnew = ("true" == ("" + nodeData["isnew"]));
+			buffer.push("<div class=\"text\" title=\"" + nodeData["text"] + "\" >");
+			if(icon){
+				buffer.push("<span class=\"" + icon + "\"></span>");
+			}
+			buffer.push( nodeData["text"] );
+			buffer.push("</div>\n");
+			
+			//有子节点才生成ul,避免ul在ie6下占高度
+			if(hasChild){
+				buffer.push("<ul></ul>");
+			}
+			
+			buffer.push("</li>\n");		
+			
+			return buffer.join('');
+		},
+		_triggerNode: function(nodeId, isExpand){ //处理展开收拢
+			var that = this;
+			
+			if(!nodeId) return;
+			if(isExpand){	
+				that.collapse(nodeId);
+			}else{
+				that.expand(nodeId);
+			}
+		},
+		_checkNode: function(nodeId, checked, fromCheckBox){  //处理单选和复选框, fromCheckBox - 是否有复选框点击操作 默认为true
+			var that = this;
+			
+			if(!that.isShowCheckBox) return;
+			
+			var nodeData = that._getNodeDataByNodeId(nodeId);
+			if(!nodeData) return;
+			
+			if("radio" == that.checkBoxType){
+				nodeData.checked = "true";
+				if(that.lastCheckedNodeId && nodeId != that.lastCheckedNodeId
+					&& (nodeData = that._getNodeDataByNodeId(that.lastCheckedNodeId))){
+					nodeData.checked = "false";
+					
+					if( false == fromCheckBox ){
+						$("#" + that.lastCheckedNodeId + " input[type=radio]:first").attr("checked", checked ? true : false);
+					}
+				}
+				
+				if( false == fromCheckBox && nodeId != that.lastCheckedNodeId){
+					$("#" + nodeId + " input[type=radio]:first").attr("checked", checked ? true : false);
+				}
+			}else if("checkbox" == that.checkBoxType){
+				nodeData.checked = checked ? "true" : "false";
+
+				if(false == fromCheckBox){
+					$("#" + nodeId + " input[type=checkbox]:first").attr("checked", checked ? true : false);
+				}
+				
+				if("true" == nodeData.haschild){
+					var childNodes = nodeData["childNodes"];
+						if(childNodes && $.isObject(childNodes)){
+							var childNodeId, childNodeData;
+							for(var id in childNodes){
+								childNodeData = childNodes[id];
+								if($.isObject(childNodeData)){
+									//递归调用，选择子节点
+					 		 		//setTimeout("window['" + that.id + "']._checkNode('" + that.id + "○" + childNodeData.dataid + "', " + checked + ")", 0);
+						 		 	that._checkNode(that.id + "○" + childNodeData.dataid, checked, false);
+						 		 }
+							}
+					 	}
+				}
+			}
+			that.lastCheckedNodeId = nodeId;
+		},
+		_activeNode: function(nodeId){ //设置为活动
+			var that = this;
+			var li, prevLi;
+			if(nodeId && $.isString(nodeId) && nodeId != that.lastActiveTapNodeId){
+				li = doc.getElementById(nodeId);
+				prevLi = that.lastActiveTapNodeId ? doc.getElementById(that.lastActiveTapNodeId) : null;
+				
+				if(prevLi && prevLi.nodeType == 1){
+					prevLi.className = $.trim((" " + prevLi.className + " ").replace(/ on /ig, " "));
+				}
+				 
+				if(li && li.nodeType == 1){
+					li.className = $.trim( (li.className ? li.className : "") + " on"); 
+					that.lastActiveTapNodeId = nodeId;
+				}
+			}
+			li = prevLi = null;
+		}
+	});
+	
+	//export 
+	window.Tree = $.Tree = Tree;	
+	
+})(Wade, window, document);	
