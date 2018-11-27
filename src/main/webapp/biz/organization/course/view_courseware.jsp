@@ -11,14 +11,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>岗前课堂学习资料</title>
+    <title>课程详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/course/query.prework.courseware.js"></script>
+    <script src="/scripts/biz/organization/course/view.courseware.js"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header e_show">
-    <div class="back" ontap="$.redirect.closeCurrentPage();">岗前学习资料</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">课程详情</div>
     <div class="fn">
         <input type="hidden" name="FILE_ID" id="FILE_ID" nullable="no" value="${pageContext.request.getParameter("FILE_ID") }" desc="文件ID" />
     </div>
