@@ -2,21 +2,25 @@
     $.extend({courseware:{
             init : function() {
                 window["UI-popup"] = new Wade.Popup("UI-popup");
-                $.ajaxPost('initPreworkCourseQuery',null,function(data){
+                $.ajaxPost('initCourseDetail',"&COURSE_ID="+$("#COURSE_ID").val(),function(data){
                     var rst = $.DataMap(data);
-                    $.courseware.drawCourseType(rst.get("COURSE"));
-                    $.courseware.drawCourse(rst.get("COURSE_LIST"));
+                    $.courseware.drawCourseDetail(rst.get("COURSE"));
+                    $.courseware.drawCourse(rst.get("FILES"));
                 });
             },
 
-            drawCourseType : function(courses) {
+            drawCourseDetail : function(course) {
                 var html=[];
-                var length = courses.length;
-                for(var i=0;i<length;i++){
-                    var course = courses.get(i);
-                    html.push("<li class=\"link e_center\" ontap=\"$.courseware.afterSelectCourse(\'"+course.get("COURSE_ID")+"\',\'"+course.get("NAME")+"\')\"><div class=\"main\">"+course.get("NAME")+"</div></li>");
-                }
-                $.insertHtml('beforeend', $("#COURSE_LIST"), html.join(""));
+                html.push(course.get("NAME"));
+                $.insertHtml('beforeend', $("#COURSE_NAME"), html.join(""));
+
+                html = [];
+                html.push(course.get("COURSE_DESC"));
+                $.insertHtml('beforeend', $("#COURSE_DESC"), html.join(""));
+
+                html = [];
+                html.push(course.get("PARENT_COURSE_NAME"));
+                $.insertHtml('beforeend', $("#PARENT_COURSE_NAME"), html.join(""));
             },
 
             drawCourse : function(datas){
@@ -50,21 +54,6 @@
                 }
 
                 $.insertHtml('beforeend', $("#courses"), html.join(""));
-            },
-
-            afterSelectCourse : function(id, name) {
-                $("#COURSE_ID").val(id);
-                $("#NAME").val(name);
-                backPopup(document.getElementById("UI-COURSE"));
-            },
-
-            query : function() {
-                var parameter = $.buildJsonData("queryArea");
-                $.ajaxPost('queryPreworkCourse', parameter, function (data) {
-                    hidePopup('UI-popup','UI-popup-query-cond');
-                    var rst = new Wade.DataMap(data);
-                    $.courseware.drawCourse(rst.get("COURSE_LIST"));
-                });
             },
 
             openCourseware : function(url, fileId) {
