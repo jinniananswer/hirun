@@ -24,8 +24,17 @@
     <entity name="OrgCenter.course.CourseService.queryPreworkCourse" class="com.hirun.app.biz.organization.course.CourseService" method="queryPreworkCourse"/>
     <entity name="OrgCenter.course.CourseService.uploadPreworkCourse" class="com.hirun.app.biz.organization.course.CourseService" method="uploadPreworkCourse"/>
     <entity name="OrgCenter.course.CourseService.queryCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="queryCourseFile"/>
+    <entity name="OrgCenter.course.CourseService.initCourseManage" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseManage"/>
+    <entity name="OrgCenter.course.CourseService.createCourse" class="com.hirun.app.biz.organization.course.CourseService" method="createCourse"/>
+    <entity name="OrgCenter.course.CourseService.initChangeCourse" class="com.hirun.app.biz.organization.course.CourseService" method="initChangeCourse"/>
+    <entity name="OrgCenter.course.CourseService.changeCourse" class="com.hirun.app.biz.organization.course.CourseService" method="changeCourse"/>
+    <entity name="OrgCenter.course.CourseService.deleteCourse" class="com.hirun.app.biz.organization.course.CourseService" method="deleteCourse"/>
+    <entity name="OrgCenter.course.CourseService.uploadCourse" class="com.hirun.app.biz.organization.course.CourseService" method="uploadCourse"/>
+    <entity name="OrgCenter.course.CourseService.initCourseDetail" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseDetail"/>
     <entity name="OrgCenter.course.ExamService.uploadExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="uploadExamGuide"/>
     <entity name="OrgCenter.course.ExamService.initExamGuideQuery" class="com.hirun.app.biz.organization.course.ExamService" method="initExamGuideQuery"/>
+    <entity name="OrgCenter.course.ExamService.queryExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="queryExamGuide"/>
+
 
     <!--运营管理中心服务-->
     <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>
