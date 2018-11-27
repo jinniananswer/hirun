@@ -1,7 +1,9 @@
 package com.hirun.web.biz.organization.course;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
@@ -13,7 +15,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,13 +72,88 @@ public class CourseController extends RootController {
         return response.toJsonString();
     }
 
+    @RequestMapping("/initCourseManage")
+    public @ResponseBody String initCourseManage(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initCourseManage", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/createCourse")
+    public @ResponseBody String createCourse(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.createCourse", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initChangeCourse")
+    public @ResponseBody String initChangeCourse(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initChangeCourse", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/changeCourse")
+    public @ResponseBody String changeCourse(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.changeCourse", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/deleteCourse")
+    public @ResponseBody String deleteCourse(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.deleteCourse", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/uploadCourse")
+    public @ResponseBody String uploadCourse(HttpServletRequest request, @RequestParam("COURSE_FILE") CommonsMultipartFile[] files) throws Exception {
+        String path=request.getSession().getServletContext().getRealPath("doc/");
+        String now = TimeTool.now(TimeTool.TIME_PATTERN_MILLISECOND);
+
+        if(ArrayTool.isEmpty(files)) {
+            return new ServiceResponse().toJsonString();
+        }
+
+        JSONObject parameter = new JSONObject();
+        int i = 0;
+
+        JSONArray fileParams = new JSONArray();
+        for(CommonsMultipartFile file : files) {
+            JSONObject fileParam = new JSONObject();
+            String fileName = file.getOriginalFilename();
+            String fileType = fileName.substring(fileName.lastIndexOf("."));
+            String newFileName = now + i + fileType;
+            File newFile=new File(path, newFileName);
+            file.transferTo(newFile);
+
+            fileParam.put("NEW_FILE_NAME", newFileName);
+            fileParam.put("COURSE_ID", request.getParameter("UPLOAD_COURSE_ID"));
+            fileParam.put("FILE_NAME", fileName);
+            fileParam.put("FILE_TYPE", fileType);
+            fileParams.add(fileParam);
+            i++;
+        }
+
+        parameter.put("FILES", fileParams);
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.uploadCourse", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToCourseDetail")
+    public String redirectToCourseDetail(HttpServletRequest request) throws Exception {
+        return "/biz/organization/course/course_detail";
+    }
+
+    @RequestMapping("/initCourseDetail")
+    public @ResponseBody String initCourseDetail(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initCourseDetail", parameter);
+        return response.toJsonString();
+    }
+
     @RequestMapping("/redirectToViewFile")
     public String redirectToViewFile(HttpServletRequest request) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("FILE_ID", request.getParameter("FILE_ID"));
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryCourseFile", parameter);
         JSONObject file = response.getJSONObject("FILE");
-        String filePath = "https://view.officeapps.live.com/op/view.aspx?src=" + file.getString("STORAGE_PATH");
+        String filePath = file.getString("STORAGE_PATH");
         request.setAttribute("PATH", filePath);
         return "/biz/organization/course/view_courseware";
     }
