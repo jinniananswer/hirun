@@ -48,8 +48,8 @@
                     html.push("归属课程："+data.get("COURSE_NAME"));
                     html.push("</div><div class='content'>");
                     html.push("</div></div>")
-                    html.push("<div class=\"side e_size-m\">");
-                    html.push(data.get("FILE_TYPE"));
+                    html.push("<div class=\"side e_size-xl\">");
+                    html.push("<span class=\"e_ico-file\"></span>");
                     html.push("</div></div></div></li>");
                 }
 
