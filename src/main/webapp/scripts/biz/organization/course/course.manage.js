@@ -85,6 +85,13 @@
                 if($.validate.verifyAll("changeCourseArea")) {
                     var parameter = $.buildJsonData("changeCourseArea");
                     $.ajaxPost('changeCourse', parameter, function (data) {
+                        var html = [];
+                        html.push($("#CHANGE_COURSE_NAME").val());
+                        var parent = $("#courseTree○"+$.course.dataId);
+                        var children = parent.children();
+                        var changeNode = $(children[1]);
+                        changeNode.empty();
+                        $.insertHtml('beforeend', $(changeNode), html.join(""));
                         hidePopup('UI-popup','UI-CHANGE_COURSE');
                     });
                 }
