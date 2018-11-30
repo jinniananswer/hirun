@@ -31,6 +31,8 @@
     <entity name="OrgCenter.course.CourseService.deleteCourse" class="com.hirun.app.biz.organization.course.CourseService" method="deleteCourse"/>
     <entity name="OrgCenter.course.CourseService.uploadCourse" class="com.hirun.app.biz.organization.course.CourseService" method="uploadCourse"/>
     <entity name="OrgCenter.course.CourseService.initCourseDetail" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseDetail"/>
+    <entity name="OrgCenter.course.CourseService.initCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseFile"/>
+    <entity name="OrgCenter.course.CourseService.deleteCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="deleteCourseFile"/>
     <entity name="OrgCenter.course.ExamService.uploadExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="uploadExamGuide"/>
     <entity name="OrgCenter.course.ExamService.initExamGuideQuery" class="com.hirun.app.biz.organization.course.ExamService" method="initExamGuideQuery"/>
     <entity name="OrgCenter.course.ExamService.queryExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="queryExamGuide"/>
