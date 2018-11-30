@@ -42,9 +42,10 @@
             <div class="fn">
                 <ul>
                     <li ontap="$.course.initCreateCourse();"><span class="e_ico-add"></span>新增子课程</li>
-                    <li ontap="$.course.initChangeCourse();"><span class="e_ico-edit"></span>编辑</li>
-                    <li ontap="$.course.deleteCourse();"><span class="e_ico-delete"></span>删除</li>
+                    <li ontap="$.course.initChangeCourse();"><span class="e_ico-edit"></span>编辑课程</li>
+                    <li ontap="$.course.deleteCourse();"><span class="e_ico-delete"></span>删除课程</li>
                     <li ontap="$.course.initUploadCourse();"><span class="e_ico-upload"></span>上传课件</li>
+                    <li ontap="$.course.initCourseFile();"><span class="e_ico-word"></span>课件管理</li>
                     <li ontap="$.course.viewDetail();"><span class="e_ico-show"></span>课程详情</li>
                 </ul>
             </div>
@@ -181,6 +182,37 @@
                     <div class="l_bottom">
                         <div class="c_submit c_submit-full">
                             <button type="button" ontap="$.course.uploadCourse();" class="e_button-l e_button-green">上传课件</button>
+                        </div>
+                    </div>
+                    <!-- 滚动 结束 -->
+                </div>
+                <div class="c_popupItem" id="UI-COURSE_FILE">
+                    <div class="c_header">
+                        <div class="back" ontap="hidePopup(this)">课件管理</div>
+                    </div>
+                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                        <div class="c_msg" id="messagebox" style="display:none">
+                            <div class="wrapper">
+                                <div class="emote"></div>
+                                <div class="info">
+                                    <div class="text">
+                                        <div class="title">暂无课件</div>
+                                        <div class="content"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 列表 开始 -->
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
+                            <ul id="courseFileArea">
+
+                            </ul>
+                        </div>
+                        <!-- 列表 结束 -->
+                    </div>
+                    <div class="l_bottom">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" ontap="$.course.deleteFile();" class="e_button-l e_button-red">删除课程</button>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
