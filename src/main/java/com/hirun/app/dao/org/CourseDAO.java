@@ -36,12 +36,15 @@ public class CourseDAO extends GenericDAO {
         return this.query("ins_course", parameter);
     }
 
-    public void deleteCoursesById(String courseIds) throws SQLException {
+    public void deleteCoursesById(String courseIds, String updateUserId, String updateTime) throws SQLException {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("UPDATE_USER_ID", updateUserId);
+        parameter.put("UPDATE_TIME", updateTime);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("delete from ins_course ");
+        sb.append("update ins_course set status = '1', update_user_id = :UPDATE_USER_ID, update_time = :UPDATE_TIME ");
         sb.append("where course_id in ("+courseIds+") ");
 
-        this.executeUpdate(sb.toString(), null);
+        this.executeUpdate(sb.toString(), parameter);
     }
 }

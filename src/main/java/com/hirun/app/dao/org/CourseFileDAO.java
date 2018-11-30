@@ -57,4 +57,16 @@ public class CourseFileDAO extends GenericDAO {
         }
         return this.queryBySql(sql.toString(), parameter);
     }
+
+    public void deleteCourseFilesById(String fileIds, String updateUserId, String updateTime) throws SQLException {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("UPDATE_USER_ID", updateUserId);
+        parameter.put("UPDATE_TIME", updateTime);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("update ins_course_file set status = '1', update_user_id = :UPDATE_USER_ID, update_time = :UPDATE_TIME ");
+        sb.append("where file_id in ("+fileIds+") ");
+
+        this.executeUpdate(sb.toString(), parameter);
+    }
 }
