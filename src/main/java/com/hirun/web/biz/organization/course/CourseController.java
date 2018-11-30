@@ -157,4 +157,27 @@ public class CourseController extends RootController {
         request.setAttribute("PATH", filePath);
         return "/biz/organization/course/view_courseware";
     }
+
+    @RequestMapping("/initCourseFile")
+    public @ResponseBody String initCourseFile(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initCourseFile", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/deleteCourseFile")
+    public @ResponseBody String deleteCourseFile(HttpServletRequest request) throws Exception{
+        String[] fileIds = request.getParameterValues("DELETE_FILE[]");
+        if(fileIds == null || fileIds.length <= 0){
+            throw new Exception("没有传要删除的文件ID");
+        }
+        String deleteFileIds = "";
+        for(String fileId : fileIds) {
+            deleteFileIds += fileId + ",";
+        }
+        deleteFileIds = deleteFileIds.substring(0, deleteFileIds.length() - 1);
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("DELETE_FILE_ID", deleteFileIds);
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.deleteCourseFile", parameter);
+        return response.toJsonString();
+    }
 }
