@@ -183,6 +183,10 @@ public class CourseService extends GenericService {
     }
 
     public ServiceResponse deleteCourse(ServiceRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+
         CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
         RecordSet courses = dao.queryAllValidCourse();
 
@@ -207,7 +211,7 @@ public class CourseService extends GenericService {
             }
             i++;
         }
-        dao.deleteCoursesById(courseIds);
+        dao.deleteCoursesById(courseIds, userId, session.getCreateTime());
         return new ServiceResponse();
     }
 
@@ -275,6 +279,25 @@ public class CourseService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE", ConvertTool.toJSONObject(course));
         response.set("FILES", ConvertTool.toJSONArray(courseFiles));
+        return response;
+    }
+
+    public ServiceResponse initCourseFile(ServiceRequest request) throws Exception {
+        CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
+        RecordSet courseFiles = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"), null, null);
+
+        ServiceResponse response = new ServiceResponse();
+        response.set("FILES", ConvertTool.toJSONArray(courseFiles));
+        return response;
+    }
+
+    public ServiceResponse deleteCourseFile(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+
+        CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
+        fileDAO.deleteCourseFilesById(request.getString("DELETE_FILE_ID"), userId, session.getCreateTime());
         return response;
     }
 }
