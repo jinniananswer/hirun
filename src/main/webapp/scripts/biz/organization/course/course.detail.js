@@ -46,7 +46,7 @@
                     html.push("</div>");
                     html.push("<div class=\"content\">");
                     html.push("归属课程："+data.get("COURSE_NAME"));
-                    html.push("</div><div class='content'>");
+                    html.push("</div><div class='content'>"+"上传时间："+data.get("CREATE_DATE"));
                     html.push("</div></div>")
                     html.push("<div class=\"side e_size-xl\">");
                     html.push("<span class=\"e_ico-file\"></span>");
@@ -73,7 +73,7 @@
 
                 }
                 else{
-                    $.redirect.open('redirectToViewFile?FILE_ID='+fileId,'资料详情');
+                    $.redirect.open('redirectToViewFile?FILE_ID='+fileId,'课件详情');
                 }
             }
         }});

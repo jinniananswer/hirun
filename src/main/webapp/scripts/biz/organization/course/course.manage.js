@@ -42,7 +42,7 @@
                     showPopup('UI-popup','UI-CREATE_COURSE');
                 }
                 else {
-                    alert("请先选中某一课程，才能添加子课程");
+                    MessageBox.alert("请先选中某一课程，才能添加子课程");
                 }
             },
 
@@ -54,15 +54,14 @@
                         var courseTree = window["courseTree"];
                         var courseDataId = $.course.dataId + "●" + newCourseId;
                         courseTree.append({"id":newCourseId, "text":$("#COURSE_NAME").val(), "value":newCourseId, "showcheck":"false", "dataid":courseDataId, "expand":"false", "haschild":"false"}, $.course.dataId);
-                        $.course.treeId = newCourseId;
-                        $.course.treeName = $("#COURSE_NAME").val();
-
+                        $.course.hasChild = "true";
 
                         //清空创建课程框中的内容
                         $("#COURSE_NAME").val("");
                         $("#PARENT_COURSE_ID").val("");
                         $("#PARENT_COURSE_NAME").val("");
                         hidePopup('UI-popup','UI-CREATE_COURSE');
+                        MessageBox.success("创建子课程成功");
                     });
                 }
             },
@@ -93,46 +92,48 @@
                         changeNode.empty();
                         $.insertHtml('beforeend', $(changeNode), html.join(""));
                         hidePopup('UI-popup','UI-CHANGE_COURSE');
+                        MessageBox.success("修改课程成功");
                     });
                 }
             },
 
             deleteCourse : function() {
                 if(this.treeId == null) {
-                    alert("请先选中要删除的课程");
+                    MessageBox.alert("请先选中要删除的课程");
                     return;
                 }
 
                 if(this.treeId == -1) {
-                    alert("根节点不能删除");
+                    MessageBox.alert("根节点不能删除");
                     return;
                 }
-                if(this.hasChild == "true") {
-                    if(window.confirm("该课程下还有其它子课程，将删除该课程和其下所有的子课程，确定删除吗？")) {
 
-                    }
-                    else {
-                        return;
-                    }
+                var message = "确定要删除该课程吗？";
+                if(this.hasChild == "true") {
+                    message = "该课程下还有其它子课程，将删除该课程和其下所有的子课程，确定删除吗？";
                 }
 
-                $.ajaxPost('deleteCourse',"&COURSE_ID="+$.course.treeId,function(data){
-                    window["courseTree"].remove($.course.dataId);
-                    $.course.dataId = null;
-                    $.course.treeId = null;
-                    $.course.treeName = null;
-                    $.course.hasChild = null;
+                MessageBox.confirm("提示信息",message, function(btn) {
+                    if(btn == "ok") {
+                        $.ajaxPost('deleteCourse',"&COURSE_ID="+$.course.treeId,function(data){
+                            window["courseTree"].remove($.course.dataId);
+                            $.course.dataId = null;
+                            $.course.treeId = null;
+                            $.course.treeName = null;
+                            $.course.hasChild = null;
+                            MessageBox.success("删除成功");
+                        });
+                    }
                 });
-
             },
 
             initUploadCourse : function() {
                 if(this.treeId == null) {
-                    alert("请先选择需要上传文件的课程");
+                    MessageBox.alert("请先选择需要上传文件的课程");
                     return false;
                 }
                 if(this.treeId == -1) {
-                    alert("根结点鸿扬课程体系下不能上传文件");
+                    MessageBox.alert("根结点鸿扬课程体系下不能上传文件");
                     return false;
                 }
                 $("#UPLOAD_COURSE_ID").val(this.treeId);
@@ -140,19 +141,20 @@
                 showPopup('UI-popup','UI-UPLOAD_COURSE');
             },
 
-            fileChange : function(index) {
-                var file = $("#COURSE_FILE"+index).attr("value");
+            fileChange : function(idx) {
+                var file = $("#COURSE_FILE"+idx).attr("value");
                 var index = file.lastIndexOf(".");
                 if(index < 0){
-                    alert("上传的文件没有扩展名，不能上传");
+                    MessageBox.alert("上传的文件没有扩展名，不能上传");
                     return false;
                 }
                 var fileType = file.substr(index + 1);
                 if(fileType != 'pdf') {
-                    alert("上传的文件只能是PDF类型的");
+                    MessageBox.alert("上传的文件只能是PDF类型的");
                     return false;
                 }
-                $("#FILE_NAME"+index).val(file);
+
+                $("#FILE_NAME"+idx).val(file);
             },
 
             addFile : function() {
@@ -177,34 +179,109 @@
             uploadCourse : function() {
                 var file = $("#COURSE_FILE0").val();
                 if(file == ""){
-                    alert("上传的文件不能为空");
+                    MessageBox.alert("上传的文件不能为空");
                     return;
                 }
-
+                $.beginPageLoading();
                 var formData = new FormData($("#uploadForm")[0]);
                 var request = new XMLHttpRequest();
                 request.open( "POST", "uploadCourse" , true );
                 request.onload = function(oEvent) {
                     hidePopup('UI-popup','UI-UPLOAD_COURSE');
+                    $.endPageLoading();
                     if (request.status == 200) {
-                        alert("上传文件成功");
+                        MessageBox.success("上传课件成功");
                     } else {
-                        alert("上传文件失败")
+                        MessageBox.error("上传课件失败")
                     }
+
                 };
                 request.send(formData);
             },
 
             viewDetail : function() {
                 if(this.treeId == null) {
-                    alert("请先选择需要查看的课程");
+                    MessageBox.alert("请先选择需要查看的课程");
                     return false;
                 }
                 if(this.treeId == -1) {
-                    alert("根结点无需查看");
+                    MessageBox.alert("根结点无需查看");
                     return false;
                 }
                 $.redirect.open('redirectToCourseDetail?COURSE_ID='+this.treeId, this.treeName+'课程详情');
+            },
+
+            initCourseFile : function() {
+                if(this.treeId == null) {
+                    MessageBox.alert("请先选择需要管理课件的课程");
+                    return false;
+                }
+                if(this.treeId == -1) {
+                    MessageBox.alert("根结点无需管理课件");
+                    return false;
+                }
+
+                $.ajaxPost('initCourseFile',"&COURSE_ID="+$.course.treeId,function(data){
+                    var rst = $.DataMap(data);
+                    $.course.drawFile(rst.get("FILES"));
+                });
+            },
+
+            drawFile : function(datas) {
+                var html = [];
+                var ul = $("#courseFileArea");
+                ul.empty();
+
+                if(datas == null || datas.length <= 0) {
+                    showPopup('UI-popup','UI-COURSE_FILE');
+                    $("#messagebox").css("display","");
+                    return;
+                }
+                $("#messagebox").css("display","none");
+                var length = datas.length;
+                for(var i=0;i<length;i++) {
+                    var data = datas.get(i);
+                    html.push("<li>");
+                    html.push("<div class='main'><div class='title link' ontap=\"$.redirect.open(\'redirectToViewFile?FILE_ID="+data.get("FILE_ID")+"\',\'课件详情\')\">");
+                    html.push(data.get("NAME"));
+                    html.push("</div></div>");
+                    html.push("<div class='fn'><input type='checkbox' name='DELETE_FILE' value='"+data.get("FILE_ID")+"' />");
+                    html.push("</div></li>");
+                }
+                $.insertHtml('beforeend', ul, html.join(""));
+                showPopup('UI-popup','UI-COURSE_FILE');
+            },
+
+            deleteFile : function() {
+                var files = $("#courseFileArea input");
+
+                if(files == null || files.length <= 0) {
+                    MessageBox.alert("没有要删除的课件");
+                    return;
+                }
+
+                var length = files.length;
+                var num = 0;
+                for(var i=0;i<length;i++) {
+                    var file = $(files[i]);
+                    if(file.attr("checked")) {
+                        num++;
+                    }
+                }
+                if(num == 0) {
+                    MessageBox.alert("请选中要删除的文件");
+                    return;
+                }
+
+                var parameter = $.buildJsonData("courseFileArea");
+                MessageBox.confirm("提示信息","确认要删除课件吗？", function(btn) {
+                    if(btn == "ok") {
+                        $.ajaxPost('deleteCourseFile',parameter,function(data){
+                            hidePopup('UI-popup','UI-COURSE_FILE');
+                            MessageBox.success("删除成功");
+                        });
+                    }
+                });
             }
         }});
 })($);
