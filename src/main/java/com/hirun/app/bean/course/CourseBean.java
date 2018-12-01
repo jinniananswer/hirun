@@ -2,6 +2,7 @@ package com.hirun.app.bean.course;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.dao.org.CourseDAO;
+import com.hirun.pub.consts.CourseConst;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
@@ -21,7 +22,7 @@ public class CourseBean {
 
     public static JSONObject getCourseTree() throws Exception {
         JSONObject root = new JSONObject();
-        root.put("text", "鸿扬课程体系");
+        root.put("text", CourseConst.COURSE_ROOT);
         root.put("id", "-1");
         root.put("dataid", "-1");
         root.put("order", "0");
