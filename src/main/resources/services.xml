@@ -19,10 +19,7 @@
     <entity name="OrgCenter.employee.EmployeeService.entryHoliday"  class="com.hirun.app.biz.employee.EmployeeService" method="entryHoliday"/>
     <entity name="OrgCenter.employee.EmployeeService.queryEnterpriseEmployees"  class="com.hirun.app.biz.employee.EmployeeService" method="queryEnterpriseEmployees"/>
     <entity name="OrgCenter.employee.EmployeeService.resetPassword"  class="com.hirun.app.biz.employee.EmployeeService" method="resetPassword"/>
-    <entity name="OrgCenter.course.CourseService.initPreworkCourseUpload" class="com.hirun.app.biz.organization.course.CourseService" method="initPreworkCourseUpload"/>
-    <entity name="OrgCenter.course.CourseService.initPreworkCourseQuery" class="com.hirun.app.biz.organization.course.CourseService" method="initPreworkCourseQuery"/>
-    <entity name="OrgCenter.course.CourseService.queryPreworkCourse" class="com.hirun.app.biz.organization.course.CourseService" method="queryPreworkCourse"/>
-    <entity name="OrgCenter.course.CourseService.uploadPreworkCourse" class="com.hirun.app.biz.organization.course.CourseService" method="uploadPreworkCourse"/>
+
     <entity name="OrgCenter.course.CourseService.queryCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="queryCourseFile"/>
     <entity name="OrgCenter.course.CourseService.initCourseManage" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseManage"/>
     <entity name="OrgCenter.course.CourseService.createCourse" class="com.hirun.app.biz.organization.course.CourseService" method="createCourse"/>
@@ -33,6 +30,8 @@
     <entity name="OrgCenter.course.CourseService.initCourseDetail" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseDetail"/>
     <entity name="OrgCenter.course.CourseService.initCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseFile"/>
     <entity name="OrgCenter.course.CourseService.deleteCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="deleteCourseFile"/>
+    <entity name="OrgCenter.course.CourseService.initCoursewareQuery" class="com.hirun.app.biz.organization.course.CourseService" method="initCoursewareQuery"/>
+    <entity name="OrgCenter.course.CourseService.queryCourseware" class="com.hirun.app.biz.organization.course.CourseService" method="queryCourseware"/>
     <entity name="OrgCenter.course.ExamService.uploadExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="uploadExamGuide"/>
     <entity name="OrgCenter.course.ExamService.initExamGuideQuery" class="com.hirun.app.biz.organization.course.ExamService" method="initExamGuideQuery"/>
     <entity name="OrgCenter.course.ExamService.queryExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="queryExamGuide"/>
