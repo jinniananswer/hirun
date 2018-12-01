@@ -18,7 +18,6 @@ import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.xml.ws.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,63 +30,6 @@ import java.util.Map;
  * @create: 2018-10-27 16:03
  **/
 public class CourseService extends GenericService {
-
-    public ServiceResponse initPreworkCourseUpload(ServiceRequest request) throws Exception {
-        ServiceResponse response = new ServiceResponse();
-
-        CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
-        RecordSet courseTypes = dao.queryCoursesByType("1");
-
-        response.set("COURSE", ConvertTool.toJSONArray(courseTypes));
-        return response;
-    }
-
-    public ServiceResponse uploadPreworkCourse(ServiceRequest request) throws Exception {
-        ServiceResponse response = new ServiceResponse();
-        CourseFileDAO dao = DAOFactory.createDAO(CourseFileDAO.class);
-        AppSession session = SessionManager.getSession();
-
-        String newFileName = request.getString("NEW_FILE_NAME");
-        String storagePath = "http://139.129.29.141:8080/doc/"+newFileName;//"http%3A%2F%2Fwww.hi-run.net%3A8080%2Fdoc%2F"+newFileName;
-
-        Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("COURSE_ID", request.getString("COURSE_ID"));
-        parameter.put("STORAGE_PATH", storagePath);
-        parameter.put("NAME", request.getString("FILE_NAME"));
-        parameter.put("FILE_TYPE", request.getString("FILE_TYPE"));
-        parameter.put("STATUS", "0");
-        String userId = session.getSessionEntity().getUserId();
-        parameter.put("CREATE_USER_ID", userId);
-        parameter.put("UPDATE_USER_ID", userId);
-        parameter.put("UPDATE_TIME", session.getCreateTime());
-        parameter.put("CREATE_DATE", session.getCreateTime());
-        dao.insertAutoIncrement("ins_course_file", parameter);
-        return response;
-    }
-
-    public ServiceResponse initPreworkCourseQuery(ServiceRequest request) throws Exception {
-        ServiceResponse response = new ServiceResponse();
-
-        CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
-        RecordSet courseTypes = dao.queryCoursesByType("1");
-
-        response.set("COURSE", ConvertTool.toJSONArray(courseTypes));
-
-        CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
-        RecordSet courseList = fileDAO.queryCourseFilesByCourseType("1");
-        response.set("COURSE_LIST", ConvertTool.toJSONArray(courseList));
-
-        return response;
-    }
-
-    public ServiceResponse queryPreworkCourse(ServiceRequest request) throws Exception {
-        ServiceResponse response = new ServiceResponse();
-
-        CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
-        RecordSet courseList = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"), request.getString("FILE_NAME"), "1");
-        response.set("COURSE_LIST", ConvertTool.toJSONArray(courseList));
-        return response;
-    }
 
     public ServiceResponse queryCourseFile(ServiceRequest request) throws Exception{
         String fileId = request.getString("FILE_ID");
@@ -274,7 +216,7 @@ public class CourseService extends GenericService {
         }
 
         CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
-        RecordSet courseFiles = fileDAO.queryCourseFilesByCourseId(courseId, null, null);
+        RecordSet courseFiles = fileDAO.queryCourseFilesByCourseId(courseId, null);
 
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE", ConvertTool.toJSONObject(course));
@@ -284,7 +226,7 @@ public class CourseService extends GenericService {
 
     public ServiceResponse initCourseFile(ServiceRequest request) throws Exception {
         CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
-        RecordSet courseFiles = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"), null, null);
+        RecordSet courseFiles = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"), null);
 
         ServiceResponse response = new ServiceResponse();
         response.set("FILES", ConvertTool.toJSONArray(courseFiles));
@@ -298,6 +240,25 @@ public class CourseService extends GenericService {
 
         CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
         fileDAO.deleteCourseFilesById(request.getString("DELETE_FILE_ID"), userId, session.getCreateTime());
+        return response;
+    }
+
+    public ServiceResponse initCoursewareQuery(ServiceRequest request) throws Exception {
+        CourseBean bean = new CourseBean();
+        JSONObject courseTree = bean.getCourseTree();
+
+        ServiceResponse response = new ServiceResponse();
+        response.set("COURSEWARE", courseTree);
+
+        return response;
+    }
+
+    public ServiceResponse queryCourseware(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
+        RecordSet courseList = fileDAO.queryCourseFilesByCourseId(request.getString("COURSE_ID"), request.getString("NAME"));
+        response.set("COURSEWARE", ConvertTool.toJSONArray(courseList));
         return response;
     }
 }
