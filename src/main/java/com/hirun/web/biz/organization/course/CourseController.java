@@ -29,49 +29,6 @@ import java.util.Map;
 @Controller
 public class CourseController extends RootController {
 
-
-    @RequestMapping("/initPreworkCourseUpload")
-    public @ResponseBody String initPreworkCourseUpload(HttpServletRequest request) throws Exception {
-        Map<String, String> parameter = new HashMap<String, String>();
-        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initPreworkCourseUpload", parameter);
-        return response.toJsonString();
-    }
-
-    @RequestMapping("/uploadPreworkCourseware")
-    public @ResponseBody String uploadPreworkCourseware(HttpServletRequest request, @RequestParam("COURSE_FILE") CommonsMultipartFile file) throws Exception {
-        String path=request.getSession().getServletContext().getRealPath("doc/");
-        String now = TimeTool.now(TimeTool.TIME_PATTERN_MILLISECOND);
-        String fileName = file.getOriginalFilename();
-        String fileType = fileName.substring(fileName.lastIndexOf("."));
-        String newFileName = now+fileType;
-        File newFile=new File(path, newFileName);
-        file.transferTo(newFile);
-
-        Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("NEW_FILE_NAME", newFileName);
-        parameter.put("COURSE_ID", request.getParameter("COURSE_ID"));
-        parameter.put("FILE_NAME", fileName);
-        parameter.put("FILE_TYPE", fileType);
-        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.uploadPreworkCourse", parameter);
-        return response.toJsonString();
-    }
-
-    @RequestMapping("/initPreworkCourseQuery")
-    public @ResponseBody String initPreworkCourseQuery(HttpServletRequest request) throws Exception {
-        Map<String, String> parameter = new HashMap<String, String>();
-        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initPreworkCourseQuery", parameter);
-        return response.toJsonString();
-    }
-
-    @RequestMapping("/queryPreworkCourse")
-    public @ResponseBody String queryPreworkCourse(HttpServletRequest request) throws Exception {
-        Map<String, String> parameter = new HashMap<String, String>();
-        parameter.put("COURSE_ID", request.getParameter("COURSE_ID"));
-        parameter.put("FILE_NAME", request.getParameter("FILE_NAME"));
-        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryPreworkCourse", parameter);
-        return response.toJsonString();
-    }
-
     @RequestMapping("/initCourseManage")
     public @ResponseBody String initCourseManage(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initCourseManage", parameter);
@@ -178,6 +135,18 @@ public class CourseController extends RootController {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("DELETE_FILE_ID", deleteFileIds);
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.deleteCourseFile", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initCoursewareQuery")
+    public @ResponseBody String initCoursewareQuery(HttpServletRequest request) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initCoursewareQuery", new HashMap());
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/queryCourseware")
+    public @ResponseBody String queryCourseware(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryCourseware", parameter);
         return response.toJsonString();
     }
 }
