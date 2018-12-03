@@ -46,7 +46,7 @@ public class CourseService extends GenericService {
 
     public ServiceResponse initCourseManage(ServiceRequest request) throws Exception {
         CourseBean bean = new CourseBean();
-        JSONObject courseTree = bean.getCourseTree();
+        JSONObject courseTree = bean.getCourseTree(false);
 
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE_TREE", courseTree);
@@ -245,7 +245,7 @@ public class CourseService extends GenericService {
 
     public ServiceResponse initCoursewareQuery(ServiceRequest request) throws Exception {
         CourseBean bean = new CourseBean();
-        JSONObject courseTree = bean.getCourseTree();
+        JSONObject courseTree = bean.getCourseTree(false);
 
         ServiceResponse response = new ServiceResponse();
         response.set("COURSEWARE", courseTree);

@@ -60,7 +60,7 @@ public class ExamService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         CourseFileDAO fileDAO = DAOFactory.createDAO(CourseFileDAO.class);
-        RecordSet courseList = fileDAO.queryCourseFilesByCourseId("9", request.getString("FILE_NAME"), "0");
+        RecordSet courseList = fileDAO.queryCourseFilesByCourseId("9", request.getString("FILE_NAME"));
         response.set("EXAM_GUIDE_LIST", ConvertTool.toJSONArray(courseList));
 
         return response;
