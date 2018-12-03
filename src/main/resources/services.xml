@@ -32,6 +32,16 @@
     <entity name="OrgCenter.course.CourseService.deleteCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="deleteCourseFile"/>
     <entity name="OrgCenter.course.CourseService.initCoursewareQuery" class="com.hirun.app.biz.organization.course.CourseService" method="initCoursewareQuery"/>
     <entity name="OrgCenter.course.CourseService.queryCourseware" class="com.hirun.app.biz.organization.course.CourseService" method="queryCourseware"/>
+
+    <entity name="OrgCenter.teacher.TeacherService.initTeacherManage" class="com.hirun.app.biz.organization.teacher.TeacherService" method="initTeacherManage"/>
+    <entity name="OrgCenter.teacher.TeacherService.initCreateTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="initCreateTeacher"/>
+    <entity name="OrgCenter.teacher.TeacherService.createTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="createTeacher"/>
+    <entity name="OrgCenter.teacher.TeacherService.deleteTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="deleteTeacher"/>
+    <entity name="OrgCenter.teacher.TeacherService.initTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="initTeacher"/>
+    <entity name="OrgCenter.teacher.TeacherService.queryTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="queryTeacher"/>
+    <entity name="OrgCenter.teacher.TeacherService.initChangeTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="initChangeTeacher"/>
+    <entity name="OrgCenter.teacher.TeacherService.changeTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="changeTeacher"/>
+
     <entity name="OrgCenter.course.ExamService.uploadExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="uploadExamGuide"/>
     <entity name="OrgCenter.course.ExamService.initExamGuideQuery" class="com.hirun.app.biz.organization.course.ExamService" method="initExamGuideQuery"/>
     <entity name="OrgCenter.course.ExamService.queryExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="queryExamGuide"/>
