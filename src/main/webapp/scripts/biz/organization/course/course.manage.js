@@ -136,9 +136,12 @@
                     MessageBox.alert("根结点鸿扬课程体系下不能上传文件");
                     return false;
                 }
-                $("#UPLOAD_COURSE_ID").val(this.treeId);
-                $("#UPLOAD_COURSE_NAME").val(this.treeName);
-                showPopup('UI-popup','UI-UPLOAD_COURSE');
+                $.ajaxPost('initChangeCourse',"&COURSE_ID="+$.course.treeId,function(data){
+                    var course = data.COURSE;
+                    $("#UPLOAD_COURSE_NAME").val(course.NAME);
+                    $("#UPLOAD_COURSE_ID").val(course.COURSE_ID);
+                    showPopup('UI-popup','UI-UPLOAD_COURSE');
+                });
             },
 
             fileChange : function(idx) {
@@ -191,6 +194,16 @@
                     $.endPageLoading();
                     if (request.status == 200) {
                         MessageBox.success("上传课件成功");
+                        var ul = $("#uploadCourseArea");
+                        var children = ul.children();
+                        if(children != null && children.length > 2){
+                            var length = children.length;
+                            for(var j=length-1;j>0;j--) {
+                                var li = $(children[j]);
+                                li.remove();
+                            }
+                            $.course.addFile();
+                        }
                     } else {
                         MessageBox.error("上传课件失败")
                     }
@@ -262,9 +275,11 @@
 
                 var length = files.length;
                 var num = 0;
+                var deleteFiles = "";
                 for(var i=0;i<length;i++) {
                     var file = $(files[i]);
                     if(file.attr("checked")) {
+                        deleteFiles += file.val()+","
                         num++;
                     }
                 }
@@ -272,8 +287,8 @@
                     MessageBox.alert("请选中要删除的文件");
                     return;
                 }
-
-                var parameter = $.buildJsonData("courseFileArea");
+                deleteFiles = deleteFiles.substring(0, deleteFiles.length - 1);
+                var parameter = "&DELETE_FILE="+deleteFiles;
                 MessageBox.confirm("提示信息","确认要删除课件吗？", function(btn) {
                     if(btn == "ok") {
                         $.ajaxPost('deleteCourseFile',parameter,function(data){
