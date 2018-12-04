@@ -4,6 +4,7 @@ import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,18 +39,19 @@ public class TeacherController extends RootController {
 
     @RequestMapping("/createTeacher")
     public @ResponseBody String createTeacher(HttpServletRequest request, @RequestParam("PIC_FILE") CommonsMultipartFile file) throws Exception {
-        String path=request.getSession().getServletContext().getRealPath("doc/teacher/");
-        String now = TimeTool.now(TimeTool.TIME_PATTERN_MILLISECOND);
-
-        String fileName = file.getOriginalFilename();
-        String fileType = fileName.substring(fileName.lastIndexOf("."));
-        String newFileName = now + fileType;
-        File newFile=new File(path, newFileName);
-        file.transferTo(newFile);
 
         Map<String, String> parameter = new HashMap<String, String>();
+        String fileName = file.getOriginalFilename();
+        if(StringUtils.isNotBlank(fileName)) {
+            String path=request.getSession().getServletContext().getRealPath("doc/teacher/");
+            String now = TimeTool.now(TimeTool.TIME_PATTERN_MILLISECOND);
+            String fileType = fileName.substring(fileName.lastIndexOf("."));
+            String newFileName = now + fileType;
+            File newFile=new File(path, newFileName);
+            file.transferTo(newFile);
+            parameter.put("PIC", newFileName);
+        }
 
-        parameter.put("PIC", newFileName);
         parameter.put("TYPE", request.getParameter("TYPE"));
         parameter.put("EMPLOYEE_ID", request.getParameter("EMPLOYEE_ID"));
         parameter.put("NAME", request.getParameter("NAME"));
@@ -93,18 +95,18 @@ public class TeacherController extends RootController {
 
     @RequestMapping("/changeTeacher")
     public @ResponseBody String changeTeacher(HttpServletRequest request, @RequestParam("CHANGE_PIC_FILE") CommonsMultipartFile file) throws Exception {
-        String path=request.getSession().getServletContext().getRealPath("doc/teacher/");
-        String now = TimeTool.now(TimeTool.TIME_PATTERN_MILLISECOND);
-
-        String fileName = file.getOriginalFilename();
-        String fileType = fileName.substring(fileName.lastIndexOf("."));
-        String newFileName = now + fileType;
-        File newFile=new File(path, newFileName);
-        file.transferTo(newFile);
-
         Map<String, String> parameter = new HashMap<String, String>();
+        String fileName = file.getOriginalFilename();
+        if(StringUtils.isNotBlank(fileName)) {
+            String path=request.getSession().getServletContext().getRealPath("doc/teacher/");
+            String now = TimeTool.now(TimeTool.TIME_PATTERN_MILLISECOND);
+            String fileType = fileName.substring(fileName.lastIndexOf("."));
+            String newFileName = now + fileType;
+            File newFile=new File(path, newFileName);
+            file.transferTo(newFile);
+            parameter.put("PIC", newFileName);
+        }
 
-        parameter.put("PIC", newFileName);
         parameter.put("TEACHER_ID", request.getParameter("CHANGE_TEACHER_ID"));
         parameter.put("NAME", request.getParameter("CHANGE_NAME"));
         parameter.put("HOLD_COURSE_ID", request.getParameter("CHANGE_HOLD_COURSE_ID"));
