@@ -123,7 +123,7 @@ public class CourseController extends RootController {
 
     @RequestMapping("/deleteCourseFile")
     public @ResponseBody String deleteCourseFile(HttpServletRequest request) throws Exception{
-        String[] fileIds = request.getParameterValues("DELETE_FILE[]");
+        String[] fileIds = request.getParameter("DELETE_FILE").split(",");
         if(fileIds == null || fileIds.length <= 0){
             throw new Exception("没有传要删除的文件ID");
         }
