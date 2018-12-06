@@ -42,17 +42,17 @@
 						<th col="CUST_NAME">客户姓名</th>
 						<th col="JW_NUM" ontap="$.sortTable(this, 'int')">加微完成次数</th>
 						<th col="JW_LAST_TIME" ontap="$.sortTable(this, 'date')">加微最后完成时间</th>
-						<th col="LTZDS_NUM" ontap="$.sortTable(this, 'int')">蓝图指导书完成次数</th>
-						<th col="LTZDS_LAST_TIME" ontap="$.sortTable(this, 'date')">蓝图指导书最后完成时间</th>
+						<th col="LTZDSTS_NUM" ontap="$.sortTable(this, 'int')">蓝图指导书完成次数</th>
+						<th col="LTZDSTS_LAST_TIME" ontap="$.sortTable(this, 'date')">蓝图指导书最后完成时间</th>
 						<th col="GZHGZ_LAST_TIME" ontap="$.sortTable(this, 'date')">关注公众号完成时间</th>
 						<th col="HXJC_LAST_TIME" ontap="$.sortTable(this, 'date')">核心接触完成时间</th>
 						<th col="SMJRQLC_NUM" ontap="$.sortTable(this, 'int')">扫码完成次数</th>
 						<th col="SMJRQLC_LAST_TIME" ontap="$.sortTable(this, 'date')">扫码完成时间</th>
-						<th col="XQLTY_NUM" ontap="$.sortTable(this, 'int')">需求蓝图一完成次数</th>
-						<th col="XQLTY_LAST_TIME" ontap="$.sortTable(this, 'date')">需求蓝图一最后完成时间</th>
+						<th col="XQLTYTS_NUM" ontap="$.sortTable(this, 'int')">需求蓝图一完成次数</th>
+						<th col="XQLTYTS_LAST_TIME" ontap="$.sortTable(this, 'date')">需求蓝图一最后完成时间</th>
 						<th col="ZX_LAST_TIME" ontap="$.sortTable(this, 'date')">咨询完成时间</th>
-						<th col="YJAL_NUM" ontap="$.sortTable(this, 'int')">一键案例完成次数</th>
-						<th col="YJAL_LAST_TIME" ontap="$.sortTable(this, 'date')">一键案例最后完成时间</th>
+						<th col="YJALTS_NUM" ontap="$.sortTable(this, 'int')">一键案例完成次数</th>
+						<th col="YJALTS_LAST_TIME" ontap="$.sortTable(this, 'date')">一键案例最后完成时间</th>
 						<th col="DKCSMU_LAST_TIME" ontap="$.sortTable(this, 'date')">城市木屋完成时间</th>
 					</tr>
 					</thead>
