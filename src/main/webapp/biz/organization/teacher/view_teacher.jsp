@@ -11,11 +11,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>课程详情</title>
+    <title>讲师详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
     <script src="/scripts/biz/organization/teacher/view.teacher.js"></script>
 </head>
 <body>
+<div class="c_header e_show">
+    <div class="back" ontap="$.redirect.closeCurrentPage();">讲师详情</div>
+    <div class="fn">
+
+    </div>
+</div>
 <div class="l_padding">
     <div class="c_title">
         <div class="text">讲师详情</div>
