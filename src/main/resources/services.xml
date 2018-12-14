@@ -46,6 +46,9 @@
     <entity name="OrgCenter.course.ExamService.initExamGuideQuery" class="com.hirun.app.biz.organization.course.ExamService" method="initExamGuideQuery"/>
     <entity name="OrgCenter.course.ExamService.queryExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="queryExamGuide"/>
 
+    <entity name="OrgCenter.train.TrainService.initCreateTrain" class="com.hirun.app.biz.organization.train.TrainService" method="initCreateTrain"/>
+    <entity name="OrgCenter.train.TrainService.createTrain" class="com.hirun.app.biz.organization.train.TrainService" method="createTrain"/>
+
 
     <!--运营管理中心服务-->
     <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>
