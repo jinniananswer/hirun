@@ -104,9 +104,13 @@ public class TeacherService extends GenericService {
     }
 
     public ServiceResponse deleteTeacher(ServiceRequest request) throws Exception {
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("TEACHER_ID", request.getString("TEACHER_ID"));
         parameter.put("STATUS", "1");
+        parameter.put("UPDATE_USER_ID", userId);
+        parameter.put("UPDATE_TIME", session.getCreateTime());
 
         TeacherDAO dao = DAOFactory.createDAO(TeacherDAO.class);
         dao.save("ins_teacher", parameter);
@@ -128,7 +132,7 @@ public class TeacherService extends GenericService {
         return response;
     }
 
-    private RecordSet filterTeachers(RecordSet teachers) throws Exception {
+    public static RecordSet filterTeachers(RecordSet teachers) throws Exception {
         if(teachers == null || teachers.size() <= 0) {
             return teachers;
         }
