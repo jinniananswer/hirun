@@ -22,7 +22,7 @@
 
         </div>
     </div>
-    <div class="center"><div class="text">管理系统</div></div>
+    <div class="center"><div class="text">鸿助手</div></div>
     <div class="right">
         <div class="fn">
 
