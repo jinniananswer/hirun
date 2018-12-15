@@ -198,9 +198,10 @@ public class TeacherService extends GenericService {
                 teacher.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", teacher.get("JOB_ROLE")));
             }
         }
+        JSONObject teacher = this.filterTeachersByLevel(teachers);
 
         ServiceResponse response = new ServiceResponse();
-        response.set("TEACHER", ConvertTool.toJSONArray(teachers));
+        response.set("TEACHER", teacher);
 
         return response;
     }
