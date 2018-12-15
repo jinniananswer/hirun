@@ -20,7 +20,7 @@ import java.util.List;
  **/
 public class CourseBean {
 
-    public static JSONObject getCourseTree(boolean hasCheck) throws Exception {
+    public static JSONObject getCourseTree(boolean hasCheck, String selectedCourseIds) throws Exception {
         JSONObject root = new JSONObject();
         root.put("text", CourseConst.COURSE_ROOT);
         root.put("id", "-1");
@@ -35,7 +35,7 @@ public class CourseBean {
         CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
         RecordSet courses = dao.queryAllValidCourse();
 
-        JSONObject children = buildTreeNode(courses, "-1", "-1", 0, hasCheck);
+        JSONObject children = buildTreeNode(courses, "-1", "-1", 0, hasCheck, selectedCourseIds);
         if (children == null) {
             root.put("haschild", "false");
         }
@@ -49,7 +49,7 @@ public class CourseBean {
         return rst;
     }
 
-    public static JSONObject buildTreeNode(RecordSet courses, String parentCourseId, String prefix, int level, boolean hasCheck){
+    public static JSONObject buildTreeNode(RecordSet courses, String parentCourseId, String prefix, int level, boolean hasCheck, String selectedCourseIds){
         if(courses == null || courses.size() <= 0)
             return null;
         level++;
@@ -69,7 +69,11 @@ public class CourseBean {
                 childNode.put("complete", "false");
                 childNode.put("disabled", "false");
                 childNode.put("showcheck", hasCheck+"");
-                JSONObject children = buildTreeNode(courses, course.get("COURSE_ID"), prefix+"●"+course.get("COURSE_ID"), level, hasCheck);
+
+                if(StringUtils.isNotBlank(selectedCourseIds) && selectedCourseIds.indexOf(course.get("COURSE_ID")) >= 0) {
+                    childNode.put("checked", "true");
+                }
+                JSONObject children = buildTreeNode(courses, course.get("COURSE_ID"), prefix+"●"+course.get("COURSE_ID"), level, hasCheck,selectedCourseIds);
                 if(children == null)
                     childNode.put("haschild", "false");
                 else{
