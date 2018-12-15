@@ -65,6 +65,7 @@ public class TeacherService extends GenericService {
         String type = request.getString("TYPE");
         if(StringUtils.equals("0", type)) {
             parameter.put("ID", request.getString("EMPLOYEE_ID"));
+            parameter.put("NAME", request.getString("EMPLOYEE_NAME"));
 
             Map<String, String> queryParameter = new HashMap<String, String>();
             queryParameter.put("ID", request.getString("EMPLOYEE_ID"));
