@@ -377,50 +377,44 @@
             },
 
             initChangeTeacher : function(teacherId) {
-                $.ajaxPost('initCreateTeacher',null,function(data) {
+
+                $.ajaxPost('initChangeTeacher','&TEACHER_ID='+teacherId,function(data) {
                     var trees = data.COURSE;
                     if(trees != null){
                         window["changeCourseHoldTree"].data = trees;
                         window["changeCourseHoldTree"].init();
                         window["changeCourseHoldTree"].expandByPath("-1", "●");
                     }
+                    var rst = new Wade.DataMap(data);
+                    var teacher = rst.get("TEACHER");
+                    var type = teacher.get("TYPE");
+                    if(type == "0") {
+                        $("#CHANGE_EMPLOYEE_ID").val(teacher.get("EMPLOYEE_ID"));
+                        $("#CHANGE_EMPLOYEE_NAME").val(teacher.get("TEACHER_NAME"));
+                        $("#CHANGE_NAME_SELECT").css("display", "");
+                        $("#CHANGE_NAME_INPUT").css("display", "none");
+                    }
+                    else if(type == "1") {
+                        $("#CHANGE_NAME").val(teacher.get("TEACHER_NAME"));
+                        $("#CHANGE_NAME_SELECT").css("display", "none");
+                        $("#CHANGE_NAME_INPUT").css("display", "");
+                    }
 
-                    $.ajaxPost('initChangeTeacher','&TEACHER_ID='+teacherId,function(data) {
-                        var rst = new Wade.DataMap(data);
-                        var teacher = rst.get("TEACHER");
-                        var type = teacher.get("TYPE");
-                        if(type == "0") {
-                            $("#CHANGE_EMPLOYEE_ID").val(teacher.get("EMPLOYEE_ID"));
-                            $("#CHANGE_EMPLOYEE_NAME").val(teacher.get("TEACHER_NAME"));
-                            $("#CHANGE_NAME_SELECT").css("display", "");
-                            $("#CHANGE_NAME_INPUT").css("display", "none");
-                        }
-                        else if(type == "1") {
-                            $("#CHANGE_NAME").val(teacher.get("TEACHER_NAME"));
-                            $("#CHANGE_NAME_SELECT").css("display", "none");
-                            $("#CHANGE_NAME_INPUT").css("display", "");
-                        }
+                    $("#CHANGE_TYPE").val(type);
+                    $("#CHANGE_TEACHER_ID").val(teacher.get("TEACHER_ID"));
+                    $("#CHANGE_LEVEL").val(teacher.get("LEVEL"));
+                    $("#CHANGE_QQ_NO").val(teacher.get("QQ_NO"));
+                    $("#CHANGE_WECHAT_NO").val(teacher.get("WECHAT_NO"));
+                    $("#CHANGE_PIC").val(teacher.get("PIC"));
 
-                        $("#CHANGE_TYPE").val(type);
-                        $("#CHANGE_TEACHER_ID").val(teacher.get("TEACHER_ID"));
-                        $("#CHANGE_LEVEL").val(teacher.get("LEVEL"));
-                        $("#CHANGE_QQ_NO").val(teacher.get("QQ_NO"));
-                        $("#CHANGE_WECHAT_NO").val(teacher.get("WECHAT_NO"));
-                        $("#CHANGE_PIC").val(teacher.get("PIC"));
-
-                        var courseIds = teacher.get("COURSE_ID");
-                        var courseNames = teacher.get("COURSE_NAME");
-                        $("#CHANGE_HOLD_COURSE_ID").val(courseIds);
-                        $("#CHANGE_HOLD_COURSE_NAME").val(courseNames);
+                    var courseIds = teacher.get("COURSE_ID");
+                    var courseNames = teacher.get("COURSE_NAME");
+                    $("#CHANGE_HOLD_COURSE_ID").val(courseIds);
+                    $("#CHANGE_HOLD_COURSE_NAME").val(courseNames);
 
 
-                        showPopup('UI-popup','UI-CHANGE_TEACHER');
-                    });
+                    showPopup('UI-popup','UI-CHANGE_TEACHER');
                 });
-            },
-
-            initChangeCourse : function() {
-
             },
 
             confirmChangeCourse : function() {
