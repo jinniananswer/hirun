@@ -179,7 +179,7 @@
 
                 <div class="c_popupItem" id="UI-CHANGE_TEACHER">
                     <div class="c_header">
-                        <div class="back" ontap="hidePopup(this)">新增讲师资料</div>
+                        <div class="back" ontap="hidePopup(this)">修改讲师资料</div>
                     </div>
                     <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                         <!-- 列表 开始 -->
@@ -290,10 +290,18 @@
                                 <div id="courseHoldTree" class="c_tree"></div>
                             </div>
                         </div>
-                        <div class="l_bottom">
-                            <div class="c_submit c_submit-full">
-                                <button type="button" ontap="$.teacher.confirmCourse();" class="e_button-l e_button-green">确定</button>
-                            </div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                    </div>
+                    <div class="l_bottom">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" ontap="$.teacher.confirmCourse();" class="e_button-l e_button-green">确定</button>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
@@ -311,10 +319,18 @@
                                 <div id="changeCourseHoldTree" class="c_tree"></div>
                             </div>
                         </div>
-                        <div class="l_bottom">
-                            <div class="c_submit c_submit-full">
-                                <button type="button" ontap="$.teacher.confirmChangeCourse();" class="e_button-l e_button-green">确定</button>
-                            </div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                        <div class="c_space"></div>
+                    </div>
+                    <div class="l_bottom">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" ontap="$.teacher.confirmChangeCourse();" class="e_button-l e_button-green">确定</button>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
@@ -378,6 +394,10 @@
         </div>
     </div>
 </div>
+<div class="c_space"></div>
+<div class="c_space"></div>
+<div class="c_space"></div>
+<div class="c_space"></div>
 <!-- 弹窗 结束 -->
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script>
