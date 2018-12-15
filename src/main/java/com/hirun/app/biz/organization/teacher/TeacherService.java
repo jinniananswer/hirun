@@ -29,7 +29,7 @@ import java.util.*;
 public class TeacherService extends GenericService {
 
     public ServiceResponse initTeacherManage(ServiceRequest request) throws Exception {
-        JSONObject courseTree = CourseBean.getCourseTree(false);
+        JSONObject courseTree = CourseBean.getCourseTree(false, null);
 
         TeacherDAO dao = DAOFactory.createDAO(TeacherDAO.class);
         RecordSet teachers = dao.queryTeachers(null,null,null);
@@ -49,7 +49,7 @@ public class TeacherService extends GenericService {
     }
 
     public ServiceResponse initCreateTeacher(ServiceRequest request) throws Exception {
-        JSONObject courseTree = CourseBean.getCourseTree(true);
+        JSONObject courseTree = CourseBean.getCourseTree(true, null);
 
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE", courseTree);
@@ -210,9 +210,13 @@ public class TeacherService extends GenericService {
         TeacherDAO dao = DAOFactory.createDAO(TeacherDAO.class);
         RecordSet teachers = dao.queryTeachers(null, null, request.getString("TEACHER_ID"));
         teachers = this.filterTeachers(teachers);
+
         ServiceResponse response = new ServiceResponse();
         if(ArrayTool.isNotEmpty(teachers)) {
+            String selectedCourseIds = teachers.get(0).get("COURSE_ID");
+            JSONObject courseTree = CourseBean.getCourseTree(true, selectedCourseIds);
             response.set("TEACHER", ConvertTool.toJSONObject(teachers.get(0)));
+            response.set("COURSE", courseTree);
         }
         return response;
     }
