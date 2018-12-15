@@ -305,7 +305,16 @@
                     else if(level == "3") {
                         html.push("特级讲师");
                     }
-                    html.push("</div><div class='content'>"+"QQ："+data.get("QQ_NO")+"/微信号："+data.get("WECHAT_NO"));
+                    var qqNo = data.get("QQ_NO");
+                    if(qqNo == null || qqNo == "undefined") {
+                        qqNo = "暂无";
+                    }
+
+                    var wechatNo = data.get("WECHAT_NO");
+                    if(wechatNo == null || wechatNo == "undefined") {
+                        wechatNo = "暂无";
+                    }
+                    html.push("</div><div class='content'>"+"QQ："+qqNo+"/微信号："+wechatNo);
                     html.push("</div></div>");
                     html.push("<div class=\"side e_size-s\">");
                     html.push("<span class=\"e_ico-edit e_ico-pic-green e_ico-pic-r\" ontap='$.teacher.initChangeTeacher(\""+data.get("TEACHER_ID")+"\");'></span>");
