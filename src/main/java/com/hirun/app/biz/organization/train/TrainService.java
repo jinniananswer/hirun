@@ -1,5 +1,6 @@
 package com.hirun.app.biz.organization.train;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.course.CourseBean;
 import com.hirun.app.biz.organization.teacher.TeacherService;
@@ -9,16 +10,15 @@ import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @program: hirun
@@ -29,8 +29,8 @@ import java.util.Map;
 public class TrainService extends GenericService {
 
     public ServiceResponse initCreateTrain(ServiceRequest request) throws Exception {
-        JSONObject singleCourseTree = CourseBean.getCourseTree(false);
-        JSONObject courseTree = CourseBean.getCourseTree(true);
+        JSONObject singleCourseTree = CourseBean.getCourseTree(false, null);
+        JSONObject courseTree = CourseBean.getCourseTree(true, null);
 
         TeacherDAO dao = DAOFactory.createDAO(TeacherDAO.class);
         RecordSet teachers = dao.queryTeachers(null,null,null);
@@ -56,6 +56,8 @@ public class TrainService extends GenericService {
         parameter.put("STATUS", "0");
         parameter.put("START_DATE", request.getString("START_DATE"));
         parameter.put("END_DATE", request.getString("END_DATE"));
+        parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
+        parameter.put("HOTEL_ADDRESS", request.getString("HOTEL_ADDRESS"));
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
         parameter.put("CREATE_DATE", session.getCreateTime());
@@ -111,5 +113,81 @@ public class TrainService extends GenericService {
 
         dao.insertBatch("ins_schedule", parameters);
         return new ServiceResponse();
+    }
+
+    public ServiceResponse initQueryTrains(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet trains = dao.queryTrains(null);
+        trains = filterTrains(trains);
+        response.set("TRAINS", ConvertTool.toJSONArray(trains));
+        return response;
+    }
+
+    public ServiceResponse initTrainDetail(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet trains = dao.queryTrains(request.getString("TRAIN_ID"));
+        trains = filterTrains(trains);
+        response.set("TRAINS", ConvertTool.toJSONArray(trains));
+
+        RecordSet schedules = dao.querySchedules(request.getString("TRAIN_ID"));
+        response.set("SCHEDULES", filterSchedules(schedules));
+        return response;
+    }
+
+    public static RecordSet filterTrains(RecordSet trains) throws Exception {
+        if(ArrayTool.isEmpty(trains)) {
+            return trains;
+        }
+
+        int size = trains.size();
+        Map<String, Record> tempTrain = new HashMap<String, Record>();
+        for(int i=0;i<size;i++) {
+            Record train = trains.get(i);
+            String trainId = train.get("TRAIN_ID");
+            String courseName = train.get("COURSE_NAME");
+            String courseId = train.get("COURSE_ID");
+            if(!tempTrain.containsKey(trainId)) {
+                tempTrain.put(trainId, train);
+            }
+            else {
+                tempTrain.get(trainId).put("COURSE_NAME", tempTrain.get(trainId).get("COURSE_NAME") + "," + courseName);
+                tempTrain.get(trainId).put("COURSE_ID", tempTrain.get(trainId).get("COURSE_ID") + "," + courseId);
+            }
+        }
+
+        RecordSet rst = new RecordSet();
+        Set<String> keys = tempTrain.keySet();
+        for(String key : keys){
+            rst.add(tempTrain.get(key));
+        }
+        return rst;
+    }
+
+    public static JSONObject filterSchedules(RecordSet schedules) throws Exception {
+        if(ArrayTool.isEmpty(schedules)) {
+            return null;
+        }
+
+        int size = schedules.size();
+        JSONObject rst = new JSONObject();
+
+        for(int i=0;i<size;i++) {
+            Record schedule = schedules.get(i);
+            String startDate = schedule.get("START_DATE").substring(0,10);
+            JSONArray tempSchedules = null;
+            if(rst.containsKey(startDate)) {
+                tempSchedules = rst.getJSONArray(startDate);
+            }
+            else {
+                tempSchedules = new JSONArray();
+                rst.put(startDate, tempSchedules);
+            }
+            tempSchedules.add(ConvertTool.toJSONObject(schedule));
+        }
+        return rst;
     }
 }
