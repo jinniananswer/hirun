@@ -1,5 +1,6 @@
 package com.hirun.app.biz.organization.teacher;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.course.CourseBean;
 import com.hirun.app.dao.org.TeacherDAO;
@@ -40,10 +41,10 @@ public class TeacherService extends GenericService {
                 teacher.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", teacher.get("JOB_ROLE")));
             }
         }
-
+        JSONObject teacher = this.filterTeachersByLevel(teachers);
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE", courseTree);
-        response.set("TEACHER", ConvertTool.toJSONArray(teachers));
+        response.set("TEACHER", teacher);
         return response;
     }
 
@@ -158,6 +159,29 @@ public class TeacherService extends GenericService {
         Set<String> keys = tempTeacher.keySet();
         for(String key : keys){
             rst.add(tempTeacher.get(key));
+        }
+        return rst;
+    }
+
+    public static JSONObject filterTeachersByLevel(RecordSet teachers) throws Exception{
+        JSONObject rst = new JSONObject();
+        if(ArrayTool.isEmpty(teachers)) {
+            return rst;
+        }
+
+        int size = teachers.size();
+        for(int i=0;i<size;i++) {
+            Record teacher = teachers.get(i);
+            String level = teacher.get("LEVEL");
+            JSONArray datas = null;
+            if(rst.containsKey(level)) {
+                datas = rst.getJSONArray(level);
+            }
+            else {
+                datas = new JSONArray();
+                rst.put(level, datas);
+            }
+            datas.add(ConvertTool.toJSONObject(teacher));
         }
         return rst;
     }
