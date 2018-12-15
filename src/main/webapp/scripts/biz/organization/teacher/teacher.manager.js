@@ -371,7 +371,7 @@
             query : function() {
                 $.ajaxPost('queryTeacher','&TEACHER_NAME='+$("#TEACHER_NAME").val()+"&COURSE_ID="+$("#COURSE_ID").val(),function(data) {
                     var rst = new Wade.DataMap(data);
-                    $.teacher.drawTeacher(rst.get("TEACHER"));
+                    $.teacher.drawTeachers(rst.get("TEACHER"));
                     hidePopup('UI-popup','UI-QUERY_COND');
                 });
             },
@@ -417,6 +417,10 @@
                         showPopup('UI-popup','UI-CHANGE_TEACHER');
                     });
                 });
+            },
+
+            initChangeCourse : function() {
+
             },
 
             confirmChangeCourse : function() {
