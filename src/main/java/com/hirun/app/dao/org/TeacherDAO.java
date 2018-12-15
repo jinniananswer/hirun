@@ -52,6 +52,7 @@ public class TeacherDAO extends GenericDAO {
             sql.append(" and t.teacher_id = :TEACHER_ID ");
             parameter.put("TEACHER_ID", teacherId);
         }
+        sql.append("order by t.level asc ");
 
         return this.queryBySql(sql.toString(), parameter);
     }
