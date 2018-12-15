@@ -113,7 +113,7 @@
                         window["courseTree"].init();
                         window["courseTree"].expandByPath("-1", "●");
                     }
-                    $.teacher.drawTeacher(teachers);
+                    $.teacher.drawTeachers(teachers);
                 });
             },
 
@@ -260,8 +260,8 @@
                 }
             },
 
-            drawTeacher : function(datas){
-                $("#teachers").empty();
+            drawTeachers : function(datas) {
+                $("#teachersType").empty();
                 var html = [];
 
                 if(datas == null || datas.length <= 0){
@@ -270,61 +270,90 @@
                 }
 
                 $("#messageboxTeacher").css("display","none");
-
-
-                var length = datas.length;
-                for(var i=0;i<length;i++) {
-                    var data = datas.get(i);
-                    html.push("<li class='link'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                datas.eachKey(function(key, index, totalCount){
+                    html.push("<div class='c_box c_box-border'><div class='c_title' ontap=\"$(this).next().toggle();\">");
+                    var levelName = "";
+                    if(key == "0") {
+                        levelName = "讲师";
+                    }
+                    else if(key == "1") {
+                        levelName = "高级讲师";
+                    }
+                    else if(key == "2") {
+                        levelName = "资深讲师";
+                    }
+                    else {
+                        levelName = "特级讲师";
+                    }
+                    var teachers = datas.get(key);
+                    var length = teachers.length;
+                    html.push("<div class=\"text e_strong e_blue\">"+levelName+"</div>");
+                    html.push("<div class=\"fn\">");
+                    html.push("<ul>");
+                    html.push("<li><span>人数："+length+"</span><span class='e_ico-unfold'></span></li>");
+                    html.push("</ul>");
                     html.push("</div></div>");
-                    html.push("<div class=\"main\" ontap='$.teacher.viewTeacherDetail(\""+data.get("TEACHER_ID")+"\");'><div class=\"title\">");
-                    html.push(data.get("TEACHER_NAME"));
-                    html.push("</div>");
-                    html.push("<div class=\"content\">");
-                    html.push("归属部门："+data.get("ORG_NAME")+"/岗位："+data.get("JOB_ROLE_NAME"));
-                    html.push("</div><div class='content'>"+"担任课程："+data.get("COURSE_NAME"));
-                    var type = data.get("TYPE");
-                    html.push("</div><div class='content'>类型：");
-                    if(type == "0") {
-                        html.push("内部讲师");
-                    }
-                    else if(type == "1") {
-                        html.push("外聘讲师");
-                    }
-                    var level = data.get("LEVEL");
-                    html.push("</div><div class='content'>级别：");
-                    if(level == "0") {
-                        html.push("讲师");
-                    }
-                    else if(level == "1") {
-                        html.push("高级讲师");
-                    }
-                    else if(level == "2") {
-                        html.push("资深讲师");
-                    }
-                    else if(level == "3") {
-                        html.push("特级讲师");
-                    }
-                    var qqNo = data.get("QQ_NO");
-                    if(qqNo == null || qqNo == "undefined") {
-                        qqNo = "暂无";
-                    }
 
-                    var wechatNo = data.get("WECHAT_NO");
-                    if(wechatNo == null || wechatNo == "undefined") {
-                        wechatNo = "暂无";
-                    }
-                    html.push("</div><div class='content'>"+"QQ："+qqNo+"/微信号："+wechatNo);
-                    html.push("</div></div>");
-                    html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-edit e_ico-pic-green e_ico-pic-r\" ontap='$.teacher.initChangeTeacher(\""+data.get("TEACHER_ID")+"\");'></span>");
-                    html.push("</div>");
-                    html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-delete e_ico-pic-red e_ico-pic-r\" ontap='$.teacher.deleteTeacher(\""+data.get("TEACHER_ID")+"\");'></span>");
-                    html.push("</div></div></div></li>");
-                }
+                    html.push("<div class=\"l_padding l_padding-u\" style=\"display: none\">");
+                    html.push("<div class=\"c_list c_list-line c_list-border c_list-space l_padding\">");
+                    html.push("<ul>");
+                    for(var i=0;i<length;i++) {
+                        var data = teachers.get(i);
+                        html.push("<li class='link'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                        html.push("</div></div>");
+                        html.push("<div class=\"main\" ontap='$.teacher.viewTeacherDetail(\""+data.get("TEACHER_ID")+"\");'><div class=\"title\">");
+                        html.push(data.get("TEACHER_NAME"));
+                        html.push("</div>");
+                        html.push("<div class=\"content\">");
+                        html.push("归属部门："+data.get("ORG_NAME")+"/岗位："+data.get("JOB_ROLE_NAME"));
+                        html.push("</div><div class='content'>"+"担任课程："+data.get("COURSE_NAME"));
+                        var type = data.get("TYPE");
+                        html.push("</div><div class='content'>类型：");
+                        if(type == "0") {
+                            html.push("内部讲师");
+                        }
+                        else if(type == "1") {
+                            html.push("外聘讲师");
+                        }
+                        var level = data.get("LEVEL");
+                        html.push("</div><div class='content'>级别：");
+                        if(level == "0") {
+                            html.push("讲师");
+                        }
+                        else if(level == "1") {
+                            html.push("高级讲师");
+                        }
+                        else if(level == "2") {
+                            html.push("资深讲师");
+                        }
+                        else if(level == "3") {
+                            html.push("特级讲师");
+                        }
+                        var qqNo = data.get("QQ_NO");
+                        if(qqNo == null || qqNo == "undefined") {
+                            qqNo = "暂无";
+                        }
 
-                $.insertHtml('beforeend', $("#teachers"), html.join(""));
+                        var wechatNo = data.get("WECHAT_NO");
+                        if(wechatNo == null || wechatNo == "undefined") {
+                            wechatNo = "暂无";
+                        }
+                        html.push("</div><div class='content'>"+"QQ："+qqNo+"/微信号："+wechatNo);
+                        html.push("</div></div>");
+                        html.push("<div class=\"side e_size-s\">");
+                        html.push("<span class=\"e_ico-edit e_ico-pic-green e_ico-pic-r\" ontap='$.teacher.initChangeTeacher(\""+data.get("TEACHER_ID")+"\");'></span>");
+                        html.push("</div>");
+                        html.push("<div class=\"side e_size-s\">");
+                        html.push("<span class=\"e_ico-delete e_ico-pic-red e_ico-pic-r\" ontap='$.teacher.deleteTeacher(\""+data.get("TEACHER_ID")+"\");'></span>");
+                        html.push("</div></div></div></li>");
+                    }
+                    html.push("</ul>");
+                    html.push("</div>");
+                    html.push("</div>");
+                    html.push("</div>");
+                    html.push("<div class='c_space'></div>");
+                });
+                $.insertHtml('beforeend', $("#teachersType"), html.join(""));
             },
 
             deleteTeacher : function(teacherId) {
