@@ -22,14 +22,14 @@
 
     </div>
 </div>
-<div class="l_padding">
-    <div class="c_title">
-        <div class="text">讲师详情</div>
-        <div class="fn">
-            <input type="hidden" name="TEACHER_ID" id="TEACHER_ID" nullable="no" value="${pageContext.request.getParameter("TEACHER_ID") }" desc="讲师ID" />
-        </div>
+<div class="c_title">
+    <div class="text">讲师详情</div>
+    <div class="fn">
+        <input type="hidden" name="TEACHER_ID" id="TEACHER_ID" nullable="no" value="${pageContext.request.getParameter("TEACHER_ID") }" desc="讲师ID" />
     </div>
-    <div class="c_scroll c_scroll-float c_scroll-header">
+</div>
+<div class="c_scroll c_scroll-float c_scroll-header">
+    <div class="l_padding">
         <div class="l_col l_col-space-1 l_col-phone-merge">
             <div class="l_colItem" style="width:30%"> <!-- 第一列 -->
                 <img id="TEACHER_PIC" src=""/>
@@ -43,8 +43,8 @@
             </div>
         </div>
     </div>
-
 </div>
+
 <!-- 滚动 结束 -->
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script>
