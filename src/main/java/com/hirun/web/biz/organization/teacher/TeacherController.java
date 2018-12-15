@@ -55,6 +55,7 @@ public class TeacherController extends RootController {
         parameter.put("TYPE", request.getParameter("TYPE"));
         parameter.put("EMPLOYEE_ID", request.getParameter("EMPLOYEE_ID"));
         parameter.put("NAME", request.getParameter("NAME"));
+        parameter.put("EMPLOYEE_NAME", request.getParameter("EMPLOYEE_NAME"));
         parameter.put("HOLD_COURSE_ID", request.getParameter("HOLD_COURSE_ID"));
         parameter.put("QQ_NO", request.getParameter("QQ_NO"));
         parameter.put("WECHAT_NO", request.getParameter("WECHAT_NO"));
