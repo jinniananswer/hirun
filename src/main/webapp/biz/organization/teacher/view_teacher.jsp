@@ -29,15 +29,17 @@
             <input type="hidden" name="TEACHER_ID" id="TEACHER_ID" nullable="no" value="${pageContext.request.getParameter("TEACHER_ID") }" desc="讲师ID" />
         </div>
     </div>
-    <div class="l_col l_col-space-1 l_col-phone-merge">
-        <div class="l_colItem" style="width:30%"> <!-- 第一列 -->
-            <img id="TEACHER_PIC" src=""/>
-        </div>
-        <div class="l_colItem"> <!-- 第二列 -->
-            <div class="c_param c_param-border c_param-col-1 c_param-label-6">
-                <ul id="TEACHER_INFO">
+    <div class="c_scroll c_scroll-float c_scroll-header">
+        <div class="l_col l_col-space-1 l_col-phone-merge">
+            <div class="l_colItem" style="width:30%"> <!-- 第一列 -->
+                <img id="TEACHER_PIC" src=""/>
+            </div>
+            <div class="l_colItem"> <!-- 第二列 -->
+                <div class="c_param c_param-border c_param-col-1 c_param-label-6">
+                    <ul id="TEACHER_INFO">
 
-                </ul>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
