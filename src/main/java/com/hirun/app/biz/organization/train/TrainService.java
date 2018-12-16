@@ -18,6 +18,7 @@ import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.xml.ws.Service;
 import java.util.*;
 
 /**
@@ -90,6 +91,9 @@ public class TrainService extends GenericService {
             Map<String, String> param = new HashMap<String, String>();
             param.put("TRAIN_ID", trainId+"");
             String nature = request.getString("NATURE_"+i);
+            if(StringUtils.isEmpty(nature)){
+                continue;
+            }
             param.put("NATURE", nature);
 
             if (StringUtils.equals("0", nature)) {
@@ -134,7 +138,28 @@ public class TrainService extends GenericService {
         response.set("TRAINS", ConvertTool.toJSONArray(trains));
 
         RecordSet schedules = dao.querySchedules(request.getString("TRAIN_ID"));
-        response.set("SCHEDULES", filterSchedules(schedules));
+        JSONObject schedule = filterSchedules(schedules);
+        response.set("SCHEDULES", schedule);
+        return response;
+    }
+
+    public ServiceResponse deleteTrain(ServiceRequest request) throws Exception{
+        ServiceResponse response = new ServiceResponse();
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        String trainId = request.getString("TRAIN_ID");
+        parameter.put("TRAIN_ID", trainId);
+        parameter.put("STATUS", "1");
+        parameter.put("UPDATE_USER_ID", userId);
+        parameter.put("UPDATE_TIME", session.getCreateTime());
+        dao.save("ins_train", parameter);
+
+        dao.deleteTrainCourseRelByTrainId(trainId);
+        dao.deleteScheduleByTrainId(trainId);
+
         return response;
     }
 
@@ -173,7 +198,7 @@ public class TrainService extends GenericService {
         }
 
         int size = schedules.size();
-        JSONObject rst = new JSONObject();
+        JSONObject rst = new JSONObject(true);
 
         for(int i=0;i<size;i++) {
             Record schedule = schedules.get(i);
