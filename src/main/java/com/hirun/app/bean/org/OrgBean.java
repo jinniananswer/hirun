@@ -244,6 +244,8 @@ public class OrgBean {
                     //上级已经是分公司了，直接返回
                     return org;
                 }
+
+                return findEmployeeRoot(org.getParentOrgId(), orgs);
             }
         }
         return null;
