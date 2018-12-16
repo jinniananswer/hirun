@@ -64,13 +64,14 @@ public class OrgBean {
                 OrgDAO orgDAO = new OrgDAO("ins");
                 employeeOrg = orgDAO.queryOrgById(orgId);
             }
-            String city = employeeOrg.getCity();
-            for (OrgEntity org : orgs) {
-                if (StringUtils.equals(org.getCity(), city) && StringUtils.equals("2", org.getType())) {
-                    rootOrg = org;
-                    break;
-                }
-            }
+//            String city = employeeOrg.getCity();
+            rootOrg = findEmployeeRoot(employeeOrg.getOrgId(), orgs);
+//            for (OrgEntity org : orgs) {
+//                if (StringUtils.equals(org.getCity(), city) && StringUtils.equals("2", org.getType())) {
+//                    rootOrg = org;
+//                    break;
+//                }
+//            }
         }
 
         /** 未找到根节点，直接返回 **/
@@ -218,5 +219,33 @@ public class OrgBean {
         OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
         List<OrgEntity> orgs = dao.queryAllOrgs();
         return orgs;
+    }
+
+    public static OrgEntity findEmployeeRoot(String employeeOrgId, List<OrgEntity> orgs) throws Exception {
+        if(ArrayTool.isEmpty(orgs)) {
+            return null;
+        }
+
+        for(OrgEntity org : orgs) {
+            if(StringUtils.equals(employeeOrgId, org.getOrgId())) {
+                String parentOrgId = org.getParentOrgId();
+                if(StringUtils.isBlank(org.getParentOrgId())) {
+                    //已经是根结点了，直接返回
+                    return org;
+                }
+
+                if(StringUtils.equals("122", parentOrgId)) {
+                    //上级已经是根结点了，直接返回
+                    return org;
+                }
+
+                String type = org.getType();
+                if(StringUtils.equals("2",type)) {
+                    //上级已经是分公司了，直接返回
+                    return org;
+                }
+            }
+        }
+        return null;
     }
 }
