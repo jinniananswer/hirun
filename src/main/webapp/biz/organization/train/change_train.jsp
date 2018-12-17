@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: jinnian
-  Date: 2018/12/12
-  Time: 4:28 PM
+  Date: 2018/12/16
+  Time: 11:23 PM
   To change this template use File | Settings | File Templates.
 --%>
 <!DOCTYPE HTML>
@@ -11,13 +11,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>新增培训安排</title>
+    <title>修改培训安排</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/train/create.train.js?v=20181216"></script>
+    <script src="/scripts/biz/organization/train/change.train.js"></script>
 </head>
 <body>
 <div class="c_header e_show">
-    <div class="back" ontap="$.redirect.closeCurrentPage();">新增培训安排</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">修改培训安排</div>
     <div class="fn">
 
     </div>
@@ -36,6 +36,7 @@
                     <div class="label">培训名称</div>
                     <div class="value">
                         <input type="text" id="NAME" name="NAME" placeholder="请输入培训名称" nullable="no" desc="培训名称" />
+                        <input type="hidden" id="TRAIN_ID" name="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID") }" desc="培训ID" />
                     </div>
                 </li>
                 <li class="link required" ontap="$('#COURSE_NAMES').focus();$('#COURSE_NAMES').blur();showPopup('UI-popup','UI-SELECT_COURSE')">
@@ -92,67 +93,9 @@
                 </li>
             </ul>
         </div>
-        <div id="courseList">
-            <div class="c_title">
-                <div class="text">课程表安排</div>
-                <div class="fn" ontap="$.train.deleteCourse(this);">
-                    <ul><li><span class="e_ico-delete"></span></li></ul>
-                </div>
-            </div>
-            <div class="c_box">
-                <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
-                    <ul>
-                        <li class="link required">
-                            <div class="label">课程性质</div>
-                            <div class="value">
-                                <span id="COURSE_NATURE_0">
+        <div id="schedules">
 
-                                </span>
-                            </div>
-                        </li>
-                        <li class="link required" id="CONTENT_SELECT_0" ontap="$('#COURSE_NAME').focus();$('#COURSE_NAME').blur();$.train.selectCourse(0);">
-                            <div class="label">课程内容</div>
-                            <div class="value">
-                                <input type="text" id="COURSE_NAME_0" name="COURSE_NAME_0" nullable="yes" readonly="true" desc="课程内容" />
-                                <input type="hidden" id="COURSE_ID_0" name="COURSE_ID_0" nullable="yes" desc="课程内容" />
-                            </div>
-                            <div class="more"></div>
-                        </li>
-                        <li class="link required" id="CONTENT_INPUT_0" style="display:none">
-                            <div class="label">课程内容</div>
-                            <div class="value">
-                                <input type="text" id="COURSE_CONTENT_0" name="COURSE_CONTENT_0" nullable="yes" desc="课程内容" />
-                            </div>
-                        </li>
-                        <li class="link" ontap="$('#TEACHER_NAME_0').focus();$('#TEACHER_NAME_0').blur();$.train.selectTeacher(0);">
-                            <div class="label">授课讲师</div>
-                            <div class="value">
-                                <input type="text" id="TEACHER_NAME_0" name="TEACHER_NAME_0" nullable="yes" readonly="true" desc="授课讲师" />
-                                <input type="hidden" id="TEACHER_ID_0" name="TEACHER_ID_0" nullable="yes" desc="授课讲师" />
-                            </div>
-                            <div class="more"></div>
-                        </li>
-                        <li class="link required">
-                            <div class="label">课程开始时间</div>
-                            <div class="value">
-                                <span class="e_mix">
-                                    <input type="text" id="START_DATE_0" name="START_DATE_0" datatype="date" nullable="no" readonly="true" desc="培训开始时间" />
-                                    <span class="e_ico-date"></span>
-                                </span>
-                            </div>
-                        </li>
-                        <li class="link required">
-                            <div class="label">课程结束时间</div>
-                            <div class="value">
-                                <span class="e_mix">
-                                    <input type="text" id="END_DATE_0" name="END_DATE_0" datatype="date" nullable="no" readonly="true" desc="培训结束时间" />
-                                    <span class="e_ico-date"></span>
-                                </span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+
         </div>
         <div class="c_title">
             <div class="text"></div>
