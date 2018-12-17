@@ -25,7 +25,7 @@ public class TrainDAO extends GenericDAO {
     public RecordSet queryTrains(String trainId) throws SQLException {
         StringBuilder sql = new StringBuilder();
         Map<String, String> parameter = new HashMap<String, String>();
-        sql.append("select a.train_id, a.name train_name,a.train_desc, a.train_address, a.hotel_address, a.start_date,a.end_date,a.charge_employee_id, c.name course_name,d.name employee_name  ");
+        sql.append("select a.train_id, a.name train_name,a.train_desc, a.train_address, a.hotel_address, date_format(a.start_date, '%Y-%m-%d') start_date, date_format(a.end_date, '%Y-%m-%d') end_date,a.charge_employee_id,c.course_id, c.name course_name,d.employee_id, d.name employee_name  ");
         sql.append("from ins_train a, ins_train_course_rel b, ins_course c, ins_employee d ");
         sql.append("where b.train_id = a.train_id ");
         sql.append("and c.course_id = b.course_id ");
@@ -48,10 +48,11 @@ public class TrainDAO extends GenericDAO {
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.train_id,a.course_id, a.course_name, a.teacher_id, date_format(a.start_date, '%Y-%m-%d %H:%i:%S') start_date, date_format(a.end_date, '%Y-%m-%d %H:%i:%S') end_date, b.name teacher_name ");
+        sql.append("select a.train_id,a.course_id, a.nature, a.course_name, a.teacher_id, date_format(a.start_date, '%Y-%m-%d %H:%i:%S') start_date, date_format(a.end_date, '%Y-%m-%d %H:%i:%S') end_date, b.name teacher_name ");
         sql.append("from ins_schedule a ");
         sql.append("left join ins_teacher b on (b.teacher_id = a.teacher_id) ");
-        sql.append("where train_id = :TRAIN_ID ");
+        sql.append("where a.train_id = :TRAIN_ID ");
+        sql.append("and a.status = '0' ");
         sql.append("order by start_date asc ");
 
         return this.queryBySql(sql.toString(), parameter);
