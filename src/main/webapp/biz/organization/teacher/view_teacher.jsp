@@ -23,7 +23,7 @@
     </div>
 </div>
 <div class="c_title">
-    <div class="text">讲师详情</div>
+    <div class="text"></div>
     <div class="fn">
         <input type="hidden" name="TEACHER_ID" id="TEACHER_ID" nullable="no" value="${pageContext.request.getParameter("TEACHER_ID") }" desc="讲师ID" />
     </div>
