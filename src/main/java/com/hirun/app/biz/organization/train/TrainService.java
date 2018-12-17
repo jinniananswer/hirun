@@ -125,7 +125,9 @@ public class TrainService extends GenericService {
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
         RecordSet trains = dao.queryTrains(null);
         trains = filterTrains(trains);
+        JSONObject singleCourseTree = CourseBean.getCourseTree(false, null);
         response.set("TRAINS", ConvertTool.toJSONArray(trains));
+        response.set("COURSE", singleCourseTree);
         return response;
     }
 
@@ -161,6 +163,112 @@ public class TrainService extends GenericService {
         dao.deleteScheduleByTrainId(trainId);
 
         return response;
+    }
+
+    public ServiceResponse initChangeTrain(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet trains = dao.queryTrains(request.getString("TRAIN_ID"));
+        trains = filterTrains(trains);
+        Record train = trains.get(0);
+        response.set("TRAIN", ConvertTool.toJSONObject(train));
+        String selectedCourseIds = train.get("COURSE_ID");
+        JSONObject courseTree = CourseBean.getCourseTree(true, selectedCourseIds);
+        response.set("COURSE", courseTree);
+
+        JSONObject singleCourseTree = CourseBean.getCourseTree(false, null);
+        response.set("SINGLE_COURSE", singleCourseTree);
+
+        RecordSet schedules = dao.querySchedules(request.getString("TRAIN_ID"));
+        response.set("SCHEDULE", ConvertTool.toJSONArray(schedules));
+
+        TeacherDAO teacherDAO = DAOFactory.createDAO(TeacherDAO.class);
+        RecordSet teachers = teacherDAO.queryTeachers(null,null,null);
+        teachers = TeacherService.filterTeachers(teachers);
+        response.set("TEACHERS", ConvertTool.toJSONArray(teachers));
+
+        return response;
+    }
+
+    public ServiceResponse changeTrain(ServiceRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+
+        /** 保存培训 **/
+        String trainId = request.getString("TRAIN_ID");
+        parameter.put("TRAIN_ID", trainId);
+        parameter.put("NAME", request.getString("NAME"));
+        parameter.put("TRAIN_DESC", request.getString("TRAIN_DESC"));
+        parameter.put("CHARGE_EMPLOYEE_ID", request.getString("CHARGE_EMPLOYEE_ID"));
+        parameter.put("STATUS", "0");
+        parameter.put("START_DATE", request.getString("START_DATE"));
+        parameter.put("END_DATE", request.getString("END_DATE"));
+        parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
+        parameter.put("HOTEL_ADDRESS", request.getString("HOTEL_ADDRESS"));
+        parameter.put("CREATE_USER_ID", userId);
+        parameter.put("UPDATE_USER_ID", userId);
+        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("UPDATE_TIME", session.getCreateTime());
+
+        dao.save("ins_train", parameter);
+        String courseIds = request.getString("COURSE_IDS");
+
+        /** 保存培训与课程关系 **/
+
+        List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
+        String[] courseIdArray = courseIds.split(",");
+        dao.deleteTrainCourseRelByTrainId(trainId);
+        for(String courseId : courseIdArray) {
+            Map<String, String> param = new HashMap<String, String>();
+            param.put("TRAIN_ID", trainId);
+            param.put("COURSE_ID", courseId);
+            param.put("STATUS", "0");
+            param.put("CREATE_USER_ID", userId);
+            param.put("UPDATE_USER_ID", userId);
+            param.put("CREATE_DATE", session.getCreateTime());
+            param.put("UPDATE_TIME", session.getCreateTime());
+            parameters.add(param);
+        }
+
+        dao.insertBatch("ins_train_course_rel", parameters);
+
+        /** 保存课程表 **/
+        parameters.clear();
+        int scheduleNum = Integer.parseInt(request.getString("SCHEDULE_NUM"));
+        dao.deleteScheduleByTrainId(trainId);
+        for(int i=0;i<scheduleNum;i++) {
+            Map<String, String> param = new HashMap<String, String>();
+            param.put("TRAIN_ID", trainId);
+            String nature = request.getString("NATURE_"+i);
+            if(StringUtils.isEmpty(nature)){
+                continue;
+            }
+            param.put("NATURE", nature);
+
+            if (StringUtils.equals("0", nature)) {
+                param.put("COURSE_ID", request.getString("COURSE_ID_"+i));
+                param.put("COURSE_NAME", request.getString("COURSE_NAME_"+i));
+            }
+            else {
+                param.put("COURSE_ID", "-1");
+                param.put("COURSE_NAME", request.getString("COURSE_CONTENT_"+i));
+            }
+            param.put("TEACHER_ID", request.getString("TEACHER_ID_"+i));
+            param.put("STATUS", "0");
+            param.put("START_DATE", request.getString("START_DATE_"+i));
+            param.put("END_DATE", request.getString("END_DATE_"+i));
+            param.put("CREATE_USER_ID", userId);
+            param.put("UPDATE_USER_ID", userId);
+            param.put("CREATE_DATE", session.getCreateTime());
+            param.put("UPDATE_TIME", session.getCreateTime());
+            parameters.add(param);
+        }
+
+        dao.insertBatch("ins_schedule", parameters);
+        return new ServiceResponse();
     }
 
     public static RecordSet filterTrains(RecordSet trains) throws Exception {
