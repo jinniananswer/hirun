@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -28,6 +29,46 @@ public class TrainController extends RootController {
     @RequestMapping("/createTrain")
     public @ResponseBody String createTrain(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.createTrain", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initQueryTrains")
+    public @ResponseBody String initQueryTrains(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initQueryTrains", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToTrainDetail")
+    public String redirectToTrainDetail(HttpServletRequest request) throws Exception {
+        return "/biz/organization/train/train_detail";
+    }
+
+    @RequestMapping("/initTrainDetail")
+    public @ResponseBody String initTrainDetail(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initTrainDetail", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/deleteTrain")
+    public @ResponseBody String deleteTrain(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.deleteTrain", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToChangeTrain")
+    public String redirectToChangeTrain(HttpServletRequest request) throws Exception {
+        return "/biz/organization/train/change_train";
+    }
+
+    @RequestMapping("/initChangeTrain")
+    public @ResponseBody String initChangeTrain(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initChangeTrain", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/changeTrain")
+    public @ResponseBody String changeTrain(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.changeTrain", parameter);
         return response.toJsonString();
     }
 }
