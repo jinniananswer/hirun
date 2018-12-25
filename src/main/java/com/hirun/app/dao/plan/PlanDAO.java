@@ -89,4 +89,18 @@ public class PlanDAO extends StrongObjectDAO {
             return null;
         }
     }
+
+    public List<PlanEntity> getMonNormalPlanListByEidAndPlanDate(String planExecutorId, String planDate) throws Exception {
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PLAN_EXECUTOR_ID", planExecutorId);
+        parameter.put("PLAN_DATE", planDate);
+
+        sql.append(" SELECT * FROM INS_PLAN A ");
+        sql.append(" WHERE A.PLAN_EXECUTOR_ID = :PLAN_EXECUTOR_ID ");
+        sql.append(" AND plan_type = '1' ");
+        sql.append(" AND MONTH(plan_date) = MONTH(:PLAN_DATE) ");
+        List<PlanEntity> list = this.queryBySql(PlanEntity.class, sql.toString(), parameter);
+        return list;
+    }
 }

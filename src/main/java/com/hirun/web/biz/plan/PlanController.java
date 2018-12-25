@@ -80,6 +80,9 @@ public class PlanController {
             response.set("PLAN_DATE", planDate);
             response.set("EXECUTOR_ID", executorId);
         }
+
+        ServiceClient.call("OperationCenter.plan.PlanService.initPlanEntry", paramter);
+
         return response.toJsonString();
     }
 

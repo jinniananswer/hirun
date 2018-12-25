@@ -398,4 +398,27 @@ public class PlanBean {
 
         return result;
     }
+
+    public static void resetPlanCycleFinishInfo(String executorId, String planDate) throws Exception {
+        PlanCycleFinishInfoDAO cyclePlanFinishInfoDAO = DAOFactory.createDAO(PlanCycleFinishInfoDAO.class);
+        String[] actions = new String[] {"HXJC", "ZX"};
+        String preCycleEndDate = TimeTool.addTime(planDate + " 00:00:00", TimeTool.TIME_PATTERN, ChronoUnit.DAYS, -1).substring(0,10);
+
+        for(int i = 0, size = actions.length; i <size; i++) {
+            String actionCode = actions[i];
+            PlanCycleFinishInfoEntity cyclePlanFinishInfoEntity = cyclePlanFinishInfoDAO.getCyclePlanFinishInfoEntity(executorId, actionCode);
+            Map<String, String> newEntityMap = new HashMap<String, String>();
+            newEntityMap.put("EXECUTOR_ID", executorId);
+            newEntityMap.put("ACTION_CODE", actionCode);
+            newEntityMap.put("PRE_CYCLE_END_DATE", preCycleEndDate);
+            newEntityMap.put("UNFINISH_NUM", "0");
+            newEntityMap.put("CURR_CYCLE_FINISH_NUM", "0");
+            newEntityMap.put("CURR_CYCLE_IMPROPER_DAYS", "0");
+            if(cyclePlanFinishInfoEntity == null) {
+                cyclePlanFinishInfoDAO.insert("INS_PLAN_CYCLE_FINISH_INFO", newEntityMap);
+            } else  {
+                cyclePlanFinishInfoDAO.save("INS_PLAN_CYCLE_FINISH_INFO", new String[] {"EXECUTOR_ID", "ACTION_CODE"}, newEntityMap);
+            }
+        }
+    }
 }

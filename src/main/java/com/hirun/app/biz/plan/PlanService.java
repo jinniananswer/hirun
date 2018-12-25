@@ -1273,4 +1273,20 @@ public class PlanService extends GenericService {
 
         return response;
     }
+
+    public ServiceResponse initPlanEntry(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String executorId = request.getString("PLAN_EXECUTOR_ID");
+        String planDate = request.getString("PLAN_DATE");
+        PlanDAO planDAO = DAOFactory.createDAO(PlanDAO.class);
+
+        if(ArrayTool.isEmpty(planDAO.getMonNormalPlanListByEidAndPlanDate(executorId, planDate))) {
+            //如果录计划的当月还没有一条正常工作的计划，则表示这可能是这个月第一天工作，
+            // 重置当月目标数
+            PlanBean.resetPlanCycleFinishInfo(executorId, planDate);
+        }
+
+        return response;
+    }
+
 }
