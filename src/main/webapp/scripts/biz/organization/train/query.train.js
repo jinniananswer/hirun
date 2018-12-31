@@ -3,7 +3,7 @@
             index : 0,
             currentIndex : 0,
             init : function() {
-                $.ajaxPost('initManagerTrains',null,function(data) {
+                $.ajaxPost('initQueryTrains',null,function(data) {
                     var rst = new Wade.DataMap(data);
                     var trains = rst.get("TRAINS");
                     $.train.drawTrains(trains);
@@ -57,24 +57,29 @@
                     html.push("</div>");
 
                     html.push("</div>");
-                    html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-edit e_ico-pic-green e_ico-pic-r\" ontap='$.train.initChangeTrain(\""+data.get("TRAIN_ID")+"\");'></span>");
-                    html.push("</div>");
-                    html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-delete e_ico-pic-red e_ico-pic-r\" ontap='$.train.deleteTrain(\""+data.get("TRAIN_ID")+"\");'></span>");
-                    html.push("</div>");
-
-                    html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewSign(\"" + data.get("TRAIN_ID") + "\");'>查</span>");
-                    html.push("</div>");
-                    html.push("</div></div></li>");
+                    var employeeSignStatus = data.get("EMPLOYEE_SIGN_STATUS");
+                    if(employeeSignStatus == null && signStatus == "0") {
+                        html.push("<div class=\"side e_size-s\">");
+                        html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-m\" ontap='$.train.signTrain(\"" + data.get("TRAIN_ID") + "\");'>报</span>");
+                        html.push("</div>");
+                    }
+                    html.push("</div></div>");
+                    if(signStatus == null) {
+                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">未报名</div>");
+                    }
+                    else if(signStatus == "0") {
+                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">未审核</div>");
+                    }
+                    else if(signStatus == "1") {
+                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">审核通过</div>");
+                    }
+                    else if(signStatus == "2") {
+                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">审核拒绝</div>");
+                    }
+                    html.push("</li>");
                 }
 
                 $.insertHtml('beforeend', $("#trains"), html.join(""));
-            },
-
-            viewSign : function(trainId) {
-                $.redirect.open('redirectToSignList?TRAIN_ID='+trainId, '培训详情');
             },
 
             viewDetail : function(trainId) {
@@ -89,8 +94,17 @@
                 });
             },
 
-            initChangeTrain : function(trainId) {
-                $.redirect.open('redirectToChangeTrain?TRAIN_ID='+trainId, '修改培训');
+            signTrain : function(trainId) {
+                $.ajaxPost('signTrain', '&TRAIN_ID='+trainId, function (data) {
+                    MessageBox.success("报名成功","请提醒人资审核您的报名资格，点击确定返回当前页面，点击取消关闭当前页面", function(btn){
+                        if("ok" == btn) {
+                            document.location.reload();
+                        }
+                        else {
+                            $.rediret.closeCurrentPage();
+                        }
+                    },{"cancel":"取消"})
+                });
             }
         }});
 })($);

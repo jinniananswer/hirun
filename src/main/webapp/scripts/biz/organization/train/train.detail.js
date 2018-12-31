@@ -68,7 +68,7 @@
 
                 datas.eachKey(function(key, index, totalCount){
 
-                    html.push("<div class='c_box c_box-border'><div class='c_title'>");
+                    html.push("<div class='c_box c_box-border'><div class='c_title' ontap=\"$(this).next().toggle();\">");
                     html.push("<div class=\"text e_strong e_blue\">"+key+"</div>");
                     html.push("<div class=\"fn\">");
                     html.push("<ul>");
