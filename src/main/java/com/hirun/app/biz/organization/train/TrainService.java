@@ -3,9 +3,12 @@ package com.hirun.app.biz.organization.train;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.course.CourseBean;
+import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.biz.organization.teacher.TeacherService;
 import com.hirun.app.dao.org.TeacherDAO;
 import com.hirun.app.dao.org.TrainDAO;
+import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
@@ -55,6 +58,7 @@ public class TrainService extends GenericService {
         parameter.put("TRAIN_DESC", request.getString("TRAIN_DESC"));
         parameter.put("CHARGE_EMPLOYEE_ID", request.getString("CHARGE_EMPLOYEE_ID"));
         parameter.put("STATUS", "0");
+        parameter.put("SIGN_STATUS", "0");
         parameter.put("START_DATE", request.getString("START_DATE"));
         parameter.put("END_DATE", request.getString("END_DATE"));
         parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
@@ -119,15 +123,25 @@ public class TrainService extends GenericService {
         return new ServiceResponse();
     }
 
-    public ServiceResponse initQueryTrains(ServiceRequest request) throws Exception {
+    public ServiceResponse initManagerTrains(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
-        RecordSet trains = dao.queryTrains(null);
+        RecordSet trains = dao.queryTrains(null, false);
         trains = filterTrains(trains);
-        JSONObject singleCourseTree = CourseBean.getCourseTree(false, null);
         response.set("TRAINS", ConvertTool.toJSONArray(trains));
-        response.set("COURSE", singleCourseTree);
+        return response;
+    }
+
+    public ServiceResponse initQueryTrains(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet trains = dao.queryTrainsBySign(employeeId);
+        trains = filterTrains(trains);
+        response.set("TRAINS", ConvertTool.toJSONArray(trains));
         return response;
     }
 
@@ -135,7 +149,7 @@ public class TrainService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
-        RecordSet trains = dao.queryTrains(request.getString("TRAIN_ID"));
+        RecordSet trains = dao.queryTrains(request.getString("TRAIN_ID"), false);
         trains = filterTrains(trains);
         response.set("TRAINS", ConvertTool.toJSONArray(trains));
 
@@ -169,7 +183,7 @@ public class TrainService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
-        RecordSet trains = dao.queryTrains(request.getString("TRAIN_ID"));
+        RecordSet trains = dao.queryTrains(request.getString("TRAIN_ID"), true);
         trains = filterTrains(trains);
         Record train = trains.get(0);
         response.set("TRAIN", ConvertTool.toJSONObject(train));
@@ -271,6 +285,86 @@ public class TrainService extends GenericService {
         return new ServiceResponse();
     }
 
+    public ServiceResponse signTrain(ServiceRequest request) throws Exception {
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", request.getString("TRAIN_ID"));
+        parameter.put("EMPLOYEE_ID", employeeId);
+        parameter.put("STATUS", "0");
+        parameter.put("CREATE_USER_ID", userId);
+        parameter.put("UPDATE_USER_ID", userId);
+        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("UPDATE_TIME", session.getCreateTime());
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        dao.insertAutoIncrement("ins_train_sign", parameter);
+        return new ServiceResponse();
+    }
+
+    public ServiceResponse initQuerySignList(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String employeeOrgId = OrgBean.getOrgId(session.getSessionEntity());
+        OrgEntity org = OrgBean.getAssignTypeOrg(employeeOrgId, "3");
+
+        boolean hasAllCity = Permission.hasAllCity();
+        if(org == null && !hasAllCity) {
+            return response;
+        }
+
+        String orgs = null;
+        if(org != null) {
+             orgs = OrgBean.getOrgLine(org.getOrgId());
+        }
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet signList = null;
+        if(!hasAllCity) {
+            signList = dao.querySignList(request.getString("TRAIN_ID"), orgs);
+        }
+        else {
+            signList = dao.querySignList(request.getString("TRAIN_ID"), null);
+        }
+        JSONObject sign = filterSignList(signList);
+        response.set("SIGN_LIST", sign);
+        response.set("HAS_END_SIGN", Permission.hasEndSign()+"");
+        return response;
+    }
+
+    public ServiceResponse auditSignTrain(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+        String time = session.getCreateTime();
+        String status = request.getString("STATUS");
+        String selectedEmployeeIds = request.getString("SELECTED_EMPLOYEE_ID");
+        String trainId = request.getString("TRAIN_ID");
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        dao.updateSignStatus(selectedEmployeeIds, trainId, status, userId, time);
+        return response;
+    }
+
+    public ServiceResponse endSign(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+        String time = session.getCreateTime();
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", request.getString("TRAIN_ID"));
+        parameter.put("SIGN_STATUS", "1");
+        parameter.put("UPDATE_TIME", time);
+        parameter.put("UPDATE_USER_ID", userId);
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        dao.save("ins_train", parameter);
+        return response;
+    }
+
     public static RecordSet filterTrains(RecordSet trains) throws Exception {
         if(ArrayTool.isEmpty(trains)) {
             return trains;
@@ -320,6 +414,32 @@ public class TrainService extends GenericService {
                 rst.put(startDate, tempSchedules);
             }
             tempSchedules.add(ConvertTool.toJSONObject(schedule));
+        }
+        return rst;
+    }
+
+    public static JSONObject filterSignList(RecordSet signList) throws Exception {
+        JSONObject rst = new JSONObject();
+        if(ArrayTool.isEmpty(signList)) {
+            return rst;
+        }
+
+        int size = signList.size();
+        for(int i=0;i<size;i++) {
+            Record sign = signList.get(i);
+            String employeeSignStatus = sign.get("STATUS");
+            if(employeeSignStatus == null) {
+                employeeSignStatus = "-1";
+            }
+            JSONArray datas = null;
+            if(rst.containsKey(employeeSignStatus)) {
+                datas = rst.getJSONArray(employeeSignStatus);
+            }
+            else {
+                datas = new JSONArray();
+                rst.put(employeeSignStatus, datas);
+            }
+            datas.add(ConvertTool.toJSONObject(sign));
         }
         return rst;
     }
