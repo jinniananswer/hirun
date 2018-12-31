@@ -32,6 +32,12 @@ public class TrainController extends RootController {
         return response.toJsonString();
     }
 
+    @RequestMapping("/initManagerTrains")
+    public @ResponseBody String initManagerTrains(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initManagerTrains", parameter);
+        return response.toJsonString();
+    }
+
     @RequestMapping("/initQueryTrains")
     public @ResponseBody String initQueryTrains(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initQueryTrains", parameter);
@@ -69,6 +75,35 @@ public class TrainController extends RootController {
     @RequestMapping("/changeTrain")
     public @ResponseBody String changeTrain(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.changeTrain", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/signTrain")
+    public @ResponseBody String signTrain(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.signTrain", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initQuerySignList")
+    public @ResponseBody String initQuerySignList(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initQuerySignList", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToSignList")
+    public String redirectToSignList(HttpServletRequest request) throws Exception {
+        return "/biz/organization/train/sign_list";
+    }
+
+    @RequestMapping("/auditSignTrain")
+    public @ResponseBody String auditSignTrain(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.auditSignTrain", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/endSign")
+    public @ResponseBody String endSign(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.endSign", parameter);
         return response.toJsonString();
     }
 }
