@@ -1,5 +1,14 @@
 (function($){
     $.extend({login:{
+        init : function() {
+            $('#password').bind('keyup', function(event) {
+                if (event.keyCode == "13") {
+                    //回车执行查询
+                    $('#login_btn').trigger("tap");
+                }
+            });
+        },
+
         verifyLogin: function(){
             if($.validate.verifyAll("loginForm")){
                 var param = $.buildJsonData("loginForm");
