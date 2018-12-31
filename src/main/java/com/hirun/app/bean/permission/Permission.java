@@ -81,6 +81,16 @@ public class Permission {
         return false;
     }
 
+    public static boolean hasEndSign() throws Exception{
+        if(isSuperUser())
+            return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("END_SIGN"))
+            return true;
+
+        return false;
+    }
+
     public static boolean isSuperUser() {
         SessionEntity session = SessionManager.getSession().getSessionEntity();
         BizSessionEntity bizSession = new BizSessionEntity(session);
