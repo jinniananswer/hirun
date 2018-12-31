@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: jinnian
-  Date: 2018/12/14
-  Time: 8:52 PM
+  Date: 2018/12/23
+  Time: 10:58 PM
   To change this template use File | Settings | File Templates.
 --%>
 <!DOCTYPE HTML>
@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>培训查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/train/train.manager.js?v=20190101062500"></script>
+    <script src="/scripts/biz/organization/train/query.train.js?v=20190101062300"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -28,11 +28,9 @@
 <div class="c_scroll c_scroll-float c_scroll-header">
     <div class="l_padding">
         <div class="c_title">
-            <div class="text">培训列表</div>
+            <div class="text">近期培训列表</div>
             <div class="fn">
-                <ul>
-                    <li ontap="$.redirect.open('biz/organization/train/create_train.jsp', '新增培训安排');"><span class="e_ico-add"></span>新增培训安排</li>
-                </ul>
+
             </div>
         </div>
         <div class="c_msg c_msg-warn" id="messagebox" style="display:none">

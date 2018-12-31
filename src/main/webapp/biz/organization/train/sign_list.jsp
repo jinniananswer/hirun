@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: jinnian
-  Date: 2018/12/14
-  Time: 8:52 PM
+  Date: 2018/12/31
+  Time: 3:53 PM
   To change this template use File | Settings | File Templates.
 --%>
 <!DOCTYPE HTML>
@@ -11,16 +11,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>培训查询</title>
+    <title>报名详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/train/train.manager.js?v=20190101062500"></script>
+    <script src="/scripts/biz/organization/train/sign.list.js?v=20190101060000"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header e_show">
     <div class="back" ontap="$.redirect.closeCurrentPage();">培训查看</div>
     <div class="fn">
-
+        <input type="hidden" name="TRAIN_ID" id="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID") }" desc="培训ID" />
     </div>
 </div>
 <!-- 标题栏 结束 -->
@@ -28,11 +28,9 @@
 <div class="c_scroll c_scroll-float c_scroll-header">
     <div class="l_padding">
         <div class="c_title">
-            <div class="text">培训列表</div>
+            <div class="text">报名人员列表</div>
             <div class="fn">
-                <ul>
-                    <li ontap="$.redirect.open('biz/organization/train/create_train.jsp', '新增培训安排');"><span class="e_ico-add"></span>新增培训安排</li>
-                </ul>
+
             </div>
         </div>
         <div class="c_msg c_msg-warn" id="messagebox" style="display:none">
@@ -41,17 +39,21 @@
                 <div class="info">
                     <div class="text">
                         <div class="title">提示信息</div>
-                        <div class="content">没有找到近期有培训信息哦~~</div>
+                        <div class="content">还没有人报名哦~~</div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="c_list c_list-line c_list-border c_list-space l_padding">
-            <ul id="trains">
+        <div id="sign_list">
 
-            </ul>
         </div>
 
+        <div class="c_space"></div>
+        <div class="c_submit c_submit-full">
+            <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.train.audit('1')">审核通过</button>
+            <button type="button" class="e_button-r e_button-l e_button-red" ontap="$.train.audit('2')">审核不通过</button>
+            <button type="button" id="END_SIGN_BUTTON" name="END_SIGN_BUTTON" class="e_button-r e_button-l e_button-orange" ontap="$.train.endSign();" style="display:none">终止报名</button>
+        </div>
     </div>
 </div>
 <!-- 滚动 结束 -->
