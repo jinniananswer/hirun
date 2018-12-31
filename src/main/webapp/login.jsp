@@ -42,7 +42,7 @@
 		.c_tooltip { z-index:99999 !important; }
 		.c_msg-full{ z-index:99999 !important; }
 	</style>
-	<script src="scripts/login.js"></script>
+	<script src="scripts/login.js?v=20190101071000"></script>
 </head>
 <body>
 	<div class="p_login">
@@ -87,7 +87,7 @@
 							<div class="c_space-2"></div>
 							<!-- 提交 开始 -->
 							<div class="c_submit c_submit-full">
-								<button id="login_btn" type="button" class="e_button-l e_button-green" ontap="$.login.verifyLogin();">登陆</button>
+								<button id="login_btn" name="login_btn" type="button" class="e_button-l e_button-green" ontap="$.login.verifyLogin();">登陆</button>
 							</div>
 							<div class="c_space-2"></div>
 							<div class="e_right p_loginLinks">
@@ -111,6 +111,7 @@
 		</div>
 	</div>
 	<script>
+        $.login.init();
 		Wade.setRatio();
 	</script>
 </body>
