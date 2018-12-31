@@ -42,10 +42,6 @@
     <entity name="OrgCenter.teacher.TeacherService.initChangeTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="initChangeTeacher"/>
     <entity name="OrgCenter.teacher.TeacherService.changeTeacher" class="com.hirun.app.biz.organization.teacher.TeacherService" method="changeTeacher"/>
 
-    <entity name="OrgCenter.course.ExamService.uploadExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="uploadExamGuide"/>
-    <entity name="OrgCenter.course.ExamService.initExamGuideQuery" class="com.hirun.app.biz.organization.course.ExamService" method="initExamGuideQuery"/>
-    <entity name="OrgCenter.course.ExamService.queryExamGuide" class="com.hirun.app.biz.organization.course.ExamService" method="queryExamGuide"/>
-
     <entity name="OrgCenter.train.TrainService.initCreateTrain" class="com.hirun.app.biz.organization.train.TrainService" method="initCreateTrain"/>
     <entity name="OrgCenter.train.TrainService.createTrain" class="com.hirun.app.biz.organization.train.TrainService" method="createTrain"/>
     <entity name="OrgCenter.train.TrainService.initManagerTrains" class="com.hirun.app.biz.organization.train.TrainService" method="initManagerTrains"/>
