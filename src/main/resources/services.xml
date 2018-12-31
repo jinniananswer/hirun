@@ -48,11 +48,16 @@
 
     <entity name="OrgCenter.train.TrainService.initCreateTrain" class="com.hirun.app.biz.organization.train.TrainService" method="initCreateTrain"/>
     <entity name="OrgCenter.train.TrainService.createTrain" class="com.hirun.app.biz.organization.train.TrainService" method="createTrain"/>
+    <entity name="OrgCenter.train.TrainService.initManagerTrains" class="com.hirun.app.biz.organization.train.TrainService" method="initManagerTrains"/>
     <entity name="OrgCenter.train.TrainService.initQueryTrains" class="com.hirun.app.biz.organization.train.TrainService" method="initQueryTrains"/>
     <entity name="OrgCenter.train.TrainService.initTrainDetail" class="com.hirun.app.biz.organization.train.TrainService" method="initTrainDetail"/>
     <entity name="OrgCenter.train.TrainService.deleteTrain" class="com.hirun.app.biz.organization.train.TrainService" method="deleteTrain"/>
     <entity name="OrgCenter.train.TrainService.initChangeTrain" class="com.hirun.app.biz.organization.train.TrainService" method="initChangeTrain"/>
     <entity name="OrgCenter.train.TrainService.changeTrain" class="com.hirun.app.biz.organization.train.TrainService" method="changeTrain"/>
+    <entity name="OrgCenter.train.TrainService.signTrain" class="com.hirun.app.biz.organization.train.TrainService" method="signTrain"/>
+    <entity name="OrgCenter.train.TrainService.initQuerySignList" class="com.hirun.app.biz.organization.train.TrainService" method="initQuerySignList"/>
+    <entity name="OrgCenter.train.TrainService.auditSignTrain" class="com.hirun.app.biz.organization.train.TrainService" method="auditSignTrain"/>
+    <entity name="OrgCenter.train.TrainService.endSign" class="com.hirun.app.biz.organization.train.TrainService" method="endSign"/>
 
 
     <!--运营管理中心服务-->
