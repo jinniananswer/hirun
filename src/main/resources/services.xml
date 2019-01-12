@@ -55,6 +55,10 @@
     <entity name="OrgCenter.train.TrainService.auditSignTrain" class="com.hirun.app.biz.organization.train.TrainService" method="auditSignTrain"/>
     <entity name="OrgCenter.train.TrainService.endSign" class="com.hirun.app.biz.organization.train.TrainService" method="endSign"/>
 
+    <entity name="OrgCenter.exam.ExamService.initPreworkExam" class="com.hirun.app.biz.organization.exam.ExamService" method="initPreworkExam"/>
+    <entity name="OrgCenter.exam.ExamService.startPreworkExam" class="com.hirun.app.biz.organization.exam.ExamService" method="startPreworkExam"/>
+    <entity name="OrgCenter.exam.ExamService.submitExam" class="com.hirun.app.biz.organization.exam.ExamService" method="submitExam"/>
+
 
     <!--运营管理中心服务-->
     <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>
