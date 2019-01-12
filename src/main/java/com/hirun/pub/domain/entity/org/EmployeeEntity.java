@@ -99,6 +99,14 @@ public class EmployeeEntity extends GenericEntity{
         this.set("IN_DATE", inDate);
     }
 
+    public String getRegularDate(){
+        return this.get("REGULAR_DATE");
+    }
+
+    public void setRegularDate(String regularDate){
+        this.set("REGULAR_DATE", regularDate);
+    }
+
     public String getDestroyDate(){
         return this.get("DESTROY_DATE");
     }
