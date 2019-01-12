@@ -64,16 +64,16 @@
                         html.push("</div>");
                     }
                     html.push("</div></div>");
-                    if(signStatus == null) {
+                    if(employeeSignStatus == null) {
                         html.push("<div class=\"statu e_size-s statu-orange statu-right\">未报名</div>");
                     }
-                    else if(signStatus == "0") {
+                    else if(employeeSignStatus == "0") {
                         html.push("<div class=\"statu e_size-s statu-orange statu-right\">未审核</div>");
                     }
-                    else if(signStatus == "1") {
+                    else if(employeeSignStatus == "1") {
                         html.push("<div class=\"statu e_size-s statu-orange statu-right\">审核通过</div>");
                     }
-                    else if(signStatus == "2") {
+                    else if(employeeSignStatus == "2") {
                         html.push("<div class=\"statu e_size-s statu-orange statu-right\">审核拒绝</div>");
                     }
                     html.push("</li>");
