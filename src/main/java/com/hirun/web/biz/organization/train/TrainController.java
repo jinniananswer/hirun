@@ -106,4 +106,33 @@ public class TrainController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.endSign", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/redirectToSign")
+    public String redirectToSign(HttpServletRequest request) throws Exception {
+        return "/biz/organization/train/choose_employee_sign_train";
+    }
+
+    @RequestMapping("/initChooseEmployeeSignTrain")
+    public @ResponseBody String initChooseEmployeeSignTrain(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initChooseEmployeeSignTrain", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/queryWantSignEmployee")
+    public @ResponseBody String queryWantSignEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.queryWantSignEmployee", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/signNewEmployee")
+    public @ResponseBody String signNewEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.signNewEmployee", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/deleteSignedEmployee")
+    public @ResponseBody String deleteSignedEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.deleteSignedEmployee", parameter);
+        return response.toJsonString();
+    }
 }
