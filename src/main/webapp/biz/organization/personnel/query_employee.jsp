@@ -107,7 +107,7 @@
                                     <div class="more"></div>
                                 </li>
                                 <li class="link" ontap="$('#PARENT_EMPLOYEE_NAME').focus();$('#PARENT_EMPLOYEE_NAME').blur();forwardPopup('UI-popup','UI-PARENT')">
-                                    <div class="label">上级员工</div>
+                                    <div class="label">直接上级</div>
                                     <div class="value">
                                         <input type="text" id="PARENT_EMPLOYEE_NAME" name="PARENT_EMPLOYEE_NAME" nullable="yes" readonly="true" desc="上级员工" />
                                         <input type="hidden" id="PARENT_EMPLOYEE_ID" name="PARENT_EMPLOYEE_ID" nullable="yes" desc="上级员工" />
