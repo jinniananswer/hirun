@@ -240,10 +240,10 @@ public class HousesReportService extends GenericService {
                 JSONObject json = new JSONObject();
                 json.put("ORG_ID", tempOrgId);
                 json.put("NAME", orgNameTemp.get(tempOrgId));
-                int planKeyNoPassCheck = Integer.parseInt(temp.get(tempOrgId+"_PLAN_0"));
-                int actualKeyNoPassCheck = Integer.parseInt(temp.get(tempOrgId+"_ACTUAL_0"));
-                int planKeyPassCheck = Integer.parseInt(temp.get(tempOrgId+"_PLAN_1"));
-                int actualKeyPassCheck = Integer.parseInt(temp.get(tempOrgId+"_ACTUAL_1"));
+                int planKeyNoPassCheck = Integer.parseInt(temp.get(tempOrgId+"_PLAN_0")==null?"0":temp.get(tempOrgId+"_PLAN_0"));
+                int actualKeyNoPassCheck = Integer.parseInt(temp.get(tempOrgId+"_ACTUAL_0")==null?"0":temp.get(tempOrgId+"_ACTUAL_0"));
+                int planKeyPassCheck = Integer.parseInt(temp.get(tempOrgId+"_PLAN_1")==null?"0":temp.get(tempOrgId+"_PLAN_1"));
+                int actualKeyPassCheck = Integer.parseInt(temp.get(tempOrgId+"_ACTUAL_1")==null?"0":temp.get(tempOrgId+"_ACTUAL_1"));
 
                 int loopholeNoPassCheck = planKeyNoPassCheck - actualKeyNoPassCheck;
                 int loopholePassCheck = planKeyPassCheck - actualKeyPassCheck;
