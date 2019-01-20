@@ -26,6 +26,19 @@
                 window["singleCourseTree"] = new Wade.Tree("singleCourseTree");
 
                 $.Select.append(
+                    "type_select",
+                    {
+                        id:"TYPE",
+                        name:"TYPE"
+                    },
+                    [
+                        {TEXT:"岗前培训", VALUE:"1"},
+                        {TEXT:"职前培训", VALUE:"2"},
+                        {TEXT:"在职培训", VALUE:"3"}
+                    ]
+                );
+
+                $.Select.append(
                     // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
                     "COURSE_NATURE_0",
                     // 参数设置
@@ -348,7 +361,7 @@
                                 document.location.reload();
                             }
                             else {
-                                $.rediret.closeCurrentPage();
+                                $.redirect.closeCurrentPage();
                             }
                         },{"cancel":"取消"})
                     });

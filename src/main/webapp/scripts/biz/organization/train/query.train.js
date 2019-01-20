@@ -57,25 +57,12 @@
                     html.push("</div>");
 
                     html.push("</div>");
-                    var employeeSignStatus = data.get("EMPLOYEE_SIGN_STATUS");
-                    if(employeeSignStatus == null && signStatus == "0") {
+                    if(signStatus == "0") {
                         html.push("<div class=\"side e_size-s\">");
                         html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-m\" ontap='$.train.signTrain(\"" + data.get("TRAIN_ID") + "\");'>报</span>");
                         html.push("</div>");
                     }
                     html.push("</div></div>");
-                    if(employeeSignStatus == null) {
-                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">未报名</div>");
-                    }
-                    else if(employeeSignStatus == "0") {
-                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">未审核</div>");
-                    }
-                    else if(employeeSignStatus == "1") {
-                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">审核通过</div>");
-                    }
-                    else if(employeeSignStatus == "2") {
-                        html.push("<div class=\"statu e_size-s statu-orange statu-right\">审核拒绝</div>");
-                    }
                     html.push("</li>");
                 }
 
@@ -95,16 +82,7 @@
             },
 
             signTrain : function(trainId) {
-                $.ajaxPost('signTrain', '&TRAIN_ID='+trainId, function (data) {
-                    MessageBox.success("报名成功","请提醒人资审核您的报名资格，点击确定返回当前页面，点击取消关闭当前页面", function(btn){
-                        if("ok" == btn) {
-                            document.location.reload();
-                        }
-                        else {
-                            $.rediret.closeCurrentPage();
-                        }
-                    },{"cancel":"取消"})
-                });
+                $.redirect.open('redirectToSign?TRAIN_ID='+trainId, '培训报名');
             }
         }});
 })($);

@@ -138,7 +138,7 @@
                             document.location.reload();
                         }
                         else {
-                            $.rediret.closeCurrentPage();
+                            $.redirect.closeCurrentPage();
                         }
                     },{"cancel":"取消"})
                 });
@@ -151,7 +151,7 @@
                             document.location.reload();
                         }
                         else {
-                            $.rediret.closeCurrentPage();
+                            $.redirect.closeCurrentPage();
                         }
                     },{"cancel":"取消"})
                 });

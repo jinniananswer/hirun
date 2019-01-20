@@ -21,6 +21,18 @@
                         useTime:false,
                     }
                 );
+                $.Select.append(
+                    "type_select",
+                    {
+                        id:"TYPE",
+                        name:"TYPE"
+                    },
+                    [
+                        {TEXT:"岗前培训", VALUE:"1"},
+                        {TEXT:"职前培训", VALUE:"2"},
+                        {TEXT:"在职培训", VALUE:"3"}
+                    ]
+                );
 
                 window["courseTree"] = new Wade.Tree("courseTree");
                 window["singleCourseTree"] = new Wade.Tree("singleCourseTree");
@@ -296,6 +308,7 @@
             setTrainValue : function(train) {
                 $("#TRAIN_ID").val(train.get("TRAIN_ID"));
                 $("#NAME").val(train.get("TRAIN_NAME"));
+                $("#TYPE").val(train.get("TYPE"));
                 $("#COURSE_NAMES").val(train.get("COURSE_NAME"));
                 $("#COURSE_IDS").val(train.get("COURSE_ID"));
                 $("#CHARGE_EMPLOYEE_NAME").val(train.get("EMPLOYEE_NAME"));
@@ -473,7 +486,7 @@
                                 document.location.reload();
                             }
                             else {
-                                $.rediret.closeCurrentPage();
+                                $.redirect.closeCurrentPage();
                             }
                         },{"cancel":"取消"})
                     });
