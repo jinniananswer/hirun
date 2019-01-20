@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>培训查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/exam/prework.exam.js"></script>
+    <script src="/scripts/biz/organization/exam/prework.exam.js?v=20190112"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -63,8 +63,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="side e_size-s">
-                                        <input type="radio" name='RADIO_EXAM' value='1' ontap='$.exam.selectExam(this);'/>
+                                    <div class="side">
+                                        <input type="radio" name='RADIO_EXAM' value='1' style="outline:none;" ontap='$.exam.selectExam(this);'/>
                                     </div>
                                 </div>
                             </li>
@@ -83,7 +83,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="side e_size-s">
+                                    <div class="side">
                                         <input type="radio" name='RADIO_EXAM' value='2' ontap='$.exam.selectExam(this);'/>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="side e_size-s">
+                                    <div class="side">
                                         <input type="radio" name='RADIO_EXAM' value='3' ontap='$.exam.selectExam(this);'/>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="side e_size-s">
+                                    <div class="side">
                                         <input type="radio" name='RADIO_EXAM' value='4' ontap='$.exam.selectExam(this);'/>
                                     </div>
                                 </div>
@@ -143,15 +143,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="side e_size-s">
-                                        <input type="radio" name='RADIO_EXAM' value='5' ontap='$.exam.selectExam(this);'/>
+                                    <div class="side">
+                                        <input type="radio" style="border: none !important;" name='RADIO_EXAM' value='5' ontap='$.exam.selectExam(this);'/>
                                     </div>
                                 </div>
                             </li>
                         </ul>
-
-
-
                     </div>
                 </div>
             </div>
