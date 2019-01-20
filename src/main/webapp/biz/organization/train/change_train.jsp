@@ -39,6 +39,14 @@
                         <input type="hidden" id="TRAIN_ID" name="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID") }" desc="培训ID" />
                     </div>
                 </li>
+                <li class="link required">
+                    <div class="label">培训类型</div>
+                    <div class="value">
+                        <span id="type_select">
+
+                        </span>
+                    </div>
+                </li>
                 <li class="link required" ontap="$('#COURSE_NAMES').focus();$('#COURSE_NAMES').blur();showPopup('UI-popup','UI-SELECT_COURSE')">
                     <div class="label">培训课程</div>
                     <div class="value">

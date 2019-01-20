@@ -38,6 +38,14 @@
                         <input type="text" id="NAME" name="NAME" placeholder="请输入培训名称" nullable="no" desc="培训名称" />
                     </div>
                 </li>
+                <li class="link required">
+                    <div class="label">培训类型</div>
+                    <div class="value">
+                        <span id="type_select">
+
+                        </span>
+                    </div>
+                </li>
                 <li class="link required" ontap="$('#COURSE_NAMES').focus();$('#COURSE_NAMES').blur();showPopup('UI-popup','UI-SELECT_COURSE')">
                     <div class="label">培训课程</div>
                     <div class="value">
