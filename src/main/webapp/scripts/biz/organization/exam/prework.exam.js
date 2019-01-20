@@ -88,7 +88,7 @@
 
                     html.push("</div>");
 
-                    html.push("<div class=\"side e_size-s\">");
+                    html.push("<div class=\"side\">");
                     if(type == "1" || type == "3") {
                         if(answer == data.get("SYMBOL")) {
                             html.push("<input type=\"radio\" name='RADIO_"+$.exam.currentIndex+"' value='" + data.get("SYMBOL") + "' checked ontap='$.exam.selectAnswer(this);'/>");
@@ -201,7 +201,7 @@
                             document.location.reload();
                         }
                         else {
-                            $.rediret.closeCurrentPage();
+                            $.redirect.closeCurrentPage();
                         }
                     },{"cancel":"取消"})
                 });
