@@ -40,7 +40,7 @@
                                 document.location.reload();
                             }
                             else {
-                                $.rediret.closeCurrentPage();
+                                $.redirect.closeCurrentPage();
                             }
                         },{"cancel":"取消"})
                     });
