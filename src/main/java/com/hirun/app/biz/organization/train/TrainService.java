@@ -6,10 +6,12 @@ import com.hirun.app.bean.course.CourseBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.biz.organization.teacher.TeacherService;
+import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.org.TeacherDAO;
 import com.hirun.app.dao.org.TrainDAO;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
@@ -55,6 +57,7 @@ public class TrainService extends GenericService {
 
         /** 保存培训 **/
         parameter.put("NAME", request.getString("NAME"));
+        parameter.put("TYPE", request.getString("TYPE"));
         parameter.put("TRAIN_DESC", request.getString("TRAIN_DESC"));
         parameter.put("CHARGE_EMPLOYEE_ID", request.getString("CHARGE_EMPLOYEE_ID"));
         parameter.put("STATUS", "0");
@@ -215,6 +218,7 @@ public class TrainService extends GenericService {
         String trainId = request.getString("TRAIN_ID");
         parameter.put("TRAIN_ID", trainId);
         parameter.put("NAME", request.getString("NAME"));
+        parameter.put("TYPE", request.getString("TYPE"));
         parameter.put("TRAIN_DESC", request.getString("TRAIN_DESC"));
         parameter.put("CHARGE_EMPLOYEE_ID", request.getString("CHARGE_EMPLOYEE_ID"));
         parameter.put("STATUS", "0");
@@ -362,6 +366,149 @@ public class TrainService extends GenericService {
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
         dao.save("ins_train", parameter);
+        return response;
+    }
+
+    public ServiceResponse initChooseEmployeeSignTrain(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+        String trainId = request.getString("TRAIN_ID");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", trainId);
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        Record train = dao.queryByPk("ins_train", parameter);
+        response.set("TRAIN", ConvertTool.toJSONObject(train));
+
+        String type = train.get("TYPE");
+        if(StringUtils.equals("2", type)) {
+            RecordSet mustSignEmployees = dao.queryNeedSignPreworkEmployee(trainId, true);
+            if(ArrayTool.isNotEmpty(mustSignEmployees)) {
+                int size = mustSignEmployees.size();
+                for(int i=0;i<size;i++) {
+                    Record employee = mustSignEmployees.get(i);
+                    employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
+                }
+            }
+            response.set("MUST_SIGN_EMPLOYEE", ConvertTool.toJSONArray(mustSignEmployees));
+
+            RecordSet needSignEmployees = dao.queryNeedSignPreworkEmployee(trainId, false);
+            RecordSet temp = new RecordSet();
+            if(ArrayTool.isNotEmpty(needSignEmployees)) {
+
+                int needSize = needSignEmployees.size();
+                int mustSize = mustSignEmployees.size();
+                for(int i=0;i<needSize;i++) {
+                    boolean isFind = false;
+                    Record needEmployee = needSignEmployees.get(i);
+                    for(int j=0;j<mustSize;j++) {
+                        Record mustEmployee = mustSignEmployees.get(j);
+                        if(StringUtils.equals(needEmployee.get("EMPLOYEE_ID"), mustEmployee.get("EMPLOYEE_ID"))) {
+                            isFind = true;
+                            break;
+                        }
+                    }
+
+                    if(!isFind) {
+                        needEmployee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", needEmployee.get("JOB_ROLE")));
+                        temp.add(needEmployee);
+                    }
+                }
+                response.set("NEED_SIGN_EMPLOYEE", ConvertTool.toJSONArray(temp));
+
+            }
+
+        }
+
+        RecordSet signEmployees = dao.queryEmployeeBySignEmployeeId(trainId, employeeId);
+        JSONObject orgTree = OrgBean.getOrgTree();
+
+        RecordSet jobRoles = StaticDataTool.getCodeTypeDatas("JOB_ROLE");
+
+        response.set("JOB_ROLE", ConvertTool.toJSONArray(jobRoles));
+        response.set("SIGN_EMPLOYEE", ConvertTool.toJSONArray(signEmployees));
+        response.set("ORG_TREE", orgTree);
+
+        return response;
+    }
+
+    public ServiceResponse queryWantSignEmployee(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        String orgId = request.getString("ORG_ID");
+
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+        if(StringUtils.isBlank(orgId)) {
+            orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
+            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+                orgId = "122";
+            }
+            else {
+                orgId = rootOrg.getOrgId();
+            }
+        }
+
+        orgId = OrgBean.getOrgLine(orgId, allOrgs);
+        RecordSet employees = dao.queryEmployees(request.getString("NAME"), null, null, null, null, orgId, request.getString("JOB_ROLE"), null);
+
+        if(employees == null || employees.size() <= 0)
+            return response;
+
+        int size = employees.size();
+        for(int i=0;i<size;i++){
+            Record employee = employees.get(i);
+            employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
+        }
+        response.set("EMPLOYEE", ConvertTool.toJSONArray(employees));
+        return response;
+    }
+
+    public ServiceResponse signNewEmployee(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String newEmployeeIds = request.getString("NEW_EMPLOYEE_ID");
+        String[] addEmployeeIdArray = newEmployeeIds.split(",");
+
+        List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
+
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+        String signEmployeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+
+        for(String employeeId : addEmployeeIdArray) {
+            Map<String, String> parameter = new HashMap<String, String>();
+            parameter.put("TRAIN_ID", request.getString("TRAIN_ID"));
+            parameter.put("EMPLOYEE_ID", employeeId);
+            parameter.put("SIGN_EMPLOYEE_ID", signEmployeeId);
+            parameter.put("STATUS", "0");
+            parameter.put("CREATE_USER_ID", userId);
+            parameter.put("UPDATE_USER_ID", userId);
+            parameter.put("CREATE_DATE", session.getCreateTime());
+            parameter.put("UPDATE_TIME", session.getCreateTime());
+            parameters.add(parameter);
+        }
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        dao.insertBatch("ins_train_sign", parameters);
+        return response;
+    }
+
+    public ServiceResponse deleteSignedEmployee(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        AppSession session = SessionManager.getSession();
+        String signEmployeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+        String trainId = request.getString("TRAIN_ID");
+        String deleteEmployeeIds = request.getString("DEL_EMPLOYEE_ID");
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        dao.deleteSign(deleteEmployeeIds, trainId, signEmployeeId);
+
         return response;
     }
 
