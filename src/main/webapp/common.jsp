@@ -36,7 +36,7 @@
 <html size="s">
 <head>
     <base href="<%=basePath%>"></base>
-    <link rel="stylesheet" href="frame/TouchUI/content/css/base.css?v=20190112095200" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="frame/TouchUI/content/css/base.css?v=20190112101000" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="frame/css/project.css" rel="stylesheet" type="text/css"/>
     <script src="frame/TouchUI/content/js/jcl-base.js"></script>
     <script src="frame/TouchUI/content/js/jcl.js"></script>
