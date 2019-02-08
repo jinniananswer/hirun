@@ -32,7 +32,6 @@
                         name:"TYPE"
                     },
                     [
-                        {TEXT:"岗前培训", VALUE:"1"},
                         {TEXT:"职前培训", VALUE:"2"},
                         {TEXT:"在职培训", VALUE:"3"}
                     ]

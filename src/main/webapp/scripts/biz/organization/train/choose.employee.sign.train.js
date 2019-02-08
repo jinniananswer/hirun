@@ -324,7 +324,7 @@
 
                 employeeIds = employeeIds.substring(0, employeeIds.length - 1);
 
-                var parameter = '&DEL_EMPLOYEE_ID='+ employeeIds + "&TRAIN_ID="+$("#TRAIN_ID").val();
+                var parameter = '&SELECTED_EMPLOYEE_ID='+ employeeIds + "&TRAIN_ID="+$("#TRAIN_ID").val();
 
                 $.beginPageLoading();
 
