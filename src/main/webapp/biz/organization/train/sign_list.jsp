@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>报名详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/train/sign.list.js?v=20190101060000"></script>
+    <script src="/scripts/biz/organization/train/sign.list.js?v=20190126180000"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -28,7 +28,7 @@
 <div class="c_scroll c_scroll-float c_scroll-header">
     <div class="l_padding">
         <div class="c_title">
-            <div class="text">报名人员列表</div>
+            <div class="text" id="total_num">报名人员列表</div>
             <div class="fn">
 
             </div>
@@ -50,9 +50,8 @@
 
         <div class="c_space"></div>
         <div class="c_submit c_submit-full">
-            <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.train.audit('1')">审核通过</button>
-            <button type="button" class="e_button-r e_button-l e_button-red" ontap="$.train.audit('2')">审核不通过</button>
-            <button type="button" id="END_SIGN_BUTTON" name="END_SIGN_BUTTON" class="e_button-r e_button-l e_button-orange" ontap="$.train.endSign();" style="display:none">终止报名</button>
+            <button type="button" id="DELETE_BUTTON" name="DELETE_BUTTON"  class="e_button-r e_button-l e_button-red" ontap="$.train.deleteSignedEmployee();">删除报名人员</button>
+            <button type="button" id="END_SIGN_BUTTON" name="END_SIGN_BUTTON" class="e_button-r e_button-l e_button-green" ontap="$.train.endSign();">生成正式报名名单</button>
         </div>
     </div>
 </div>
