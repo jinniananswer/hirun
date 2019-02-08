@@ -2,19 +2,17 @@ package com.hirun.app.bean.org;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hirun.app.bean.authority.AuthorityJudgement;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
-import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
-import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -209,6 +207,24 @@ public class OrgBean {
                         return getParentOrg(org.getParentOrgId(), type, orgs);
                     }
                 }
+                else if(StringUtils.equals("4", type)){
+                    //查事业部
+                    if(StringUtils.equals("1", org.getType())){
+                        return org;
+                    }
+                    else{
+                        return getParentOrg(org.getParentOrgId(), type, orgs);
+                    }
+                }
+                else if(StringUtils.equals("5", type)){
+                    //查集团总部
+                    if(StringUtils.equals("0", org.getType())){
+                        return org;
+                    }
+                    else{
+                        return getParentOrg(org.getParentOrgId(), type, orgs);
+                    }
+                }
             }
 
         }
@@ -250,4 +266,48 @@ public class OrgBean {
         }
         return null;
     }
+
+    public static List<OrgEntity> findBloodOrg(String employeeOrgId, List<OrgEntity> allOrgs) throws Exception {
+        if (ArrayTool.isEmpty(allOrgs)) {
+            return null;
+        }
+
+        List<OrgEntity> bloodLine = new ArrayList<OrgEntity>();
+
+        for (OrgEntity org : allOrgs) {
+            if (StringUtils.equals(employeeOrgId, org.getOrgId())) {
+
+                bloodLine.add(org);//先加入本身
+
+                if (StringUtils.isBlank(org.getParentOrgId())) {
+                    //已经到头了
+                    break;
+                }
+                else if(StringUtils.equals("2", org.getType())) {
+                    break;
+                }
+                else {
+                    List<OrgEntity> orgs = findBloodOrg(org.getParentOrgId(), allOrgs);
+                    bloodLine.addAll(orgs);
+                    break;
+                }
+            }
+        }
+
+        return bloodLine;
+    }
+
+    public static List<OrgEntity> bloodOrgDesc(String employeeOrgId, List<OrgEntity> allOrgs) throws Exception{
+        List<OrgEntity> bloodLine = findBloodOrg(employeeOrgId, allOrgs);
+        //因为顺序是按从小到大的，所以重新排下序
+        List<OrgEntity> rst = new ArrayList<OrgEntity>();
+        if (ArrayTool.isNotEmpty(bloodLine)) {
+            int size = bloodLine.size();
+            for (int i = size - 1; i >= 0; i--) {
+                rst.add(bloodLine.get(i));
+            }
+        }
+        return rst;
+    }
+
 }
