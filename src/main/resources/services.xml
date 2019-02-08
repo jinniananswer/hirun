@@ -54,10 +54,22 @@
     <entity name="OrgCenter.train.TrainService.initQuerySignList" class="com.hirun.app.biz.organization.train.TrainService" method="initQuerySignList"/>
     <entity name="OrgCenter.train.TrainService.auditSignTrain" class="com.hirun.app.biz.organization.train.TrainService" method="auditSignTrain"/>
     <entity name="OrgCenter.train.TrainService.endSign" class="com.hirun.app.biz.organization.train.TrainService" method="endSign"/>
+    <entity name="OrgCenter.train.TrainService.initChooseEmployeeSignTrain" class="com.hirun.app.biz.organization.train.TrainService" method="initChooseEmployeeSignTrain"/>
+    <entity name="OrgCenter.train.TrainService.queryWantSignEmployee" class="com.hirun.app.biz.organization.train.TrainService" method="queryWantSignEmployee"/>
+    <entity name="OrgCenter.train.TrainService.signNewEmployee" class="com.hirun.app.biz.organization.train.TrainService" method="signNewEmployee"/>
+    <entity name="OrgCenter.train.TrainService.deleteSignedEmployee" class="com.hirun.app.biz.organization.train.TrainService" method="deleteSignedEmployee"/>
+    <entity name="OrgCenter.train.TrainService.createPreworkEvaluation" class="com.hirun.app.biz.organization.train.TrainService" method="createPreworkEvaluation"/>
+    <entity name="OrgCenter.train.TrainService.initViewTrainNotice" class="com.hirun.app.biz.organization.train.TrainService" method="initViewTrainNotice"/>
 
     <entity name="OrgCenter.exam.ExamService.initPreworkExam" class="com.hirun.app.biz.organization.exam.ExamService" method="initPreworkExam"/>
     <entity name="OrgCenter.exam.ExamService.startPreworkExam" class="com.hirun.app.biz.organization.exam.ExamService" method="startPreworkExam"/>
     <entity name="OrgCenter.exam.ExamService.submitExam" class="com.hirun.app.biz.organization.exam.ExamService" method="submitExam"/>
+
+    <entity name="OrgCenter.prework.PreWorkService.initQueryPreWorkEvaluation" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initQueryPreWorkEvaluation"/>
+    <entity name="OrgCenter.prework.PreWorkService.initViewPreWorkNotice" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initViewPreWorkNotice"/>
+    <entity name="OrgCenter.prework.PreWorkService.initChooseEmployeeSignPreWork" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initChooseEmployeeSignPreWork"/>
+    <entity name="OrgCenter.prework.PreWorkService.addNewPreworkSign" class="com.hirun.app.biz.organization.prework.PreWorkService" method="addNewPreworkSign"/>
+
 
 
     <!--运营管理中心服务-->
