@@ -35,6 +35,25 @@ public class TrainDAO extends GenericDAO {
         sql.append("and b.status = '0' ");
         sql.append("and c.status = '0' ");
         sql.append("and d.status = '0' ");
+        sql.append("and a.type in ('2','3') ");
+        if(isValid) {
+            sql.append("and a.end_date >= now() ");
+        }
+        if (StringUtils.isNotBlank(trainId)) {
+            sql.append("and a.train_id = :TRAIN_ID ");
+            parameter.put("TRAIN_ID", trainId);
+        }
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
+    public RecordSet queryPreWorks(String trainId, boolean isValid) throws SQLException {
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        sql.append("select a.train_id, a.name train_name,a.type, a.train_desc, a.train_address, a.hotel_address, date_format(a.start_date, '%Y-%m-%d') start_date, date_format(a.end_date, '%Y-%m-%d') end_date,a.charge_employee_id,a.status, a.sign_status ");
+        sql.append("from ins_train a ");
+        sql.append("where a.type = '1' ");
+        sql.append("and a.status = '0' ");
         if(isValid) {
             sql.append("and a.end_date >= now() ");
         }
@@ -62,6 +81,7 @@ public class TrainDAO extends GenericDAO {
         sql.append("and b.status = '0' ");
         sql.append("and c.status = '0' ");
         sql.append("and d.status = '0' ");
+        sql.append("and a.type in ('2','3') ");
         sql.append("and a.end_date >= now() ");
 
         return this.queryBySql(sql.toString(), parameter);
@@ -115,6 +135,7 @@ public class TrainDAO extends GenericDAO {
         sql.append("and c.employee_id = a.employee_id ");
         sql.append("and d.org_id = c.org_id ");
         sql.append("and e.enterprise_id = d.enterprise_id ");
+        sql.append("and a.status = '0' ");
         sql.append("and b.status = '0' ");
         sql.append("and (now() between c.start_date and c.end_date ) ");
         sql.append("and a.train_id = :TRAIN_ID ");
@@ -167,6 +188,7 @@ public class TrainDAO extends GenericDAO {
         sql.append("select a.train_id, a.employee_id, b.name, b.sex ");
         sql.append("from ins_train_sign a, ins_employee b ");
         sql.append("where b.employee_id = a.employee_id ");
+        sql.append("and a.status = '0' ");
         sql.append("and b.status = '0' ");
         sql.append("and a.train_id = :TRAIN_ID ");
         sql.append("and a.sign_employee_id = :SIGN_EMPLOYEE_ID ");
@@ -174,12 +196,31 @@ public class TrainDAO extends GenericDAO {
         return this.queryBySql(sql.toString(), parameter);
     }
 
-    public RecordSet queryNeedSignPreworkEmployee(String trainId, boolean needOverThirty) throws Exception {
+    public RecordSet queryPreworkEmployeeBySignEmployeeId(String trainId, String signEmployeeId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", trainId);
+        parameter.put("SIGN_EMPLOYEE_ID", signEmployeeId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select a.train_id, a.employee_id, b.name, b.sex, c.type, c.item ");
+        sql.append("from ins_train_sign a, ins_employee b, ins_train_sign_item c ");
+        sql.append("where b.employee_id = a.employee_id ");
+        sql.append("and c.sign_id = a.sign_id ");
+        sql.append("and c.status = '0' ");
+        sql.append("and a.status = '0' ");
+        sql.append("and b.status = '0' ");
+        sql.append("and a.train_id = :TRAIN_ID ");
+        sql.append("and a.sign_employee_id = :SIGN_EMPLOYEE_ID ");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
+    public RecordSet queryNeedSignPreTrainEmployee(String trainId, boolean needOverThirty) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, f.NAME parent_org_name ");
+        sql.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,date_format(b.in_date,'%Y-%m-%d') in_date ,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, f.NAME parent_org_name ");
         sql.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
         sql.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
         sql.append("where b.USER_ID = a.USER_ID ");
@@ -192,7 +233,36 @@ public class TrainDAO extends GenericDAO {
         if(needOverThirty) {
             sql.append("and date_add(now(), interval -30 day) > b.in_date ");
         }
-        sql.append("and not exists(select 1 from ins_train_sign f where f.employee_id = b.employee_id and f.train_id = :TRAIN_ID) ");
+        sql.append("and not exists(select 1 from ins_train_sign f where f.employee_id = b.employee_id and f.train_id = :TRAIN_ID and f.status = '0') ");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
+    public RecordSet queryNeedSignPreWorkEmployee(String trainId, boolean needOverSeventyFive, boolean needPassExam) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", trainId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,date_format(b.in_date,'%Y-%m-%d') in_date,a.mobile_no contact_no, d.JOB_ROLE, e.org_id, e.name org_name ");
+        sql.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
+        sql.append("where b.USER_ID = a.USER_ID ");
+        sql.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
+        sql.append("and a.status = '0' ");
+        sql.append("and b.status = '0' " );
+        sql.append("and now() < d.end_date ");
+        sql.append("and e.ORG_ID = d.ORG_ID ");
+        sql.append("and b.regular_date > now() ");
+        if (needOverSeventyFive) {
+            sql.append("and date_add(now(), interval - 75 day) > b.in_date ");
+        }
+        sql.append("and not exists(select 1 from ins_train_sign f where f.employee_id = b.employee_id and f.train_id = :TRAIN_ID and f.status = '0') ");
+        if (needPassExam) {
+            sql.append("and exists(select 1 from ins_exam_score f where f.employee_id = b.employee_id and f.exam_id = 1 and f.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score g where g.employee_id = b.employee_id and g.exam_id = 2 and g.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score h where h.employee_id = b.employee_id and h.exam_id = 3 and h.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score i where i.employee_id = b.employee_id and i.exam_id = 4 and i.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score j where j.employee_id = b.employee_id and j.exam_id = 5 and j.score >= 80) ");
+        }
 
         return this.queryBySql(sql.toString(), parameter);
     }
