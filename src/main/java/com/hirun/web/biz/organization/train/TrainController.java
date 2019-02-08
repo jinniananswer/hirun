@@ -95,9 +95,9 @@ public class TrainController extends RootController {
         return "/biz/organization/train/sign_list";
     }
 
-    @RequestMapping("/auditSignTrain")
-    public @ResponseBody String auditSignTrain(@RequestParam Map parameter) throws Exception{
-        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.auditSignTrain", parameter);
+    @RequestMapping("/deleteSignedEmployee")
+    public @ResponseBody String deleteSignedEmployee(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.deleteSignedEmployee", parameter);
         return response.toJsonString();
     }
 
@@ -130,9 +130,20 @@ public class TrainController extends RootController {
         return response.toJsonString();
     }
 
-    @RequestMapping("/deleteSignedEmployee")
-    public @ResponseBody String deleteSignedEmployee(@RequestParam Map parameter) throws Exception{
-        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.deleteSignedEmployee", parameter);
+    @RequestMapping("/createPreworkEvaluation")
+    public @ResponseBody String createPreworkEvaluation(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.createPreworkEvaluation", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToViewTrainNotice")
+    public String redirectToViewTrainNotice(HttpServletRequest request) throws Exception {
+        return "/biz/organization/train/view_train_notice";
+    }
+
+    @RequestMapping("/initViewTrainNotice")
+    public @ResponseBody String initViewTrainNotice(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initViewTrainNotice", parameter);
         return response.toJsonString();
     }
 }
