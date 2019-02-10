@@ -147,6 +147,31 @@ public class TrainDAO extends GenericDAO {
         return this.queryBySql(sql.toString(), parameter);
     }
 
+    public RecordSet queryPreworkSignList(String trainId, String orgs) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", trainId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select a.train_id, a.employee_id,a.status, b.name, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.type, f.item ");
+        sql.append("from ins_train_sign a, ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e, ins_train_sign_item f ");
+        sql.append("where b.employee_id = a.employee_id ");
+        sql.append("and c.employee_id = a.employee_id ");
+        sql.append("and d.org_id = c.org_id ");
+        sql.append("and e.enterprise_id = d.enterprise_id ");
+        sql.append("and f.sign_id = a.sign_id ");
+        sql.append("and a.status = '0' ");
+        sql.append("and b.status = '0' ");
+        sql.append("and f.status = '0' ");
+        sql.append("and (now() between c.start_date and c.end_date ) ");
+        sql.append("and a.train_id = :TRAIN_ID ");
+
+        if(StringUtils.isNotBlank(orgs)) {
+            sql.append(" and c.org_id in ("+orgs+") ");
+        }
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
     public void updateSignStatus(String employeeIds, String trainId, String status, String userId, String time) throws SQLException {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("TRAIN_ID", trainId);
