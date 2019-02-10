@@ -61,7 +61,7 @@
             },
 
             viewSign : function(trainId) {
-                $.redirect.open('redirectToSignList?TRAIN_ID='+trainId, '培训详情');
+                $.redirect.open('redirectToPreworkSignList?TRAIN_ID='+trainId, '培训详情');
             },
 
             deletePreWork : function(trainId) {

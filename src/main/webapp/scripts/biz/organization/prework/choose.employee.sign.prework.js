@@ -58,6 +58,13 @@
                     $.prework.train = rst.get("TRAIN");
                     var trainName = $("#train_name");
                     trainName.html($.prework.train.get("NAME"));
+
+                    var signStatus = $.prework.train.get("SIGN_STATUS");
+                    if (signStatus == "1") {
+                        $("#addArea").css("display", "none");
+                        $("#addPreworkEmployee").css("display", "none");
+                        $("#delPreworkEmployee").css("display", "none");
+                    }
                     $.prework.drawSignEmployees(signEmployees);
 
                     $.prework.jobs = rst.get("JOB_ROLE");
