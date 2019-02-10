@@ -31,7 +31,7 @@
         <div class="c_title">
             <div class="text" id="train_name"></div>
             <div class="fn">
-                <ul>
+                <ul id="addArea">
                     <li ontap="showPopup('UI-popup','UI-popup-query-cond')"><span class="e_ico-add"></span>选择报名人员</li>
                 </ul>
             </div>
@@ -90,8 +90,8 @@
         </div>
         <div class="c_space"></div>
         <div class="c_submit c_submit-full">
-            <button type="button" class="e_button-r e_button-l e_button-red" ontap="$.prework.submitDelete()">删除已报名人员</button>
-            <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.prework.submitAdd()">提交新报名人员</button>
+            <button type="button" id="addPreworkEmployee" name="addPreworkEmployee" class="e_button-r e_button-l e_button-red" ontap="$.prework.submitDelete()">删除已报名人员</button>
+            <button type="button" id="delPreworkEmployee" name="delPreworkEmployee" class="e_button-r e_button-l e_button-green" ontap="$.prework.submitAdd()">提交新报名人员</button>
         </div>
     </div>
     <div class="c_space"></div>
