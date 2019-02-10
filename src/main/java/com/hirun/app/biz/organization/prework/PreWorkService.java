@@ -3,7 +3,10 @@ package com.hirun.app.biz.organization.prework;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
+import com.hirun.app.biz.organization.train.TrainService;
 import com.hirun.app.dao.org.TrainDAO;
+import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
@@ -106,37 +109,7 @@ public class PreWorkService extends GenericService {
 
         RecordSet signEmployees = dao.queryPreworkEmployeeBySignEmployeeId(trainId, employeeId);
 
-        if (ArrayTool.isNotEmpty(signEmployees)) {
-            int size = signEmployees.size();
-            for (int i=0;i<size;i++) {
-                Record employee = signEmployees.get(i);
-                String item = employee.get("ITEM");
-                String itemType = employee.get("TYPE");
-                if (StringUtils.equals("1", itemType) || StringUtils.equals("3", itemType)) {
-                    String[] itemArray = item.split("|");
-                    for (String key : itemArray) {
-                        if (StringUtils.isBlank(key)) {
-                            continue;
-                        }
-                        if (StringUtils.equals("-1", key)) {
-                            employee.put("EXAM_ITEM_COMM", "false");
-                            employee.put("EXAM_ITEM_PRO", "false");
-                        }
-                        else if(StringUtils.equals("0", key)) {
-                            employee.put("EXAM_ITEM_COMM", "true");
-                        }
-                        else if(StringUtils.equals("1", key)) {
-                            employee.put("EXAM_ITEM_PRO", "true");
-                        }
-                        else {
-                            employee.put("EXAM_ITEM_COMM", "false");
-                            employee.put("EXAM_ITEM_PRO", "false");
-                        }
-                    }
-                }
-
-            }
-        }
+        filterPreworkSignList(signEmployees);
 
         JSONObject orgTree = OrgBean.getOrgTree();
 
@@ -207,5 +180,79 @@ public class PreWorkService extends GenericService {
         }
         dao.insertBatch("ins_train_sign_item", items);
         return response;
+    }
+
+    public ServiceResponse initQueryPreworkSignList(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        String employeeOrgId = OrgBean.getOrgId(session.getSessionEntity());
+        OrgEntity org = OrgBean.getAssignTypeOrg(employeeOrgId, "3");
+
+        boolean hasAllCity = Permission.hasAllCity();
+        if(org == null && !hasAllCity) {
+            return response;
+        }
+
+        String orgs = null;
+        if(org != null) {
+            orgs = OrgBean.getOrgLine(org.getOrgId());
+        }
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+
+        String trainId = request.getString("TRAIN_ID");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", trainId);
+        Record train = dao.queryByPk("ins_train", parameter);
+
+        response.set("TRAIN", ConvertTool.toJSONObject(train));
+        RecordSet signList = null;
+        if(!hasAllCity) {
+            signList = dao.queryPreworkSignList(trainId, orgs);
+        }
+        else {
+            signList = dao.queryPreworkSignList(trainId, null);
+        }
+
+        filterPreworkSignList(signList);
+        response.set("TOTAL_NUM", signList.size()+"");
+        JSONObject sign = TrainService.filterSignList(signList);
+        response.set("SIGN_LIST", sign);
+        return response;
+    }
+
+    public static void filterPreworkSignList(RecordSet signEmployees) throws Exception {
+        if (ArrayTool.isNotEmpty(signEmployees)) {
+            int size = signEmployees.size();
+            for (int i=0;i<size;i++) {
+                Record employee = signEmployees.get(i);
+                String item = employee.get("ITEM");
+                String itemType = employee.get("TYPE");
+                if (StringUtils.equals("1", itemType) || StringUtils.equals("3", itemType)) {
+                    String[] itemArray = item.split("|");
+                    for (String key : itemArray) {
+                        if (StringUtils.isBlank(key)) {
+                            continue;
+                        }
+                        if (StringUtils.equals("-1", key)) {
+                            employee.put("EXAM_ITEM_COMM", "false");
+                            employee.put("EXAM_ITEM_PRO", "false");
+                        }
+                        else if(StringUtils.equals("0", key)) {
+                            employee.put("EXAM_ITEM_COMM", "true");
+                        }
+                        else if(StringUtils.equals("1", key)) {
+                            employee.put("EXAM_ITEM_PRO", "true");
+                        }
+                        else {
+                            employee.put("EXAM_ITEM_COMM", "false");
+                            employee.put("EXAM_ITEM_PRO", "false");
+                        }
+                    }
+                }
+
+            }
+        }
     }
 }
