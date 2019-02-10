@@ -61,13 +61,13 @@
                         html.push("归属公司："+data.get("ENTERPRISE_NAME"));
                         html.push("</div>");
 
+
                         html.push("</div>");
 
-                        if(signStatus == "0") {
-                            html.push("<div class=\"side e_size-s\">");
-                            html.push("<input type=\"checkbox\" value='"+data.get("EMPLOYEE_ID")+"'/>");
-                            html.push("</div>");
-                        }
+                        html.push("<div class=\"side e_size-s\">");
+                        html.push("<input type=\"checkbox\" value='"+data.get("EMPLOYEE_ID")+"'/>");
+                        html.push("</div>");
+
 
                         html.push("</div></div></li>");
                     }
