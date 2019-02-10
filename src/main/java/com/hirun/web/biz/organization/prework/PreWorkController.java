@@ -53,4 +53,15 @@ public class PreWorkController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.prework.PreWorkService.addNewPreworkSign", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/redirectToPreworkSignList")
+    public String redirectToPreworkSignList(HttpServletRequest request) throws Exception {
+        return "/biz/organization/prework/prework_sign_list";
+    }
+
+    @RequestMapping("/initQueryPreworkSignList")
+    public @ResponseBody String initQueryPreworkSignList(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.prework.PreWorkService.initQueryPreworkSignList", parameter);
+        return response.toJsonString();
+    }
 }
