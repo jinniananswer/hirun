@@ -5,6 +5,7 @@
                     var rst = new Wade.DataMap(data);
                     var train = rst.get("TRAIN");
 
+                    $("#subtitle").html(train.get("START_DATE").substring(0,7));
                     $("#simple_date").html(train.get("START_DATE").substring(0,7));
                     $("#train_name").html(train.get("NAME"));
                     $("#date").html(train.get("START_DATE")+"至"+train.get("END_DATE"));
