@@ -64,4 +64,10 @@ public class PreWorkController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.prework.PreWorkService.initQueryPreworkSignList", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/initViewPreworkCourseware")
+    public @ResponseBody String initViewPreworkCourseware(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.prework.PreWorkService.initViewPreworkCourseware", parameter);
+        return response.toJsonString();
+    }
 }
