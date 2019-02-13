@@ -2,6 +2,7 @@ package com.hirun.app.biz.organization.prework;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.course.CourseBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.biz.organization.train.TrainService;
@@ -219,6 +220,16 @@ public class PreWorkService extends GenericService {
         response.set("TOTAL_NUM", signList.size()+"");
         JSONObject sign = TrainService.filterSignList(signList);
         response.set("SIGN_LIST", sign);
+        return response;
+    }
+
+    public ServiceResponse initViewPreworkCourseware(ServiceRequest request) throws Exception {
+        CourseBean bean = new CourseBean();
+        JSONObject courseTree = bean.getCourseTreeByExceptCourseId("12");
+
+        ServiceResponse response = new ServiceResponse();
+        response.set("COURSE_TREE", courseTree);
+
         return response;
     }
 
