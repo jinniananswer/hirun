@@ -35,7 +35,7 @@ public class CourseBean {
         CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
         RecordSet courses = dao.queryAllValidCourse();
 
-        JSONObject children = buildTreeNode(courses, "-1", "-1", 0, hasCheck, selectedCourseIds);
+        JSONObject children = buildTreeNode(courses, "-1", "-1", 0, hasCheck, selectedCourseIds, "-99");
         if (children == null) {
             root.put("haschild", "false");
         }
@@ -49,15 +49,19 @@ public class CourseBean {
         return rst;
     }
 
-    public static JSONObject buildTreeNode(RecordSet courses, String parentCourseId, String prefix, int level, boolean hasCheck, String selectedCourseIds){
+    public static JSONObject buildTreeNode(RecordSet courses, String parentCourseId, String prefix, int level, boolean hasCheck, String selectedCourseIds, String exceptCourseId){
         if(courses == null || courses.size() <= 0)
             return null;
         level++;
+
         JSONObject node = new JSONObject();
         int order = 0;
         int size = courses.size();
         for(int i=0;i<size;i++){
             Record course = courses.get(i);
+            if(StringUtils.equals(exceptCourseId, course.get("COURSE_ID"))) {
+                continue;
+            }
             if(StringUtils.equals(parentCourseId, course.get("PARENT_COURSE_ID"))){
                 JSONObject childNode = new JSONObject();
                 childNode.put("text", course.get("NAME"));
@@ -73,7 +77,7 @@ public class CourseBean {
                 if(StringUtils.isNotBlank(selectedCourseIds) && selectedCourseIds.indexOf(course.get("COURSE_ID")) >= 0) {
                     childNode.put("checked", "true");
                 }
-                JSONObject children = buildTreeNode(courses, course.get("COURSE_ID"), prefix+"●"+course.get("COURSE_ID"), level, hasCheck,selectedCourseIds);
+                JSONObject children = buildTreeNode(courses, course.get("COURSE_ID"), prefix+"●"+course.get("COURSE_ID"), level, hasCheck,selectedCourseIds, exceptCourseId);
                 if(children == null)
                     childNode.put("haschild", "false");
                 else{
@@ -112,6 +116,35 @@ public class CourseBean {
                 }
             }
         }
+        return rst;
+    }
+
+    public static JSONObject getCourseTreeByExceptCourseId(String exceptCourseId) throws Exception {
+        JSONObject root = new JSONObject();
+        root.put("text", CourseConst.COURSE_ROOT);
+        root.put("id", "-1");
+        root.put("dataid", "-1");
+        root.put("order", "0");
+        root.put("value", "-1");
+        root.put("expand", "true");
+        root.put("disabled", "false");
+        root.put("complete", "false");
+        root.put("showcheck", "false");
+
+        CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
+        RecordSet courses = dao.queryAllValidCourse();
+
+        JSONObject children = buildTreeNode(courses, "-1", "-1", 0, false, null, exceptCourseId);
+        if (children == null) {
+            root.put("haschild", "false");
+        }
+        else {
+            root.put("haschild", "true");
+            root.put("childNodes", children);
+        }
+
+        JSONObject rst = new JSONObject();
+        rst.put("-1", root);
         return rst;
     }
 }
