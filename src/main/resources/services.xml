@@ -70,6 +70,7 @@
     <entity name="OrgCenter.prework.PreWorkService.initChooseEmployeeSignPreWork" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initChooseEmployeeSignPreWork"/>
     <entity name="OrgCenter.prework.PreWorkService.addNewPreworkSign" class="com.hirun.app.biz.organization.prework.PreWorkService" method="addNewPreworkSign"/>
     <entity name="OrgCenter.prework.PreWorkService.initQueryPreworkSignList" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initQueryPreworkSignList"/>
+    <entity name="OrgCenter.prework.PreWorkService.initViewPreworkCourseware" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initViewPreworkCourseware"/>
 
 
 
