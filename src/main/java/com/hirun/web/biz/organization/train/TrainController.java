@@ -146,4 +146,10 @@ public class TrainController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initViewTrainNotice", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/initQueryMyTrain")
+    public @ResponseBody String initQueryMyTrain(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initQueryMyTrain", parameter);
+        return response.toJsonString();
+    }
 }
