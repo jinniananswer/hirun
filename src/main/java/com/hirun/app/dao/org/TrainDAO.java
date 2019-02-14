@@ -291,4 +291,21 @@ public class TrainDAO extends GenericDAO {
 
         return this.queryBySql(sql.toString(), parameter);
     }
+
+    public RecordSet queryMyTrain(String employeeId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select a.train_id, a.name train_name, a.type train_type, date_format(a.start_date,'%Y-%m-%d') start_date, date_format(a.end_date,'%Y-%m-%d') end_date ");
+        sql.append("from ins_train a, ins_train_sign b ");
+        sql.append("where b.train_id = a.train_id ");
+        sql.append("and a.status = '0' ");
+        sql.append("and a.sign_status = '1' ");
+        sql.append("and b.status = '0' ");
+        sql.append("and a.end_date > now() ");
+        sql.append("and b.employee_id = :EMPLOYEE_ID ");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
 }
