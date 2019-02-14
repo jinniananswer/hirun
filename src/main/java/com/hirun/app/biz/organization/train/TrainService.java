@@ -1,5 +1,6 @@
 package com.hirun.app.biz.organization.train;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.course.CourseBean;
@@ -562,6 +563,43 @@ public class TrainService extends GenericService {
             Record user = userDAO.queryByPk("ins_user", parameter);
             response.set("MOBILE_NO", user.get("USERNAME"));
         }
+        return response;
+    }
+
+    public ServiceResponse initQueryMyTrain(ServiceRequest request) throws Exception {
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+
+        EmployeeEntity employee = EmployeeBean.getEmployeeByEmployeeId(employeeId);
+        String now = session.getCreateTime().substring(0, 10);
+
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet myTrains = dao.queryMyTrain(employeeId);
+
+        ServiceResponse response = new ServiceResponse();
+        response.set("EMPLOYEE", employee.toJson());
+
+        if(ArrayTool.isEmpty(myTrains)) {
+            return response;
+        }
+
+        int size = myTrains.size();
+        JSONArray current = new JSONArray();
+        JSONArray history = new JSONArray();
+
+        for(int i=0;i<size;i++) {
+            Record myTrain = myTrains.get(i);
+            String endDate = myTrain.get("END_DATE");
+            if(endDate.compareTo(now) >= 0) {
+                current.add(ConvertTool.toJSONObject(myTrain));
+            }
+            else {
+                history.add(ConvertTool.toJSONObject(myTrain));
+            }
+        }
+
+        response.set("CURRENT", current);
+        response.set("HISTORY", history);
         return response;
     }
 
