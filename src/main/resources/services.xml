@@ -60,6 +60,7 @@
     <entity name="OrgCenter.train.TrainService.deleteSignedEmployee" class="com.hirun.app.biz.organization.train.TrainService" method="deleteSignedEmployee"/>
     <entity name="OrgCenter.train.TrainService.createPreworkEvaluation" class="com.hirun.app.biz.organization.train.TrainService" method="createPreworkEvaluation"/>
     <entity name="OrgCenter.train.TrainService.initViewTrainNotice" class="com.hirun.app.biz.organization.train.TrainService" method="initViewTrainNotice"/>
+    <entity name="OrgCenter.train.TrainService.initQueryMyTrain" class="com.hirun.app.biz.organization.train.TrainService" method="initQueryMyTrain"/>
 
     <entity name="OrgCenter.exam.ExamService.initPreworkExam" class="com.hirun.app.biz.organization.exam.ExamService" method="initPreworkExam"/>
     <entity name="OrgCenter.exam.ExamService.startPreworkExam" class="com.hirun.app.biz.organization.exam.ExamService" method="startPreworkExam"/>
