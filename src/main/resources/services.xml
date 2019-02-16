@@ -79,6 +79,10 @@
     <entity name="OrgCenter.score.ScoreService.queryExamScore"  class="com.hirun.app.biz.organization.score.ScoreService" method="queryExamScore"/>
     <!--岗前成绩查询-->
     <entity name="OrgCenter.score.ScoreService.queryPostJobScore"  class="com.hirun.app.biz.organization.score.ScoreService" method="queryPostJobScore"/>
+    <!--成绩录入-->
+    <entity name="OrgCenter.score.ScoreService.inputScore"  class="com.hirun.app.biz.organization.score.ScoreService" method="inputScore"/>
+    <entity name="OrgCenter.score.ScoreService.initScoreQuery"  class="com.hirun.app.biz.organization.score.ScoreService" method="initScoreQuery"/>
+
 
     <!--运营管理中心服务-->
     <entity name="OperationCenter.house.HousesService.initCreatePlan"  class="com.hirun.app.biz.houses.HousesService" method="initCreatePlan"/>
