@@ -38,4 +38,16 @@ public class ScoreController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.score.ScoreService.queryPostJobScore", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/inputScore")
+    public @ResponseBody String inputScore(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.score.ScoreService.inputScore", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initScoreQuery")
+    public @ResponseBody String initScoreQuery(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.score.ScoreService.initScoreQuery", parameter);
+        return response.toJsonString();
+    }
 }
