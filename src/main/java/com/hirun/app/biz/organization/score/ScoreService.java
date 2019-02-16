@@ -7,6 +7,8 @@ import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.hirun.app.dao.org.ScoreDAO;
+import com.most.core.app.session.AppSession;
+import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.*;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
@@ -100,22 +102,81 @@ public class ScoreService extends GenericService {
         return response;
     }
 
-
-    public ServiceResponse queryPostJobScore(ServiceRequest request) throws Exception {
-        ServiceResponse response=new ServiceResponse();
+    public ServiceResponse initScoreQuery(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
         ScoreDAO dao=DAOFactory.createDAO(ScoreDAO.class);
+
+        String today = TimeTool.today();
+        response.set("TODAY", today);
+        JSONObject orgTree = OrgBean.getOrgTree();
+        response.set("ORG_TREE", orgTree);
+
+        String train_id = request.getString("TRAIN_ID_QUERY");
 
         String orgId = request.getString("ORG_ID");
         if(StringUtils.isNotBlank(orgId))
             orgId = OrgBean.getOrgLine(orgId);
 
-        RecordSet exams=dao.queryPostJobScore(request.getString("NAME"),orgId);
+        RecordSet exams=dao.queryPostJobScore(request.getString("NAME"),orgId,train_id);
 
         if(exams.size()==0 || exams==null)
             return  response;
 
 
         response.set("DATAS", ConvertTool.toJSONArray(exams));
+        return response;
+    }
+
+    public ServiceResponse queryPostJobScore(ServiceRequest request) throws Exception {
+        ServiceResponse response=new ServiceResponse();
+        ScoreDAO dao=DAOFactory.createDAO(ScoreDAO.class);
+        String train_id = request.getString("TRAIN_ID_QUERY");
+
+        String orgId = request.getString("ORG_ID");
+        if(StringUtils.isNotBlank(orgId))
+            orgId = OrgBean.getOrgLine(orgId);
+
+        RecordSet exams=dao.queryPostJobScore(request.getString("NAME"),orgId,train_id);
+
+        if(exams.size()==0 || exams==null)
+            return  response;
+
+
+        response.set("DATAS", ConvertTool.toJSONArray(exams));
+
+        return response;
+    }
+
+    public ServiceResponse inputScore(ServiceRequest request) throws Exception {
+        ServiceResponse response=new ServiceResponse();
+        ScoreDAO dao=DAOFactory.createDAO(ScoreDAO.class);
+        AppSession session = SessionManager.getSession();
+        String userId = session.getSessionEntity().getUserId();
+        String train_id = request.getString("TRAIN_ID");
+
+        List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
+
+        JSONObject obj=request.getBody().getData();
+        Map<String, String> mobjec = ConvertTool.toMap(obj);
+        String cols[]={"EMPLOYEE_ID","TRAIN_ID"};
+
+        for (String key : mobjec.keySet()) {
+            String value = mobjec.get(key);
+            if (value == null || StringUtils.equals(key,"TRAIN_ID") ) { // 过滤空的key
+                continue;
+            }
+            Map<String, String> param = new HashMap<String, String>();
+            param.put("EMPLOYEE_ID",key);
+            param.put("TRAIN_ID",train_id);
+            param.put("SCORE",value);
+            param.put("CREATE_USER_ID",userId);
+            param.put("CREATE_DATE",session.getCreateTime());
+            param.put("UPDATE_USER_ID",userId);
+            param.put("UPDATE_TIME",session.getCreateTime());
+            parameters.add(param);
+        }
+            dao.deleteBatch("ins_train_exam_score",cols,parameters);
+            dao.insertBatch("ins_train_exam_score",parameters);
 
         return response;
     }
