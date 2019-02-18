@@ -40,6 +40,9 @@
           <div class="value">
             <input type="hidden" id="TRAIN_ID" name="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID")}" desc="培训ID" />
           </div>
+         <div id="submitButton" class="c_submit c_submit-full">
+                     <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.score.submit()">提交</button>
+          </div>
     </div>
     <div class="c_space"></div>
     <div class="c_space"></div>
