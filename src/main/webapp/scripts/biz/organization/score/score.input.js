@@ -49,6 +49,7 @@
                 }
             },
 
+
             drawScore : function(datas){
                 $.endPageLoading();
                 $("#scores").empty();
@@ -57,8 +58,12 @@
                 if(datas == null || datas.length <= 0){
                     $("#queryMessage").css("display","");
                     $("#tip").css("display","none");
+                    $("#submitButton").css("display","none");
+
+                    //$("#submitButton").hide();
                     return;
                 }
+                $("#submitButton").css("display","");
 
                 $("#queryMessage").css("display","none");
                 $("#tip").css("display","");
@@ -93,10 +98,11 @@
                     html.push("<div class=\'value\'>")
                     var score=data.get("SCORE")
                     if(score != null) {
-                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\" value='"+data.get("SCORE")+"'  desc=\"课程内容\" onblur=\"$.score.checkScore('')\" />");
+                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\" value='"+data.get("SCORE")+"'  desc=\"课程内容\"  />");
+                        //onblur="$.score.checkScore('')"
                     }
                     else {
-                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\"   desc=\"课程内容\"  onblur=\"$.score.checkScore('1')\" />");
+                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\"   desc=\"课程内容\"   />");
                     }
                     html.push("<div>")
 
@@ -105,11 +111,11 @@
                     html.push("</div></div>")
                 }
 
-                html.push("<div class=\"c_button c_button-full\">");
-                html.push("<button type=\"button\" ontap=\"$.score.submit()\" class=\"e_button-r e_button-l e_button-green\">");
-                html.push("提交")
-                html.push("</button>")
-                html.push("</div>")
+               // html.push("<div class=\"c_button c_button-full\">");
+               // html.push("<button type=\"button\" ontap=\"$.score.submit()\" class=\"e_button-r e_button-l e_button-green\">");
+               // html.push("提交")
+               // html.push("</button>")
+               // html.push("</div>")
 
 
 
@@ -117,7 +123,7 @@
             },
 
             checkScore: function(score){
-                alert(score);
+               // alert(score);
                 //没有实现
             },
 
