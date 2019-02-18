@@ -70,28 +70,8 @@
                                     <div class="label">姓名</div>
                                     <div class="value"><input id="NAME" name="NAME" type="text" nullable="yes" desc="姓名"/></div>
                                 </li>
-                                <%--
-                                <li class="link" ontap="$('#CITY_TEXT').focus();$('#CITY_TEXT').blur();forwardPopup('UI-popup','UI-CITY')">
-                                    <div class="label">工作城市</div>
-                                    <div class="value">
-                                        <input type="text" id="CITY_TEXT" name="CITY_TEXT" nullable="yes" readonly="true" desc="责任店面" />
-                                        <input type="hidden" id="CITY" name="CITY" nullable="yes" desc="归属门店" />
-                                    </div>
-                                    <div class="more"></div>
-                                </li>
-                                --%>
-                                <%-->
-                                <li class="link">
-                                    <div class="label">手机号码</div>
-                                    <div class="value"><input id="MOBILE_NO" name="MOBILE_NO" type="text" equsize="11" datatype="mbphone" nullable="yes" desc="手机号码"/></div>
-                                </li>
-                                <--%>
-                                <%-->
-                                <li class="link">
-                                    <div class="label">身份证</div>
-                                    <div class="value"><input id="IDENTITY_NO" name="IDENTITY_NO" type="text" maxsize="20" datatype="pspt" nullable="yes" desc="身份证"/></div>
-                                </li>
-                                <--%>
+
+
 
                                 <li class="link" ontap="$('#ORG_TEXT').focus();$('#ORG_TEXT').blur();forwardPopup('UI-popup','UI-ORG')">
                                     <div class="label">所属部门</div>
@@ -102,26 +82,8 @@
                                     <div class="more"></div>
                                 </li>
 
-                                <%-->
-                                <li class="link" ontap="$('#JOB_TEXT').focus();$('#JOB_TEXT').blur();forwardPopup('UI-popup','UI-JOB')">
-                                    <div class="label">岗位</div>
-                                    <div class="value">
-                                        <input type="text" id="JOB_TEXT" name="JOB_TEXT" nullable="yes" readonly="true" desc="岗位" />
-                                        <input type="hidden" id="JOB_ROLE" name="JOB_ROLE" nullable="yes" desc="岗位" />
-                                    </div>
-                                    <div class="more"></div>
-                                </li>
-                                <--%>
-                                <%-->
-                                <li class="link" ontap="$('#PARENT_EMPLOYEE_NAME').focus();$('#PARENT_EMPLOYEE_NAME').blur();forwardPopup('UI-popup','UI-PARENT')">
-                                    <div class="label">上级员工</div>
-                                    <div class="value">
-                                        <input type="text" id="PARENT_EMPLOYEE_NAME" name="PARENT_EMPLOYEE_NAME" nullable="yes" readonly="true" desc="上级员工" />
-                                        <input type="hidden" id="PARENT_EMPLOYEE_ID" name="PARENT_EMPLOYEE_ID" nullable="yes" desc="上级员工" />
-                                    </div>
-                                    <div class="more"></div>
-                                </li>
-                                <--%>
+
+
                             </ul>
                         </div>
                         <!-- 列表 结束 -->
