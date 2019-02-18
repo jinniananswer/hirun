@@ -254,7 +254,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         Map<String, String> parameter = new HashMap<String, String>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, date_format(b.in_date,'%Y-%m-%d') in_date,d.JOB_ROLE, e.name org_name, f.NAME parent_org_name ");
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, date_format(b.in_date,'%Y-%m-%d') in_date,d.JOB_ROLE,e.org_id, e.name org_name, f.NAME parent_org_name ");
         sb.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
         sb.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
         sb.append("where b.USER_ID = a.USER_ID ");
