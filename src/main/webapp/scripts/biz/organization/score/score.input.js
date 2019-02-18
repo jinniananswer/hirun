@@ -91,6 +91,11 @@
                     html.push("<ul>")
                     html.push("<li>")
 
+                    html.push("<span class=\"label\">"+"培训名称："+"</span>")
+                    var train_name=data.get("TRAIN_NAME");
+                    html.push("<span class=\"value \">"+train_name+""+"</span>")
+
+                    html.push("<li>")
                     html.push("</li>")
                     html.push("<div>")
                     html.push("<span class=\"label\">"+"培训成绩："+"</span>")
