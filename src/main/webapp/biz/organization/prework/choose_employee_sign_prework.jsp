@@ -90,8 +90,8 @@
         </div>
         <div class="c_space"></div>
         <div class="c_submit c_submit-full">
-            <button type="button" id="addPreworkEmployee" name="addPreworkEmployee" class="e_button-r e_button-l e_button-red" ontap="$.prework.submitDelete()">删除已报名人员</button>
-            <button type="button" id="delPreworkEmployee" name="delPreworkEmployee" class="e_button-r e_button-l e_button-green" ontap="$.prework.submitAdd()">提交新报名人员</button>
+            <button type="button" id="delPreworkEmployee" name="delPreworkEmployee" class="e_button-r e_button-l e_button-red" ontap="$.prework.submitDelete()">删除已报名人员</button>
+            <button type="button" id="addPreworkEmployee" name="addPreworkEmployee" class="e_button-r e_button-l e_button-green" ontap="$.prework.submitAdd()">提交新报名人员</button>
         </div>
     </div>
     <div class="c_space"></div>
