@@ -38,7 +38,7 @@
         </ul>
 
           <div class="value">
-            <input type="hidden" id="TRAIN_ID" name="TRAIN_ID" nullable="no" value="2" desc="培训ID" />
+            <input type="hidden" id="TRAIN_ID" name="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID")}" desc="培训ID" />
           </div>
     </div>
     <div class="c_space"></div>
@@ -63,7 +63,7 @@
                         <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
                             <ul id="queryArea">
 
-                               <input type="hidden" id="TRAIN_ID_QUERY" name="TRAIN_ID_QUERY" nullable="no" value="2" desc="培训ID" />
+                               <input type="hidden" id="TRAIN_ID_QUERY" name="TRAIN_ID_QUERY" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID")}" desc="培训ID" />
 
 
                                 <li class="link">
