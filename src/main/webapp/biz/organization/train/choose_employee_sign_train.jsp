@@ -31,13 +31,13 @@
         <div class="c_title">
             <div class="text" id="train_name"></div>
             <div class="fn">
-                <ul>
+                <ul id="addArea">
                     <li ontap="showPopup('UI-popup','UI-popup-query-cond')"><span class="e_ico-add"></span>选择报名人员</li>
                 </ul>
             </div>
         </div>
 
-        <div class='c_box c_box-border'>
+        <div class='c_box c_box-border' id="new_sign">
             <div class='c_title' ontap="$(this).next().toggle();">
                 <div class="text e_strong e_blue">
                     本次新报名人员
@@ -90,8 +90,8 @@
         </div>
         <div class="c_space"></div>
         <div class="c_submit c_submit-full">
-            <button type="button" class="e_button-r e_button-l e_button-red" ontap="$.train.submitDelete()">删除已报名人员</button>
-            <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.train.submitAdd()">提交新报名人员</button>
+            <button type="button" id="delTrainEmployee" name="delTrainEmployee" class="e_button-r e_button-l e_button-red" ontap="$.train.submitDelete()">删除已报名人员</button>
+            <button type="button" id="addTrainEmployee" name="addTrainEmployee" class="e_button-r e_button-l e_button-green" ontap="$.train.submitAdd()">提交新报名人员</button>
         </div>
     </div>
     <div class="c_space"></div>
