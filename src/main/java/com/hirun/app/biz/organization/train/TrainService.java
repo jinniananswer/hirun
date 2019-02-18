@@ -26,6 +26,7 @@ import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.common.record.Records;
 
 import javax.xml.ws.Service;
 import java.util.*;
@@ -395,6 +396,7 @@ public class TrainService extends GenericService {
         String type = train.get("TYPE");
         if(StringUtils.equals("2", type)) {
             RecordSet mustSignEmployees = dao.queryNeedSignPreTrainEmployee(trainId, true);
+            fillAllOrgName(mustSignEmployees);
             if(ArrayTool.isNotEmpty(mustSignEmployees)) {
                 int size = mustSignEmployees.size();
                 for(int i=0;i<size;i++) {
@@ -405,6 +407,7 @@ public class TrainService extends GenericService {
             response.set("MUST_SIGN_EMPLOYEE", ConvertTool.toJSONArray(mustSignEmployees));
 
             RecordSet needSignEmployees = dao.queryNeedSignPreTrainEmployee(trainId, false);
+            fillAllOrgName(needSignEmployees);
             RecordSet temp = new RecordSet();
             if(ArrayTool.isNotEmpty(needSignEmployees)) {
 
@@ -466,7 +469,7 @@ public class TrainService extends GenericService {
 
         orgId = OrgBean.getOrgLine(orgId, allOrgs);
         RecordSet employees = dao.queryEmployees(request.getString("NAME"), null, null, null, null, orgId, request.getString("JOB_ROLE"), null);
-
+        fillAllOrgName(employees);
         if(employees == null || employees.size() <= 0)
             return response;
 
@@ -563,6 +566,8 @@ public class TrainService extends GenericService {
             Record user = userDAO.queryByPk("ins_user", parameter);
             response.set("MOBILE_NO", user.get("USERNAME"));
         }
+
+        insertNoticeView(trainId);
         return response;
     }
 
@@ -590,6 +595,23 @@ public class TrainService extends GenericService {
         for(int i=0;i<size;i++) {
             Record myTrain = myTrains.get(i);
             String endDate = myTrain.get("END_DATE");
+
+            String trainId = myTrain.get("TRAIN_ID");
+
+            RecordSet courses = dao.queryCourseByTrainId(trainId);
+
+            if (ArrayTool.isEmpty(courses)) {
+                myTrain.put("COURSE_NAME", "暂无");
+            }
+            else {
+                int length = courses.size();
+                String courseName = "";
+                for (int j=0;j<length;j++) {
+                    Record course = courses.get(j);
+                    courseName += course.get("NAME") + "<br/>";
+                }
+                myTrain.put("COURSE_NAME", courseName);
+            }
             if(endDate.compareTo(now) >= 0) {
                 current.add(ConvertTool.toJSONObject(myTrain));
             }
@@ -694,8 +716,63 @@ public class TrainService extends GenericService {
                 datas = new JSONArray();
                 rst.put(rootOrgName, datas);
             }
+            sign.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", sign.get("JOB_ROLE")));
             datas.add(ConvertTool.toJSONObject(sign));
         }
         return rst;
+    }
+
+    public static void fillAllOrgName(RecordSet employees) throws Exception {
+        if(ArrayTool.isEmpty(employees)) {
+            return;
+        }
+
+        int size = employees.size();
+
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+
+        //按最大组织合并
+        for (int i=0;i<size;i++) {
+            Record employee = employees.get(i);
+            String orgId = employee.get("ORG_ID");
+            List<OrgEntity> bloodLine = OrgBean.bloodOrgDesc(orgId, allOrgs);
+            String rootOrgName = "鸿扬";
+
+            if (ArrayTool.isNotEmpty(bloodLine)) {
+                OrgEntity org = bloodLine.get(0);
+                rootOrgName = org.getName();
+
+                String allOrgName = "";
+                for (OrgEntity blood : bloodLine) {
+                    allOrgName += blood.getName() + "-";
+                }
+
+                employee.put("ALL_ORG_NAME", allOrgName.substring(0, allOrgName.length() - 1));
+            }
+        }
+        return;
+    }
+
+    public static void insertNoticeView(String trainId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+        String userId = session.getSessionEntity().getUserId();
+        parameter.clear();
+        parameter.put("TRAIN_ID", trainId);
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+        RecordSet viewers = dao.query("ins_train_notice_view", parameter);
+        if(ArrayTool.isEmpty(viewers)) {
+            parameter.clear();
+            parameter.put("TRAIN_ID", trainId);
+            parameter.put("EMPLOYEE_ID", employeeId);
+            parameter.put("CREATE_USER_ID", userId);
+            parameter.put("CREATE_DATE", session.getCreateTime());
+            parameter.put("UPDATE_USER_ID", userId);
+            parameter.put("UPDATE_TIME", session.getCreateTime());
+            dao.insert("ins_train_notice_view", parameter);
+        }
     }
 }

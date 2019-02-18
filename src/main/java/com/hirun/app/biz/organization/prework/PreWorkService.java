@@ -52,6 +52,8 @@ public class PreWorkService extends GenericService {
         Record train = dao.queryByPk("ins_train", parameter);
         ServiceResponse response = new ServiceResponse();
         response.set("TRAIN", ConvertTool.toJSONObject(train));
+
+        TrainService.insertNoticeView(trainId);
         return response;
     }
 
@@ -71,6 +73,7 @@ public class PreWorkService extends GenericService {
         String type = train.get("TYPE");
         if(StringUtils.equals("1", type)) {
             RecordSet mustSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, true, true);
+            TrainService.fillAllOrgName(mustSignEmployees);
             if(ArrayTool.isNotEmpty(mustSignEmployees)) {
                 int size = mustSignEmployees.size();
                 for(int i=0;i<size;i++) {
@@ -81,6 +84,7 @@ public class PreWorkService extends GenericService {
             response.set("MUST_SIGN_EMPLOYEE", ConvertTool.toJSONArray(mustSignEmployees));
 
             RecordSet needSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, false, false);
+            TrainService.fillAllOrgName(needSignEmployees);
             RecordSet temp = new RecordSet();
             if(ArrayTool.isNotEmpty(needSignEmployees)) {
 
@@ -241,7 +245,7 @@ public class PreWorkService extends GenericService {
                 String item = employee.get("ITEM");
                 String itemType = employee.get("TYPE");
                 if (StringUtils.equals("1", itemType) || StringUtils.equals("3", itemType)) {
-                    String[] itemArray = item.split("|");
+                    String[] itemArray = item.split("\\|");
                     for (String key : itemArray) {
                         if (StringUtils.isBlank(key)) {
                             continue;
@@ -249,6 +253,7 @@ public class PreWorkService extends GenericService {
                         if (StringUtils.equals("-1", key)) {
                             employee.put("EXAM_ITEM_COMM", "false");
                             employee.put("EXAM_ITEM_PRO", "false");
+                            break;
                         }
                         else if(StringUtils.equals("0", key)) {
                             employee.put("EXAM_ITEM_COMM", "true");
@@ -262,7 +267,7 @@ public class PreWorkService extends GenericService {
                         }
                     }
                 }
-
+                employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
             }
         }
     }
