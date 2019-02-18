@@ -30,6 +30,15 @@
                     $.train.train = rst.get("TRAIN");
                     var trainName = $("#train_name");
                     trainName.html($.train.train.get("NAME"));
+
+                    var signStatus = $.train.train.get("SIGN_STATUS");
+                    if (signStatus == "1") {
+                        $("#addArea").css("display", "none");
+                        $("#new_sign").css("display", "none");
+                        $("#delTrainEmployee").css("display", "none");
+                        $("#addTrainEmployee").css("display", "none");
+
+                    }
                     $.train.drawSignEmployees(signEmployees);
 
                     $.train.jobs = rst.get("JOB_ROLE");
@@ -141,10 +150,8 @@
                     html.push(data.get("NAME"));
                     html.push("</div>");
                     html.push("<div class=\"content\">");
-                    var parentOrgName = data.get("PARENT_ORG_NAME");
-                    if(parentOrgName != null && parentOrgName != "undefined")
-                        html.push(parentOrgName + "-");
-                    html.push(data.get("ORG_NAME"));
+                    var allOrgName = data.get("ALL_ORG_NAME");
+                    html.push(allOrgName);
                     html.push("</div><div class='content'>"+data.get("JOB_ROLE_NAME"));
                     html.push("</div></div>")
                     html.push("</div></div></li>");

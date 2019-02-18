@@ -74,10 +74,17 @@
                     html.push("<div class='content content-auto'>课程："+courseName+"</div>");
                     html.push("<div class=\"content content-auto\">培训时间："+data.get("START_DATE")+"~"+data.get("END_DATE")+"</div>");
                     html.push("</div>");
+                    html.push("<div class=\"side e_size-s\">");
+                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-m\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
+                    html.push("</div>");
                     html.push("</li>");
                     this.level ++;
                 }
                 $.insertHtml('beforeend', area, html.join(""));
+            },
+
+            viewNotice : function(trainId) {
+                $.redirect.open('redirectToViewPreWorkNotice?TRAIN_ID='+trainId, '查看岗前考评告知书');
             }
         }});
 })($);

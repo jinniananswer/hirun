@@ -74,7 +74,7 @@
             },
 
             viewSign : function(trainId) {
-                $.redirect.open('redirectToSignList?TRAIN_ID='+trainId, '培训详情');
+                $.redirect.open('redirectToSignList?TRAIN_ID='+trainId, '人员详情');
             },
 
             viewDetail : function(trainId) {

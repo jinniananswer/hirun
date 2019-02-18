@@ -57,12 +57,11 @@
                     html.push("</div>");
 
                     html.push("</div>");
-                    if(signStatus == "0") {
-                        html.push("<div class=\"side e_size-s\">");
-                        html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-m\" ontap='$.train.signTrain(\"" + data.get("TRAIN_ID") + "\");'>报</span>");
-                        html.push("</div>");
-                    }
-                    else if(signStatus == "1") {
+
+                    html.push("<div class=\"side e_size-s\">");
+                    html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-m\" ontap='$.train.signTrain(\"" + data.get("TRAIN_ID") + "\",\""+signStatus+"\");'>人</span>");
+                    html.push("</div>");
+                    if(signStatus == "1") {
                         html.push("<div class=\"side e_size-s\">");
                         html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-m\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
                         html.push("</div>");
@@ -86,8 +85,13 @@
                 });
             },
 
-            signTrain : function(trainId) {
-                $.redirect.open('redirectToSign?TRAIN_ID='+trainId, '培训报名');
+            signTrain : function(trainId, signStatus) {
+                if(signStatus == "0") {
+                    $.redirect.open('redirectToSign?TRAIN_ID=' + trainId, '培训报名');
+                }
+                else {
+                    $.redirect.open('redirectToSignList?TRAIN_ID='+trainId, '人员详情');
+                }
             },
 
             viewNotice : function(trainId) {
