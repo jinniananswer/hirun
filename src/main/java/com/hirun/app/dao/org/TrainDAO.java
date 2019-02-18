@@ -129,12 +129,13 @@ public class TrainDAO extends GenericDAO {
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.train_id, a.employee_id,a.status, b.name, c.org_id, c.job_role, d.name org_name, e.name enterprise_name ");
-        sql.append("from ins_train_sign a, ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e ");
+        sql.append("select a.train_id, a.employee_id,a.status, b.name,b.identity_no, b.sex,b.major, b.school, b.education_level,date_format(b.in_date, '%Y-%m-%d') in_date, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.mobile_no ");
+        sql.append("from ins_train_sign a, ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e, ins_user f ");
         sql.append("where b.employee_id = a.employee_id ");
         sql.append("and c.employee_id = a.employee_id ");
         sql.append("and d.org_id = c.org_id ");
         sql.append("and e.enterprise_id = d.enterprise_id ");
+        sql.append("and f.user_id = b.user_id ");
         sql.append("and a.status = '0' ");
         sql.append("and b.status = '0' ");
         sql.append("and (now() between c.start_date and c.end_date ) ");
@@ -152,13 +153,14 @@ public class TrainDAO extends GenericDAO {
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.train_id, a.employee_id,a.status, b.name, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.type, f.item ");
-        sql.append("from ins_train_sign a, ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e, ins_train_sign_item f ");
+        sql.append("select a.train_id, a.employee_id,a.status, b.name, b.identity_no, b.sex,b.major, b.school, b.education_level,date_format(b.in_date, '%Y-%m-%d') in_date, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.type, f.item, g.mobile_no ");
+        sql.append("from ins_train_sign a, ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e, ins_train_sign_item f, ins_user g ");
         sql.append("where b.employee_id = a.employee_id ");
         sql.append("and c.employee_id = a.employee_id ");
         sql.append("and d.org_id = c.org_id ");
         sql.append("and e.enterprise_id = d.enterprise_id ");
         sql.append("and f.sign_id = a.sign_id ");
+        sql.append("and g.user_id = b.user_id ");
         sql.append("and a.status = '0' ");
         sql.append("and b.status = '0' ");
         sql.append("and f.status = '0' ");
@@ -245,9 +247,8 @@ public class TrainDAO extends GenericDAO {
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,date_format(b.in_date,'%Y-%m-%d') in_date ,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, f.NAME parent_org_name ");
+        sql.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,date_format(b.in_date,'%Y-%m-%d') in_date ,a.mobile_no contact_no, d.JOB_ROLE,e.org_id, e.name org_name ");
         sql.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
-        sql.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
         sql.append("where b.USER_ID = a.USER_ID ");
         sql.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
         sql.append("and a.status = '0' ");
@@ -305,6 +306,22 @@ public class TrainDAO extends GenericDAO {
         sql.append("and b.status = '0' ");
         sql.append("and a.end_date > now() ");
         sql.append("and b.employee_id = :EMPLOYEE_ID ");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
+    public RecordSet queryCourseByTrainId(String trainId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", trainId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select c.name ");
+        sql.append("from ins_train a, ins_train_course_rel b, ins_course c ");
+        sql.append("where b.train_id = a.train_id ");
+        sql.append("and c.course_id = b.course_id ");
+        sql.append("and b.status = '0' ");
+        sql.append("and c.status = '0' ");
+        sql.append("and a.train_id = :TRAIN_ID ");
 
         return this.queryBySql(sql.toString(), parameter);
     }
