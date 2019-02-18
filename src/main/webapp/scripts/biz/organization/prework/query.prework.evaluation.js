@@ -46,6 +46,7 @@
                     html.push("</div>");
 
                     html.push("</div>");
+
                     html.push("<div class=\"side e_size-s\">");
                     html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-m\" ontap='$.prework.signPrework(\"" + data.get("TRAIN_ID") + "\");'>报</span>");
                     html.push("</div>");
