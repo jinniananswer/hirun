@@ -423,7 +423,7 @@
                         html.push("</div>");
 
                         html.push("<div class=\"content\" ontap='$.prework.deleteNewEmployee(this);'>");
-                        html.push("<span class=\"e_ico-delete e_ico-pic-r e_ico-pic-red\">");
+                        html.push("<span class=\"e_ico-delete e_ico-pic-r e_ico-pic-red e_ico-pic-xxs\">");
                         html.push("</span>");
                         html.push("</div>");
                         html.push("</div>");
