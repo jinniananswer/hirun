@@ -83,7 +83,7 @@ public class PreWorkService extends GenericService {
             }
             response.set("MUST_SIGN_EMPLOYEE", ConvertTool.toJSONArray(mustSignEmployees));
 
-            RecordSet needSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, false, false);
+            RecordSet needSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, false, true);
             TrainService.fillAllOrgName(needSignEmployees);
             RecordSet temp = new RecordSet();
             if(ArrayTool.isNotEmpty(needSignEmployees)) {
