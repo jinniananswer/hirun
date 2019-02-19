@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>培训查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/exam/prework.exam.js?v=20190112"></script>
+    <script src="/scripts/biz/organization/exam/prework.exam.js"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -36,6 +36,14 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div id="timedown_root" style="display:none">
+            <div class="title">
+                <div class="text e_strong e_red" id="timedown">
+
+                </div>
+            </div>
+            <div class="c_space"></div>
         </div>
         <div id="exam">
             <div class="c_box">
@@ -156,12 +164,19 @@
         <div id="topic">
 
         </div>
+        <div class="c_form"  id="topic_select" style="display:none">
+                跳转至
+                <input type="text" id="topic_index" placeholder="请输入题目编号"/>
+                <button type="button" ontap="$.exam.selectTopic()">确定</button>
+        </div>
+        <div class="c_space"></div>
         <div class="c_submit c_submit-full">
             <button type="button" id="CONFIRM_BUTTON" class="e_button-r e_button-l e_button-green" ontap="$.exam.init()">确定</button>
             <button type="button" id="START_BUTTON" style="display:none" class="e_button-r e_button-l e_button-green" ontap="$.exam.start()">开始考试</button>
             <button type="button" id="PREVIOUS_BUTTON" style="display:none" class="e_button-r e_button-l e_button-green" ontap="$.exam.previous()">上一题</button>
             <button type="button" id="NEXT_BUTTON" style="display:none" class="e_button-r e_button-l e_button-green" ontap="$.exam.next()">下一题</button>
-            <button type="button" id="SUBMIT_BUTTON" style="display:none" class="e_button-r e_button-l e_button-red" ontap="$.exam.submit()">提交考卷</button>
+
+            <button type="button" id="SUBMIT_BUTTON" style="display:none" class="e_button-r e_button-l e_button-red" ontap="$.exam.submit(true)">提交考卷</button>
         </div>
     </div>
 </div>
