@@ -103,11 +103,11 @@
                     html.push("<div class=\'value\'>")
                     var score=data.get("SCORE")
                     if(score != null) {
-                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\" value='"+data.get("SCORE")+"'  desc=\"课程内容\"  />");
-                        //onblur="$.score.checkScore('')"
+                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\" value='"+data.get("SCORE")+"'  desc=\"课程内容\"   />");
+                        //onblur="$.score.checkScore($('#userName').val())"
                     }
                     else {
-                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\"   desc=\"课程内容\"   />");
+                        html.push("<input type=\"text\" id='"+data.get("EMPLOYEE_ID")+"' name='"+data.get("EMPLOYEE_ID")+"' nullable=\"yes\"   desc=\"课程内容\" />");
                     }
                     html.push("<div>")
 
@@ -116,11 +116,6 @@
                     html.push("</div></div>")
                 }
 
-               // html.push("<div class=\"c_button c_button-full\">");
-               // html.push("<button type=\"button\" ontap=\"$.score.submit()\" class=\"e_button-r e_button-l e_button-green\">");
-               // html.push("提交")
-               // html.push("</button>")
-               // html.push("</div>")
 
 
 
@@ -129,7 +124,10 @@
 
             checkScore: function(score){
                // alert(score);
-                //没有实现
+                var reg=/^\+?[1-9][0-9]*$/;
+                if(!reg.test(score)){
+                    alert("输入分数不满足条件");
+                }
             },
 
 
