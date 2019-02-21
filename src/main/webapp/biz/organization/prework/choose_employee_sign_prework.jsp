@@ -167,6 +167,44 @@
                     </div>
                     <!-- 滚动 结束 -->
                 </div>
+                <div class="c_popupItem" id="EXAM_SELECT_PARENT">
+                    <!-- 标题栏 开始 -->
+                    <div class="c_header">
+                        <div class="back" ontap="hidePopup(this);">请选择考评类型</div>
+                    </div>
+                    <!-- 标题栏 结束 -->
+                    <!-- 滚动（替换为 java 组件） 开始 -->
+                    <div class="c_scroll c_scroll-float c_scroll-header">
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
+                            <ul>
+                                <li class="link">
+                                    <div class="label">考评类型</div>
+                                    <div class="value">
+                                        <span id="evaluation_type_parent">
+
+                                        </span>
+                                    </div>
+                                </li>
+                                <li class="link" id="EXAM_ITEM_PARENT" style="display:none">
+                                    <div class="label">考评科目</div>
+                                    <div class="value">
+                                        <input type="checkbox" id="EXAM_ITEM_COMM_PARENT" value="0" desc="通用" checked/>
+                                        通用
+                                        <input type="checkbox" id="EXAM_ITEM_PRO_PARENT" value="1" desc="专业" checked/>
+                                        专业
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="l_bottom">
+                            <div class="c_submit c_submit-full">
+                                <input type="hidden" name="EXAM_EMPLOYEE_ID_PARENT" id="EXAM_EMPLOYEE_ID_PARENT" nullable="no" value="" desc="考评员工ID" />
+                                <button type="button" id="CONFIRM_EVALUATION_PARENT" name="CONFIRM_EVALUATION_PARENT" ontap="$.prework.confirmExamParent();" class="e_button-l e_button-green">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 滚动 结束 -->
+                </div>
             </div>
             <div class="c_popupGroup">
                 <div class="c_popupItem" id="UI-ORG">
@@ -250,11 +288,10 @@
                                 <li class="link" id="EXAM_ITEM" style="display:none">
                                     <div class="label">考评科目</div>
                                     <div class="value">
-                                            <input type="checkbox" id="EXAM_ITEM_COMM" value="0" desc="通用" checked/>
-                                                通用
-                                            <input type="checkbox" id="EXAM_ITEM_PRO" value="1" desc="专业" checked/>
-                                                专业
-                                        </div>
+                                        <input type="checkbox" id="EXAM_ITEM_COMM" value="0" desc="通用" checked/>
+                                            通用
+                                        <input type="checkbox" id="EXAM_ITEM_PRO" value="1" desc="专业" checked/>
+                                            专业
                                     </div>
                                 </li>
                             </ul>
@@ -264,6 +301,22 @@
                                 <input type="hidden" name="EXAM_EMPLOYEE_ID" id="EXAM_EMPLOYEE_ID" nullable="no" value="" desc="考评员工ID" />
                                 <button type="button" id="CONFIRM_EVALUATION" name="CONFIRM_EVALUATION" ontap="$.prework.confirmExam();" class="e_button-l e_button-green">确定</button>
                             </div>
+                        </div>
+                    </div>
+                    <!-- 滚动 结束 -->
+                </div>
+                <div class="c_popupItem" id="EMPLOYEE_SCORE">
+                    <!-- 标题栏 开始 -->
+                    <div class="c_header">
+                        <div class="back" ontap="backPopup(this);">在线测试成绩查看</div>
+                    </div>
+                    <!-- 标题栏 结束 -->
+                    <!-- 滚动（替换为 java 组件） 开始 -->
+                    <div class="c_scroll c_scroll-float c_scroll-header">
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
+                            <ul id="SCORE_LIST">
+
+                            </ul>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
