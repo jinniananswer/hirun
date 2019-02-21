@@ -72,7 +72,18 @@ public class PreWorkService extends GenericService {
 
         String type = train.get("TYPE");
         if(StringUtils.equals("1", type)) {
-            RecordSet mustSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, true, true);
+            List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+            String orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
+            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+                orgId = "122";
+            }
+            else {
+                orgId = rootOrg.getOrgId();
+            }
+
+            orgId = OrgBean.getOrgLine(orgId, allOrgs);
+            RecordSet mustSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, true, true, orgId);
             TrainService.fillAllOrgName(mustSignEmployees);
             if(ArrayTool.isNotEmpty(mustSignEmployees)) {
                 int size = mustSignEmployees.size();
@@ -83,7 +94,7 @@ public class PreWorkService extends GenericService {
             }
             response.set("MUST_SIGN_EMPLOYEE", ConvertTool.toJSONArray(mustSignEmployees));
 
-            RecordSet needSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, false, true);
+            RecordSet needSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, false, true, orgId);
             TrainService.fillAllOrgName(needSignEmployees);
             RecordSet temp = new RecordSet();
             if(ArrayTool.isNotEmpty(needSignEmployees)) {
@@ -234,6 +245,15 @@ public class PreWorkService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE_TREE", courseTree);
 
+        return response;
+    }
+
+    public ServiceResponse showOnlineScore(ServiceRequest request) throws Exception {
+        String employeeId = request.getString("EMPLOYEE_ID");
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet scores = dao.queryOnlineScore(employeeId);
+        ServiceResponse response = new ServiceResponse();
+        response.set("SCORES", ConvertTool.toJSONArray(scores));
         return response;
     }
 
