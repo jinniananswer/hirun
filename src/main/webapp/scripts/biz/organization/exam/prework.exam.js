@@ -238,6 +238,7 @@
                 }
                 $.ajaxPost('submitExam', "&ANSWER_SCORE="+answerScore+"&EXAM_ID="+$.exam.examId, function (data) {
                     $.endPageLoading();
+                    clearInterval($.exam.timer);
                     MessageBox.success("提交试卷成功，您的成绩为"+answerScore+"分","点击确定返回，点击取消关闭当前页面", function(btn){
                         if("ok" == btn) {
                             document.location.reload();
