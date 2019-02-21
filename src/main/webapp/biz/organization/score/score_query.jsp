@@ -37,9 +37,7 @@
 
         </ul>
 
-          <div class="value">
-            <input type="hidden" id="TRAIN_ID" name="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID")}" desc="培训ID" />
-          </div>
+
     </div>
     <div class="c_space"></div>
     <div class="c_space"></div>
@@ -63,35 +61,14 @@
                         <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
                             <ul id="queryArea">
 
-                               <input type="hidden" id="TRAIN_ID_QUERY" name="TRAIN_ID_QUERY" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID")}" desc="培训ID" />
+                               <input type="hidden" id="TRAIN_ID_QUERY" name="TRAIN_ID_QUERY" nullable="no" value="2" desc="培训ID" />
 
 
                                 <li class="link">
                                     <div class="label">姓名</div>
                                     <div class="value"><input id="NAME" name="NAME" type="text" nullable="yes" desc="姓名"/></div>
                                 </li>
-                                <%--
-                                <li class="link" ontap="$('#CITY_TEXT').focus();$('#CITY_TEXT').blur();forwardPopup('UI-popup','UI-CITY')">
-                                    <div class="label">工作城市</div>
-                                    <div class="value">
-                                        <input type="text" id="CITY_TEXT" name="CITY_TEXT" nullable="yes" readonly="true" desc="责任店面" />
-                                        <input type="hidden" id="CITY" name="CITY" nullable="yes" desc="归属门店" />
-                                    </div>
-                                    <div class="more"></div>
-                                </li>
-                                --%>
-                                <%-->
-                                <li class="link">
-                                    <div class="label">手机号码</div>
-                                    <div class="value"><input id="MOBILE_NO" name="MOBILE_NO" type="text" equsize="11" datatype="mbphone" nullable="yes" desc="手机号码"/></div>
-                                </li>
-                                <--%>
-                                <%-->
-                                <li class="link">
-                                    <div class="label">身份证</div>
-                                    <div class="value"><input id="IDENTITY_NO" name="IDENTITY_NO" type="text" maxsize="20" datatype="pspt" nullable="yes" desc="身份证"/></div>
-                                </li>
-                                <--%>
+
 
                                 <li class="link" ontap="$('#ORG_TEXT').focus();$('#ORG_TEXT').blur();forwardPopup('UI-popup','UI-ORG')">
                                     <div class="label">所属部门</div>
@@ -102,26 +79,7 @@
                                     <div class="more"></div>
                                 </li>
 
-                                <%-->
-                                <li class="link" ontap="$('#JOB_TEXT').focus();$('#JOB_TEXT').blur();forwardPopup('UI-popup','UI-JOB')">
-                                    <div class="label">岗位</div>
-                                    <div class="value">
-                                        <input type="text" id="JOB_TEXT" name="JOB_TEXT" nullable="yes" readonly="true" desc="岗位" />
-                                        <input type="hidden" id="JOB_ROLE" name="JOB_ROLE" nullable="yes" desc="岗位" />
-                                    </div>
-                                    <div class="more"></div>
-                                </li>
-                                <--%>
-                                <%-->
-                                <li class="link" ontap="$('#PARENT_EMPLOYEE_NAME').focus();$('#PARENT_EMPLOYEE_NAME').blur();forwardPopup('UI-popup','UI-PARENT')">
-                                    <div class="label">上级员工</div>
-                                    <div class="value">
-                                        <input type="text" id="PARENT_EMPLOYEE_NAME" name="PARENT_EMPLOYEE_NAME" nullable="yes" readonly="true" desc="上级员工" />
-                                        <input type="hidden" id="PARENT_EMPLOYEE_ID" name="PARENT_EMPLOYEE_ID" nullable="yes" desc="上级员工" />
-                                    </div>
-                                    <div class="more"></div>
-                                </li>
-                                <--%>
+
                             </ul>
                         </div>
                         <!-- 列表 结束 -->
@@ -152,129 +110,7 @@
                     </div>
                     <!-- 滚动 结束 -->
                 </div>
-                <div class="c_popupItem" id="UI-PARENT">
-                    <!-- 标题栏 开始 -->
-                    <div class="c_header">
-                        <div class="back" ontap="hidePopup(this);">请选择上级员工</div>
-                    </div>
-                    <!-- 标题栏 结束 -->
-                    <div class="l_padding">
-                        <div class="c_box">
-                            <!-- 表单 开始 -->
-                            <div class="c_list c_list-form">
-                                <ul id="searchArea">
-                                    <li>
-                                        <div class="value">
-                                                <span class="e_mix">
-                                                    <input id="SEARCH_TEXT" name="SEARCH_TEXT" type="text" placeholder="请输入员工姓名（模糊搜索）" nullable="no" desc="查询条件"/>
-                                                    <button type="button" class="e_button-blue" ontap="$.employee.queryParent();"><span class="e_ico-search"></span><span>查询</span></button>
-                                                </span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- 表单 结束 -->
-                        </div>
-                    </div>
-                    <!-- 滚动（替换为 java 组件） 开始 -->
-                    <div class="c_scroll">
-                        <div class="l_padding">
-                            <div class="c_msg c_msg-warn" id="messagebox" style="display:none">
-                                <div class="wrapper">
-                                    <div class="emote"></div>
-                                    <div class="info">
-                                        <div class="text">
-                                            <div class="title">提示信息</div>
-                                            <div class="content">sorry,没有找到您想要的信息~</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="c_box">
-                                <div class="c_list c_list-line">
-                                    <ul id="parent_employees">
 
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                    </div>
-                    <!-- 滚动 结束 -->
-
-                </div>
-                <div class="c_popupItem" id="UI-JOB">
-                    <!-- 标题栏 开始 -->
-                    <div class="c_header">
-                        <div class="back" ontap="hidePopup(this);">请选择岗位</div>
-                    </div>
-                    <!-- 标题栏 结束 -->
-                    <div class="l_padding">
-                        <div class="c_box">
-                            <!-- 表单 开始 -->
-                            <div class="c_list c_list-form">
-                                <ul id="jobArea">
-                                    <li>
-                                        <div class="value">
-                                                <span class="e_mix">
-                                                    <input id="JOB_SEARCH_TEXT" name="JOB_SEARCH_TEXT" type="text" placeholder="请输入岗位名称（模糊搜索）" nullable="no" desc="查询条件"/>
-                                                    <button type="button" class="e_button-blue" ontap="$.employee.queryJobs();"><span class="e_ico-search"></span><span>查询</span></button>
-                                                </span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- 表单 结束 -->
-                        </div>
-                    </div>
-                    <!-- 滚动（替换为 java 组件） 开始 -->
-                    <div class="c_scroll">
-                        <div class="l_padding">
-                            <div class="c_box">
-                                <div class="c_list c_list-line">
-                                    <ul id="jobRoles">
-
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                    </div>
-                    <!-- 滚动 结束 -->
-
-                </div>
-                <div class="c_popupItem" id="UI-CITY">
-                    <!-- 标题栏 开始 -->
-                    <div class="c_header">
-                        <div class="back" ontap="hidePopup(this);">请选择城市</div>
-                    </div>
-                    <!-- 标题栏 结束 -->
-                    <!-- 滚动（替换为 java 组件） 开始 -->
-                    <div class="c_scroll">
-                        <div class="c_box">
-                            <div class="c_list c_list-line">
-                                <ul id="citys">
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                    </div>
-                    <!-- 滚动 结束 -->
-
-                </div>
             </div>
         </div>
     </div>
