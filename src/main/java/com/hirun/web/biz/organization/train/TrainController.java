@@ -152,4 +152,14 @@ public class TrainController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initQueryMyTrain", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/redirectToTrainScoreManager")
+    public String redirectToTrainScoreManager(HttpServletRequest request) throws Exception {
+        return "/biz/organization/score/score_input";
+    }
+
+    @RequestMapping("/redirectToTrainScoreQuery")
+    public String redirectToTrainScoreQuery(HttpServletRequest request) throws Exception {
+        return "/biz/organization/score/score_query";
+    }
 }
