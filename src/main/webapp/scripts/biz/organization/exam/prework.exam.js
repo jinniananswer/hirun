@@ -3,7 +3,7 @@
             topics : null,
             currentIndex : null,
             examId : null,
-            maxTime : 5*60,
+            maxTime : 40*60,
             timer : null,
             init : function() {
                 $.ajaxPost('initPreworkExam',"&EXAM_ID="+this.examId,function(data) {
