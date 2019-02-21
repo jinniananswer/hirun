@@ -3,6 +3,8 @@
             topics : null,
             currentIndex : null,
             examId : null,
+            maxTime : 5*60,
+            timer : null,
             init : function() {
                 $.ajaxPost('initPreworkExam',"&EXAM_ID="+this.examId,function(data) {
                     $("#CONFIRM_BUTTON").css("display", "none");
@@ -28,7 +30,43 @@
                     var rst = new Wade.DataMap(data);
                     $.exam.topics = rst.get("EXAM_TOPIC");
                     $.exam.drawTopic(0);
+                    $("#topic_select").css("display", "");
+                    $("#timedown_root").css("display", "");
+                    $.exam.timer = setInterval("$.exam.timeDown()", 1000);
                 });
+            },
+
+            timeDown : function() {
+                if ($.exam.maxTime >= 0) {
+                    var minutes = Math.floor($.exam.maxTime / 60);
+                    var seconds = Math.floor($.exam.maxTime % 60);
+                    var msg = "距离结束还有" + minutes + "分" + seconds + "秒";
+                    $("#timedown").html(msg);
+                    --$.exam.maxTime;
+                }
+                else {
+                    clearInterval($.exam.timer);
+                    $.exam.submit(false);
+                }
+            },
+
+            selectTopic : function(){
+
+              try{
+                  var index = $("#topic_index").val();
+                  if(index == null || index == "" || index == "undfined") {
+                      return;
+                  }
+                  var topicIndex = parseInt(index);
+                  if(topicIndex == 0 || topicIndex > 40) {
+                      MessageBox.alert("超过本次考试的题目数量范围");
+                      return;
+                  }
+                  $.exam.drawTopic(topicIndex - 1);
+              }
+              catch(error){
+
+              }
             },
 
             drawTopic : function(index) {
@@ -158,7 +196,7 @@
                 this.examId = radio.val();
             },
 
-            submit : function() {
+            submit : function(needConfirm) {
                 var allScore = 0;
                 var length = this.topics.length;
                 var answerScore = 0;
@@ -168,9 +206,13 @@
                     allScore = score+allScore;
 
                     var answer = topic.get("ANSWER");
-                    if(answer == null) {
-                        MessageBox.alert("您第"+(i+1)+"题尚未作答，不能提交");
+                    if(answer == null && needConfirm) {
+                        MessageBox.alert("您第"+(i+1)+"题尚未作答");
                         return;
+                    }
+
+                    if(answer == null) {
+                        continue;
                     }
                     var type = topic.get("TYPE");
                     var correctAnswer = topic.get("CORRECT_ANSWER");

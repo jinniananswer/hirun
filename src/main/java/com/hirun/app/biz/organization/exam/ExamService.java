@@ -35,11 +35,11 @@ public class ExamService extends GenericService {
         String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
 
         EmployeeEntity employee = EmployeeBean.getEmployeeByEmployeeId(employeeId);
-        if(StringUtils.isBlank(employee.getRegularDate()) || TimeTool.compareTwoTime(session.getCreateTime(), employee.getRegularDate()+" 00:00:00") > 0) {
-            response.set("NEED_EXAM", "false");
-            response.set("DESC","您已经是正式员工，无需参加岗前测试");
-            return response;
-        }
+//        if(StringUtils.isBlank(employee.getRegularDate()) || TimeTool.compareTwoTime(session.getCreateTime(), employee.getRegularDate()+" 00:00:00") > 0) {
+//            response.set("NEED_EXAM", "false");
+//            response.set("DESC","您已经是正式员工，无需参加岗前测试");
+//            return response;
+//        }
 
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("EMPLOYEE_ID", employeeId);

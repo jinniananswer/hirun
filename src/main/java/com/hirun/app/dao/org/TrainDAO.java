@@ -271,6 +271,7 @@ public class TrainDAO extends GenericDAO {
         StringBuilder sql = new StringBuilder();
         sql.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,date_format(b.in_date,'%Y-%m-%d') in_date,a.mobile_no contact_no, d.JOB_ROLE, e.org_id, e.name org_name ");
         sql.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
+        sql.append("left join ins_ e on (e.train_id = a.train_id and e.employee_id = :EMPLOYEE_ID) ");
         sql.append("where b.USER_ID = a.USER_ID ");
         sql.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
         sql.append("and a.status = '0' ");
