@@ -729,6 +729,7 @@ public class TrainService extends GenericService {
                 rst.put(rootOrgName, datas);
             }
             sign.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", sign.get("JOB_ROLE")));
+            sign.put("EDUCATION", StaticDataTool.getCodeName("EDUCATION_LEVEL", sign.get("EDUCATION_LEVEL")));
             datas.add(ConvertTool.toJSONObject(sign));
         }
         return rst;
