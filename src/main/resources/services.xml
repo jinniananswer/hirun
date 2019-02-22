@@ -72,6 +72,7 @@
     <entity name="OrgCenter.prework.PreWorkService.addNewPreworkSign" class="com.hirun.app.biz.organization.prework.PreWorkService" method="addNewPreworkSign"/>
     <entity name="OrgCenter.prework.PreWorkService.initQueryPreworkSignList" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initQueryPreworkSignList"/>
     <entity name="OrgCenter.prework.PreWorkService.initViewPreworkCourseware" class="com.hirun.app.biz.organization.prework.PreWorkService" method="initViewPreworkCourseware"/>
+    <entity name="OrgCenter.prework.PreWorkService.showOnlineScore" class="com.hirun.app.biz.organization.prework.PreWorkService" method="showOnlineScore"/>
 
     <!--成绩查询初始化-->
     <entity name="OrgCenter.score.ScoreService.initExamQuery"  class="com.hirun.app.biz.organization.score.ScoreService" method="initExamQuery"/>

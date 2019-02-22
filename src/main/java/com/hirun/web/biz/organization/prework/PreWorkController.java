@@ -70,4 +70,20 @@ public class PreWorkController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.prework.PreWorkService.initViewPreworkCourseware", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/showOnlineScore")
+    public @ResponseBody String showOnlineScore(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.prework.PreWorkService.showOnlineScore", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/redirectToPreworkScoreManager")
+    public String redirectToPreworkScoreManager(HttpServletRequest request) throws Exception {
+        return "/biz/organization/score/score_input";
+    }
+
+    @RequestMapping("/redirectToPreworkScoreQuery")
+    public String redirectToPreworkScoreQuery(HttpServletRequest request) throws Exception {
+        return "/biz/organization/score/score_query";
+    }
 }

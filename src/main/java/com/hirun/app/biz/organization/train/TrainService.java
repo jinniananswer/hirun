@@ -395,7 +395,19 @@ public class TrainService extends GenericService {
 
         String type = train.get("TYPE");
         if(StringUtils.equals("2", type)) {
-            RecordSet mustSignEmployees = dao.queryNeedSignPreTrainEmployee(trainId, true);
+            List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+            String orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
+            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+                orgId = "122";
+            }
+            else {
+                orgId = rootOrg.getOrgId();
+            }
+
+            orgId = OrgBean.getOrgLine(orgId, allOrgs);
+
+            RecordSet mustSignEmployees = dao.queryNeedSignPreTrainEmployee(trainId, true, orgId);
             fillAllOrgName(mustSignEmployees);
             if(ArrayTool.isNotEmpty(mustSignEmployees)) {
                 int size = mustSignEmployees.size();
@@ -406,7 +418,7 @@ public class TrainService extends GenericService {
             }
             response.set("MUST_SIGN_EMPLOYEE", ConvertTool.toJSONArray(mustSignEmployees));
 
-            RecordSet needSignEmployees = dao.queryNeedSignPreTrainEmployee(trainId, false);
+            RecordSet needSignEmployees = dao.queryNeedSignPreTrainEmployee(trainId, false, orgId);
             fillAllOrgName(needSignEmployees);
             RecordSet temp = new RecordSet();
             if(ArrayTool.isNotEmpty(needSignEmployees)) {

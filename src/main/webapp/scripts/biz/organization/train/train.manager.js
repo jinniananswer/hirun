@@ -65,7 +65,11 @@
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewSign(\"" + data.get("TRAIN_ID") + "\");'>查</span>");
+                    html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewSign(\"" + data.get("TRAIN_ID") + "\");'>人</span>");
+                    html.push("</div>");
+
+                    html.push("<div class=\"side e_size-s\">");
+                    html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewScore(\"" + data.get("TRAIN_ID") + "\");'>绩</span>");
                     html.push("</div>");
                     html.push("</div></div></li>");
                 }
@@ -79,6 +83,10 @@
 
             viewDetail : function(trainId) {
                 $.redirect.open('redirectToTrainDetail?TRAIN_ID='+trainId, '培训详情');
+            },
+
+            viewScore : function(trainId) {
+                $.redirect.open('redirectToTrainScoreManager?TRAIN_ID='+trainId, '培训成绩管理');
             },
 
             deleteTrain : function(trainId) {

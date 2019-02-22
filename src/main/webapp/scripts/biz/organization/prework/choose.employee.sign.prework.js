@@ -37,12 +37,39 @@
                     ]
                 );
 
+                $.Select.append(
+                    // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
+                    "evaluation_type_parent",
+                    // 参数设置
+                    {
+                        id:"EXAM_TYPE_PARENT",
+                        name:"EXAM_TYPE_PARENT",
+                        addDefault:false
+                    },
+                    // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
+                    [
+                        {TEXT:"初次考评", VALUE:"0"},
+                        {TEXT:"补考", VALUE:"1"},
+                        {TEXT:"转岗专业考评", VALUE:"2"},
+                        {TEXT:"复职考评", VALUE:"3"}
+                    ]
+                );
+
                 $("#EXAM_TYPE").bind("change", function(){
                     if(this.value == "1" || this.value == "3") {
                         $("#EXAM_ITEM").css("display", "");
                     }
                     else{
                         $("#EXAM_ITEM").css("display", "none")
+                    }
+                });
+
+                $("#EXAM_TYPE_PARENT").bind("change", function(){
+                    if(this.value == "1" || this.value == "3") {
+                        $("#EXAM_ITEM_PARENT").css("display", "");
+                    }
+                    else{
+                        $("#EXAM_ITEM_PARENT").css("display", "none")
                     }
                 });
 
@@ -223,14 +250,113 @@
                         html.push(parentOrgName + "-");
                     html.push(data.get("ORG_NAME"));
                     html.push("</div><div class='content'>"+data.get("JOB_ROLE_NAME"));
-                    html.push("</div></div>");
+                    html.push("</div>");
+                    html.push("<div class=\"content\">");
+                    html.push("<a href='javascript:void(0)' ontap='$.prework.showOnlineScore("+data.get("EMPLOYEE_ID")+")' >在线测试成绩查看</a>");
+                    html.push("</div>");
+                    html.push("</div>");
                     html.push("<div class='side' ontap='$.prework.showExam(this);'>");
+                    html.push("<div class='content'>");
                     html.push("<span class='e_tag e_tag-green'>初次考评</span>");
+                    html.push("</div>");
                     html.push("</div></div></li>");
                 }
 
                 $.insertHtml('beforeend', $("#select_employees"), html.join(""));
                 $.endPageLoading();
+            },
+
+            showOnlineScore : function(employeeId) {
+                $.ajaxPost('showOnlineScore', "&EMPLOYEE_ID="+employeeId, function (data) {
+                    var rst = new Wade.DataMap(data);
+                    var datas = rst.get("SCORES");
+                    $.prework.drawEmployeeScore("SCORE_LIST", datas);
+                    forwardPopup('UI-popup','EMPLOYEE_SCORE');
+                });
+            },
+
+            drawEmployeeScore : function(areaId, datas) {
+                var area = $("#"+areaId);
+                area.empty();
+
+                var html = [];
+                html.push("<li class=\"link\">");
+                html.push("<div class=\"main\">");
+                html.push("<div class=\"title\">在线测试成绩</div>");
+                html.push("<div class=\"content\">");
+                html.push("通用知识：");
+                var score = this.findScore(1, datas);
+                if(score == "未考试" || score < 80) {
+                    html.push("<span class='e_red'>"+score+"</span>");
+                }
+                else {
+                    html.push(score);
+                }
+                html.push("</div>");
+
+                html.push("<div class=\"content\">");
+                html.push("产品知识：");
+                var score = this.findScore(2, datas);
+                if(score == "未考试" || score < 80) {
+                    html.push("<span class='e_red'>"+score+"</span>");
+                }
+                else {
+                    html.push(score);
+                }
+                html.push("</div>");
+
+                html.push("<div class=\"content\">");
+                html.push("鸿扬介绍：");
+                var score = this.findScore(3, datas);
+                if(score == "未考试" || score < 80) {
+                    html.push("<span class='e_red'>"+score+"</span>");
+                }
+                else {
+                    html.push(score);
+                }
+                html.push("</div>");
+
+                html.push("<div class=\"content\">");
+                html.push("家装知识：");
+                var score = this.findScore(4, datas);
+                if(score == "未考试" || score < 80) {
+                    html.push("<span class='e_red'>"+score+"</span>");
+                }
+                else {
+                    html.push(score);
+                }
+                html.push("</div>");
+
+                html.push("<div class=\"content\">");
+                html.push("客户服务：");
+                var score = this.findScore(5, datas);
+                if(score == "未考试" || score < 80) {
+                    html.push("<span class='e_red'>"+score+"</span>");
+                }
+                else {
+                    html.push(score);
+                }
+                html.push("</div>");
+
+                $.insertHtml('beforeend', area, html.join(""));
+
+            },
+
+            findScore : function(examId, datas) {
+                if(datas == null || datas.length <= 0) {
+                    return "未考试";
+                }
+                else {
+                    var length = datas.length;
+                    for(var i=0;i<length;i++) {
+                        var data = datas.get(i);
+                        var tempExamId = data.get("EXAM_ID");
+                        if(examId == tempExamId) {
+                            return data.get("SCORE");
+                        }
+                    }
+                    return "未考试";
+                }
             },
 
             selectEmployee : function(obj) {
@@ -283,6 +409,33 @@
                 }
 
                 forwardPopup('UI-popup','EXAM_SELECT');
+                return false;
+            },
+
+            showExamParent : function(obj) {
+                var li = $($(obj).parent()).parent();
+                $("#EXAM_EMPLOYEE_ID_PARENT").val(li.attr("employeeId"));
+                var examType = li.attr("examType");
+                $("#EXAM_TYPE_PARENT").val(examType);
+                $("#EXAM_TYPE_PARENT").trigger("change");
+
+                var examItemComm = li.attr("examItemComm");
+                var examItemPro = li.attr("examItemPro");
+                if (examItemComm == "true" || typeof(examItemComm) == "undefined") {
+                    $("#EXAM_ITEM_COMM_PARENT").attr("checked", "true");
+                }
+                else {
+                    $("#EXAM_ITEM_COMM_PARENT").removeAttr("checked");
+                }
+
+                if (examItemPro == "true" || typeof(examItemComm) == "undefined") {
+                    $("#EXAM_ITEM_PRO_PARENT").attr("checked", "true");
+                }
+                else {
+                    $("#EXAM_ITEM_PRO_PARENT").removeAttr("checked");
+                }
+
+                showPopup('UI-popup','EXAM_SELECT_PARENT');
                 return false;
             },
 
@@ -354,6 +507,87 @@
 
             },
 
+            confirmExamParent : function() {
+                var examType = $("#EXAM_TYPE_PARENT").val();
+                var examItemComm = $("#EXAM_ITEM_COMM_PARENT").attr("checked");
+                var examItemPro = $("#EXAM_ITEM_PRO_PARENT").attr("checked");
+
+                var employeeId = $("#EXAM_EMPLOYEE_ID_PARENT").val();
+
+                var lis = $("#new_employees li");
+                var length = lis.length;
+                var html = [];
+                for(var i=0;i<length;i++) {
+                    var li = $(lis[i]);
+                    var selectEmployeeId = li.attr("employeeId");
+
+                    if(selectEmployeeId == employeeId) {
+                        li.attr("examType", examType);
+                        li.attr("examItemComm", examItemComm);
+                        li.attr("examItemPro", examItemPro);
+                        var main = $(li.children()[2]);
+                        html.push("<div class='content content-auto' ontap='$.prework.showExamParent(this);'>");
+                        html.push("<span class='e_tag e_tag-green'>");
+                        if(examType == "0") {
+                            html.push("初次考评");
+                        }
+                        else if(examType == "1") {
+                            html.push("补考");
+                        }
+                        else if(examType == "2") {
+                            html.push('转岗专业考评');
+                        }
+                        else if(examType = "3") {
+                            html.push("复职考评")
+                        }
+                        html.push("</span>");
+                        if(examType == "1" || examType=="3") {
+                            if(examItemComm) {
+                                html.push("&nbsp;<span class='e_tag e_tag-navy'>");
+                                html.push("通用");
+                                html.push("</span>");
+                            }
+                            if(examItemPro) {
+                                html.push("&nbsp;<span class='e_tag e_tag-navy'>");
+                                html.push("专业");
+                                html.push("</span>");
+                            }
+                        }
+
+                        html.push("</div>");
+                        var node = $(main.children()[1]);
+                        if(node != null) {
+                            node.remove();
+                        }
+
+                        node = $(main.children()[1]);
+                        if(node != null) {
+                            node.remove();
+                        }
+                        html.push("<div class=\"content\" ontap='$.prework.deleteNewEmployee(this);'>");
+                        html.push("<span class=\"e_ico-delete e_ico-pic-r e_ico-pic-red e_ico-pic-xxs\">");
+                        html.push("</span>");
+                        html.push("</div>");
+                        $.insertHtml('beforeend', main, html.join(""));
+
+                        var size = this.addEmployees.length;
+                        for(var i=0;i<size;i++) {
+                            var addEmployee = this.addEmployees.get(i);
+                            var addEmployeeId = addEmployee.get("EMPLOYEE_ID");
+                            if(addEmployeeId == employeeId) {
+                                addEmployee.put("EXAM_TYPE", li.attr("examType"));
+                                addEmployee.put("EXAM_ITEM_COMM", li.attr("examItemComm"));
+                                addEmployee.put("EXAM_ITEM_PRO", li.attr("examItemPro"));
+                            }
+                        }
+                        break;
+                    }
+
+                }
+                hidePopup('UI-popup', 'EXAM_SELECT_PARENT');
+
+            },
+
             confirmSelectEmployee : function() {
                 var lis = $("#select_employees li");
 
@@ -390,7 +624,7 @@
                         html.push(li.attr("employeeName"));
                         html.push("</div>");
 
-                        html.push("<div class=\"content content-auto\">");
+                        html.push("<div class=\"content content-auto\" ontap='$.prework.showExamParent(this);'>");
                         html.push("<span class=\"e_tag e_tag-green\">");
                         if(examType == "0") {
                             html.push("初次考评");
