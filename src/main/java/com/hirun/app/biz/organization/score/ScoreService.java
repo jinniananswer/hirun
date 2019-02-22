@@ -14,10 +14,7 @@ import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class ScoreService extends GenericService {
@@ -85,8 +82,15 @@ public class ScoreService extends GenericService {
                 String scorej = recordA.get("SCORE");
                 String examidj = recordA.get("EXAM_ID");
                 if (StringUtils.equals(employee_id_i, employee_id_j)) {
-                    if (StringUtils.equals(examid, examidj)) {
+                    if(StringUtils.isBlank(examidj)|| examidj==null)
+                        continue;
+
+                    if (StringUtils.equals(examid, examidj) || record.containsKey("EXAM_ID_"+examidj)) {
                         String score_k=record.get("EXAM_ID_"+examidj);
+
+                        if(StringUtils.isBlank(scorej)|| scorej==null){
+                            continue;
+                        }
                         if(StringUtils.isNotBlank(score_k)|| score_k!=null){
                             if((Integer.parseInt(score_k)-Integer.parseInt(scorej))<0){
                                 record.put("EXAM_ID_" + examidj, scorej);
@@ -114,6 +118,9 @@ public class ScoreService extends GenericService {
 
         return response;
     }
+
+
+
 
     public ServiceResponse initScoreQuery(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
