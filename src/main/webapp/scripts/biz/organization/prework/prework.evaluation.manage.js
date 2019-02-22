@@ -52,7 +52,7 @@
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewSign(\"" + data.get("TRAIN_ID") + "\");'>人</span>");
+                    html.push("<span class=\"e_ico-pic-blue e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewSign(\"" + data.get("TRAIN_ID") + "\");'>人</span>");
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
