@@ -59,15 +59,15 @@
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-pic-blue e_ico-pic-r e_ico-pic-m\" ontap='$.train.signTrain(\"" + data.get("TRAIN_ID") + "\",\""+signStatus+"\");'>人</span>");
+                    html.push("<span class=\"e_ico-pic-blue e_ico-pic-r e_ico-pic-xs\" ontap='$.train.signTrain(\"" + data.get("TRAIN_ID") + "\",\""+signStatus+"\");'>人</span>");
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-m\" ontap='$.train.viewScore(\"" + data.get("TRAIN_ID") + "\");'>绩</span>");
+                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewScore(\"" + data.get("TRAIN_ID") + "\");'>绩</span>");
                     html.push("</div>");
                     if(signStatus == "1") {
                         html.push("<div class=\"side e_size-s\">");
-                        html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-m\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
+                        html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
                         html.push("</div>");
                     }
                     html.push("</div></div>");

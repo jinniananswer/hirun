@@ -84,7 +84,7 @@
                         html.push("<div class=\"content content-auto\">");
                         html.push("毕业院校："+school);
                         html.push("</div>");
-                        var educationLevelName = data.get("EDUCATION_LEVEL_NAME");
+                        var educationLevelName = data.get("EDUCATION");
                         if(educationLevelName == null || educationLevelName == "undefined") {
                             educationLevelName = "";
                         }
