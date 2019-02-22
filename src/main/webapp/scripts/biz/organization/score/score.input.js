@@ -16,15 +16,11 @@
                     return true;
                 });
 
-                var parameter = $.buildJsonData("queryArea");
 
-                $.ajaxPost('initScoreQuery',parameter,function(data){
+                $.ajaxPost('initScoreQuery','&TRAIN_ID='+$("#TRAIN_ID").val(),function(data){
 
                     var trees = data.ORG_TREE;
-                    var jobRoles = data.JOB_ROLES;
-                    var citys = data.CITYS;
-                    var defaultCityId = data.DEFAULT_CITY_ID;
-                    var defaultCityName = data.DEFAULT_CITY_NAME;
+
                     if(trees != null){
                         window["orgTree"].data = trees;
                         window["orgTree"].init();
@@ -39,8 +35,11 @@
             query : function(){
                 if($.validate.verifyAll("queryArea")) {
                     $.beginPageLoading();
-                    var parameter = $.buildJsonData("queryArea");
-                    $.ajaxPost('queryPostJobScore', parameter, function (data) {
+                    var name=$("#NAME").val();
+                    var org_id=$("#ORG_ID").val();
+                    var train_id=$("#TRAIN_ID").val();
+
+                    $.ajaxPost('queryPostJobScore', '&TRAIN_ID='+train_id+'&NAME='+name+'&ORG_ID='+org_id, function (data) {
                         var rst = new Wade.DataMap(data);
                         var datas = rst.get("DATAS");
                         $.score.drawScore(datas);

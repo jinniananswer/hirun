@@ -1,8 +1,8 @@
 package com.hirun.app.biz.organization.score;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
@@ -41,11 +41,25 @@ public class ScoreService extends GenericService {
     public ServiceResponse queryExamScore(ServiceRequest request) throws Exception {
         ServiceResponse response=new ServiceResponse();
         ScoreDAO dao=DAOFactory.createDAO(ScoreDAO.class);
+        AppSession session = SessionManager.getSession();
 
         String orgId = request.getString("ORG_ID");
-        if(StringUtils.isNotBlank(orgId))
-            orgId = OrgBean.getOrgLine(orgId);
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
 
+        if(StringUtils.isBlank(orgId)){
+            orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
+            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+                orgId = "122";
+            }
+            else {
+                orgId = rootOrg.getOrgId();
+            }
+            orgId = OrgBean.getOrgLine(orgId, allOrgs);
+        }
+        else {
+            orgId = OrgBean.getOrgLine(orgId);
+        }
         RecordSet exams=dao.queryExamScore(request.getString("NAME"),orgId);
         RecordSet newexams=new RecordSet();
 
@@ -72,7 +86,6 @@ public class ScoreService extends GenericService {
                 String examidj = recordA.get("EXAM_ID");
                 if (StringUtils.equals(employee_id_i, employee_id_j)) {
                     if (StringUtils.equals(examid, examidj)) {
-                        //有问题，应该取数据与新拼装数据比较
                         String score_k=record.get("EXAM_ID_"+examidj);
                         if(StringUtils.isNotBlank(score_k)|| score_k!=null){
                             if((Integer.parseInt(score_k)-Integer.parseInt(scorej))<0){
@@ -105,17 +118,35 @@ public class ScoreService extends GenericService {
     public ServiceResponse initScoreQuery(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         ScoreDAO dao=DAOFactory.createDAO(ScoreDAO.class);
+        AppSession session = SessionManager.getSession();
 
         String today = TimeTool.today();
         response.set("TODAY", today);
         JSONObject orgTree = OrgBean.getOrgTree();
         response.set("ORG_TREE", orgTree);
 
-        String train_id = request.getString("TRAIN_ID_QUERY");
+        String train_id = request.getString("TRAIN_ID");
 
         String orgId = request.getString("ORG_ID");
-        if(StringUtils.isNotBlank(orgId))
+
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+
+        if(StringUtils.isBlank(orgId)){
+            orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
+            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+                orgId = "122";
+            }
+            else {
+                orgId = rootOrg.getOrgId();
+            }
+
+            orgId = OrgBean.getOrgLine(orgId, allOrgs);
+
+        }
+        else {
             orgId = OrgBean.getOrgLine(orgId);
+        }
 
         RecordSet exams=dao.queryPostJobScore(request.getString("NAME"),orgId,train_id);
 
@@ -130,12 +161,28 @@ public class ScoreService extends GenericService {
     public ServiceResponse queryPostJobScore(ServiceRequest request) throws Exception {
         ServiceResponse response=new ServiceResponse();
         ScoreDAO dao=DAOFactory.createDAO(ScoreDAO.class);
-        String train_id = request.getString("TRAIN_ID_QUERY");
+        String train_id = request.getString("TRAIN_ID");
+        AppSession session = SessionManager.getSession();
 
         String orgId = request.getString("ORG_ID");
-        if(StringUtils.isNotBlank(orgId))
-            orgId = OrgBean.getOrgLine(orgId);
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
 
+        if(StringUtils.isBlank(orgId)){
+            orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
+            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+                orgId = "122";
+            }
+            else {
+                orgId = rootOrg.getOrgId();
+            }
+
+            orgId = OrgBean.getOrgLine(orgId, allOrgs);
+
+        }
+        else {
+            orgId = OrgBean.getOrgLine(orgId);
+        }
         RecordSet exams=dao.queryPostJobScore(request.getString("NAME"),orgId,train_id);
 
         if(exams.size()==0 || exams==null)
