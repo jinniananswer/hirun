@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>培训查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/prework.evaluation.manage.js"></script>
+    <script src="/scripts/biz/organization/prework/prework.evaluation.manage.js?v=20190223"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -49,7 +49,8 @@
 
             </ul>
         </div>
-
+        <div class="c_space-4"></div>
+        <div class="c_space-4"></div>
     </div>
 </div>
 <!-- 滚动 结束 -->
