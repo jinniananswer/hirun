@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>讲师管理</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/teacher/teacher.manager.js?v=20190223"></script>
+    <script src="/scripts/biz/organization/teacher/teacher.manager.js?v=201902230122"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
