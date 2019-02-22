@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>报名详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/prework.sign.list.js"></script>
+    <script src="/scripts/biz/organization/prework/prework.sign.list.js?v=20190222"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
