@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>新增楼盘规划</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/personnel/change.employee.js"></script>
+    <script src="/scripts/biz/organization/personnel/change.employee.js?v=20190223"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -78,12 +78,26 @@
                         <div class="more"></div>
                     </li>
                     <li class="required link" ontap="$('#PARENT_EMPLOYEE_NAME').focus();$('#PARENT_EMPLOYEE_NAME').blur();showPopup('UI-popup','UI-PARENT')">
-                        <div class="label">上级员工</div>
+                        <div class="label">直属上级</div>
                         <div class="value">
-                            <input type="text" id="PARENT_EMPLOYEE_NAME" name="PARENT_EMPLOYEE_NAME" nullable="no" readonly="true" desc="上级员工" />
-                            <input type="hidden" id="PARENT_EMPLOYEE_ID" name="PARENT_EMPLOYEE_ID" nullable="no" desc="上级员工" />
+                            <input type="text" id="PARENT_EMPLOYEE_NAME" name="PARENT_EMPLOYEE_NAME" nullable="no" readonly="true" desc="直属上级" />
+                            <input type="hidden" id="PARENT_EMPLOYEE_ID" name="PARENT_EMPLOYEE_ID" nullable="no" desc="直属上级" />
                         </div>
                         <div class="more"></div>
+                    </li>
+                    <li class="link required">
+                        <div class="label">最高学历</div>
+                        <div class="value">
+                            <span id="educationcontainer"></span>
+                        </div>
+                    </li>
+                    <li class="link required">
+                        <div class="label">毕业院校</div>
+                        <div class="value"><input id="SCHOOL" name="SCHOOL" type="text" nullable="no" desc="毕业院校"/></div>
+                    </li>
+                    <li class="link required">
+                        <div class="label">专业</div>
+                        <div class="value"><input id="MAJOR" name="MAJOR" type="text" nullable="no" desc="专业"/></div>
                     </li>
                 </ul>
             </div>
