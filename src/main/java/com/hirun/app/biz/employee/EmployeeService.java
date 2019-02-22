@@ -189,6 +189,9 @@ public class EmployeeService extends GenericService {
         employee.put("IN_DATE", request.getString("IN_DATE"));
         employee.put("WORK_NATURE", "1");
         employee.put("WORKPLACE", request.getString("CITY"));
+        employee.put("EDUCATION_LEVEL", request.getString("EDUCATION"));
+        employee.put("SCHOOL", request.getString("SCHOOL"));
+        employee.put("MAJOR", request.getString("MAJOR"));
         employee.put("STATUS", "0");
         employee.put("CREATE_DATE", session.getCreateTime());
         employee.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
@@ -330,8 +333,24 @@ public class EmployeeService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
         String orgId = request.getString("ORG_ID");
-        if(StringUtils.isNotBlank(orgId))
+        if(StringUtils.isNotBlank(orgId)) {
             orgId = OrgBean.getOrgLine(orgId);
+        }
+        else {
+            AppSession session = SessionManager.getSession();
+            List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+            orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
+            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+                orgId = "122";
+            }
+            else {
+                orgId = rootOrg.getOrgId();
+            }
+
+            orgId = OrgBean.getOrgLine(orgId, allOrgs);
+        }
+
         RecordSet employees = dao.queryEmployees(request.getString("NAME"), request.getString("SEX"), request.getString("CITY"), request.getString("MOBILE_NO"), request.getString("IDENTITY_NO"), orgId, request.getString("JOB_ROLE"), request.getString("PARENT_EMPLOYEE_ID"));
         if(employees == null || employees.size() <= 0)
             return response;
@@ -377,6 +396,9 @@ public class EmployeeService extends GenericService {
         UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
         UserEntity user = userDAO.queryUserByPk(employee.getUserId());
         employeeInfo.put("MOBILE_NO", user.getMobileNo());
+        employeeInfo.put("EDUCATION_LEVEL", employee.getEducationLevel());
+        employeeInfo.put("SCHOOL", employee.getSchool());
+        employeeInfo.put("MAJOR", employee.getMajor());
 
         EmployeeJobRoleDAO jobDAO = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
         List<EmployeeJobRoleEntity> jobRoles = jobDAO.queryJobRoleByEmployeeId(employeeId);
@@ -439,13 +461,19 @@ public class EmployeeService extends GenericService {
         String identityNo = request.getString("IDENTITY_NO");
         String homeAddress = request.getString("HOME_ADDRESS");
         String inDate = request.getString("IN_DATE");
+        String educationLevel = request.getString("EDUCATION");
+        String school = request.getString("SCHOOL");
+        String major = request.getString("MAJOR");
 
         if(!StringUtils.equals(name, employee.getName())
                 || !StringUtils.equals(sex, employee.getSex())
                 || !StringUtils.equals(city, employee.getWorkPlace())
                 || !StringUtils.equals(identityNo, employee.getIdentityNo())
                 || !StringUtils.equals(homeAddress, employee.getHomeAddress())
-                || !StringUtils.equals(inDate+" 00:00:00", employee.getInDate())){
+                || !StringUtils.equals(inDate+" 00:00:00", employee.getInDate())
+                || !StringUtils.equals(major, employee.getMajor())
+                || !StringUtils.equals(educationLevel, employee.getEducationLevel())
+                || !StringUtils.equals(school, employee.getSchool())){
             //修改了员工信息，更新员工表
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("EMPLOYEE_ID", employeeId);
@@ -455,6 +483,9 @@ public class EmployeeService extends GenericService {
             parameter.put("IDENTITY_NO", identityNo);
             parameter.put("HOME_ADDRESS", homeAddress);
             parameter.put("IN_DATE", inDate);
+            parameter.put("EDUCATION_LEVEL", educationLevel);
+            parameter.put("SCHOOL", school);
+            parameter.put("MAJOR", major);
             parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
             parameter.put("UPDATE_TIME", session.getCreateTime());
             employeeDAO.save("ins_employee", parameter);
