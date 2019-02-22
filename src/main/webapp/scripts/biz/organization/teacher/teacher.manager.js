@@ -304,18 +304,18 @@
                         html.push("<div class=\"main\" ontap='$.teacher.viewTeacherDetail(\""+data.get("TEACHER_ID")+"\");'><div class=\"title\">");
                         html.push(data.get("TEACHER_NAME"));
                         html.push("</div>");
-                        html.push("<div class=\"content\">");
+                        html.push("<div class=\"content content-auto\">");
                         html.push("归属部门："+data.get("ORG_NAME"));
-                        html.push("</div><div class='content content-auto'");
+                        html.push("</div><div class='content content-auto'>");
                         if(data.get("ID") == "103") {
                             html.push("岗位：经理");
                         }
                         else {
                             html.push("岗位：" + data.get("JOB_ROLE_NAME"));
                         }
-                        html.push("</div><div class='content'>"+"担任课程："+data.get("COURSE_NAME"));
+                        html.push("</div><div class='content content-auto'>"+"担任课程："+data.get("COURSE_NAME"));
                         var type = data.get("TYPE");
-                        html.push("</div><div class='content'>类型：");
+                        html.push("</div><div class='content content-auto'>类型：");
                         if(type == "0") {
                             html.push("内部讲师");
                         }
@@ -323,7 +323,7 @@
                             html.push("外聘讲师");
                         }
                         var level = data.get("LEVEL");
-                        html.push("</div><div class='content'>级别：");
+                        html.push("</div><div class='content content-auto'>级别：");
                         if(level == "0") {
                             html.push("讲师");
                         }
@@ -345,8 +345,8 @@
                         if(wechatNo == null || wechatNo == "undefined") {
                             wechatNo = "暂无";
                         }
-                        html.push("</div><div class='content'>"+"QQ："+qqNo);
-                        html.push("</div><div class='content'>"+"微信号："+wechatNo);
+                        html.push("</div><div class='content content-auto'>"+"QQ："+qqNo);
+                        html.push("</div><div class='content content-auto'>"+"微信号："+wechatNo);
                         html.push("</div></div>");
                         html.push("<div class=\"side e_size-s\">");
                         html.push("<span class=\"e_ico-edit e_ico-pic-green e_ico-pic-r\" ontap='$.teacher.initChangeTeacher(\""+data.get("TEACHER_ID")+"\");'></span>");
