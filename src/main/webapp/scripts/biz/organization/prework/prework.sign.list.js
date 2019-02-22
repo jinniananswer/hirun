@@ -135,7 +135,14 @@
                         html.push("入职日期："+data.get("IN_DATE"));
                         html.push("</div>");
 
-
+                        var viewId = data.get("VIEW_ID");
+                        var isViewNotice = "否";
+                        if(viewId != null && viewId != "undefined") {
+                            isViewNotice = "是";
+                        }
+                        html.push("<div class=\"content content-auto\">");
+                        html.push("是否查看通知书："+isViewNotice);
+                        html.push("</div>");
 
                         html.push("</div>");
 
