@@ -19,6 +19,26 @@
                     ]
                 );
 
+                $.Select.append(
+                    // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
+                    "educationcontainer",
+                    // 参数设置
+                    {
+                        id:"EDUCATION",
+                        name:"EDUCATION",
+                        addDefault:false
+                    },
+                    // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
+                    [
+                        {TEXT:"本科", VALUE:"1"},
+                        {TEXT:"硕士", VALUE:"2"},
+                        {TEXT:"博士", VALUE:"3"},
+                        {TEXT:"专科", VALUE:"4"},
+                        {TEXT:"高中", VALUE:"5"},
+                        {TEXT:"初中", VALUE:"6"}
+                    ]
+                );
+
                 window["orgTree"] = new Wade.Tree("orgTree");
                 $("#orgTree").textAction(function(e, nodeData){
                     var hasChild = nodeData.haschild;
@@ -64,6 +84,9 @@
                         $("#IN_DATE").val(employeeInfo.IN_DATE);
                         $("#ORG_ID").val(employeeInfo.ORG_ID);
                         $("#ORG_TEXT").val(employeeInfo.ORG_NAME);
+                        $("#EDUCATION").val(employeeInfo.EDUCATION_LEVEL);
+                        $("#SCHOOL").val(employeeInfo.SCHOOL);
+                        $("#MAJOR").val(employeeInfo.MAJOR);
                         var jobRole = employeeInfo.JOB_ROLE;
                         if(jobRole != null && jobRole != "undefined"){
                             $("#JOB_ROLE").val(jobRole);
