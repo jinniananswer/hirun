@@ -75,7 +75,7 @@
             },
 
             viewScore : function(trainId) {
-                $.redirect.open('redirectToTrainScoreQuery?TRAIN_ID='+trainId, '培训成绩管理');
+                $.redirect.open('redirectToTrainScoreQuery?TRAIN_ID='+trainId, '培训成绩查询');
             }
         }});
 })($);

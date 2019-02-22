@@ -285,11 +285,11 @@ public class TrainDAO extends GenericDAO {
         }
         sql.append("and not exists(select 1 from ins_train_sign f where f.employee_id = b.employee_id and f.train_id = :TRAIN_ID and f.status = '0') ");
         if (needPassExam) {
-            sql.append("and exists(select 1 from ins_exam_score g where g.employee_id = b.employee_id and g.exam_id = 1 and f.score >= 80) ");
-            sql.append("and exists(select 1 from ins_exam_score h where h.employee_id = b.employee_id and h.exam_id = 2 and g.score >= 80) ");
-            sql.append("and exists(select 1 from ins_exam_score i where i.employee_id = b.employee_id and i.exam_id = 3 and h.score >= 80) ");
-            sql.append("and exists(select 1 from ins_exam_score j where j.employee_id = b.employee_id and j.exam_id = 4 and i.score >= 80) ");
-            sql.append("and exists(select 1 from ins_exam_score k where k.employee_id = b.employee_id and k.exam_id = 5 and j.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score g where g.employee_id = b.employee_id and g.exam_id = 1 and g.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score h where h.employee_id = b.employee_id and h.exam_id = 2 and h.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score i where i.employee_id = b.employee_id and i.exam_id = 3 and i.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score j where j.employee_id = b.employee_id and j.exam_id = 4 and j.score >= 80) ");
+            sql.append("and exists(select 1 from ins_exam_score k where k.employee_id = b.employee_id and k.exam_id = 5 and k.score >= 80) ");
             sql.append("and exists(select 1 from ins_train l, ins_train_exam_score m where m.train_id = l.train_id and l.type = '2' and l.status = '0' and m.employee_id = b.employee_id and m.score >= 80 ) ");
         }
 
