@@ -48,7 +48,7 @@
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-pic-blue e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.signPrework(\"" + data.get("TRAIN_ID") + "\");'>人</span>");
+                    html.push("<span class=\"e_ico-pic-blue e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.signPrework(\"" + data.get("TRAIN_ID") + "\",\""+signStatus+"\");'>人</span>");
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
@@ -66,8 +66,13 @@
                 $.insertHtml('beforeend', $("#preworks"), html.join(""));
             },
 
-            signPrework : function(trainId) {
-                $.redirect.open('redirectToSignPreWork?TRAIN_ID='+trainId, '岗前考评报名');
+            signPrework : function(trainId, signStatus) {
+                if(signStatus == "0") {
+                    $.redirect.open('redirectToSignPreWork?TRAIN_ID='+trainId, '岗前考评报名');
+                }
+                else {
+                    $.redirect.open('redirectToPreworkSignList?TRAIN_ID='+trainId, '人员详情');
+                }
             },
 
             viewNotice : function(trainId) {
