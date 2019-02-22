@@ -131,6 +131,30 @@ public class EmployeeEntity extends GenericEntity{
         this.set("WORKPLACE", workplace);
     }
 
+    public String getEducationLevel() {
+        return this.get("EDUCATION_LEVEL");
+    }
+
+    public void setEducationLevel(String educationLevel) {
+        this.set("EDUCATION_LEVEL", educationLevel);
+    }
+
+    public String getSchool() {
+        return this.get("SCHOOL");
+    }
+
+    public void setSchool(String school) {
+        this.set("SCHOOL", school);
+    }
+
+    public String getMajor() {
+        return this.get("MAJOR");
+    }
+
+    public void setMajor(String major) {
+        this.set("MAJOR", major);
+    }
+
     public String getStatus(){
         return this.get("STATUS");
     }
