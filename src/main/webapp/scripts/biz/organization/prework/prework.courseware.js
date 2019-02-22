@@ -65,7 +65,7 @@
                 var length = datas.length;
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
-                    html.push("<li class='link' ontap=\"$.redirect.open('redirectToViewFile?FILE_ID="+data.get("FILE_ID")+"','课件详情')\">");
+                    html.push("<li class='link' ontap=\"$.prework.openCourseware('"+data.get("STORAGE_PATH")+"','"+data.get("FILE_ID")+"')\">");
                     html.push("<div class='main'><div class='title'>");
                     html.push(data.get("NAME"));
                     html.push("</div></div>");
@@ -74,6 +74,26 @@
                 }
                 $.insertHtml('beforeend', ul, html.join(""));
                 showPopup('UI-popup','UI-COURSE_FILE');
+            },
+
+            openCourseware : function(url, fileId) {
+                if($.os.phone) {
+
+                    if($.os.ios) {
+                        try {
+                            window.webkit.messageHandlers.openCourseware.postMessage(url);
+                        } catch (err) {
+
+                        }
+                    }
+                    else if($.os.android) {
+                        document.location = "office://courseware?FILE_URL="+url;
+                    }
+
+                }
+                else{
+                    $.redirect.open('redirectToViewFile?FILE_ID='+fileId,'资料详情');
+                }
             }
         }});
 })($);
