@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>讲师管理</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/teacher/teacher.manager.js?v=20181215191800"></script>
+    <script src="/scripts/biz/organization/teacher/teacher.manager.js?v=20190223"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -50,6 +50,14 @@
 
         </div>
     </div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
 </div>
 <!-- 滚动 结束 -->
 
@@ -391,10 +399,6 @@
         </div>
     </div>
 </div>
-<div class="c_space"></div>
-<div class="c_space"></div>
-<div class="c_space"></div>
-<div class="c_space"></div>
 <!-- 弹窗 结束 -->
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script>

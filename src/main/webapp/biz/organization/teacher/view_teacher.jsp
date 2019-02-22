@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>讲师详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/teacher/view.teacher.js"></script>
+    <script src="/scripts/biz/organization/teacher/view.teacher.js?v=20190223"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -43,6 +43,14 @@
             </div>
         </div>
     </div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
 </div>
 
 <!-- 滚动 结束 -->
