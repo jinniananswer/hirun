@@ -59,7 +59,7 @@ public class CourseBean {
         int size = courses.size();
         for(int i=0;i<size;i++){
             Record course = courses.get(i);
-            if(StringUtils.equals(exceptCourseId, course.get("COURSE_ID"))) {
+            if(StringUtils.indexOf(","+exceptCourseId+",", course.get("COURSE_ID")) > 0) {
                 continue;
             }
             if(StringUtils.equals(parentCourseId, course.get("PARENT_COURSE_ID"))){
