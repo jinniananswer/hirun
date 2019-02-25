@@ -14,6 +14,8 @@
                     var startDate = train.get("START_DATE");
                     var endDate = train.get("END_DATE");
 
+                    $("#new_start_date").html(startDate);
+
                     $("#design_sign_date").html(startDate+" 08:20");
                     $("#design_start_date").html(startDate);
 
