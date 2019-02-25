@@ -5,7 +5,9 @@
             examId : null,
             maxTime : 40*60,
             timer : null,
+            errorTopic : ",",
             init : function() {
+                window["UI-popup"] = new Wade.Popup("UI-popup");
                 $.ajaxPost('initPreworkExam',"&EXAM_ID="+this.examId,function(data) {
                     $("#CONFIRM_BUTTON").css("display", "none");
                     $("#exam").css("display", "none");
@@ -220,6 +222,9 @@
                         if(answer == correctAnswer) {
                             answerScore += score;
                         }
+                        else{
+                            this.errorTopic += i+",";
+                        }
                     }
                     else {
                         if(answer.length == correctAnswer.length) {
@@ -233,21 +238,70 @@
                             if( num == correctAnswer.length) {
                                 answerScore += score;
                             }
+                            else {
+                                this.errorTopic += i+",";
+                            }
+                        }
+                        else{
+                            this.errorTopic += i+",";
                         }
                     }
                 }
                 $.ajaxPost('submitExam', "&ANSWER_SCORE="+answerScore+"&EXAM_ID="+$.exam.examId, function (data) {
-                    $.endPageLoading();
                     clearInterval($.exam.timer);
                     MessageBox.success("提交试卷成功，您的成绩为"+answerScore+"分","点击确定返回，点击取消关闭当前页面", function(btn){
                         if("ok" == btn) {
+                            $.endPageLoading();
                             document.location.reload();
                         }
-                        else {
-                            $.redirect.closeCurrentPage();
+                        else{
+                            //$.endPageLoading();
+                            $("#submitArea").empty();
+                            $.exam.showErrorTopic();
+                            //$.redirect.closeCurrentPage();
                         }
-                    },{"cancel":"取消"})
+                    },{"cancel":"查看错题"});
                 });
+            },
+
+            showErrorTopic : function(){
+                $("#error_topic").empty();
+                var html = [];
+                var length = this.topics.length;
+                for(var i=0;i<length;i++) {
+
+                    if(this.errorTopic.indexOf(i+"") >= 0) {
+                        var topic = this.topics.get(i);
+                        html.push("<li class='link'>");
+                        html.push("<div class=\"group\">");
+                        html.push("<div class=\"content\">");
+                        html.push("<div class='l_padding'>");
+                        html.push("<div class=\"pic pic-middle\">");
+                        html.push("</div>");
+                        html.push("</div>");
+                        html.push("<div class=\"main\">");
+                        html.push("<div class=\"title title-auto\">");
+                        html.push(topic.get("NAME"));
+                        html.push("</div>");
+                        var options = topic.get("OPTION");
+                        var optionLength = options.length;
+                        for(var j=0;j<optionLength;j++){
+                            var data = options.get(j);
+                            html.push("<div class=\"content content-auto\">");
+                            html.push(data.get("SYMBOL"));
+                            html.push(data.get("NAME"));
+                            html.push("</div>");
+                        }
+
+                        html.push("</div>");
+                        html.push("</div>");
+                        html.push("</div>");
+                        html.push("</li>");
+                    }
+                }
+
+                $.insertHtml('beforeend', $("#error_topic"), html.join(""));
+                showPopup('UI-popup','UI-ERROR_ITEM');
             }
         }});
 })($);
