@@ -346,6 +346,9 @@ public class TrainService extends GenericService {
         response.set("TOTAL_NUM", signList.size()+"");
         JSONObject sign = filterSignList(signList);
         response.set("SIGN_LIST", sign);
+        JSONObject orgTree = OrgBean.getOrgTree();
+        response.set("ORG_TREE", orgTree);
+        response.set("HAS_END_SIGN_OPER", Permission.hasEndSignOper()+"");
         return response;
     }
 
@@ -538,6 +541,7 @@ public class TrainService extends GenericService {
         parameter.put("SIGN_STATUS", "0");
         parameter.put("START_DATE", request.getString("START_DATE"));
         parameter.put("END_DATE", request.getString("END_DATE"));
+        parameter.put("SIGN_END_DATE", request.getString("SIGN_END_DATE"));
         parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
