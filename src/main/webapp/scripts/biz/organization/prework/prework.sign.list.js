@@ -131,9 +131,19 @@
                         html.push("<div class=\"content content-auto\">");
                         html.push("专业："+major);
                         html.push("</div>");
+
+                        var certificateNo = data.get("CERTIFICATE_NO");
+                        if(certificateNo == null || certificateNo == "undefined") {
+                            certificateNo = "";
+                        }
+                        html.push("<div class=\"content content-auto\">");
+                        html.push("毕业证书编号："+certificateNo);
+                        html.push("</div>");
+
                         html.push("<div class=\"content content-auto\">");
                         html.push("入职日期："+data.get("IN_DATE"));
                         html.push("</div>");
+
 
                         var viewId = data.get("VIEW_ID");
                         var isViewNotice = "否";
