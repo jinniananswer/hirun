@@ -117,7 +117,7 @@
                 $.insertHtml('beforeend', area, html.join(""));
             },
 
-            viewNotice : function(trainId) {
+            viewNotice : function(trainId, type) {
                 if(type == "1") {
                     $.redirect.open('redirectToViewPreWorkNotice?TRAIN_ID=' + trainId, '查看岗前考评告知书');
                 }
