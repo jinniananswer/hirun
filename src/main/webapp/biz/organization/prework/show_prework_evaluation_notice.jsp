@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>查看岗前考评通知</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/show.prework.evaluation.notice.js?v=20190225"></script>
+    <script src="/scripts/biz/organization/prework/show.prework.evaluation.notice.js?v=20190226"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -44,7 +44,7 @@
                 <br/>
                 <span class="e_strong">三、参加人员：</span>
                 <br/>
-                1、截至2019年1月9日，进公司满60—75天的新员工；
+                1、截至<span id="new_start_date"></span>，进公司满60—75天的新员工；
                 <br/>
                 2、参加过一次考评，但通用或专业科目未达80分的员工；
                 <br/>
