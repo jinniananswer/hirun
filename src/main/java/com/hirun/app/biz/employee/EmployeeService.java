@@ -187,11 +187,13 @@ public class EmployeeService extends GenericService {
         employee.put("NATIVE_CITY", "0");
         employee.put("NATIVE_REGION", "0");
         employee.put("IN_DATE", request.getString("IN_DATE"));
+        employee.put("REGULAR_DATE", request.getString("REGULAR_DATE"));
         employee.put("WORK_NATURE", "1");
         employee.put("WORKPLACE", request.getString("CITY"));
         employee.put("EDUCATION_LEVEL", request.getString("EDUCATION"));
         employee.put("SCHOOL", request.getString("SCHOOL"));
         employee.put("MAJOR", request.getString("MAJOR"));
+        employee.put("CERTIFICATE_NO", request.getString("CERTIFICATE_NO"));
         employee.put("STATUS", "0");
         employee.put("CREATE_DATE", session.getCreateTime());
         employee.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
@@ -215,6 +217,14 @@ public class EmployeeService extends GenericService {
 
         FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
         RecordSet jobFuncs = funcDAO.queryJobFunc(request.getString("JOB_ROLE"));
+        RecordSet commFuncs = funcDAO.queryJobFunc("-1");
+        if(jobFuncs == null) {
+            jobFuncs = new RecordSet();
+        }
+
+        if(ArrayTool.isNotEmpty(commFuncs)) {
+            jobFuncs.addAll(commFuncs);
+        }
         List<Map<String, String>> userFuncs = new ArrayList<Map<String, String>>();
         if(jobFuncs != null && jobFuncs.size() > 0){
             int jobFuncSize = jobFuncs.size();
@@ -387,7 +397,13 @@ public class EmployeeService extends GenericService {
         if(StringUtils.isNotBlank(inDate)){
             inDate = TimeTool.formatLocalDateTimeToString(TimeTool.stringToLocalDateTime(inDate,TimeTool.TIME_PATTERN),TimeTool.DATE_FMT_3);
         }
+
+        String regularDate = employee.getRegularDate();
+        if(StringUtils.isNotBlank(regularDate)) {
+            regularDate = TimeTool.formatLocalDateTimeToString(TimeTool.stringToLocalDateTime(regularDate,TimeTool.TIME_PATTERN),TimeTool.DATE_FMT_3);
+        }
         employeeInfo.put("IN_DATE", inDate);
+        employeeInfo.put("REGULAR_DATE", regularDate);
         employeeInfo.put("HOME_ADDRESS", employee.getHomeAddress());
         employeeInfo.put("USER_ID", employee.getUserId());
         employeeInfo.put("CITY", employee.getWorkPlace());
@@ -399,6 +415,7 @@ public class EmployeeService extends GenericService {
         employeeInfo.put("EDUCATION_LEVEL", employee.getEducationLevel());
         employeeInfo.put("SCHOOL", employee.getSchool());
         employeeInfo.put("MAJOR", employee.getMajor());
+        employeeInfo.put("CERTIFICATE_NO", employee.getCertificateNo());
 
         EmployeeJobRoleDAO jobDAO = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
         List<EmployeeJobRoleEntity> jobRoles = jobDAO.queryJobRoleByEmployeeId(employeeId);
@@ -464,6 +481,7 @@ public class EmployeeService extends GenericService {
         String educationLevel = request.getString("EDUCATION");
         String school = request.getString("SCHOOL");
         String major = request.getString("MAJOR");
+        String certificateNo = request.getString("CERTIFICATE_NO");
 
         if(!StringUtils.equals(name, employee.getName())
                 || !StringUtils.equals(sex, employee.getSex())
@@ -473,7 +491,8 @@ public class EmployeeService extends GenericService {
                 || !StringUtils.equals(inDate+" 00:00:00", employee.getInDate())
                 || !StringUtils.equals(major, employee.getMajor())
                 || !StringUtils.equals(educationLevel, employee.getEducationLevel())
-                || !StringUtils.equals(school, employee.getSchool())){
+                || !StringUtils.equals(school, employee.getSchool())
+                || !StringUtils.equals(certificateNo, employee.getCertificateNo())){
             //修改了员工信息，更新员工表
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("EMPLOYEE_ID", employeeId);
@@ -486,6 +505,7 @@ public class EmployeeService extends GenericService {
             parameter.put("EDUCATION_LEVEL", educationLevel);
             parameter.put("SCHOOL", school);
             parameter.put("MAJOR", major);
+            parameter.put("CERTIFICATE_NO", certificateNo);
             parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
             parameter.put("UPDATE_TIME", session.getCreateTime());
             employeeDAO.save("ins_employee", parameter);
