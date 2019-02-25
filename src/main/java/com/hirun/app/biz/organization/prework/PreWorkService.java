@@ -38,7 +38,7 @@ public class PreWorkService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
-        RecordSet trains = dao.queryPreWorks(null, true);
+        RecordSet trains = dao.queryPreWorks(null, false);
         response.set("PREWORKS", ConvertTool.toJSONArray(trains));
         return response;
     }
@@ -239,6 +239,10 @@ public class PreWorkService extends GenericService {
     }
 
     public ServiceResponse initViewPreworkCourseware(ServiceRequest request) throws Exception {
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+
+
         CourseBean bean = new CourseBean();
         JSONObject courseTree = bean.getCourseTreeByExceptCourseId("12");
 
