@@ -81,11 +81,11 @@ public class Permission {
         return false;
     }
 
-    public static boolean hasEndSign() throws Exception{
+    public static boolean hasEndSignOper() throws Exception{
         if(isSuperUser())
             return true;
         RightsCollection rights = RightsCollection.getInstance();
-        if(rights.hasFuncCode("END_SIGN"))
+        if(rights.hasFuncCode("END_SIGN_OPER"))
             return true;
 
         return false;
