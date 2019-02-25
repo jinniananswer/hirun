@@ -51,7 +51,7 @@ public class TrainDAO extends GenericDAO {
     public RecordSet queryPreWorks(String trainId, boolean isValid) throws SQLException {
         StringBuilder sql = new StringBuilder();
         Map<String, String> parameter = new HashMap<String, String>();
-        sql.append("select a.train_id, a.name train_name,a.type, a.train_desc, a.train_address, a.hotel_address, date_format(a.start_date, '%Y-%m-%d') start_date, date_format(a.end_date, '%Y-%m-%d') end_date,a.charge_employee_id,a.status, a.sign_status ");
+        sql.append("select a.train_id, a.name train_name,a.type, a.train_desc, a.train_address, a.hotel_address, date_format(a.start_date, '%Y-%m-%d') start_date, date_format(a.end_date, '%Y-%m-%d') end_date,date_format(a.sign_end_date, '%Y-%m-%d %H:%i:%s') sign_end_date ,a.charge_employee_id,a.status, a.sign_status ");
         sql.append("from ins_train a ");
         sql.append("where a.type = '1' ");
         sql.append("and a.status = '0' ");
@@ -309,7 +309,6 @@ public class TrainDAO extends GenericDAO {
         sql.append("and a.status = '0' ");
         sql.append("and a.sign_status = '1' ");
         sql.append("and b.status = '0' ");
-        sql.append("and a.end_date > now() ");
         sql.append("and b.employee_id = :EMPLOYEE_ID ");
 
         return this.queryBySql(sql.toString(), parameter);
