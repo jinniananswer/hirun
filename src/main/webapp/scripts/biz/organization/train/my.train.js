@@ -109,7 +109,7 @@
                     html.push("</div>");
                     html.push("</div>");
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-m\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
+                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-m\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\",\""+type+"\");'>通</span>");
                     html.push("</div>");
                     html.push("</li>");
                     this.level ++;
@@ -118,7 +118,12 @@
             },
 
             viewNotice : function(trainId) {
-                $.redirect.open('redirectToViewPreWorkNotice?TRAIN_ID='+trainId, '查看岗前考评告知书');
+                if(type == "1") {
+                    $.redirect.open('redirectToViewPreWorkNotice?TRAIN_ID=' + trainId, '查看岗前考评告知书');
+                }
+                else{
+                    $.redirect.open('redirectToViewTrainNotice?TRAIN_ID='+trainId, '查看培训告知书');
+                }
             },
 
             viewDetail : function(trainId) {
