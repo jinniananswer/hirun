@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>新增楼盘规划</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/personnel/change.employee.js?v=20190223"></script>
+    <script src="/scripts/biz/organization/personnel/change.employee.js?v=20190225"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -61,6 +61,13 @@
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
+                    <li class="link required" ontap="$('#REGULAR_DATE').focus();$('#REGULAR_DATE').blur();">
+                        <div class="label">转正日期</div>
+                        <div class="value"><span class="e_mix">
+								<input type="text" id="REGULAR_DATE" name="REGULAR_DATE" datatype="date" readonly="true" desc="转正日期" />
+								<span class="e_ico-date"></span>
+							</span></div>
+                    </li>
                     <li class="required link" ontap="$('#ORG_TEXT').focus();$('#ORG_TEXT').blur();showPopup('UI-popup','UI-ORG')">
                         <div class="label">所属部门</div>
                         <div class="value">
@@ -98,6 +105,10 @@
                     <li class="link required">
                         <div class="label">专业</div>
                         <div class="value"><input id="MAJOR" name="MAJOR" type="text" nullable="no" desc="专业"/></div>
+                    </li>
+                    <li class="link required">
+                        <div class="label">毕业证书编号</div>
+                        <div class="value"><input id="CERTIFICATE_NO" name="CERTIFICATE_NO" type="text" nullable="no" desc="毕业证书编号"/></div>
                     </li>
                 </ul>
             </div>
