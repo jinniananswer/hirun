@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>查看岗前考评通知</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/show.prework.evaluation.notice.js"></script>
+    <script src="/scripts/biz/organization/prework/show.prework.evaluation.notice.js?v=20190225"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -54,6 +54,347 @@
                 <br/>
                 以下为初次考评时间安排，调职和补考的，根据初次考评时间进行相应科目考评。
                 <br/>
+                <div class="c_list c_list-line c_list-border c_list-space l_padding">
+                    <ul>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            设计师协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="design_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="design_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：陈志斌、李强
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：方案设计师、助理设计师
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            制作设计师协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="make_design_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="make_design_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：张瑞、朱平
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：制作设计师
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            客户代表协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="customer_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="customer_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：杜世昌、徐灿
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：客户代表、客户文员
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            橱柜设计师协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="cg_design_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="cg_design_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：曾令军、陈谨
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：橱柜设计师
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            家装顾问协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="counselor_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="counselor_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：唐晓江、伍迎湘
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：家装/家居顾问、小区推广员、市场文员、小区宣传员等
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            会计协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="kj_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="kj_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：旷红斌、魏姣
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：会计、出纳
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            人资协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="rz_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="rz_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：薛帅、蒋丹
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：人资专干、人资文员
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            工程协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="gc_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="gc_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：王召、陈波
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：项目经理、工程助理（文员）
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            供应链协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="gyl_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="gyl_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：文春桥、贺秋
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：采购员、主材下单员
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            订单管理协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="ddgl_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="ddgl_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：刘友庆、李丽
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：订单管理员
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            售后服务协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="shfw_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="shfw_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：杜世昌、雍新辉
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：售后专干、售后文员
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class='link'>
+                            <div class="group">
+                                <div class="content">
+                                    <div class='l_padding'>
+                                        <div class="pic pic-middle">
+                                        </div>
+                                    </div>
+                                    <div class="main">
+                                        <div class="title">
+                                            结构工程师协会
+                                        </div>
+                                        <div class="content content-auto">
+                                            报到时间：<span id="jg_sign_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            考试时间：<span id="jg_start_date"></span>
+                                        </div>
+                                        <div class="content content-auto">
+                                            主持人：晏松涛、肖军
+                                        </div>
+                                        <div class="content content-auto">
+                                            参加人员：结构工程师
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <br/>
                 <span class="e_strong">五、员工参加岗前培训考评的资格：</span>
                 <br/>
                 1、已参加职前培训并考试合格。
@@ -64,7 +405,7 @@
                 <br/>
                 <span class="e_strong">六、报名截止时间：</span>
                 <br/>
-                各家装分公司、鸿扬木制人资必须在<span id="sign_end_date"></span>下午17点前填写好《岗前考评报名表》（详见附件1），以邮件形式报鸿扬集团总部人力资源与公共事务部公共邮箱（邮箱：1498729757@qq.com，注明洪慧收）。
+                各家装分公司、鸿扬木制人资必须在<span id="sign_end_date"></span>下午17点前完成报名。
                 <br/>
                 <span class="e_strong">七、注意事项：</span>
                 <br/>

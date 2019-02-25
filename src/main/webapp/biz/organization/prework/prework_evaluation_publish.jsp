@@ -59,8 +59,17 @@
                     <div class="value">
                         <span class="e_mix">
                             <input type="text" id="END_DATE" name="END_DATE" datatype="date" nullable="no" readonly="true" desc="培训结束时间" />
+                        </span>
+                    </div>
+                </li>
+                <li class="link required">
+                    <div class="label">报名截止时间</div>
+                    <div class="value">
+                        <span class="e_mix">
+                            <input type="text" id="SIGN_END_DATE" name="SIGN_END_DATE" datatype="date" nullable="no" readonly="true" desc="培训结束时间" />
                             <span class="e_ico-date"></span>
                         </span>
+
                     </div>
                 </li>
             </ul>
