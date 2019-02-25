@@ -241,10 +241,18 @@ public class PreWorkService extends GenericService {
     public ServiceResponse initViewPreworkCourseware(ServiceRequest request) throws Exception {
         AppSession session = SessionManager.getSession();
         String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
-
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet signed = dao.queryPreJobTrain(employeeId);
+        String exceptCourseId = "12";
+        if(ArrayTool.isEmpty(signed)) {
+            exceptCourseId = StaticDataTool.getCodeName("PREWORK_COURSEWARE_EXCEPT", "1");
+        }
+        else {
+            exceptCourseId = StaticDataTool.getCodeName("PREWORK_COURSEWARE_EXCEPT", "2");
+        }
 
         CourseBean bean = new CourseBean();
-        JSONObject courseTree = bean.getCourseTreeByExceptCourseId("12");
+        JSONObject courseTree = bean.getCourseTreeByExceptCourseId(exceptCourseId);
 
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE_TREE", courseTree);
