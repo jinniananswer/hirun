@@ -360,4 +360,19 @@ public class TrainDAO extends GenericDAO {
 
         return this.queryBySql(sql.toString(), parameter);
     }
+
+    public RecordSet queryMyTrainScore(String employeeId, String trainId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+        parameter.put("TRAIN_ID", trainId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select train_id, item, max(score) score ");
+        sql.append("from ins_train_exam_score ");
+        sql.append("where employee_id = :EMPLOYEE_ID ");
+        sql.append("and train_id = :TRAIN_ID ");
+        sql.append("group by train_id, item ");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
 }
