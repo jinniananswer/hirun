@@ -628,11 +628,14 @@ public class TrainService extends GenericService {
                 }
                 myTrain.put("COURSE_NAME", courseName);
             }
+            RecordSet scores = dao.queryMyTrainScore(employeeId, trainId);
+            JSONObject temp = ConvertTool.toJSONObject(myTrain);
+            temp.put("SCORES", ConvertTool.toJSONArray(scores));
             if(endDate.compareTo(now) >= 0) {
-                current.add(ConvertTool.toJSONObject(myTrain));
+                current.add(temp);
             }
             else {
-                history.add(ConvertTool.toJSONObject(myTrain));
+                history.add(temp);
             }
         }
 
