@@ -69,8 +69,14 @@
                 $.insertHtml('beforeend', $("#tip"), "共查询到"+length+"条数据");
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
-                    html.push("<li class='link' ><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    var score=data.get("SCORE");
+                    var scoreItem0=data.get("ITEM_0");
+                    var scoreItem1=data.get("ITEM_1");
+                    var type=data.get("TYPE");
+                    var needComm=data.get("NEED_COMM");
+                    var needPro=data.get("NEED_PRO");
 
+                    html.push("<li class='link' ><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     html.push("</div></div>");
                     html.push("<div class=\"main\"><div class=\"title\">");
                     html.push("<span class=\"e_strong \">");
@@ -90,10 +96,9 @@
                     html.push("<span class=\"value \">"+train_name+""+"</span>")
                     html.push("</li>")
 
+                    if(2==type ||3==type){
                     html.push("<li>")
-                    html.push("<span class=\"label\">"+"培训成绩："+"</span>")
-
-                    var score=data.get("SCORE")
+                    html.push("<span class=\"label\">"+"综合成绩："+"</span>")
                     if(score==null){
                     html.push("<span class=\"value e_red\">"+"未录入成绩"+"</span>")
                     }
@@ -101,7 +106,32 @@
                         html.push("<span class=\"value \">"+score+" 分"+"</span>")
                     }
                     html.push("</li>")
+                    }else {
+                        if(needComm=="TRUE"){
+                            html.push("<li>")
+                            html.push("<span class=\"label\">"+"通用成绩："+"</span>")
+                            if(scoreItem0==null  ){
+                                html.push("<span class=\"value e_red\">"+"未录入成绩"+"</span>")
+                            }
+                            else {
 
+                                html.push("<span class=\"value \">"+scoreItem0+" 分"+"</span>")
+                            }
+                            html.push("</li>")
+                        }
+                        if(needPro=="TRUE"){
+                            html.push("<li>")
+                            html.push("<span class=\"label\">"+"专业成绩："+"</span>")
+                            if(scoreItem1==null){
+                                html.push("<span class=\"value e_red\">"+"未录入成绩"+"</span>")
+                            }
+                            else {
+                                html.push("<span class=\"value \">"+scoreItem1+" 分"+"</span>")
+                            }
+                            html.push("</li>")
+                        }
+
+                    }
 
                     html.push("</ul>")
 
