@@ -35,6 +35,10 @@
                     html.push(data.get("TRAIN_ADDRESS"));
                     html.push("</div>");
 
+                    html.push("<div class='content content-auto'><span class='e_strong'>报名截止时间：</span>");
+                    html.push(data.get("SIGN_END_DATE"));
+                    html.push("</div>");
+
                     html.push("<div class='content content-auto'><span class='e_strong'>报名状态：</span>");
                     var signStatus = data.get("SIGN_STATUS");
                     if(signStatus == "0") {
