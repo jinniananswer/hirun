@@ -235,6 +235,9 @@ public class PreWorkService extends GenericService {
         response.set("TOTAL_NUM", signList.size()+"");
         JSONObject sign = TrainService.filterSignList(signList);
         response.set("SIGN_LIST", sign);
+        JSONObject orgTree = OrgBean.getOrgTree();
+        response.set("ORG_TREE", orgTree);
+        response.set("HAS_END_SIGN_OPER", Permission.hasEndSignOper()+"");
         return response;
     }
 
