@@ -145,7 +145,7 @@ public class TrainService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
-        RecordSet trains = dao.queryTrains(null, true);
+        RecordSet trains = dao.queryTrains(null, false);
         trains = filterTrains(trains);
         response.set("TRAINS", ConvertTool.toJSONArray(trains));
         return response;
@@ -644,6 +644,7 @@ public class TrainService extends GenericService {
 
         int size = trains.size();
         Map<String, Record> tempTrain = new HashMap<String, Record>();
+        RecordSet rst = new RecordSet();
         for(int i=0;i<size;i++) {
             Record train = trains.get(i);
             String trainId = train.get("TRAIN_ID");
@@ -651,17 +652,12 @@ public class TrainService extends GenericService {
             String courseId = train.get("COURSE_ID");
             if(!tempTrain.containsKey(trainId)) {
                 tempTrain.put(trainId, train);
+                rst.add(train);
             }
             else {
                 tempTrain.get(trainId).put("COURSE_NAME", tempTrain.get(trainId).get("COURSE_NAME") + "," + courseName);
                 tempTrain.get(trainId).put("COURSE_ID", tempTrain.get(trainId).get("COURSE_ID") + "," + courseId);
             }
-        }
-
-        RecordSet rst = new RecordSet();
-        Set<String> keys = tempTrain.keySet();
-        for(String key : keys){
-            rst.add(tempTrain.get(key));
         }
         return rst;
     }
