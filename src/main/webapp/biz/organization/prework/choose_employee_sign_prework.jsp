@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>选择员工报名</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/choose.employee.sign.prework.js"></script>
+    <script src="/scripts/biz/organization/prework/choose.employee.sign.prework.js?v=20190226"></script>
 </head>
 <body>
 <div class="c_header">
