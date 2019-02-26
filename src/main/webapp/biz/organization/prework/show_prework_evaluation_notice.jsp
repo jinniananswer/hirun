@@ -405,7 +405,7 @@
                 <br/>
                 <span class="e_strong">六、报名截止时间：</span>
                 <br/>
-                各家装分公司、鸿扬木制人资必须在<span id="sign_end_date"></span>下午17点前完成报名。
+                各家装分公司、鸿扬木制人资必须在<span id="sign_end_date"></span>前完成报名。
                 <br/>
                 <span class="e_strong">七、注意事项：</span>
                 <br/>
