@@ -41,7 +41,7 @@
                             $("#DELETE_BUTTON").css("display", "");
                         }
                         else {
-                            $("#DELETE_BUTTON").css("display", "none");
+                            $("#ADD_BUTTON").css("display", "none");
                             $("#DELETE_BUTTON").css("display", "none");
                         }
                     }
