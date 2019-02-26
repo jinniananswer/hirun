@@ -179,6 +179,14 @@
             <button type="button" id="SUBMIT_BUTTON" style="display:none" class="e_button-r e_button-l e_button-red" ontap="$.exam.submit(true)">提交考卷</button>
         </div>
     </div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
+    <div class="c_space"></div>
 </div>
 <!-- 滚动 结束 -->
 <!-- 弹窗 开始 -->
