@@ -229,9 +229,7 @@ public class TrainService extends GenericService {
         parameter.put("END_DATE", request.getString("END_DATE"));
         parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
         parameter.put("HOTEL_ADDRESS", request.getString("HOTEL_ADDRESS"));
-        parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
-        parameter.put("CREATE_DATE", session.getCreateTime());
         parameter.put("UPDATE_TIME", session.getCreateTime());
 
         dao.save("ins_train", parameter);
