@@ -86,7 +86,7 @@
 
                         }
                     }
-                    else if($.os.android) {
+                    else{
                         document.location = "office://courseware?FILE_URL="+url;
                     }
 
