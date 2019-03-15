@@ -148,6 +148,12 @@
             <version>2.4.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.6</version>
+        </dependency>
+
         <!-- jedis -->
         <dependency>
             <groupId>redis.clients</groupId>
