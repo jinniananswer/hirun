@@ -321,6 +321,12 @@
             <groupId>com.github.fernandospr</groupId>
             <artifactId>javapns-jdk16</artifactId>
             <version>2.2.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId> org.bouncycastle</groupId>
+                    <artifactId>bcprov-jdk16</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
