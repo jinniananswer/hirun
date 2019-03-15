@@ -91,6 +91,7 @@
                 }
 
                 $("#messagebox").css("display","none");
+                $("#EXPORT_SIGN_BUTTON").css("display", "");
                 datas.eachKey(function(key, index, totalCount){
                     html.push("<div class='c_box c_box-border'><div class='c_title' ontap=\"$(this).next().toggle();\">");
                     var signs = datas.get(key);
@@ -632,6 +633,11 @@
                     },{"cancel":"取消"})
                 });
 
+            },
+
+            export : function() {
+                var trainId = $("#TRAIN_ID").val();
+                window.location.href = "/exportPreworkSignList?TRAIN_ID=" + trainId;
             },
 
             isExists : function(employeeId) {
