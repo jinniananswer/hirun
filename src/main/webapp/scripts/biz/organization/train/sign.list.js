@@ -62,6 +62,7 @@
                 }
 
                 $("#messagebox").css("display","none");
+                $("#EXPORT_SIGN_BUTTON").css("display", "");
                 datas.eachKey(function(key, index, totalCount){
                     html.push("<div class='c_box c_box-border'><div class='c_title' ontap=\"$(this).next().toggle();\">");
                     var signs = datas.get(key);
@@ -307,6 +308,11 @@
                 else {
                     li.attr("class", "link checked");
                 }
+            },
+
+            export : function() {
+                var trainId = $("#TRAIN_ID").val();
+                window.location.href = "/exportSignList?TRAIN_ID=" + trainId;
             },
 
             confirmSelectEmployee : function() {
