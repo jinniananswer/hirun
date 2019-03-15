@@ -329,6 +329,12 @@
             <version>1.1.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.6</version>
+        </dependency>
+
 
 
         <!--测试时用到的 end-->
