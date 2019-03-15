@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>报名详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/prework.sign.list.js?v=201902262347"></script>
+    <script src="/scripts/biz/organization/prework/prework.sign.list.js?v=20190315"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -53,6 +53,7 @@
             <button type="button" id="ADD_BUTTON" name="ADD_BUTTON"  class="e_button-r e_button-l e_button-green" ontap="showPopup('UI-popup','UI-popup-query-cond')">新增报名人员</button>
             <button type="button" id="DELETE_BUTTON" name="DELETE_BUTTON"  class="e_button-r e_button-l e_button-red" ontap="$.prework.deleteSignedEmployee();">删除报名人员</button>
             <button type="button" id="END_SIGN_BUTTON" name="END_SIGN_BUTTON" class="e_button-r e_button-l e_button-green" ontap="$.prework.endSign();">生成正式报名名单</button>
+            <button type="button" id="EXPORT_SIGN_BUTTON" name="EXPORT_SIGN_BUTTON" class="e_button-r e_button-l e_button-navy" ontap="$.prework.export();" style="display:none">导出正式报名名单</button>
         </div>
         <div class="c_space-4"></div>
         <div class="c_space-4"></div>
