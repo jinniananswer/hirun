@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>培训查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/exam/prework.exam.js?v=20190225"></script>
+    <script src="/scripts/biz/organization/exam/prework.exam.js?v=20190316"></script>
 </head>
 <body>
 <div class="c_header e_show">
