@@ -8,6 +8,15 @@
             errorTopic : ",",
             init : function() {
                 window["UI-popup"] = new Wade.Popup("UI-popup");
+
+                var exams = $("input[name=RADIO_EXAM]");
+                for(var i=0;i<exams.length;i++) {
+                    var examSelect = $(exams[i]);
+                    if(examSelect.attr("checked")) {
+                        this.examId = examSelect.val();
+                        break;
+                    }
+                }
                 $.ajaxPost('initPreworkExam',"&EXAM_ID="+this.examId,function(data) {
                     $("#CONFIRM_BUTTON").css("display", "none");
                     $("#exam").css("display", "none");
