@@ -73,6 +73,7 @@
                       MessageBox.alert("超过本次考试的题目数量范围");
                       return;
                   }
+                  this.saveTopicAnswer();
                   $.exam.drawTopic(topicIndex - 1);
               }
               catch(error){
@@ -140,18 +141,18 @@
                     html.push("<div class=\"side\">");
                     if(type == "1" || type == "3") {
                         if(answer == data.get("SYMBOL")) {
-                            html.push("<input type=\"radio\" name='RADIO_"+$.exam.currentIndex+"' value='" + data.get("SYMBOL") + "' checked ontap='$.exam.selectAnswer(this);'/>");
+                            html.push("<input type=\"radio\" name='RADIO_"+$.exam.currentIndex+"' value='" + data.get("SYMBOL") + "' checked/>");
                         }
                         else {
-                            html.push("<input type=\"radio\" name='RADIO_"+$.exam.currentIndex+"' value='" + data.get("SYMBOL") + "' ontap='$.exam.selectAnswer(this);'/>");
+                            html.push("<input type=\"radio\" name='RADIO_"+$.exam.currentIndex+"' value='" + data.get("SYMBOL") + "'/>");
                         }
                     }
                     if(type == "2") {
                         if(answer != null && answer.indexOf(data.get("SYMBOL")) >= 0) {
-                            html.push("<input type=\"checkbox\" value='" + data.get("SYMBOL") + "' checked ontap='$.exam.selectAnswer(this);'/>");
+                            html.push("<input type=\"checkbox\" value='" + data.get("SYMBOL") + "' checked/>");
                         }
                         else {
-                            html.push("<input type=\"checkbox\" value='" + data.get("SYMBOL") + "' ontap='$.exam.selectAnswer(this);'/>");
+                            html.push("<input type=\"checkbox\" value='" + data.get("SYMBOL") + "'/>");
                         }
                     }
 
@@ -171,10 +172,12 @@
             },
 
             next : function() {
+                this.saveTopicAnswer();
                 this.drawTopic(this.currentIndex + 1);
             },
 
             previous : function() {
+                this.saveTopicAnswer();
                 this.drawTopic(this.currentIndex - 1);
             },
 
@@ -202,12 +205,44 @@
                 topic.put("ANSWER", answer);
             },
 
+            saveTopicAnswer : function() {
+                var options = $("#topic input");
+                if(options == null || options.length <= 0) {
+                    return;
+                }
+
+                var topic = this.topics.get(this.currentIndex);
+                var type = topic.get("TYPE");
+                var answer = topic.get("ANSWER");
+                if(answer == null || type == "2") {
+                    answer = "";
+                }
+
+                var length = options.length;
+                for(var i=0;i<length;i++){
+                    var option = $(options[i]);
+                    var value = option.val();
+                    if(option.attr("checked")) {
+                        if(type == "2") {
+                            answer += value;
+                        }
+                        else {
+                            answer = value;
+                            break;
+                        }
+                    }
+                }
+
+                topic.put("ANSWER", answer);
+            },
+
             selectExam : function(obj) {
                 var radio = $(obj);
                 this.examId = radio.val();
             },
 
             submit : function(needConfirm) {
+                this.saveTopicAnswer();
                 var allScore = 0;
                 var length = this.topics.length;
                 var answerScore = 0;
