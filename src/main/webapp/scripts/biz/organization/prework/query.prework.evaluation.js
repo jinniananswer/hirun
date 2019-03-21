@@ -58,11 +58,10 @@
                     html.push("<div class=\"side e_size-s\">");
                     html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewScore(\"" + data.get("TRAIN_ID") + "\");'>绩</span>");
                     html.push("</div>");
-                    if(signStatus == "1") {
-                        html.push("<div class=\"side e_size-s\">");
-                        html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
-                        html.push("</div>");
-                    }
+                    html.push("<div class=\"side e_size-s\">");
+                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
+                    html.push("</div>");
+
                     html.push("</div></div>");
                     html.push("</li>");
                 }
