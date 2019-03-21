@@ -44,8 +44,8 @@
                     $("#gyl_start_date").html(endDate);
 
 
-                    $("#ddgl_sign_date").html(startDate+" 08:20");
-                    $("#ddgl_start_date").html(startDate);
+                    $("#ddgl_sign_date").html(endDate+" 08:20");
+                    $("#ddgl_start_date").html(endDate);
 
                     $("#shfw_sign_date").html(endDate+" 08:20");
                     $("#shfw_start_date").html(endDate);
