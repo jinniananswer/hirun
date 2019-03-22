@@ -123,6 +123,7 @@ public class PreWorkController extends RootController {
         titles.add("入职日期");
         titles.add("考试类型");
         titles.add("考试科目");
+        titles.add("是否食堂就餐");
 
         Set<String> companys = signs.keySet();
         List<List<String>> values = new ArrayList<List<String>>();
@@ -193,6 +194,14 @@ public class PreWorkController extends RootController {
                 }
                 else {
                     value.add("通用|专业");
+                }
+
+                String inCanteen = data.getString("IN_CANTEEN");
+                if(StringUtils.equals("1", inCanteen)) {
+                    value.add("是");
+                }
+                else {
+                    value.add("否");
                 }
                 values.add(value);
             }
