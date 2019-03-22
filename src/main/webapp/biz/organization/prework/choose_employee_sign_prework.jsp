@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>选择员工报名</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/choose.employee.sign.prework.js?v=20190226"></script>
+    <script src="/scripts/biz/organization/prework/choose.employee.sign.prework.js?v=20190323"></script>
 </head>
 <body>
 <div class="c_header">
@@ -193,6 +193,13 @@
                                         通用
                                         <input type="checkbox" id="EXAM_ITEM_PRO_PARENT" value="1" desc="专业" checked/>
                                         专业
+                                    </div>
+                                </li>
+                                <li class="link" id="IN_CANTEEN_PARENT">
+                                    <div class="label">食堂就餐</div>
+                                    <div class="value">
+                                        <input type="checkbox" id="IN_CANTEEN"/>
+
                                     </div>
                                 </li>
                             </ul>
