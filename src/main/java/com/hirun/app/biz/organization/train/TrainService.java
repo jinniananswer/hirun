@@ -145,7 +145,7 @@ public class TrainService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
-        RecordSet trains = dao.queryTrains(null, true);
+        RecordSet trains = dao.queryTrains(null, false);
         trains = filterTrains(trains);
         response.set("TRAINS", ConvertTool.toJSONArray(trains));
         return response;
@@ -229,9 +229,7 @@ public class TrainService extends GenericService {
         parameter.put("END_DATE", request.getString("END_DATE"));
         parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
         parameter.put("HOTEL_ADDRESS", request.getString("HOTEL_ADDRESS"));
-        parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
-        parameter.put("CREATE_DATE", session.getCreateTime());
         parameter.put("UPDATE_TIME", session.getCreateTime());
 
         dao.save("ins_train", parameter);
@@ -346,6 +344,9 @@ public class TrainService extends GenericService {
         response.set("TOTAL_NUM", signList.size()+"");
         JSONObject sign = filterSignList(signList);
         response.set("SIGN_LIST", sign);
+        JSONObject orgTree = OrgBean.getOrgTree();
+        response.set("ORG_TREE", orgTree);
+        response.set("HAS_END_SIGN_OPER", Permission.hasEndSignOper()+"");
         return response;
     }
 
@@ -538,6 +539,7 @@ public class TrainService extends GenericService {
         parameter.put("SIGN_STATUS", "0");
         parameter.put("START_DATE", request.getString("START_DATE"));
         parameter.put("END_DATE", request.getString("END_DATE"));
+        parameter.put("SIGN_END_DATE", request.getString("SIGN_END_DATE"));
         parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
@@ -624,11 +626,14 @@ public class TrainService extends GenericService {
                 }
                 myTrain.put("COURSE_NAME", courseName);
             }
+            RecordSet scores = dao.queryMyTrainScore(employeeId, trainId);
+            JSONObject temp = ConvertTool.toJSONObject(myTrain);
+            temp.put("SCORES", ConvertTool.toJSONArray(scores));
             if(endDate.compareTo(now) >= 0) {
-                current.add(ConvertTool.toJSONObject(myTrain));
+                current.add(temp);
             }
             else {
-                history.add(ConvertTool.toJSONObject(myTrain));
+                history.add(temp);
             }
         }
 
@@ -644,6 +649,7 @@ public class TrainService extends GenericService {
 
         int size = trains.size();
         Map<String, Record> tempTrain = new HashMap<String, Record>();
+        RecordSet rst = new RecordSet();
         for(int i=0;i<size;i++) {
             Record train = trains.get(i);
             String trainId = train.get("TRAIN_ID");
@@ -651,17 +657,12 @@ public class TrainService extends GenericService {
             String courseId = train.get("COURSE_ID");
             if(!tempTrain.containsKey(trainId)) {
                 tempTrain.put(trainId, train);
+                rst.add(train);
             }
             else {
                 tempTrain.get(trainId).put("COURSE_NAME", tempTrain.get(trainId).get("COURSE_NAME") + "," + courseName);
                 tempTrain.get(trainId).put("COURSE_ID", tempTrain.get(trainId).get("COURSE_ID") + "," + courseId);
             }
-        }
-
-        RecordSet rst = new RecordSet();
-        Set<String> keys = tempTrain.keySet();
-        for(String key : keys){
-            rst.add(tempTrain.get(key));
         }
         return rst;
     }

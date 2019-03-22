@@ -51,7 +51,7 @@ public class TrainDAO extends GenericDAO {
     public RecordSet queryPreWorks(String trainId, boolean isValid) throws SQLException {
         StringBuilder sql = new StringBuilder();
         Map<String, String> parameter = new HashMap<String, String>();
-        sql.append("select a.train_id, a.name train_name,a.type, a.train_desc, a.train_address, a.hotel_address, date_format(a.start_date, '%Y-%m-%d') start_date, date_format(a.end_date, '%Y-%m-%d') end_date,a.charge_employee_id,a.status, a.sign_status ");
+        sql.append("select a.train_id, a.name train_name,a.type, a.train_desc, a.train_address, a.hotel_address, date_format(a.start_date, '%Y-%m-%d') start_date, date_format(a.end_date, '%Y-%m-%d') end_date,date_format(a.sign_end_date, '%Y-%m-%d %H:%i:%s') sign_end_date ,a.charge_employee_id,a.status, a.sign_status ");
         sql.append("from ins_train a ");
         sql.append("where a.type = '1' ");
         sql.append("and a.status = '0' ");
@@ -131,7 +131,7 @@ public class TrainDAO extends GenericDAO {
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.train_id, a.employee_id,a.status, b.name,b.identity_no, b.sex,b.major, b.school, b.education_level,date_format(b.in_date, '%Y-%m-%d') in_date, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.mobile_no, v.view_id ");
+        sql.append("select a.train_id, a.employee_id,a.status, b.name,b.identity_no, b.sex,b.major, b.school, b.education_level,b.certificate_no, date_format(b.in_date, '%Y-%m-%d') in_date, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.mobile_no, v.view_id ");
         sql.append("from ins_train_sign a left join ins_train_notice_view v on (v.train_id = a.train_id and v.employee_id = a.employee_id), ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e, ins_user f ");
         sql.append("where b.employee_id = a.employee_id ");
         sql.append("and c.employee_id = a.employee_id ");
@@ -155,7 +155,7 @@ public class TrainDAO extends GenericDAO {
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.train_id, a.employee_id,a.status, b.name, b.identity_no, b.sex,b.major, b.school, b.education_level,date_format(b.in_date, '%Y-%m-%d') in_date, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.type, f.item, g.mobile_no, v.view_id ");
+        sql.append("select a.train_id, a.employee_id,a.status, b.name, b.identity_no, b.sex,b.major, b.school, b.education_level,b.certificate_no, date_format(b.in_date, '%Y-%m-%d') in_date, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.type, f.item, g.mobile_no, v.view_id ");
         sql.append("from ins_train_sign a left join ins_train_notice_view v on (v.train_id = a.train_id and v.employee_id = a.employee_id), ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e, ins_train_sign_item f, ins_user g ");
         sql.append("where b.employee_id = a.employee_id ");
         sql.append("and c.employee_id = a.employee_id ");
@@ -309,7 +309,6 @@ public class TrainDAO extends GenericDAO {
         sql.append("and a.status = '0' ");
         sql.append("and a.sign_status = '1' ");
         sql.append("and b.status = '0' ");
-        sql.append("and a.end_date > now() ");
         sql.append("and b.employee_id = :EMPLOYEE_ID ");
 
         return this.queryBySql(sql.toString(), parameter);
@@ -342,6 +341,37 @@ public class TrainDAO extends GenericDAO {
         sql.append("and exam_id <= 5 ");
         sql.append("group by exam_id ");
         sql.append("order by exam_id asc ");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
+    public RecordSet queryPreJobTrain(String employeeId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select b.employee_id ");
+        sql.append("from ins_train a, ins_train_sign b ");
+        sql.append("where b.train_id = a.train_id ");
+        sql.append("and a.type = '2' ");
+        sql.append("and a.status = '0' ");
+        sql.append("and b.employee_id = :EMPLOYEE_ID ");
+        sql.append("and b.status = '0' ");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
+    public RecordSet queryMyTrainScore(String employeeId, String trainId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+        parameter.put("TRAIN_ID", trainId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select train_id, item, max(score) score ");
+        sql.append("from ins_train_exam_score ");
+        sql.append("where employee_id = :EMPLOYEE_ID ");
+        sql.append("and train_id = :TRAIN_ID ");
+        sql.append("group by train_id, item ");
 
         return this.queryBySql(sql.toString(), parameter);
     }

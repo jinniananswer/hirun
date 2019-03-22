@@ -10,14 +10,35 @@
                     }
                 );
 
-                window["END_DATE"] = new Wade.DateField(
-                    "END_DATE",
+                window["SIGN_END_DATE"] = new Wade.DateField(
+                    "SIGN_END_DATE",
                     {
                         dropDown:true,
-                        format:"yyyy-MM-dd",
-                        useTime:false,
+                        format:"yyyy-MM-dd HH:mm:ss",
+                        useTime:true
                     }
                 );
+
+                $("#START_DATE").bind("afterAction", function(){
+                    var startDate = new Date(this.value);
+                    startDate.setDate(startDate.getDate() + 1);
+                    var month = startDate.getMonth() + 1;
+                    var day = startDate.getDate();
+                    $("#END_DATE").val(startDate.getFullYear() + '-' + $.train.getFormatDate(month) + '-' + $.train.getFormatDate(day));
+                });
+            },
+
+            getFormatDate :function(arg) {
+                if (arg == undefined || arg == '') {
+                    return '';
+                }
+
+                var re = arg + '';
+                if (re.length < 2) {
+                    re = '0' + re;
+                }
+
+                return re;
             },
 
             submit : function() {

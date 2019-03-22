@@ -66,6 +66,15 @@
                     }
                 );
 
+                window["REGULAR_DATE"] = new Wade.DateField(
+                    "REGULAR_DATE",
+                    {
+                        dropDown:true,
+                        format:"yyyy-MM-dd",
+                        useTime:false
+                    }
+                );
+
                 $.beginPageLoading();
                 $.ajaxPost('initChangeEmployee','&EMPLOYEE_ID='+$("#EMPLOYEE_ID").val(),function(data){
                     var trees = data.ORG_TREE;
@@ -82,11 +91,13 @@
                         $("#IDENTITY_NO").val(employeeInfo.IDENTITY_NO);
                         $("#HOME_ADDRESS").val(employeeInfo.HOME_ADDRESS);
                         $("#IN_DATE").val(employeeInfo.IN_DATE);
+                        $("#REGULAR_DATE").val(employeeInfo.REGULAR_DATE);
                         $("#ORG_ID").val(employeeInfo.ORG_ID);
                         $("#ORG_TEXT").val(employeeInfo.ORG_NAME);
                         $("#EDUCATION").val(employeeInfo.EDUCATION_LEVEL);
                         $("#SCHOOL").val(employeeInfo.SCHOOL);
                         $("#MAJOR").val(employeeInfo.MAJOR);
+                        $("#CERTIFICATE_NO").val(employeeInfo.CERTIFICATE_NO);
                         var jobRole = employeeInfo.JOB_ROLE;
                         if(jobRole != null && jobRole != "undefined"){
                             $("#JOB_ROLE").val(jobRole);

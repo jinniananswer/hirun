@@ -38,7 +38,7 @@ public class PreWorkService extends GenericService {
         ServiceResponse response = new ServiceResponse();
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
-        RecordSet trains = dao.queryPreWorks(null, true);
+        RecordSet trains = dao.queryPreWorks(null, false);
         response.set("PREWORKS", ConvertTool.toJSONArray(trains));
         return response;
     }
@@ -235,12 +235,27 @@ public class PreWorkService extends GenericService {
         response.set("TOTAL_NUM", signList.size()+"");
         JSONObject sign = TrainService.filterSignList(signList);
         response.set("SIGN_LIST", sign);
+        JSONObject orgTree = OrgBean.getOrgTree();
+        response.set("ORG_TREE", orgTree);
+        response.set("HAS_END_SIGN_OPER", Permission.hasEndSignOper()+"");
         return response;
     }
 
     public ServiceResponse initViewPreworkCourseware(ServiceRequest request) throws Exception {
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+        RecordSet signed = dao.queryPreJobTrain(employeeId);
+        String exceptCourseId = "12";
+        if(ArrayTool.isEmpty(signed)) {
+            exceptCourseId = StaticDataTool.getCodeName("PREWORK_COURSEWARE_EXCEPT", "1");
+        }
+        else {
+            exceptCourseId = StaticDataTool.getCodeName("PREWORK_COURSEWARE_EXCEPT", "2");
+        }
+
         CourseBean bean = new CourseBean();
-        JSONObject courseTree = bean.getCourseTreeByExceptCourseId("12");
+        JSONObject courseTree = bean.getCourseTreeByExceptCourseId(exceptCourseId);
 
         ServiceResponse response = new ServiceResponse();
         response.set("COURSE_TREE", courseTree);

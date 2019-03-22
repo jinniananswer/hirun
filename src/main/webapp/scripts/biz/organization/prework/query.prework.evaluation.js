@@ -35,6 +35,10 @@
                     html.push(data.get("TRAIN_ADDRESS"));
                     html.push("</div>");
 
+                    html.push("<div class='content content-auto'><span class='e_strong'>报名截止时间：</span>");
+                    html.push(data.get("SIGN_END_DATE"));
+                    html.push("</div>");
+
                     html.push("<div class='content content-auto'><span class='e_strong'>报名状态：</span>");
                     var signStatus = data.get("SIGN_STATUS");
                     if(signStatus == "0") {
@@ -54,11 +58,10 @@
                     html.push("<div class=\"side e_size-s\">");
                     html.push("<span class=\"e_ico-pic-green e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewScore(\"" + data.get("TRAIN_ID") + "\");'>绩</span>");
                     html.push("</div>");
-                    if(signStatus == "1") {
-                        html.push("<div class=\"side e_size-s\">");
-                        html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
-                        html.push("</div>");
-                    }
+                    html.push("<div class=\"side e_size-s\">");
+                    html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.prework.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
+                    html.push("</div>");
+
                     html.push("</div></div>");
                     html.push("</li>");
                 }

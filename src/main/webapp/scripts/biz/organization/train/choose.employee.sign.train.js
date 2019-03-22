@@ -135,6 +135,7 @@
 
             drawSelectEmployees : function(datas) {
                 if(datas == null || datas.length <= 0) {
+                    $.endPageLoading();
                     $("#messagebox").css("display", "");
                     return;
                 }

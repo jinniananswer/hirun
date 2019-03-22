@@ -155,6 +155,14 @@ public class EmployeeEntity extends GenericEntity{
         this.set("MAJOR", major);
     }
 
+    public String getCertificateNo() {
+        return this.get("CERTIFICATE_NO");
+    }
+
+    public void setCertificateNo(String certificateNo) {
+        this.set("CERTIFICATE_NO", certificateNo);
+    }
+
     public String getStatus(){
         return this.get("STATUS");
     }
