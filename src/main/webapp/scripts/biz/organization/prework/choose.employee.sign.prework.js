@@ -738,7 +738,7 @@
                 var length = datas.length;
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
-                    html.push("<li class=\"link\" employeeId='"+data.get("EMPLOYEE_ID")+"' examType='0'>");
+                    html.push("<li class=\"link\" employeeId='"+data.get("EMPLOYEE_ID")+"' examType='0' inCanteen='1'>");
                     html.push("<div class='c_space-2'></div>");
                     html.push("<div class=\"pic\">");
                     var sex = data.get("SEX");
@@ -758,6 +758,7 @@
                     var map = new Wade.DataMap();
                     map.put("EMPLOYEE_ID", data.get("EMPLOYEE_ID"));
                     map.put("EXAM_TYPE", "0");
+                    map.put("IN_CANTEEN", "1");
                     this.addEmployees.add(map);
                 }
 
