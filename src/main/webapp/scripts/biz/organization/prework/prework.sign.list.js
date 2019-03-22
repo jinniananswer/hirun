@@ -202,6 +202,17 @@
                         html.push("入职日期："+data.get("IN_DATE"));
                         html.push("</div>");
 
+                        var inCanteen = data.get("IN_CANTEEN");
+
+                        html.push("<div class=\"content content-auto\">");
+                        html.push("是否在食堂就餐：");
+                        if(inCanteen == "1") {
+                            html.push("是");
+                        }
+                        else{
+                            html.push("否");
+                        }
+                        html.push("</div>");
 
                         var viewId = data.get("VIEW_ID");
                         var isViewNotice = "否";
