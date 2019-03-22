@@ -74,7 +74,7 @@ public class ScoreService extends GenericService {
             String employee_id_i = record.get("EMPLOYEE_ID");
             String score = record.get("SCORE");
             String examid = record.get("EXAM_ID");
-            for (int j = 1; j < size; j++) {
+            for (int j = 0; j < size; j++) {
                 /*取数据与后面的数据比较
                  *1、判断employee_id是否一致，*/
                 Record recordA = exams.get(j);
