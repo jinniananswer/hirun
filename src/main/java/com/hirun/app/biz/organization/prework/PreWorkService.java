@@ -164,9 +164,11 @@ public class PreWorkService extends GenericService {
             long signId = dao.insertAutoIncrement("ins_train_sign", parameter);
 
             String examType = employee.getString("EXAM_TYPE");
+            String isInCanteen = employee.getString("IN_CANTEEN");
             Map<String, String> item = new HashMap<String, String>();
             item.put("SIGN_ID", signId+"");
             item.put("TYPE", examType);
+            item.put("IN_CANTEEN", isInCanteen);
             item.put("STATUS", "0");
             item.put("CREATE_USER_ID", userId);
             item.put("UPDATE_USER_ID", userId);

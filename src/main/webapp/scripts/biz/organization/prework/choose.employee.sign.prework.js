@@ -239,7 +239,7 @@
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
                     html.push("<li class='link' employeeId='"+data.get("EMPLOYEE_ID")+"' sex='"+data.get("SEX")+"' employeeName='"+data.get("NAME")+"' examType='0'><div class=\"group\"><div class=\"content\">");
-                    html.push("<div class=\"main\" ontap=\"$.prework.selectEmployee(this)\"><div class=\"title\">");
+                    html.push("<div class=\"main\" onclick=\"$.prework.selectEmployee(event, this);\"><div class=\"title\">");
                     html.push(data.get("NAME"));
                     html.push("</div>");
                     html.push("<div class=\"content\">");
@@ -255,6 +255,11 @@
                     html.push("<div class=\"content\">");
                     html.push("<a href='javascript:void(0)' ontap='$.prework.showOnlineScore("+data.get("EMPLOYEE_ID")+")' >在线测试成绩查看</a>");
                     html.push("</div>");
+
+                    html.push("<div class=\"content\">");
+                    html.push("<input type='checkbox' id='CANTEEN_"+data.get("EMPLOYEE_ID")+"' name='CANTEEN_"+data.get("EMPLOYEE_ID")+"' checked/>在食堂就餐");
+                    html.push("</div>");
+
                     html.push("</div>");
                     html.push("<div class='side' ontap='$.prework.showExam(this);'>");
                     html.push("<div class='content'>");
@@ -360,7 +365,11 @@
                 }
             },
 
-            selectEmployee : function(obj) {
+            selectEmployee : function(e,obj) {
+                var src = e.srcElement.tagName;
+                if(src == "INPUT" || src == "A") {
+                    return;
+                }
                 var li = $($($($(obj).parent()).parent()).parent());
                 var className = li.attr("class");
                 if(className == "link checked") {
@@ -386,7 +395,7 @@
                 var li = $($($(obj).parent()).parent()).parent();
                 var className = li.attr("class");
                 if (className == "link") {
-                    this.selectEmployee(obj);
+                    //this.selectEmployee(obj);
                 }
                 $("#EXAM_EMPLOYEE_ID").val(li.attr("employeeId"));
                 var examType = li.attr("examType");
@@ -419,6 +428,11 @@
                 var examType = li.attr("examType");
                 $("#EXAM_TYPE_PARENT").val(examType);
                 $("#EXAM_TYPE_PARENT").trigger("change");
+                var inCanteen = li.attr("inCanteen");
+
+                if(inCanteen == "1") {
+                    $("#IN_CANTEEN").attr("checked", true);
+                }
 
                 var examItemComm = li.attr("examItemComm");
                 var examItemPro = li.attr("examItemPro");
@@ -514,6 +528,11 @@
                 var examItemPro = $("#EXAM_ITEM_PRO_PARENT").attr("checked");
 
                 var employeeId = $("#EXAM_EMPLOYEE_ID_PARENT").val();
+                var inCanteen = $("#IN_CANTEEN");
+                var isInCanteen = "0";
+                if(inCanteen.attr("checked")) {
+                    isInCanteen = "1";
+                }
 
                 var lis = $("#new_employees li");
                 var length = lis.length;
@@ -526,6 +545,8 @@
                         li.attr("examType", examType);
                         li.attr("examItemComm", examItemComm);
                         li.attr("examItemPro", examItemPro);
+                        li.attr("inCanteen", isInCanteen);
+
                         var main = $(li.children()[2]);
                         html.push("<div class='content content-auto' ontap='$.prework.showExamParent(this);'>");
                         html.push("<span class='e_tag e_tag-green'>");
@@ -579,6 +600,7 @@
                                 addEmployee.put("EXAM_TYPE", li.attr("examType"));
                                 addEmployee.put("EXAM_ITEM_COMM", li.attr("examItemComm"));
                                 addEmployee.put("EXAM_ITEM_PRO", li.attr("examItemPro"));
+                                addEmployee.put("IN_CANTEEN", li.attr("inCanteen"));
                             }
                         }
                         break;
@@ -609,7 +631,13 @@
                         var examType = li.attr("examType");
                         var examItemComm = li.attr("examItemComm");
                         var examItemPro = li.attr("examItemPro");
-                        html.push("<li class=\"link\" employeeId='"+li.attr("employeeId")+"' examType='"+examType+"' examItemComm='"+examItemComm+"' examItemPro='"+examItemPro+"'>");
+
+                        var inCanteen = $("#CANTEEN_"+li.attr("employeeId"));
+                        var isInCanteen = "1";
+                        if(!inCanteen.attr("checked")){
+                            isInCanteen = "0";
+                        }
+                        html.push("<li class=\"link\" employeeId='"+li.attr("employeeId")+"' examType='"+examType+"' examItemComm='"+examItemComm+"' examItemPro='"+examItemPro+"' inCanteen='"+isInCanteen+"'>");
                         html.push("<div class='c_space-2'></div>");
                         html.push("<div class=\"pic\">");
                         var sex = li.attr("sex");
@@ -657,6 +685,7 @@
                         }
                         html.push("</div>");
 
+
                         html.push("<div class=\"content\" ontap='$.prework.deleteNewEmployee(this);'>");
                         html.push("<span class=\"e_ico-delete e_ico-pic-r e_ico-pic-red e_ico-pic-xxs\">");
                         html.push("</span>");
@@ -668,6 +697,9 @@
                         map.put("EXAM_TYPE", li.attr("examType"));
                         map.put("EXAM_ITEM_COMM", li.attr("examItemComm"));
                         map.put("EXAM_ITEM_PRO", li.attr("examItemPro"));
+
+
+                        map.put("IN_CANTEEN",isInCanteen);
                         this.addEmployees.add(map);
                     }
                 }
@@ -706,7 +738,7 @@
                 var length = datas.length;
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
-                    html.push("<li class=\"link\" employeeId='"+data.get("EMPLOYEE_ID")+"' examType='0'>");
+                    html.push("<li class=\"link\" employeeId='"+data.get("EMPLOYEE_ID")+"' examType='0' inCanteen='1'>");
                     html.push("<div class='c_space-2'></div>");
                     html.push("<div class=\"pic\">");
                     var sex = data.get("SEX");
@@ -726,6 +758,7 @@
                     var map = new Wade.DataMap();
                     map.put("EMPLOYEE_ID", data.get("EMPLOYEE_ID"));
                     map.put("EXAM_TYPE", "0");
+                    map.put("IN_CANTEEN", "1");
                     this.addEmployees.add(map);
                 }
 
