@@ -58,69 +58,17 @@ public class ScoreService extends GenericService {
             orgId = OrgBean.getOrgLine(orgId);
         }
         RecordSet exams=dao.queryExamScore(request.getString("NAME"),orgId);
-        RecordSet newexams=new RecordSet();
+        exams=this.filterExamScore(exams);
 
-        if(exams.size()==0 || exams==null)
-            return  response;
 
-        int size = exams.size();
-        for(int i=0;i<size;i++) {
-
-            Record record = exams.get(i);
-            String flag=record.get("FLAG");
-            //处理过的数据不再处理
-            if(StringUtils.equals("1",flag))
-                continue;
-            String employee_id_i = record.get("EMPLOYEE_ID");
-            String score = record.get("SCORE");
-            String examid = record.get("EXAM_ID");
-            for (int j = 0; j < size; j++) {
-                /*取数据与后面的数据比较
-                 *1、判断employee_id是否一致，*/
-                Record recordA = exams.get(j);
-                String employee_id_j = recordA.get("EMPLOYEE_ID");
-                String scorej = recordA.get("SCORE");
-                String examidj = recordA.get("EXAM_ID");
-                if (StringUtils.equals(employee_id_i, employee_id_j)) {
-                    if(StringUtils.isBlank(examidj)|| examidj==null)
-                        continue;
-
-                    if (StringUtils.equals(examid, examidj) || record.containsKey("EXAM_ID_"+examidj)) {
-                        String score_k=record.get("EXAM_ID_"+examidj);
-
-                        if(StringUtils.isBlank(scorej)|| scorej==null){
-                            continue;
-                        }
-                        if(StringUtils.isNotBlank(score_k)|| score_k!=null){
-                            if((Integer.parseInt(score_k)-Integer.parseInt(scorej))<0){
-                                record.put("EXAM_ID_" + examidj, scorej);
-                            }
-                        }
-                        else if ((Integer.parseInt(score) - Integer.parseInt(scorej)) < 0) {
-                            record.put("EXAM_ID_" + examidj, scorej);
-                        }
-                        else {
-                            record.put("EXAM_ID_" + examid, score);
-                        }
-                        recordA.put("FLAG","1");
-                    }
-                    else{
-                        record.put("EXAM_ID_" + examidj, scorej);
-                        recordA.put("FLAG","1");
-                    }
-                }
-
-            }
-            record.put("CITY_NAME", StaticDataTool.getCodeName("BIZ_CITY", record.get("CITY")));
-            newexams.add(record);
-        }
-
-        response.set("DATAS", ConvertTool.toJSONArray(newexams));
+        response.set("DATAS", ConvertTool.toJSONArray(exams));
 
         return response;
     }
 
-    public static RecordSet filterEmployeeScore(RecordSet exams) throws Exception {
+
+
+    public static RecordSet filterExamScore(RecordSet exams) throws Exception {
         if(exams == null || exams.size() <= 0) {
             return exams;
         }
@@ -150,9 +98,8 @@ public class ScoreService extends GenericService {
                     continue;
                 }else {
                     String tempScore=tempeExam.get(employeeId).get("EXAM_ID_"+examId);
-                    String tempExamId=tempeExam.get(employeeId).get("EXAM_ID");
                     Record tempRecord=tempeExam.get(employeeId);
-                    if((!StringUtils.equals(tempExamId,examId)) || tempRecord.containsKey("EXAM_ID_"+examId)){
+                    if(!tempRecord.containsKey("EXAM_ID_"+examId)){
                         tempRecord.put("EXAM_ID_"+examId,score);//设置科目成绩
                         tempeExam.put(employeeId, tempRecord);
                     }else{
