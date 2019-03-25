@@ -246,6 +246,7 @@
                 var allScore = 0;
                 var length = this.topics.length;
                 var answerScore = 0;
+                this.errorTopic = ",";
                 for(var i=0;i<length;i++) {
                     var topic = this.topics.get(i);
                     var score = parseInt(topic.get("SCORE"));
@@ -258,6 +259,7 @@
                     }
 
                     if(answer == null) {
+                        this.errorTopic += i+",";
                         continue;
                     }
                     var type = topic.get("TYPE");
@@ -314,7 +316,7 @@
                 var length = this.topics.length;
                 for(var i=0;i<length;i++) {
 
-                    if(this.errorTopic.indexOf(i+"") >= 0) {
+                    if(this.errorTopic.indexOf(","+i+",") >= 0) {
                         var topic = this.topics.get(i);
                         html.push("<li class='link'>");
                         html.push("<div class=\"group\">");
