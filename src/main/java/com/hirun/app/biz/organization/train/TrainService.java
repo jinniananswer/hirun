@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.common.record.Records;
 
 import javax.xml.ws.Service;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -191,6 +192,11 @@ public class TrainService extends GenericService {
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
         RecordSet trains = dao.queryTrains(request.getString("TRAIN_ID"), true);
         trains = filterTrains(trains);
+
+        if(ArrayTool.isEmpty(trains)) {
+            throw new Exception("该培训已过时间，不能编辑!");
+        }
+
         Record train = trains.get(0);
         response.set("TRAIN", ConvertTool.toJSONObject(train));
         String selectedCourseIds = train.get("COURSE_ID");
