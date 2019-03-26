@@ -61,6 +61,8 @@
                     $.train.drawTeachers(teachers);
                     $.train.setTrainValue(train);
                     $.train.drawSchedules(schedule);
+                }, function(errorCode, errorInfo){
+                    MessageBox.error("错误信息","", null,"", "错误编码："+errorCode+"，错误信息："+errorInfo);
                 });
             },
 
@@ -481,7 +483,7 @@
                     $.beginPageLoading();
                     $.ajaxPost('changeTrain', parameter, function (data) {
                         $.endPageLoading();
-                        MessageBox.success("新增培训成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
+                        MessageBox.success("修改培训成功","点击确定返回新增页面，点击取消关闭当前页面", function(btn){
                             if("ok" == btn) {
                                 document.location.reload();
                             }
