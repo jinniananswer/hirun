@@ -191,6 +191,9 @@ public class PreWorkService extends GenericService {
                 }
                 item.put("ITEM", itemDetail);
             }
+            else if (StringUtils.equals("2", examType)) {
+                item.put("ITEM", "|1|");
+            }
             else {
                 item.put("ITEM", "|-1|");
             }
