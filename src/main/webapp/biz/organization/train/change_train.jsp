@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>修改培训安排</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/train/change.train.js?v=20190326"></script>
+    <script src="/scripts/biz/organization/train/change.train.js?v=2019032"></script>
 </head>
 <body>
 <div class="c_header e_show">
