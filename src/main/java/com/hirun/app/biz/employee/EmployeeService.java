@@ -549,6 +549,16 @@ public class EmployeeService extends GenericService {
 
                     FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
                     RecordSet jobFuncs = funcDAO.queryJobFunc(jobRole);
+                    RecordSet commFuncs = funcDAO.queryJobFunc("-1");
+
+                    if(ArrayTool.isEmpty(jobFuncs)) {
+                        jobFuncs = new RecordSet();
+                    }
+
+                    if(ArrayTool.isNotEmpty(commFuncs)) {
+                        jobFuncs.addAll(commFuncs);
+                    }
+
                     List<Map<String, String>> userFuncs = new ArrayList<Map<String, String>>();
                     if(jobFuncs != null && jobFuncs.size() > 0){
                         int jobFuncSize = jobFuncs.size();
