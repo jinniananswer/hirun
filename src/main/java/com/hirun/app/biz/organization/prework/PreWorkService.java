@@ -179,7 +179,7 @@ public class PreWorkService extends GenericService {
             boolean isChangSha = EmployeeBean.isChangshaEmployee(employee.getString("EMPLOYEE_ID"));
 
             if(isChangSha) {
-                item.put("ITEM", "1");
+                item.put("ITEM", "|1|");
             }
             else if (StringUtils.equals("1", examType) || StringUtils.equals("3", examType)) {
                 String examItemComm = employee.getString("EXAM_ITEM_COMM");
