@@ -3,6 +3,7 @@ package com.hirun.app.biz.organization.prework;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.course.CourseBean;
+import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.biz.organization.train.TrainService;
@@ -174,7 +175,13 @@ public class PreWorkService extends GenericService {
             item.put("UPDATE_USER_ID", userId);
             item.put("CREATE_DATE", session.getCreateTime());
             item.put("UPDATE_TIME", session.getCreateTime());
-            if (StringUtils.equals("1", examType) || StringUtils.equals("3", examType)) {
+
+            boolean isChangSha = EmployeeBean.isChangshaEmployee(employee.getString("EMPLOYEE_ID"));
+
+            if(isChangSha) {
+                item.put("ITEM", "1");
+            }
+            else if (StringUtils.equals("1", examType) || StringUtils.equals("3", examType)) {
                 String examItemComm = employee.getString("EXAM_ITEM_COMM");
                 String examItemPro = employee.getString("EXAM_ITEM_PRO");
                 String itemDetail = "|";
