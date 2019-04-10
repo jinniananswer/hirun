@@ -195,6 +195,9 @@ public class PreWorkController extends RootController {
                 else if(StringUtils.equals("2", type)) {
                     value.add("专业");
                 }
+                else if(StringUtils.equals("|1|", data.getString("ITEM"))) {
+                    value.add("专业");
+                }
                 else {
                     value.add("通用|专业");
                 }
