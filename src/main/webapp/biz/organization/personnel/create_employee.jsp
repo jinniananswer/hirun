@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>新增员工档案</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/personnel/create.employee.js?v=20190225"></script>
+    <script src="/scripts/biz/organization/personnel/create.employee.js?v=20190412"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -54,7 +54,7 @@
                     <li class="link required" ontap="$('#IN_DATE').focus();$('#IN_DATE').blur();">
                         <div class="label">入职日期</div>
                         <div class="value"><span class="e_mix">
-								<input type="text" id="IN_DATE" name="IN_DATE" datatype="date" readonly="true" desc="计划进入时间" />
+								<input type="text" id="IN_DATE" name="IN_DATE" datatype="date" readonly="true" desc="入职日期" />
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
@@ -62,6 +62,13 @@
                         <div class="label">转正日期</div>
                         <div class="value"><span class="e_mix">
 								<input type="text" id="REGULAR_DATE" name="REGULAR_DATE" datatype="date" readonly="true" desc="转正日期" />
+								<span class="e_ico-date"></span>
+							</span></div>
+                    </li>
+                    <li class="link required" ontap="$('#JOB_DATE').focus();$('#JOB_DATE').blur();">
+                        <div class="label">就业日期</div>
+                        <div class="value"><span class="e_mix">
+								<input type="text" id="JOB_DATE" name="JOB_DATE" datatype="date" readonly="true" desc="就业日期" />
 								<span class="e_ico-date"></span>
 							</span></div>
                     </li>
