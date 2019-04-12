@@ -77,6 +77,15 @@
                     }
                 );
 
+                window["JOB_DATE"] = new Wade.DateField(
+                    "JOB_DATE",
+                    {
+                        dropDown:true,
+                        format:"yyyy-MM-dd",
+                        useTime:false
+                    }
+                );
+
                 $.ajaxPost('initCreateEmployee',null,function(data){
                     var trees = data.ORG_TREE;
                     var today = data.TODAY;
