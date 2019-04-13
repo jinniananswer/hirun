@@ -192,6 +192,8 @@ public class TrainController extends RootController {
         titles.add("性别");
         titles.add("工作岗位");
         titles.add("联系电话");
+        titles.add("鸿扬工作年限");
+        titles.add("社会工作年限");
         titles.add("毕业院校");
         titles.add("学历");
         titles.add("专业");
@@ -224,6 +226,8 @@ public class TrainController extends RootController {
                 value.add(sexName);
                 value.add(data.getString("JOB_ROLE_NAME"));
                 value.add(data.getString("MOBILE_NO"));
+                value.add(data.getString("IN_DATE_DIFF"));
+                value.add(data.getString("JOB_DATE_DIFF"));
                 value.add(data.getString("SCHOOL"));
                 value.add(data.getString("EDUCATION"));
                 value.add(data.getString("MAJOR"));
