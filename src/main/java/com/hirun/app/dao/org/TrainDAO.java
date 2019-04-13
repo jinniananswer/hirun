@@ -131,7 +131,7 @@ public class TrainDAO extends GenericDAO {
         parameter.put("TRAIN_ID", trainId);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("select a.train_id, a.employee_id,a.status, b.name,b.identity_no, b.sex,b.major, b.school, b.education_level,b.certificate_no, date_format(b.in_date, '%Y-%m-%d') in_date, c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.mobile_no, v.view_id ");
+        sql.append("select a.train_id, a.employee_id,a.status, b.name,b.identity_no, b.sex,b.major, b.school, b.education_level,b.certificate_no, date_format(b.in_date, '%Y-%m-%d') in_date, convert(datediff(now(), b.in_date)/365, decimal(10,2)) in_date_diff,convert(datediff(now(), b.job_date)/365, decimal(10,2)) job_date_diff,c.org_id, c.job_role, d.name org_name, e.name enterprise_name, f.mobile_no, v.view_id ");
         sql.append("from ins_train_sign a left join ins_train_notice_view v on (v.train_id = a.train_id and v.employee_id = a.employee_id), ins_employee b, ins_employee_job_role c, ins_org d, ins_enterprise e, ins_user f ");
         sql.append("where b.employee_id = a.employee_id ");
         sql.append("and c.employee_id = a.employee_id ");
