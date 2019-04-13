@@ -142,6 +142,22 @@
                         html.push("入职日期："+data.get("IN_DATE"));
                         html.push("</div>");
 
+                        var inDateDiff = data.get("IN_DATE_DIFF");
+                        if(inDateDiff == null || inDateDiff == "undefined") {
+                            inDateDiff = "";
+                        }
+                        html.push("<div class=\"content content-auto\">");
+                        html.push("鸿扬工作年限："+inDateDiff);
+                        html.push("</div>");
+
+                        var jobDateDiff = data.get("JOB_DATE_DIFF");
+                        if(jobDateDiff == null || jobDateDiff == "undefined") {
+                            jobDateDiff = "";
+                        }
+                        html.push("<div class=\"content content-auto\">");
+                        html.push("社会工作年限："+jobDateDiff);
+                        html.push("</div>");
+
                         var viewId = data.get("VIEW_ID");
                         var isViewNotice = "否";
                         if(viewId != null && viewId != "undefined") {
