@@ -203,6 +203,10 @@ public class OrgBean {
                     if(StringUtils.equals("2", org.getType())){
                         return org;
                     }
+                    else if(StringUtils.equals(org.getOrgId(), "122")) {
+                        //已经是集团公司了
+                        return org;
+                    }
                     else{
                         return getParentOrg(org.getParentOrgId(), type, orgs);
                     }
