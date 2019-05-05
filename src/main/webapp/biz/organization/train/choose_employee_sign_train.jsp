@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>选择员工报名</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/train/choose.employee.sign.train.js?v=20190226"></script>
+    <script src="/scripts/biz/organization/train/choose.employee.sign.train.js?v=20190505"></script>
 </head>
 <body>
 <div class="c_header">
@@ -163,6 +163,35 @@
                     <div class="l_bottom">
                         <div class="c_submit c_submit-full">
                             <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.train.confirmSelectEmployee();" class="e_button-l e_button-green">确定</button>
+                        </div>
+                    </div>
+                    <!-- 滚动 结束 -->
+                </div>
+                <div class="c_popupItem" id="BUSI_GRADE_SELECT">
+                    <!-- 标题栏 开始 -->
+                    <div class="c_header">
+                        <div class="back" ontap="backPopup(this);">请选择业绩等级</div>
+                    </div>
+                    <!-- 标题栏 结束 -->
+                    <!-- 滚动（替换为 java 组件） 开始 -->
+                    <div class="c_scroll c_scroll-float c_scroll-header">
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
+                            <ul>
+                                <li class="link">
+                                    <div class="label">业绩等级</div>
+                                    <div class="value">
+                                        <span id="grade_type">
+
+                                        </span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="l_bottom">
+                            <div class="c_submit c_submit-full">
+                                <input type="hidden" name="GRADE_EMPLOYEE_ID" id="GRADE_EMPLOYEE_ID" nullable="no" value="" desc="考评员工ID" />
+                                <button type="button" id="CONFIRM_GRADE" name="CONFIRM_GRADE" ontap="$.train.confirmGrade();" class="e_button-l e_button-green">确定</button>
+                            </div>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
