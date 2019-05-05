@@ -4,10 +4,13 @@
             currentIndex : 0,
             addEmployees : ",",
             existsEmployees : ",",
+            train : null,
+            employeeItems : null,
             addLength : 0,
             init : function() {
                 window["UI-popup"] = new Wade.Popup("UI-popup");
                 window["orgTree"] = new Wade.Tree("orgTree");
+                this.employeeItems = new Wade.DatasetList();
                 $("#orgTree").textAction(function(e, nodeData){
                     var id = nodeData.id;
                     var text = nodeData.text;
@@ -27,6 +30,7 @@
                     var rst = new Wade.DataMap(data);
                     var signs = rst.get("SIGN_LIST");
                     var train = rst.get("TRAIN");
+                    $.train.train = rst.get("TRAIN");
                     var signStatus = train.get("SIGN_STATUS");
                     if(signStatus == "0") {
                         $("#DELETE_BUTTON").css("display", "");
@@ -156,6 +160,15 @@
                         }
                         html.push("<div class=\"content content-auto\">");
                         html.push("社会工作年限："+jobDateDiff);
+                        html.push("</div>");
+
+
+                        var busiGrade = data.get("BUSI_GRADE");
+                        if(busiGrade == null || busiGrade == "undefined") {
+                            busiGrade = "";
+                        }
+                        html.push("<div class=\"content content-auto\">");
+                        html.push("业绩："+busiGrade);
                         html.push("</div>");
 
                         var viewId = data.get("VIEW_ID");
@@ -307,7 +320,15 @@
                     var allOrgName = data.get("ALL_ORG_NAME");
                     html.push(allOrgName);
                     html.push("</div><div class='content'>"+data.get("JOB_ROLE_NAME"));
-                    html.push("</div></div>")
+                    html.push("</div>");
+
+                    if(this.train.get("TYPE") == "3") {
+                        html.push("<div class=\"content\">");
+                        html.push("业绩：<select id='" + data.get("EMPLOYEE_ID") + "_BUSI_GRADE' class='e_select'><option value='A1'>A1</option><option value='A2'>A2</option><option value='A3'>A3</option><option value='B1'>B1</option><option value='B2'>B2</option><option value='C'>C</option></select>");
+                        html.push("</div>");
+                    }
+
+                    html.push("</div>");
                     html.push("</div></div></li>");
                 }
 
@@ -348,6 +369,14 @@
                             continue;
                         }
                         this.addEmployees += li.attr("employeeId")+",";
+
+                        if(this.train.get("TYPE") == "3") {
+                            var employeeId = li.attr("employeeId");
+                            var employeeItem = new Wade.DataMap();
+                            employeeItem.put("EMPLOYEE_ID", employeeId);
+                            employeeItem.put("BUSI_GRADE", $("#" + employeeId + "_BUSI_GRADE").val());
+                            this.employeeItems.add(employeeItem);
+                        }
                         this.addLength++;
                     }
                 }
@@ -356,7 +385,7 @@
                     return;
                 }
                 var employeeIds = this.addEmployees.substring(1,this.addEmployees.length - 1);
-                var parameter = '&NEW_EMPLOYEE_ID='+employeeIds+"&TRAIN_ID="+$("#TRAIN_ID").val();
+                var parameter = '&NEW_EMPLOYEE_ID='+employeeIds+"&TRAIN_ID="+$("#TRAIN_ID").val()+"&EMPLOYEE_ITEMS="+this.employeeItems;
                 $.beginPageLoading();
                 $.ajaxPost('signNewEmployee', parameter, function (data) {
                     $.endPageLoading();

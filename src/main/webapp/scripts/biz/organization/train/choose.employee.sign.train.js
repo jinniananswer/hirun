@@ -3,9 +3,11 @@
             train : null,
             jobs : null,
             addEmployees : ",",
+            employeeItems : null,
             addLength : 0,
             existsEmployees : ",",
             init : function() {
+                this.employeeItems = new Wade.DatasetList();
                 window["UI-popup"] = new Wade.Popup("UI-popup");
                 window["orgTree"] = new Wade.Tree("orgTree");
                 $("#orgTree").textAction(function(e, nodeData){
@@ -17,6 +19,26 @@
                     backPopup(document.getElementById('UI-ORG'));
                     return true;
                 });
+
+                $.Select.append(
+                    // 对应元素，在 el 元素下生成下拉框，el 可以为元素 id，或者原生 dom 对象
+                    "grade_type",
+                    // 参数设置
+                    {
+                        id:"GRADE_TYPE",
+                        name:"GRADE_TYPE",
+                        addDefault:false
+                    },
+                    // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
+                    [
+                        {TEXT:"A1", VALUE:"A1"},
+                        {TEXT:"A2", VALUE:"A2"},
+                        {TEXT:"A3", VALUE:"A3"},
+                        {TEXT:"B1", VALUE:"B1"},
+                        {TEXT:"B2", VALUE:"B2"},
+                        {TEXT:"C", VALUE:"C"}
+                    ]
+                );
 
                 $.ajaxPost('initChooseEmployeeSignTrain','&TRAIN_ID='+$("#TRAIN_ID").val(),function(data) {
                     var trees = data.ORG_TREE;
@@ -81,6 +103,19 @@
                     html.push("<div class=\"content content-auto\">");
                     html.push(data.get("NAME"));
                     html.push("</div>");
+
+                    if(this.train.get("TYPE") == "3") {
+                        html.push("<div class=\"content content-auto\" ontap='$.prework.showExamParent(this);'>");
+                        html.push("<span class=\"e_tag e_tag-green\">");
+                        var grade = data.get("BUSI_GRADE");
+                        if(grade == null || grade == "undefined") {
+                            grade == "";
+                        }
+                        html.push(grade);
+                        html.push("</span>");
+                        html.push("</div>");
+                    }
+
                     html.push("</div>");
                     html.push("</li>");
                     $.train.existsEmployees += data.get("EMPLOYEE_ID")+",";
@@ -134,12 +169,12 @@
             },
 
             drawSelectEmployees : function(datas) {
+                $("#select_employees").empty();
                 if(datas == null || datas.length <= 0) {
                     $.endPageLoading();
                     $("#messagebox").css("display", "");
                     return;
                 }
-                $("#select_employees").empty();
                 $("#messagebox").css("display", "none");
                 var html = [];
 
@@ -154,7 +189,15 @@
                     var allOrgName = data.get("ALL_ORG_NAME");
                     html.push(allOrgName);
                     html.push("</div><div class='content'>"+data.get("JOB_ROLE_NAME"));
-                    html.push("</div></div>")
+                    html.push("</div>");
+
+                    if(this.train.get("TYPE") == "3") {
+                        html.push("<div class=\"content\">");
+                        html.push("业绩：<select id='" + data.get("EMPLOYEE_ID") + "_BUSI_GRADE' class='e_select'><option value='A1'>A1</option><option value='A2'>A2</option><option value='A3'>A3</option><option value='B1'>B1</option><option value='B2'>B2</option><option value='C'>C</option></select>");
+                        html.push("</div>");
+                    }
+
+                    html.push("</div>");
                     html.push("</div></div></li>");
                 }
 
@@ -206,6 +249,35 @@
                         html.push("<div class=\"content content-auto\">");
                         html.push(li.attr("employeeName"));
                         html.push("</div>");
+
+                        if(this.train.get("TYPE") == "3") {
+                            var employeeId = li.attr("employeeId");
+                            html.push("<div class=\"content content-auto\" ontap='$.train.showGrade("+employeeId+");'>");
+                            html.push("<span class=\"e_tag e_tag-green\">");
+
+                            html.push($("#" + employeeId + "_BUSI_GRADE").val());
+                            html.push("</span>");
+                            html.push("</div>");
+
+                            var isFind = false;
+                            if(this.employeeItems.length > 0) {
+                                for(var i=0;i<this.employeeItems.length;i++) {
+                                    var employeeItem = this.employeeItems[i];
+                                    if(employeeId = employeeItem.get("EMPLOYEE_ID")) {
+                                        employeeItem.put("BUSI_GRADE", $("#" + employeeId + "_BUSI_GRADE").val());
+                                        isFind = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(!isFind) {
+                                var employeeItem = new Wade.DataMap();
+                                employeeItem.put("EMPLOYEE_ID", employeeId);
+                                employeeItem.put("BUSI_GRADE", $("#" + employeeId + "_BUSI_GRADE").val());
+                                this.employeeItems.add(employeeItem);
+                            }
+                        }
+
                         html.push("<div class=\"content\" ontap='$.train.deleteNewEmployee(this);'>");
                         html.push("<span class=\"e_tag e_tag-orange\">");
                         html.push("移除");
@@ -221,6 +293,77 @@
                 $("#new_num").html("人数："+this.addLength);
                 $.insertHtml('beforeend', $("#new_employees"), html.join(""));
                 hidePopup('UI-popup','UI-popup-query-cond');
+            },
+
+            showGrade : function(employeeId) {
+                $("#GRADE_EMPLOYEE_ID").val(employeeId);
+                var grade = '';
+
+                if(this.employeeItems.length > 0) {
+                    for(var i=0;i<this.employeeItems.length;i++) {
+                        var employeeItem = this.employeeItems[i];
+                        if(employeeId = employeeItem.get("EMPLOYEE_ID")) {
+                            grade = employeeItem.get("BUSI_GRADE");
+                            break;
+                        }
+                    }
+                }
+                if(grade != '') {
+                    $("#GRADE_TYPE").val(grade);
+                }
+                showPopup('UI-popup','BUSI_GRADE_SELECT');
+            },
+
+            confirmGrade : function() {
+                var grade = $("#GRADE_TYPE").val();
+                var employeeId = $("#GRADE_EMPLOYEE_ID").val();
+
+                var lis = $("#new_employees li");
+                var length = lis.length;
+                var html = [];
+                for(var i=0;i<length;i++) {
+                    var li = $(lis[i]);
+                    var selectEmployeeId = li.attr("employeeId");
+
+                    if(selectEmployeeId == employeeId) {
+
+                        var main = $(li.children()[2]);
+                        html.push("<div class='content content-auto' ontap='$.train.showGrade("+employeeId+");'>");
+                        html.push("<span class='e_tag e_tag-green'>");
+                        html.push(grade);
+                        html.push("</span>");
+                        html.push("</div>");
+                        var node = $(main.children()[1]);
+                        if(node != null) {
+                            node.remove();
+                        }
+
+                        node = $(main.children()[1]);
+                        if(node != null) {
+                            node.remove();
+                        }
+                        html.push("<div class=\"content\" ontap='$.train.deleteNewEmployee(this);'>");
+                        html.push("<span class=\"e_tag e_tag-orange\">");
+                        html.push("移除");
+                        html.push("</span>");
+                        html.push("</div>");
+                        $.insertHtml('beforeend', main, html.join(""));
+
+                        if(this.employeeItems.length > 0) {
+                            for(var i=0;i<this.employeeItems.length;i++) {
+                                var employeeItem = this.employeeItems[i];
+                                if(employeeId = employeeItem.get("EMPLOYEE_ID")) {
+                                    employeeItem.put("BUSI_GRADE", grade);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                }
+
+                hidePopup('UI-popup', 'EXAM_SELECT_PARENT');
             },
 
             drawMustSignEmployees : function(datas) {
@@ -290,7 +433,7 @@
                     return;
                 }
                 var employeeIds = this.addEmployees.substring(1,this.addEmployees.length - 1);
-                var parameter = '&NEW_EMPLOYEE_ID='+employeeIds+"&TRAIN_ID="+$("#TRAIN_ID").val();
+                var parameter = '&NEW_EMPLOYEE_ID='+employeeIds+"&TRAIN_ID="+$("#TRAIN_ID").val()+"&EMPLOYEE_ITEMS="+this.employeeItems;
                 $.beginPageLoading();
                 $.ajaxPost('signNewEmployee', parameter, function (data) {
                     $.endPageLoading();
