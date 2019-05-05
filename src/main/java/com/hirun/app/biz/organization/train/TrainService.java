@@ -512,11 +512,24 @@ public class TrainService extends GenericService {
         String userId = session.getSessionEntity().getUserId();
         String signEmployeeId = session.getSessionEntity().get("EMPLOYEE_ID");
 
+        JSONArray employeeItems = request.getJSONArray("EMPLOYEE_ITEMS");
+
         for(String employeeId : addEmployeeIdArray) {
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("TRAIN_ID", request.getString("TRAIN_ID"));
             parameter.put("EMPLOYEE_ID", employeeId);
             parameter.put("SIGN_EMPLOYEE_ID", signEmployeeId);
+
+            if(ArrayTool.isNotEmpty(employeeItems)) {
+                for(Object obj : employeeItems) {
+                    JSONObject item = (JSONObject)obj;
+                    String gradeEmployeeId = item.getString("EMPLOYEE_ID");
+                    if(StringUtils.equals(gradeEmployeeId, employeeId)) {
+                        parameter.put("BUSI_GRADE", item.getString("BUSI_GRADE"));
+                        break;
+                    }
+                }
+            }
             parameter.put("STATUS", "0");
             parameter.put("CREATE_USER_ID", userId);
             parameter.put("UPDATE_USER_ID", userId);
