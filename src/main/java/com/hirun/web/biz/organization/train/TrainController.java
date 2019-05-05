@@ -199,6 +199,9 @@ public class TrainController extends RootController {
         titles.add("专业");
         titles.add("毕业证书编号");
         titles.add("入职日期");
+        if(StringUtils.equals(train.getString("TYPE"), "3")) {
+            titles.add("业绩");
+        }
 
         Set<String> companys = signs.keySet();
         List<List<String>> values = new ArrayList<List<String>>();
@@ -233,6 +236,9 @@ public class TrainController extends RootController {
                 value.add(data.getString("MAJOR"));
                 value.add(data.getString("CERTIFICATE_NO"));
                 value.add(data.getString("IN_DATE"));
+                if(StringUtils.equals(train.getString("TYPE"), "3")) {
+                    value.add(data.getString("BUSI_GRADE"));
+                }
                 values.add(value);
             }
         }
