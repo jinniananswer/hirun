@@ -26,7 +26,7 @@
                         window["orgTree"].init();
                     }
                     var rst = new Wade.DataMap(data);
-                    var datas = rst.get("DATAS");
+                    var datas = rst.get("COMPANY_SCORES");
                     $.score.drawScore(datas);
 
                 });
@@ -41,7 +41,7 @@
 
                     $.ajaxPost('queryPostJobScore', '&TRAIN_ID='+train_id+'&NAME='+name+'&ORG_ID='+org_id, function (data) {
                         var rst = new Wade.DataMap(data);
-                        var datas = rst.get("DATAS");
+                        var datas = rst.get("COMPANY_SCORES");
                         $.score.drawScore(datas);
                         hidePopup('UI-popup','UI-popup-query-cond');
                     });
@@ -65,87 +65,104 @@
                 $("#submitButton").css("display","");
 
                 $("#queryMessage").css("display","none");
-                $("#tip").css("display","");
 
-                var length = datas.length;
-
-                $("#tip").empty();
-                $.insertHtml('beforeend', $("#tip"), "共查询到"+length+"条数据");
-                for(var i=0;i<length;i++) {
-                    var data = datas.get(i);
-                    var score=data.get("SCORE");
-                    var scoreItem0=data.get("ITEM_0");
-                    var scoreItem1=data.get("ITEM_1");
-                    var type=data.get("TYPE");
-                    var needComm=data.get("NEED_COMM");
-                    var needPro=data.get("NEED_PRO");
-                    html.push("<li class='link' ><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
-
+                datas.eachKey(function(key, index, totalCount){
+                    html.push("<div class='c_box c_box-border'><div class='c_title' ontap=\"$(this).next().toggle();\">");
+                    var scores = datas.get(key);
+                    var length = scores.length;
+                    html.push("<div class=\"text e_strong e_blue\">"+key+"</div>");
+                    html.push("<div class=\"fn\">");
+                    html.push("<ul>");
+                    html.push("<li><span>人数："+length+"</span><span class='e_ico-unfold'></span></li>");
+                    html.push("</ul>");
                     html.push("</div></div>");
-                    html.push("<div class=\"main\"><div class=\"title\">");
-                    html.push("<span class=\"e_strong \">");
-                    html.push(data.get("NAME"));
-                    html.push("<span>");
-                    html.push("</div>");
-                    html.push("<div class=\"content\">");
-                    var parentOrgName = data.get("PARENT_ORG_NAME");
-                    if(parentOrgName != null && parentOrgName != "undefined")
-                        html.push(parentOrgName + "-");
-                    html.push(data.get("ORG_NAME"));
-                    html.push("</div><div class='content'>");
-                    html.push("<ul>")
 
-                    html.push("<li>")
-                    html.push("<span class=\"label\">"+"培训名称："+"</span>")
-                    var train_name=data.get("TRAIN_NAME");
-                    html.push("<span class=\"value \">"+train_name+""+"</span>")
-                    html.push("</li>")
+                    html.push("<div class=\"l_padding l_padding-u\" style=\"display: none\">");
+                    html.push("<div class=\"c_list c_list-line c_list-border c_list-space l_padding\">");
+                    html.push("<ul>");
 
-                    if(2==type ||3==type) {
+                    for(var i=0;i<length;i++) {
+                        var data = scores.get(i);
+                        var score=data.get("SCORE");
+                        var scoreItem0=data.get("ITEM_0");
+                        var scoreItem1=data.get("ITEM_1");
+                        var type=data.get("TYPE");
+                        var needComm=data.get("NEED_COMM");
+                        var needPro=data.get("NEED_PRO");
+                        html.push("<li class='link' ><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+
+                        html.push("</div></div>");
+                        html.push("<div class=\"main\"><div class=\"title\">");
+                        html.push("<span class=\"e_strong \">");
+                        html.push(data.get("NAME"));
+                        html.push("<span>");
+                        html.push("</div>");
+                        html.push("<div class=\"content\">");
+                        var parentOrgName = data.get("PARENT_ORG_NAME");
+                        if(parentOrgName != null && parentOrgName != "undefined")
+                            html.push(parentOrgName + "-");
+                        html.push(data.get("ORG_NAME"));
+                        html.push("</div><div class='content'>");
+                        html.push("<ul>")
 
                         html.push("<li>")
-                        html.push("<span class=\"label\">" + "综合成绩：" + "</span>")
-                        html.push("<span class=\'value\'>")
-                        var score = data.get("SCORE")
-                        if (score != null) {
-                            html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID") + "' nullable=\"yes\" value='" + data.get("SCORE") + "'  desc=\"课程内容\"   />");
-                            //onblur="$.score.checkScore($('#userName').val())"
-
-                        } else {
-                            html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID") + "' nullable=\"yes\"   desc=\"课程内容\" />");
-                        }
-                        html.push("</span>")
+                        html.push("<span class=\"label\">"+"培训名称："+"</span>")
+                        var train_name=data.get("TRAIN_NAME");
+                        html.push("<span class=\"value \">"+train_name+""+"</span>")
                         html.push("</li>")
-                    } else {
-                        if(needComm=="TRUE"){
-                            html.push("<li >")
-                            html.push("<span class=\"label\">"+"通用成绩："+"</span>")
-                            if(scoreItem0!=null){
-                                html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID")+"_0" + "' nullable=\"yes\" value='" + scoreItem0 + "'  desc=\"课程内容\"   />");
 
-                            }else{
-                                html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID")+"_0" + "'+\"_0\" nullable=\"yes\"   desc=\"课程内容\" />");
+                        if(2==type ||3==type) {
+
+                            html.push("<li>")
+                            html.push("<span class=\"label\">" + "综合成绩：" + "</span>")
+                            html.push("<span class=\'value\'>")
+                            var score = data.get("SCORE")
+                            if (score != null) {
+                                html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID") + "' nullable=\"yes\" value='" + data.get("SCORE") + "'  desc=\"课程内容\"   />");
+                                //onblur="$.score.checkScore($('#userName').val())"
+
+                            } else {
+                                html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID") + "' nullable=\"yes\"   desc=\"课程内容\" />");
                             }
-                            html.push("<li>")
-                        }
-                        if(needPro=="TRUE"){
-                            html.push("<li>")
-                            html.push("<span class=\"label\">"+"专业成绩："+"</span>")
-                            if(scoreItem1!=null){
-                                html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID")+"_1" + "'nullable=\"yes\" value='" + scoreItem1 + "'  desc=\"课程内容\"   />");
+                            html.push("</span>")
+                            html.push("</li>")
+                        } else {
+                            if(needComm=="TRUE"){
+                                html.push("<li >")
+                                html.push("<span class=\"label\">"+"通用成绩："+"</span>")
+                                if(scoreItem0!=null){
+                                    html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID")+"_0" + "' nullable=\"yes\" value='" + scoreItem0 + "'  desc=\"课程内容\"   />");
 
-                            }else{
-                                html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID") +"_1"+ "' nullable=\"yes\"   desc=\"课程内容\" />");
+                                }else{
+                                    html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID")+"_0" + "'+\"_0\" nullable=\"yes\"   desc=\"课程内容\" />");
+                                }
+                                html.push("<li>")
+                            }
+                            if(needPro=="TRUE"){
+                                html.push("<li>")
+                                html.push("<span class=\"label\">"+"专业成绩："+"</span>")
+                                if(scoreItem1!=null){
+                                    html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID")+"_1" + "'nullable=\"yes\" value='" + scoreItem1 + "'  desc=\"课程内容\"   />");
+
+                                }else{
+                                    html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID") +"_1"+ "' nullable=\"yes\"   desc=\"课程内容\" />");
+
+                                }
+                                html.push("<li>")
 
                             }
-                            html.push("<li>")
-
                         }
+                        html.push("</ul>")
+
+                        html.push("</div></div>")
                     }
-                    html.push("</ul>")
+                    html.push("</ul>");
+                    html.push("</div>");
+                    html.push("</div>");
+                    html.push("</div>");
+                    html.push("<div class='c_space'></div>");
+                });
 
-                    html.push("</div></div>")
-                }
 
 
 
