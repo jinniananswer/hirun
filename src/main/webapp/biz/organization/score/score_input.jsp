@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>成绩录入</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/score/score.input.js"></script>
+    <script src="/scripts/biz/organization/score/score.input.js?v=20190508"></script>
 </head>
 <body>
 <div class="c_header">
@@ -33,9 +33,9 @@
     </div>
     <!-- 筛选 结束 -->
     <div class="c_list c_list-line c_list-border c_list-space l_padding" id="submitarea">
-        <ul id="scores">
+        <div id="scores">
 
-        </ul>
+        </div>
 
           <div class="value">
             <input type="hidden" id="TRAIN_ID" name="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID") }" desc="培训ID" />
