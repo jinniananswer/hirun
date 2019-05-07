@@ -51,7 +51,7 @@ public class ScoreDAO extends GenericDAO {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, e.city , f.NAME parent_org_name ,h.TRAIN_ID ,g.score ,it.name train_name, g.item  ");
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE,e.org_id, e.name org_name, e.city , f.NAME parent_org_name ,h.TRAIN_ID ,g.score ,it.name train_name, g.item  ");
         sb.append("from ins_user a, ins_employee b ,  ");
         sb.append("ins_train_sign h  ");
         sb.append("left join ins_train_exam_score g on (h.EMPLOYEE_ID=g.EMPLOYEE_ID AND g.train_id = h.train_id) , ");
@@ -91,7 +91,7 @@ public class ScoreDAO extends GenericDAO {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, e.city , f.NAME parent_org_name ,h.TRAIN_ID ,g.score ,it.name train_name, g.item , i.ITEM sign_item   ");
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE,e.org_id, e.name org_name, e.city , f.NAME parent_org_name ,h.TRAIN_ID ,g.score ,it.name train_name, g.item , i.ITEM sign_item   ");
         sb.append("from ins_user a, ins_employee b ,  ins_train_sign_item i , ");
         sb.append("ins_train_sign h  ");
         sb.append("left join ins_train_exam_score g on (h.EMPLOYEE_ID=g.EMPLOYEE_ID AND g.train_id = h.train_id) , ");
