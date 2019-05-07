@@ -1,15 +1,19 @@
 package com.hirun.app.biz.organization.score;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.dao.org.ScoreDAO;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
-import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
-import com.hirun.app.dao.org.ScoreDAO;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.*;
+import com.most.core.pub.data.Record;
+import com.most.core.pub.data.RecordSet;
+import com.most.core.pub.data.ServiceRequest;
+import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
@@ -220,8 +224,28 @@ public class ScoreService extends GenericService {
 
         }
 
+        JSONObject company = new JSONObject();
+
+        if(ArrayTool.isNotEmpty(scores)) {
+            int size = scores.size();
+            List<OrgEntity> orgs = OrgBean.getAllOrgs();
+            for(int i=0;i<size;i++) {
+                Record score = scores.get(i);
+                String employeeOrgId = score.get("ORG_ID");
+                OrgEntity rootOrg = OrgBean.findEmployeeRoot(employeeOrgId, orgs);
+                JSONArray companyScores = company.getJSONArray(rootOrg.getName());
+                if(companyScores == null) {
+                    companyScores = new JSONArray();
+                    company.put(rootOrg.getName(), companyScores);
+                }
+
+                companyScores.add(ConvertTool.toJSONObject(score));
+            }
+        }
+
 
         response.set("DATAS", ConvertTool.toJSONArray(scores));
+        response.set("COMPANY_SCORES", company);
         return response;
     }
 
@@ -306,7 +330,26 @@ public class ScoreService extends GenericService {
             }
         }
 
+        JSONObject company = new JSONObject();
+
+        if(ArrayTool.isNotEmpty(scores)) {
+            int size = scores.size();
+            List<OrgEntity> orgs = OrgBean.getAllOrgs();
+            for(int i=0;i<size;i++) {
+                Record score = scores.get(i);
+                String employeeOrgId = score.get("ORG_ID");
+                OrgEntity rootOrg = OrgBean.findEmployeeRoot(employeeOrgId, orgs);
+                JSONArray companyScores = company.getJSONArray(rootOrg.getName());
+                if(companyScores == null) {
+                    companyScores = new JSONArray();
+                    company.put(rootOrg.getName(), companyScores);
+                }
+
+                companyScores.add(ConvertTool.toJSONObject(score));
+            }
+        }
         response.set("DATAS", ConvertTool.toJSONArray(scores));
+        response.set("COMPANY_SCORES", company);
 
         return response;
     }
