@@ -27,10 +27,10 @@
                     var data = datas.get(i);
                     html.push("<li class='link'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     html.push("</div></div>");
-                    html.push("<div class=\"main\" ontap='$.train.viewDetail(\""+data.get("TRAIN_ID")+"\");'><div class=\"title\">");
+                    html.push("<div class=\"main\" ontap='$.train.viewDetail(\""+data.get("TRAIN_ID")+"\");'><div class=\"title title-auto\">");
                     html.push(data.get("TRAIN_NAME"));
                     html.push("</div>");
-                    html.push("<div class=\"content\">");
+                    html.push("<div class=\"content content-auto\">");
                     html.push("起止时间："+data.get("START_DATE")+"~"+data.get("END_DATE"));
                     html.push("</div><div class='content'>"+"涉及课程："+data.get("COURSE_NAME"));
                     html.push("</div><div class='content'>班主任：");
