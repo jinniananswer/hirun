@@ -485,6 +485,7 @@ public class EmployeeService extends GenericService {
         String major = request.getString("MAJOR");
         String certificateNo = request.getString("CERTIFICATE_NO");
         String jobDate = request.getString("JOB_DATE");
+        String regularDate = request.getString("REGULAR_DATE");
 
         if(!StringUtils.equals(name, employee.getName())
                 || !StringUtils.equals(sex, employee.getSex())
@@ -496,7 +497,8 @@ public class EmployeeService extends GenericService {
                 || !StringUtils.equals(educationLevel, employee.getEducationLevel())
                 || !StringUtils.equals(school, employee.getSchool())
                 || !StringUtils.equals(certificateNo, employee.getCertificateNo())
-                || !StringUtils.equals(jobDate, employee.getJobDate())){
+                || !StringUtils.equals(jobDate, employee.getJobDate())
+                || !StringUtils.equals(regularDate, employee.getRegularDate())){
             //修改了员工信息，更新员工表
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("EMPLOYEE_ID", employeeId);
@@ -511,6 +513,7 @@ public class EmployeeService extends GenericService {
             parameter.put("MAJOR", major);
             parameter.put("CERTIFICATE_NO", certificateNo);
             parameter.put("JOB_DATE", jobDate);
+            parameter.put("REGULAR_DATE", regularDate);
             parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
             parameter.put("UPDATE_TIME", session.getCreateTime());
             employeeDAO.save("ins_employee", parameter);
