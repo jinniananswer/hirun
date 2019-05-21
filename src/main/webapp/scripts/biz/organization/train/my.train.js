@@ -121,6 +121,9 @@
                 if(type == "1") {
                     $.redirect.open('redirectToViewPreWorkNotice?TRAIN_ID=' + trainId, '查看岗前考评告知书');
                 }
+                else if(type == "2") {
+                    $.redirect.open('redirectToViewPreJobTrainNotice?TRAIN_ID='+trainId, '查看培训告知书');
+                }
                 else{
                     $.redirect.open('redirectToViewTrainNotice?TRAIN_ID='+trainId, '查看培训告知书');
                 }

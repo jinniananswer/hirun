@@ -67,7 +67,7 @@
                     html.push("</div>");
                     if(signStatus == "1") {
                         html.push("<div class=\"side e_size-s\">");
-                        html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\");'>通</span>");
+                        html.push("<span class=\"e_ico-pic-red e_ico-pic-r e_ico-pic-xs\" ontap='$.train.viewNotice(\"" + data.get("TRAIN_ID") + "\",\""+data.get("TYPE")+"\");'>通</span>");
                         html.push("</div>");
                     }
                     html.push("</div></div>");
@@ -98,8 +98,13 @@
                 }
             },
 
-            viewNotice : function(trainId) {
-                $.redirect.open('redirectToViewTrainNotice?TRAIN_ID='+trainId, '查看培训告知书');
+            viewNotice : function(trainId, type) {
+                if(type == "2") {
+                    $.redirect.open('redirectToViewPreJobTrainNotice?TRAIN_ID='+trainId, '查看培训告知书');
+                }
+                else if(type == "3") {
+                    $.redirect.open('redirectToViewTrainNotice?TRAIN_ID='+trainId, '查看培训告知书');
+                }
             },
 
             viewScore : function(trainId) {
