@@ -65,7 +65,7 @@
             <div class="c_popupGroup">
                 <div class="c_popupItem" id="UI-COURSE_FILE">
                     <div class="c_header">
-                        <div class="back" ontap="hidePopup(this)">课件管理</div>
+                        <div class="back" ontap="hidePopup(this)">课件列表</div>
                     </div>
                     <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                         <div class="c_msg" id="messageboxFile" style="display:none">
