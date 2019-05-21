@@ -89,7 +89,7 @@
                     </div>
                     <div class="l_bottom">
                         <div class="c_submit c_submit-full">
-                            <button type="button" ontap="$.course.deleteFile();" class="e_button-l e_button-red">删除课件</button>
+
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
