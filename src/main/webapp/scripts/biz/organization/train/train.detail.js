@@ -3,6 +3,7 @@
             index : 0,
             currentIndex : 0,
             init : function() {
+                window["UI-popup"] = new Wade.Popup("UI-popup");
                 $.ajaxPost('initTrainDetail','&TRAIN_ID='+$("#TRAIN_ID").val(),function(data) {
                     var rst = new Wade.DataMap(data);
                     var trains = rst.get("TRAINS");
@@ -86,8 +87,8 @@
                         var data = schedules.get(i);
                         html.push("<li class='link'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                         html.push("</div></div>");
-                        html.push("<div class=\"main\" ontap='$.train.viewDetail(\""+data.get("TRAIN_ID")+"\");'><div class=\"title\">");
-                        html.push(data.get("START_DATE").substring(11,16)+"~"+data.get("END_DATE").substring(11,16)+": "+data.get("COURSE_NAME"));
+                        html.push("<div class=\"main\" ontap='$.train.viewCourseFile(\""+data.get("COURSE_ID")+"\");'><div class=\"title\">");
+                        html.push(data.get("START_DATE").substring(11,16)+"~"+data.get("END_DATE").substring(11,16)+": <span class='e_blue'>"+data.get("COURSE_NAME")+"</span>");
                         html.push("</div>");
                         var teacherName = data.get("TEACHER_NAME");
                         if(teacherName != null && teacherName != 'undefined') {
@@ -109,6 +110,38 @@
                 });
 
                 $.insertHtml('beforeend', $("#schedules"), html.join(""));
+            },
+
+            viewCourseFile : function(courseId) {
+                $.ajaxPost('initCourseFile',"&COURSE_ID="+courseId,function(data){
+                    var rst = $.DataMap(data);
+                    $.train.drawFile(rst.get("FILES"));
+                });
+            },
+
+            drawFile : function(datas) {
+                var html = [];
+                var ul = $("#courseFileArea");
+                ul.empty();
+
+                if(datas == null || datas.length <= 0) {
+                    showPopup('UI-popup','UI-COURSE_FILE');
+                    $("#messageboxFile").css("display","");
+                    return;
+                }
+                $("#messageboxFile").css("display","none");
+                var length = datas.length;
+                for(var i=0;i<length;i++) {
+                    var data = datas.get(i);
+                    html.push("<li>");
+                    html.push("<div class='main'><div class='title link' ontap=\"$.redirect.open(\'redirectToViewFile?FILE_ID="+data.get("FILE_ID")+"\',\'课件详情\')\">");
+                    html.push(data.get("NAME"));
+                    html.push("</div></div>");
+                    html.push("<div class='fn'><input type='checkbox' name='DELETE_FILE' value='"+data.get("FILE_ID")+"' />");
+                    html.push("</div></li>");
+                }
+                $.insertHtml('beforeend', ul, html.join(""));
+                showPopup('UI-popup','UI-COURSE_FILE');
             },
 
             viewTeacher : function(teacherId) {
