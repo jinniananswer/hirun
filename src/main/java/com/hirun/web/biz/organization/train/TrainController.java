@@ -149,6 +149,11 @@ public class TrainController extends RootController {
         return "/biz/organization/train/view_train_notice";
     }
 
+    @RequestMapping("/redirectToViewPreJobTrainNotice")
+    public String redirectToViewPreJobTrainNotice(HttpServletRequest request) throws Exception {
+        return "/biz/organization/train/view_prejob_train_notice";
+    }
+
     @RequestMapping("/initViewTrainNotice")
     public @ResponseBody String initViewTrainNotice(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.train.TrainService.initViewTrainNotice", parameter);
