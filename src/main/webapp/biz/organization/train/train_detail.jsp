@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>培训详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/train/train.detail.js?v=20181231235600"></script>
+    <script src="/scripts/biz/organization/train/train.detail.js?v=20190521"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -58,6 +58,46 @@
     </div>
 </div>
 <!-- 滚动 结束 -->
+<div class="c_popup" id="UI-popup">
+    <div class="c_popupBg" id="UI-popup_bg"></div>
+    <div class="c_popupBox">
+        <div class="c_popupWrapper" id="UI-popup_wrapper">
+            <div class="c_popupGroup">
+                <div class="c_popupItem" id="UI-COURSE_FILE">
+                    <div class="c_header">
+                        <div class="back" ontap="hidePopup(this)">课件管理</div>
+                    </div>
+                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                        <div class="c_msg" id="messageboxFile" style="display:none">
+                            <div class="wrapper">
+                                <div class="emote"></div>
+                                <div class="info">
+                                    <div class="text">
+                                        <div class="title">暂无课件</div>
+                                        <div class="content"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 列表 开始 -->
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
+                            <ul id="courseFileArea">
+
+                            </ul>
+                        </div>
+                        <!-- 列表 结束 -->
+                    </div>
+                    <div class="l_bottom">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" ontap="$.course.deleteFile();" class="e_button-l e_button-red">删除课件</button>
+                        </div>
+                    </div>
+                    <!-- 滚动 结束 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 <script>
     Wade.setRatio();
