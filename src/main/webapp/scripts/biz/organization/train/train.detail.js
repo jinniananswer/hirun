@@ -113,6 +113,9 @@
             },
 
             viewCourseFile : function(courseId) {
+                if(courseId == "-1") {
+                    return;
+                }
                 $.ajaxPost('initCourseFile',"&COURSE_ID="+courseId,function(data){
                     var rst = $.DataMap(data);
                     $.train.drawFile(rst.get("FILES"));
@@ -133,11 +136,11 @@
                 var length = datas.length;
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
-                    html.push("<li>");
-                    html.push("<div class='main'><div class='title link' ontap=\"$.redirect.open(\'redirectToViewFile?FILE_ID="+data.get("FILE_ID")+"\',\'课件详情\')\">");
+                    html.push("<li class='link' ontap=\"$.redirect.open('redirectToViewFile?FILE_ID="+data.get("FILE_ID")+"','课件详情')\">");
+                    html.push("<div class='main'><div class='title'>");
                     html.push(data.get("NAME"));
                     html.push("</div></div>");
-                    html.push("<div class='fn'><input type='checkbox' name='DELETE_FILE' value='"+data.get("FILE_ID")+"' />");
+                    html.push("<div class='fn'>");
                     html.push("</div></li>");
                 }
                 $.insertHtml('beforeend', ul, html.join(""));
