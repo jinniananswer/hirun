@@ -382,7 +382,7 @@
                                             考试时间：<span id="jg_start_date"></span>
                                         </div>
                                         <div class="content content-auto">
-                                            主持人：晏松涛、肖军
+                                            主持人：肖军、戴斐斐
                                         </div>
                                         <div class="content content-auto">
                                             参加人员：结构工程师
