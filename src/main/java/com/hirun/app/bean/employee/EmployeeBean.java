@@ -162,6 +162,16 @@ public class EmployeeBean {
         return counselors;
     }
 
+    public static RecordSet queryCounselorByOrgId(String orgId, List<OrgEntity> orgs, String employeeName) throws Exception{
+        String orgLine = OrgBean.getOrgLine(orgId, orgs);
+        if(StringUtils.isBlank(orgLine))
+            return null;
+
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        RecordSet counselors = dao.queryCounselorsByOrgIds(orgLine, employeeName);
+        return counselors;
+    }
+
     public static OrgEntity queryOrgByEmployee(String employeeId, String type) throws Exception{
         EmployeeJobRoleDAO dao = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
         List<EmployeeJobRoleEntity> jobRoles = dao.queryJobRoleByEmployeeId(employeeId);
@@ -178,6 +188,30 @@ public class EmployeeBean {
 
     public static RecordSet queryAllCounselors(String orgId, List<OrgEntity> orgs) throws Exception{
         RecordSet counselors = queryCounselorByOrgId(orgId, orgs);
+        if(counselors == null || counselors.size() <= 0)
+            return null;
+
+        int size = counselors.size();
+        for(int i=0;i<size;i++){
+            Record counselor = counselors.get(i);
+            String counselorOrgId = counselor.get("ORG_ID");
+            OrgEntity shop = queryOrgByOrgId(counselorOrgId, "2", orgs);
+            if(shop != null) {
+                counselor.put("SHOP", shop.getOrgId());
+                counselor.put("SHOP_NAME",shop.getName());
+            }
+
+            OrgEntity company = queryOrgByOrgId(counselorOrgId, "3", orgs);
+            if(company != null) {
+                counselor.put("COMPANY", company.getOrgId());
+                counselor.put("COMPANY_NAME", company.getName());
+            }
+        }
+        return counselors;
+    }
+
+    public static RecordSet queryAllCounselors(String orgId, List<OrgEntity> orgs, String employeeName) throws Exception{
+        RecordSet counselors = queryCounselorByOrgId(orgId, orgs, employeeName);
         if(counselors == null || counselors.size() <= 0)
             return null;
 
