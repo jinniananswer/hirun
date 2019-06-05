@@ -314,4 +314,29 @@ public class OrgBean {
         return rst;
     }
 
+    public static List<OrgEntity> findSubordinateOrg(String orgId, List<OrgEntity> allOrgs, String type) throws Exception {
+        if (ArrayTool.isEmpty(allOrgs)) {
+            return null;
+        }
+
+        List<OrgEntity> bloodLine = new ArrayList<OrgEntity>();
+
+        for (OrgEntity org : allOrgs) {
+            if (StringUtils.equals(orgId, org.getParentOrgId())) {
+
+                if(StringUtils.equals(type, org.getType())) {
+                    bloodLine.add(org);
+                }
+                else {
+                    List<OrgEntity> orgs = findSubordinateOrg(org.getOrgId(), allOrgs, type);
+                    if(orgs != null) {
+                        bloodLine.addAll(orgs);
+                    }
+                }
+            }
+        }
+
+        return bloodLine;
+    }
+
 }
