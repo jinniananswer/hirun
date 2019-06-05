@@ -34,14 +34,15 @@ var EmployeeDailySheetQuery = {
 
         // EmployeeDailySheetQuery.queryEmployeeDailySheetList(now);
     },
-    queryEmployeeDailySheetList : function(startDate, endDate) {
+    queryEmployeeDailySheetList : function(startDate, endDate, houseCounselorName) {
 	    $.beginPageLoading("查询中。。。");
         $.ajaxReq({
             url : 'datacenter/plan/queryEmployeeDaillySheet2',
             data : {
                 EMPLOYEE_ID : Employee.employeeId,
                 START_DATE : startDate,
-                END_DATE : endDate
+                END_DATE : endDate,
+                HOUSE_COUNSELOR_NAME : houseCounselorName
             },
             successFunc : function(data) {
                 $.endPageLoading();
@@ -57,9 +58,9 @@ var EmployeeDailySheetQuery = {
         });
     },
     clickQueryButton : function() {
-        QueryCondPopup.showQueryCond(function(startDate, endDate) {
+        QueryCondPopup.showQueryCond(function(startDate, endDate, houseCounselorName) {
             $('#QUERY_COND_TEXT').val(startDate + "~" + endDate);
-            EmployeeDailySheetQuery.queryEmployeeDailySheetList(startDate, endDate);
+            EmployeeDailySheetQuery.queryEmployeeDailySheetList(startDate, endDate, houseCounselorName);
         });
     }
 };
@@ -74,9 +75,10 @@ var QueryCondPopup = {
     confirm : function(obj) {
         var startDate = $('#COND_START_DATE').val();
         var endDate = $('#COND_END_DATE').val();
+        var houseCounselorName = $('#COND_HOUSE_COUNSELOR_NAME').val();
         hidePopup(obj);
         if(QueryCondPopup.callback) {
-            QueryCondPopup.callback(startDate, endDate);
+            QueryCondPopup.callback(startDate, endDate, houseCounselorName);
         }
     }
 };

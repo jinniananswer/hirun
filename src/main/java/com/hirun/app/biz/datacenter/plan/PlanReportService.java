@@ -18,6 +18,7 @@ import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.transform.ConvertTool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -43,6 +44,7 @@ public class PlanReportService extends GenericService{
         String startDate = request.getString("START_DATE");
         String endDate = request.getString("END_DATE");
         String employeeId = request.getString("EMPLOYEE_ID");
+        String houueCounselorName = request.getString("HOUSE_COUNSELOR_NAME");
 
         String orgId = "";
         if(Permission.hasAllCity()) {
@@ -56,34 +58,43 @@ public class PlanReportService extends GenericService{
         OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
 
         List<OrgEntity> orgEntityList = OrgBean.getAllOrgs();
-        RecordSet recordSet = EmployeeBean.queryAllCounselors(orgId, orgEntityList);
+
+        RecordSet recordSet = null;
+        if(StringUtils.isNotBlank(houueCounselorName)) {
+            recordSet = EmployeeBean.queryAllCounselors(orgId, orgEntityList, houueCounselorName);
+        } else {
+            recordSet = EmployeeBean.queryAllCounselors(orgId, orgEntityList);
+        }
+
         Map<String, List<String>> companyMap = new HashMap<String, List<String>>();
         Map<String, List<JSONObject>> shopMap = new HashMap<String, List<JSONObject>>();
 //        JSONArray array = ConvertTool.toJSONArray(list, new String[]{"EMPLOYEE_ID", "NAME"});
         JSONArray sheetList = new JSONArray();
-        for(int i = 0, size = recordSet.size(); i < size; i++) {
-            Record record = recordSet.get(i);
-            String company = record.get("COMPANY");
-            String shop = record.get("SHOP");
-            JSONObject employeeSheet = PlanStatBean.queryEmployeeSheetByEmployeeId(record.get("EMPLOYEE_ID"), startDate, endDate);
+        if(recordSet != null) {
+            for(int i = 0, size = recordSet.size(); i < size; i++) {
+                Record record = recordSet.get(i);
+                String company = record.get("COMPANY");
+                String shop = record.get("SHOP");
+                JSONObject employeeSheet = PlanStatBean.queryEmployeeSheetByEmployeeId(record.get("EMPLOYEE_ID"), startDate, endDate);
 //            sheetList.add(employeeSheet);
 
-            if(companyMap.containsKey(company)) {
-                if(!shopMap.containsKey(shop)) {
-                    companyMap.get(company).add(shop);
+                if(companyMap.containsKey(company)) {
+                    if(!shopMap.containsKey(shop)) {
+                        companyMap.get(company).add(shop);
+                    }
+                } else {
+                    List<String> shopList = new ArrayList<String>();
+                    shopList.add(shop);
+                    companyMap.put(company, shopList);
                 }
-            } else {
-                List<String> shopList = new ArrayList<String>();
-                shopList.add(shop);
-                companyMap.put(company, shopList);
-            }
 
-            if(shopMap.containsKey(shop)) {
-                shopMap.get(shop).add(employeeSheet);
-            } else {
-                List<JSONObject> employeeList = new ArrayList<JSONObject>();
-                employeeList.add(employeeSheet);
-                shopMap.put(shop, employeeList);
+                if(shopMap.containsKey(shop)) {
+                    shopMap.get(shop).add(employeeSheet);
+                } else {
+                    List<JSONObject> employeeList = new ArrayList<JSONObject>();
+                    employeeList.add(employeeSheet);
+                    shopMap.put(shop, employeeList);
+                }
             }
         }
 

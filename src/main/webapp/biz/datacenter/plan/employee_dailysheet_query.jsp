@@ -103,6 +103,7 @@
 						<div class="c_list c_list_form c_list-line" id="QueryCondForm">
 							<ul>
 								<li>
+									<div class="label">开始时间</div>
 									<div class="value">
 										<span class="e_mix">
 											<input type="text" id="COND_START_DATE" name="COND_START_DATE" datatype="date" nullable="no" desc="开始日期" readonly="true"/>
@@ -111,11 +112,18 @@
 									</div>
 								</li>
 								<li>
+									<div class="label">结束时间</div>
 									<div class="value">
 										<span class="e_mix">
 											<input type="text" id="COND_END_DATE" name="COND_END_DATE" datatype="date" nullable="no" desc="结束日期" readonly="true"/>
 											<span class="e_ico-date"></span>
 										</span>
+									</div>
+								</li>
+								<li>
+									<div class="label">家装顾问姓名</div>
+									<div class="value">
+										<input type="text" id="COND_HOUSE_COUNSELOR_NAME" name="COND_HOUSE_COUNSELOR_NAME" nullable="no" desc="家装顾问姓名"/>
 									</div>
 								</li>
 							</ul>
