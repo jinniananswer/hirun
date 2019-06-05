@@ -707,4 +707,41 @@ public class EmployeeService extends GenericService {
         dao.save("ins_user", parameter);
         return response;
     }
+
+    public ServiceResponse initMyControlEnterprise(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+
+        AppSession session = SessionManager.getSession();
+        String orgId = OrgBean.getOrgId(session.getSessionEntity());
+        OrgEntity enterpriseOrg = OrgBean.getAssignTypeOrg(orgId, "3");
+        if (enterpriseOrg == null) {
+            return response;
+        }
+
+        if (StringUtils.equals("122", enterpriseOrg.getOrgId())) {
+            OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
+            RecordSet enterprises = dao.queryCompany();
+            response.set("ENTERPRISES", ConvertTool.toJSONArray(enterprises));
+        }
+        else{
+            JSONArray array = new JSONArray();
+            array.add(JSONObject.parseObject(JSON.toJSONString(enterpriseOrg.getContent())));
+            response.set("ENTERPRISES", array);
+        }
+
+        return response;
+    }
+
+    public ServiceResponse initMyControlShop(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String enterpriseOrgId = request.getString("ENTERPRISE");
+
+        if(StringUtils.isBlank(enterpriseOrgId)) {
+            return response;
+        }
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+        List<OrgEntity> shops = OrgBean.findSubordinateOrg(enterpriseOrgId, allOrgs, "4");
+        response.set("SHOPS", ConvertTool.toJSONArray(shops));
+        return response;
+    }
 }
