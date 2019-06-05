@@ -19,6 +19,8 @@
     <entity name="OrgCenter.employee.EmployeeService.entryHoliday"  class="com.hirun.app.biz.employee.EmployeeService" method="entryHoliday"/>
     <entity name="OrgCenter.employee.EmployeeService.queryEnterpriseEmployees"  class="com.hirun.app.biz.employee.EmployeeService" method="queryEnterpriseEmployees"/>
     <entity name="OrgCenter.employee.EmployeeService.resetPassword"  class="com.hirun.app.biz.employee.EmployeeService" method="resetPassword"/>
+    <entity name="OrgCenter.employee.EmployeeService.initMyControlEnterprise"  class="com.hirun.app.biz.employee.EmployeeService" method="initMyControlEnterprise"/>
+    <entity name="OrgCenter.employee.EmployeeService.initMyControlShop"  class="com.hirun.app.biz.employee.EmployeeService" method="initMyControlShop"/>
 
     <entity name="OrgCenter.course.CourseService.queryCourseFile" class="com.hirun.app.biz.organization.course.CourseService" method="queryCourseFile"/>
     <entity name="OrgCenter.course.CourseService.initCourseManage" class="com.hirun.app.biz.organization.course.CourseService" method="initCourseManage"/>
