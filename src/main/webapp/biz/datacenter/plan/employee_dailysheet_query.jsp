@@ -126,6 +126,22 @@
 										<input type="text" id="COND_HOUSE_COUNSELOR_NAME" name="COND_HOUSE_COUNSELOR_NAME" nullable="no" desc="家装顾问姓名"/>
 									</div>
 								</li>
+								<li class="link" ontap="forwardPopup(this,'UI-ENTERPRISE')">
+									<div class="label">分公司</div>
+									<div class="value">
+										<input type="text" id="ENTERPRISE_TEXT" name="ENTERPRISE_TEXT" nullable="yes" desc="" />
+										<input type="hidden" name="ENTERPRISE" id="ENTERPRISE" nullable="yes" desc="分公司" />
+									</div>
+									<div class="more"></div>
+								</li>
+								<li class="link" ontap="forwardPopup('UI-popup','UI-SHOP')">
+									<div class="label">门店</div>
+									<div class="value">
+										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" nullable="yes" desc="门店" />
+										<input type="hidden" id="SHOP" name="SHOP" nullable="yes" desc="门店" />
+									</div>
+									<div class="more"></div>
+								</li>
 							</ul>
 						</div>
 						<!-- 客户列表 结束 -->
@@ -134,6 +150,41 @@
 							<button type="button" class="e_button-l e_button-green" ontap="QueryCondPopup.confirm(this)">查询</button>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="c_popupGroup">
+				<div class="c_popupItem" id="UI-ENTERPRISE">
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this)">请选择分公司</div>
+					</div>
+					<div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+						<!-- 列表 开始 -->
+						<div class="c_list c_list-col-2 c_list-line c_list-border c_list-fixWrapSpace">
+							<ul id="BIZ_ENTERPRISE">
+
+							</ul>
+						</div>
+						<!-- 列表 结束 -->
+						<div class="c_line"></div>
+					</div>
+				</div>
+				<div class="c_popupItem" id="UI-SHOP">
+					<!-- 标题栏 开始 -->
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this);">请选择门店</div>
+					</div>
+					<!-- 标题栏 结束 -->
+					<!-- 滚动（替换为 java 组件） 开始 -->
+					<div class="c_scroll c_scroll-float c_scroll-header">
+						<!-- 列表 开始 -->
+						<div class="c_list c_list-col-2 c_list-line c_list-border c_list-fixWrapSpace">
+							<ul id="BIZ_SHOP">
+
+							</ul>
+						</div>
+						<!-- 列表 结束 -->
+					</div>
+					<!-- 滚动 结束 -->
 				</div>
 			</div>
 		</div>
