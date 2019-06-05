@@ -148,4 +148,16 @@ public class EmployeeController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.resetPassword", parameter);
         return response.toJsonString();
     }
+
+    @RequestMapping("/initMyControlEnterprise")
+    public @ResponseBody String initMyControlEnterprise(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.initMyControlEnterprise", parameter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping("/initMyControlShop")
+    public @ResponseBody String initMyControlShop(@RequestParam Map parameter) throws Exception{
+        ServiceResponse response = ServiceClient.call("OrgCenter.employee.EmployeeService.initMyControlShop", parameter);
+        return response.toJsonString();
+    }
 }
