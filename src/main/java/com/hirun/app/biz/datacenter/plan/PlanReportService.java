@@ -45,14 +45,16 @@ public class PlanReportService extends GenericService{
         String endDate = request.getString("END_DATE");
         String employeeId = request.getString("EMPLOYEE_ID");
         String houueCounselorName = request.getString("HOUSE_COUNSELOR_NAME");
+        String orgId = request.getString("ORG_ID");
 
-        String orgId = "";
-        if(Permission.hasAllCity()) {
-            orgId = "7";
-        } else if(Permission.hasAllShop()) {
-            orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
-        } else {
-            orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
+        if(StringUtils.isBlank(orgId)) {
+            if(Permission.hasAllCity()) {
+                orgId = "7";
+            } else if(Permission.hasAllShop()) {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
+            } else {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
+            }
         }
 
         OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
@@ -98,85 +100,92 @@ public class PlanReportService extends GenericService{
             }
         }
 
-        Iterator<String> companyIter = companyMap.keySet().iterator();
-        JSONObject buSheet = new JSONObject();
-        while(companyIter.hasNext()) {
-            String companyKey = companyIter.next();
-            List<String> shopList = companyMap.get(companyKey);
-            JSONObject companySheet = new JSONObject();
-            for(String shopId : shopList) {
-                List<JSONObject> employeeList = shopMap.get(shopId);
-                JSONObject shopSheet = new JSONObject();
-                for(JSONObject employeeSheet : employeeList) {
-                    sheetList.add(employeeSheet);
-                    shopSheet.put("PLAN_JW",shopSheet.getIntValue("PLAN_JW") + employeeSheet.getIntValue("PLAN_JW"));
-                    shopSheet.put("PLAN_LTZDSTS",shopSheet.getIntValue("PLAN_LTZDSTS") + employeeSheet.getIntValue("PLAN_LTZDSTS"));
-                    shopSheet.put("PLAN_GZHGZ",shopSheet.getIntValue("PLAN_GZHGZ") + employeeSheet.getIntValue("PLAN_GZHGZ"));
-                    shopSheet.put("PLAN_HXJC",shopSheet.getIntValue("PLAN_HXJC") + employeeSheet.getIntValue("PLAN_HXJC"));
-                    shopSheet.put("PLAN_SMJRQLC",shopSheet.getIntValue("PLAN_SMJRQLC") + employeeSheet.getIntValue("PLAN_SMJRQLC"));
-                    shopSheet.put("PLAN_XQLTYTS",shopSheet.getIntValue("PLAN_XQLTYTS") + employeeSheet.getIntValue("PLAN_XQLTYTS"));
-                    shopSheet.put("PLAN_ZX",shopSheet.getIntValue("PLAN_ZX") + employeeSheet.getIntValue("PLAN_ZX"));
-                    shopSheet.put("PLAN_YJALTS",shopSheet.getIntValue("PLAN_YJALTS") + employeeSheet.getIntValue("PLAN_YJALTS"));
-                    shopSheet.put("PLAN_DKCSMU",shopSheet.getIntValue("PLAN_DKCSMU") + employeeSheet.getIntValue("PLAN_DKCSMU"));
-                    shopSheet.put("FINISH_JW",shopSheet.getIntValue("FINISH_JW") + employeeSheet.getIntValue("FINISH_JW"));
-                    shopSheet.put("FINISH_LTZDSTS",shopSheet.getIntValue("FINISH_LTZDSTS") + employeeSheet.getIntValue("FINISH_LTZDSTS"));
-                    shopSheet.put("FINISH_GZHGZ",shopSheet.getIntValue("FINISH_GZHGZ") + employeeSheet.getIntValue("FINISH_GZHGZ"));
-                    shopSheet.put("FINISH_HXJC",shopSheet.getIntValue("FINISH_HXJC") + employeeSheet.getIntValue("FINISH_HXJC"));
-                    shopSheet.put("FINISH_SMJRQLC",shopSheet.getIntValue("FINISH_SMJRQLC") + employeeSheet.getIntValue("FINISH_SMJRQLC"));
-                    shopSheet.put("FINISH_XQLTYTS",shopSheet.getIntValue("FINISH_XQLTYTS") + employeeSheet.getIntValue("FINISH_XQLTYTS"));
-                    shopSheet.put("FINISH_ZX",shopSheet.getIntValue("FINISH_ZX") + employeeSheet.getIntValue("FINISH_ZX"));
-                    shopSheet.put("FINISH_YJALTS",shopSheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
-                    shopSheet.put("FINISH_DKCSMU",shopSheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
+        if(StringUtils.isBlank(houueCounselorName)) {
+            Iterator<String> companyIter = companyMap.keySet().iterator();
+            JSONObject buSheet = new JSONObject();
+            while(companyIter.hasNext()) {
+                String companyKey = companyIter.next();
+                List<String> shopList = companyMap.get(companyKey);
+                JSONObject companySheet = new JSONObject();
+                for(String shopId : shopList) {
+                    List<JSONObject> employeeList = shopMap.get(shopId);
+                    JSONObject shopSheet = new JSONObject();
+                    for(JSONObject employeeSheet : employeeList) {
+                        sheetList.add(employeeSheet);
+                        shopSheet.put("PLAN_JW",shopSheet.getIntValue("PLAN_JW") + employeeSheet.getIntValue("PLAN_JW"));
+                        shopSheet.put("PLAN_LTZDSTS",shopSheet.getIntValue("PLAN_LTZDSTS") + employeeSheet.getIntValue("PLAN_LTZDSTS"));
+                        shopSheet.put("PLAN_GZHGZ",shopSheet.getIntValue("PLAN_GZHGZ") + employeeSheet.getIntValue("PLAN_GZHGZ"));
+                        shopSheet.put("PLAN_HXJC",shopSheet.getIntValue("PLAN_HXJC") + employeeSheet.getIntValue("PLAN_HXJC"));
+                        shopSheet.put("PLAN_SMJRQLC",shopSheet.getIntValue("PLAN_SMJRQLC") + employeeSheet.getIntValue("PLAN_SMJRQLC"));
+                        shopSheet.put("PLAN_XQLTYTS",shopSheet.getIntValue("PLAN_XQLTYTS") + employeeSheet.getIntValue("PLAN_XQLTYTS"));
+                        shopSheet.put("PLAN_ZX",shopSheet.getIntValue("PLAN_ZX") + employeeSheet.getIntValue("PLAN_ZX"));
+                        shopSheet.put("PLAN_YJALTS",shopSheet.getIntValue("PLAN_YJALTS") + employeeSheet.getIntValue("PLAN_YJALTS"));
+                        shopSheet.put("PLAN_DKCSMU",shopSheet.getIntValue("PLAN_DKCSMU") + employeeSheet.getIntValue("PLAN_DKCSMU"));
+                        shopSheet.put("FINISH_JW",shopSheet.getIntValue("FINISH_JW") + employeeSheet.getIntValue("FINISH_JW"));
+                        shopSheet.put("FINISH_LTZDSTS",shopSheet.getIntValue("FINISH_LTZDSTS") + employeeSheet.getIntValue("FINISH_LTZDSTS"));
+                        shopSheet.put("FINISH_GZHGZ",shopSheet.getIntValue("FINISH_GZHGZ") + employeeSheet.getIntValue("FINISH_GZHGZ"));
+                        shopSheet.put("FINISH_HXJC",shopSheet.getIntValue("FINISH_HXJC") + employeeSheet.getIntValue("FINISH_HXJC"));
+                        shopSheet.put("FINISH_SMJRQLC",shopSheet.getIntValue("FINISH_SMJRQLC") + employeeSheet.getIntValue("FINISH_SMJRQLC"));
+                        shopSheet.put("FINISH_XQLTYTS",shopSheet.getIntValue("FINISH_XQLTYTS") + employeeSheet.getIntValue("FINISH_XQLTYTS"));
+                        shopSheet.put("FINISH_ZX",shopSheet.getIntValue("FINISH_ZX") + employeeSheet.getIntValue("FINISH_ZX"));
+                        shopSheet.put("FINISH_YJALTS",shopSheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
+                        shopSheet.put("FINISH_DKCSMU",shopSheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
 
-                    companySheet.put("PLAN_JW",companySheet.getIntValue("PLAN_JW") + employeeSheet.getIntValue("PLAN_JW"));
-                    companySheet.put("PLAN_LTZDSTS",companySheet.getIntValue("PLAN_LTZDSTS") + employeeSheet.getIntValue("PLAN_LTZDSTS"));
-                    companySheet.put("PLAN_GZHGZ",companySheet.getIntValue("PLAN_GZHGZ") + employeeSheet.getIntValue("PLAN_GZHGZ"));
-                    companySheet.put("PLAN_HXJC",companySheet.getIntValue("PLAN_HXJC") + employeeSheet.getIntValue("PLAN_HXJC"));
-                    companySheet.put("PLAN_SMJRQLC",companySheet.getIntValue("PLAN_SMJRQLC") + employeeSheet.getIntValue("PLAN_SMJRQLC"));
-                    companySheet.put("PLAN_XQLTYTS",companySheet.getIntValue("PLAN_XQLTYTS") + employeeSheet.getIntValue("PLAN_XQLTYTS"));
-                    companySheet.put("PLAN_ZX",companySheet.getIntValue("PLAN_ZX") + employeeSheet.getIntValue("PLAN_ZX"));
-                    companySheet.put("PLAN_YJALTS",companySheet.getIntValue("PLAN_YJALTS") + employeeSheet.getIntValue("PLAN_YJALTS"));
-                    companySheet.put("PLAN_DKCSMU",companySheet.getIntValue("PLAN_DKCSMU") + employeeSheet.getIntValue("PLAN_DKCSMU"));
-                    companySheet.put("FINISH_JW",companySheet.getIntValue("FINISH_JW") + employeeSheet.getIntValue("FINISH_JW"));
-                    companySheet.put("FINISH_LTZDSTS",companySheet.getIntValue("FINISH_LTZDSTS") + employeeSheet.getIntValue("FINISH_LTZDSTS"));
-                    companySheet.put("FINISH_GZHGZ",companySheet.getIntValue("FINISH_GZHGZ") + employeeSheet.getIntValue("FINISH_GZHGZ"));
-                    companySheet.put("FINISH_HXJC",companySheet.getIntValue("FINISH_HXJC") + employeeSheet.getIntValue("FINISH_HXJC"));
-                    companySheet.put("FINISH_SMJRQLC",companySheet.getIntValue("FINISH_SMJRQLC") + employeeSheet.getIntValue("FINISH_SMJRQLC"));
-                    companySheet.put("FINISH_XQLTYTS",companySheet.getIntValue("FINISH_XQLTYTS") + employeeSheet.getIntValue("FINISH_XQLTYTS"));
-                    companySheet.put("FINISH_ZX",companySheet.getIntValue("FINISH_ZX") + employeeSheet.getIntValue("FINISH_ZX"));
-                    companySheet.put("FINISH_YJALTS",companySheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
-                    companySheet.put("FINISH_DKCSMU",companySheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
+                        companySheet.put("PLAN_JW",companySheet.getIntValue("PLAN_JW") + employeeSheet.getIntValue("PLAN_JW"));
+                        companySheet.put("PLAN_LTZDSTS",companySheet.getIntValue("PLAN_LTZDSTS") + employeeSheet.getIntValue("PLAN_LTZDSTS"));
+                        companySheet.put("PLAN_GZHGZ",companySheet.getIntValue("PLAN_GZHGZ") + employeeSheet.getIntValue("PLAN_GZHGZ"));
+                        companySheet.put("PLAN_HXJC",companySheet.getIntValue("PLAN_HXJC") + employeeSheet.getIntValue("PLAN_HXJC"));
+                        companySheet.put("PLAN_SMJRQLC",companySheet.getIntValue("PLAN_SMJRQLC") + employeeSheet.getIntValue("PLAN_SMJRQLC"));
+                        companySheet.put("PLAN_XQLTYTS",companySheet.getIntValue("PLAN_XQLTYTS") + employeeSheet.getIntValue("PLAN_XQLTYTS"));
+                        companySheet.put("PLAN_ZX",companySheet.getIntValue("PLAN_ZX") + employeeSheet.getIntValue("PLAN_ZX"));
+                        companySheet.put("PLAN_YJALTS",companySheet.getIntValue("PLAN_YJALTS") + employeeSheet.getIntValue("PLAN_YJALTS"));
+                        companySheet.put("PLAN_DKCSMU",companySheet.getIntValue("PLAN_DKCSMU") + employeeSheet.getIntValue("PLAN_DKCSMU"));
+                        companySheet.put("FINISH_JW",companySheet.getIntValue("FINISH_JW") + employeeSheet.getIntValue("FINISH_JW"));
+                        companySheet.put("FINISH_LTZDSTS",companySheet.getIntValue("FINISH_LTZDSTS") + employeeSheet.getIntValue("FINISH_LTZDSTS"));
+                        companySheet.put("FINISH_GZHGZ",companySheet.getIntValue("FINISH_GZHGZ") + employeeSheet.getIntValue("FINISH_GZHGZ"));
+                        companySheet.put("FINISH_HXJC",companySheet.getIntValue("FINISH_HXJC") + employeeSheet.getIntValue("FINISH_HXJC"));
+                        companySheet.put("FINISH_SMJRQLC",companySheet.getIntValue("FINISH_SMJRQLC") + employeeSheet.getIntValue("FINISH_SMJRQLC"));
+                        companySheet.put("FINISH_XQLTYTS",companySheet.getIntValue("FINISH_XQLTYTS") + employeeSheet.getIntValue("FINISH_XQLTYTS"));
+                        companySheet.put("FINISH_ZX",companySheet.getIntValue("FINISH_ZX") + employeeSheet.getIntValue("FINISH_ZX"));
+                        companySheet.put("FINISH_YJALTS",companySheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
+                        companySheet.put("FINISH_DKCSMU",companySheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
 
-                    buSheet.put("PLAN_JW",buSheet.getIntValue("PLAN_JW") + employeeSheet.getIntValue("PLAN_JW"));
-                    buSheet.put("PLAN_LTZDSTS",buSheet.getIntValue("PLAN_LTZDSTS") + employeeSheet.getIntValue("PLAN_LTZDSTS"));
-                    buSheet.put("PLAN_GZHGZ",buSheet.getIntValue("PLAN_GZHGZ") + employeeSheet.getIntValue("PLAN_GZHGZ"));
-                    buSheet.put("PLAN_HXJC",buSheet.getIntValue("PLAN_HXJC") + employeeSheet.getIntValue("PLAN_HXJC"));
-                    buSheet.put("PLAN_SMJRQLC",buSheet.getIntValue("PLAN_SMJRQLC") + employeeSheet.getIntValue("PLAN_SMJRQLC"));
-                    buSheet.put("PLAN_XQLTYTS",buSheet.getIntValue("PLAN_XQLTYTS") + employeeSheet.getIntValue("PLAN_XQLTYTS"));
-                    buSheet.put("PLAN_ZX",buSheet.getIntValue("PLAN_ZX") + employeeSheet.getIntValue("PLAN_ZX"));
-                    buSheet.put("PLAN_YJALTS",buSheet.getIntValue("PLAN_YJALTS") + employeeSheet.getIntValue("PLAN_YJALTS"));
-                    buSheet.put("PLAN_DKCSMU",buSheet.getIntValue("PLAN_DKCSMU") + employeeSheet.getIntValue("PLAN_DKCSMU"));
-                    buSheet.put("FINISH_JW",buSheet.getIntValue("FINISH_JW") + employeeSheet.getIntValue("FINISH_JW"));
-                    buSheet.put("FINISH_LTZDSTS",buSheet.getIntValue("FINISH_LTZDSTS") + employeeSheet.getIntValue("FINISH_LTZDSTS"));
-                    buSheet.put("FINISH_GZHGZ",buSheet.getIntValue("FINISH_GZHGZ") + employeeSheet.getIntValue("FINISH_GZHGZ"));
-                    buSheet.put("FINISH_HXJC",buSheet.getIntValue("FINISH_HXJC") + employeeSheet.getIntValue("FINISH_HXJC"));
-                    buSheet.put("FINISH_SMJRQLC",buSheet.getIntValue("FINISH_SMJRQLC") + employeeSheet.getIntValue("FINISH_SMJRQLC"));
-                    buSheet.put("FINISH_XQLTYTS",buSheet.getIntValue("FINISH_XQLTYTS") + employeeSheet.getIntValue("FINISH_XQLTYTS"));
-                    buSheet.put("FINISH_ZX",buSheet.getIntValue("FINISH_ZX") + employeeSheet.getIntValue("FINISH_ZX"));
-                    buSheet.put("FINISH_YJALTS",buSheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
-                    buSheet.put("FINISH_DKCSMU",buSheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
+                        buSheet.put("PLAN_JW",buSheet.getIntValue("PLAN_JW") + employeeSheet.getIntValue("PLAN_JW"));
+                        buSheet.put("PLAN_LTZDSTS",buSheet.getIntValue("PLAN_LTZDSTS") + employeeSheet.getIntValue("PLAN_LTZDSTS"));
+                        buSheet.put("PLAN_GZHGZ",buSheet.getIntValue("PLAN_GZHGZ") + employeeSheet.getIntValue("PLAN_GZHGZ"));
+                        buSheet.put("PLAN_HXJC",buSheet.getIntValue("PLAN_HXJC") + employeeSheet.getIntValue("PLAN_HXJC"));
+                        buSheet.put("PLAN_SMJRQLC",buSheet.getIntValue("PLAN_SMJRQLC") + employeeSheet.getIntValue("PLAN_SMJRQLC"));
+                        buSheet.put("PLAN_XQLTYTS",buSheet.getIntValue("PLAN_XQLTYTS") + employeeSheet.getIntValue("PLAN_XQLTYTS"));
+                        buSheet.put("PLAN_ZX",buSheet.getIntValue("PLAN_ZX") + employeeSheet.getIntValue("PLAN_ZX"));
+                        buSheet.put("PLAN_YJALTS",buSheet.getIntValue("PLAN_YJALTS") + employeeSheet.getIntValue("PLAN_YJALTS"));
+                        buSheet.put("PLAN_DKCSMU",buSheet.getIntValue("PLAN_DKCSMU") + employeeSheet.getIntValue("PLAN_DKCSMU"));
+                        buSheet.put("FINISH_JW",buSheet.getIntValue("FINISH_JW") + employeeSheet.getIntValue("FINISH_JW"));
+                        buSheet.put("FINISH_LTZDSTS",buSheet.getIntValue("FINISH_LTZDSTS") + employeeSheet.getIntValue("FINISH_LTZDSTS"));
+                        buSheet.put("FINISH_GZHGZ",buSheet.getIntValue("FINISH_GZHGZ") + employeeSheet.getIntValue("FINISH_GZHGZ"));
+                        buSheet.put("FINISH_HXJC",buSheet.getIntValue("FINISH_HXJC") + employeeSheet.getIntValue("FINISH_HXJC"));
+                        buSheet.put("FINISH_SMJRQLC",buSheet.getIntValue("FINISH_SMJRQLC") + employeeSheet.getIntValue("FINISH_SMJRQLC"));
+                        buSheet.put("FINISH_XQLTYTS",buSheet.getIntValue("FINISH_XQLTYTS") + employeeSheet.getIntValue("FINISH_XQLTYTS"));
+                        buSheet.put("FINISH_ZX",buSheet.getIntValue("FINISH_ZX") + employeeSheet.getIntValue("FINISH_ZX"));
+                        buSheet.put("FINISH_YJALTS",buSheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
+                        buSheet.put("FINISH_DKCSMU",buSheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
+                    }
+                    shopSheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(shopId).getName() + "合计");
+                    sheetList.add(shopSheet);
                 }
-                shopSheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(shopId).getName() + "合计");
-                sheetList.add(shopSheet);
+                if(Permission.hasAllShop()) {
+                    companySheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(companyKey).getName() + "合计");
+                    sheetList.add(companySheet);
+                }
             }
-            if(Permission.hasAllShop()) {
-                companySheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(companyKey).getName() + "合计");
-                sheetList.add(companySheet);
+            if(Permission.hasAllCity()) {
+                buSheet.put("EMPLOYEE_NAME", "家装事业部合计");
+                sheetList.add(buSheet);
             }
-        }
-        if(Permission.hasAllCity()) {
-            buSheet.put("EMPLOYEE_NAME", "家装事业部合计");
-            sheetList.add(buSheet);
+        } else {
+            Iterator<List<JSONObject>> shopIter = shopMap.values().iterator();
+            while(shopIter.hasNext()) {
+                sheetList.addAll(shopIter.next());
+            }
         }
 
         response.set("EMPLOYEE_DAILYSHEET_LIST", sheetList);
