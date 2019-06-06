@@ -1,9 +1,9 @@
 var EmployeeMonStatQueryNew = {
 	init : function() {
-        // window["UI-popup"] = new Wade.Popup("UI-popup",{
-        //     visible:false,
-        //     mask:true
-        // });
+        window["UI-popup"] = new Wade.Popup("UI-popup",{
+            visible:false,
+            mask:true
+        });
 
         // window["COND_START_DATE"] = new Wade.DateField(
         //     "COND_START_DATE",
@@ -15,8 +15,8 @@ var EmployeeMonStatQueryNew = {
         // );
         var now = $.date.now();
         var nowYYYYMM = $.date.now().substring(0,4) + $.date.now().substring(5,7);
-        window["MON_DATE"] = new Wade.DateField(
-            "MON_DATE",
+        window["COND_MON_DATE"] = new Wade.DateField(
+            "COND_MON_DATE",
             {
                 value:nowYYYYMM,
                 dropDown:true,
@@ -32,21 +32,19 @@ var EmployeeMonStatQueryNew = {
             editMode:false
         });
 
-        $('#MON_DATE').val(nowYYYYMM);
-        $("#MON_DATE").bind("afterAction", function(){
-            var $obj = $(this);
-            EmployeeMonStatQueryNew.queryEmployeeDailySheetList($obj.val());
-        });
+        $('#COND_MON_DATE').val(nowYYYYMM);
 
         EmployeeMonStatQueryNew.queryEmployeeDailySheetList(nowYYYYMM);
     },
-    queryEmployeeDailySheetList : function(month) {
+    queryEmployeeDailySheetList : function(month, houseCounselorName, orgId) {
 	    $.beginPageLoading("查询中。。。");
         $.ajaxReq({
             url : 'datacenter/plan/queryEmployeeMonthSheet2',
             data : {
                 EMPLOYEE_ID : Employee.employeeId,
                 MONTH : month,
+                HOUSE_COUNSELOR_NAME : houseCounselorName,
+                ORG_ID : orgId
             },
             successFunc : function(data) {
                 $.endPageLoading();
@@ -61,15 +59,14 @@ var EmployeeMonStatQueryNew = {
             }
         });
     },
-    // clickQueryButton : function() {
-    //     QueryCondPopup.showQueryCond(function(startDate, endDate) {
-    //         $('#QUERY_COND_TEXT').val(startDate + "~" + endDate);
-    //         EmployeeDailySheetQuery.queryEmployeeDailySheetList(startDate, endDate);
-    //     });
-    // }
+    clickQueryButton : function() {
+        QueryCondPopup.showQueryCond(function(monDate, houseCounselorName, orgId) {
+            $('#QUERY_COND_TEXT').val(monDate);
+            EmployeeMonStatQueryNew.queryEmployeeDailySheetList(monDate, houseCounselorName, orgId);
+        });
+    }
 };
 
-/*
 var QueryCondPopup = {
     callback : '',
     showQueryCond : function(callback) {
@@ -78,12 +75,22 @@ var QueryCondPopup = {
         showPopup('UI-popup','QueryCondPopupItem');
     },
     confirm : function(obj) {
-        var startDate = $('#COND_START_DATE').val();
-        var endDate = $('#COND_END_DATE').val();
+        var monDate = $('#COND_MON_DATE').val();
+        var enterpriseId = $("#ENTERPRISE").val();
+        var shopId = $("#SHOP").val();
+
+        var orgId = '';
+        if(shopId != '') {
+            orgId = shopId;
+        }
+        else {
+            orgId = enterpriseId;
+        }
+
+        var houseCounselorName = $('#COND_HOUSE_COUNSELOR_NAME').val();
         hidePopup(obj);
         if(QueryCondPopup.callback) {
-            QueryCondPopup.callback(startDate, endDate);
+            QueryCondPopup.callback(monDate, houseCounselorName, orgId);
         }
     }
 };
-*/

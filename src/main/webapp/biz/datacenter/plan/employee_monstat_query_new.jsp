@@ -14,9 +14,6 @@
 	<script src="scripts/biz/datacenter/plan/employee.monstat.query.new.js?a=3"></script>
 </head>
 <body>
-<%--<div class="c_header">--%>
-<%--<div class="back" ontap="back();"><span>家装顾问日报表</span></div>--%>
-<%--</div>--%>
 <jsp:include page="/header.jsp">
 	<jsp:param value="家装顾问月报表" name="headerName"/>
 </jsp:include>
@@ -25,14 +22,14 @@
 	<div class="l_padding l_padding-u">
 		<div class="c_form">
 			<ul>
-				<li class="required">
-					<div class="label">查询月份：</div>
+				<li>
 					<div class="value">
-						<span class="e_mix">
-							<input type="text" id="MON_DATE" name="MON_DATE" datatype="date"
-								   nullable="no" desc="月份" readonly="true"/>
-							<span class="e_ico-date"></span>
-						</span>
+						<div class="e_mix">
+							<input type="text" id="QUERY_COND_TEXT" disabled="true"/>
+							<button class="e_button-blue" type="button" ontap="EmployeeMonStatQueryNew.clickQueryButton();">
+								<span class="e_ico-search"></span>
+							</button>
+						</div>
 					</div>
 				</li>
 			</ul>
@@ -92,7 +89,6 @@
 </div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 
-<!--
 <div class="c_popup" id="UI-popup">
 	<div class="c_popupBg" id="UI-popup_bg"></div>
 	<div class="c_popupBox">
@@ -105,24 +101,41 @@
 					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
 						<div class="c_list c_list_form c_list-line" id="QueryCondForm">
 							<ul>
-								<li>
+								<li class="required">
+									<div class="label">查询月份：</div>
 									<div class="value">
 										<span class="e_mix">
-											<input type="text" id="COND_START_DATE" name="COND_START_DATE" datatype="date" nullable="no" desc="开始日期" readonly="true"/>
+											<input type="text" id="COND_MON_DATE" name="COND_MON_DATE" datatype="date"
+												   nullable="no" desc="月份" readonly="true"/>
 											<span class="e_ico-date"></span>
 										</span>
 									</div>
 								</li>
 								<li>
+									<div class="label">家装顾问姓名</div>
 									<div class="value">
-										<span class="e_mix">
-											<input type="text" id="COND_END_DATE" name="COND_END_DATE" datatype="date" nullable="no" desc="结束日期" readonly="true"/>
-											<span class="e_ico-date"></span>
-										</span>
+										<input type="text" id="COND_HOUSE_COUNSELOR_NAME" name="COND_HOUSE_COUNSELOR_NAME" nullable="no" desc="家装顾问姓名"/>
 									</div>
+								</li>
+								<li class="link" ontap="forwardPopup(this,'UI-ENTERPRISE')">
+									<div class="label">分公司</div>
+									<div class="value">
+										<input type="text" id="ENTERPRISE_TEXT" name="ENTERPRISE_TEXT" nullable="yes" desc="" />
+										<input type="hidden" name="ENTERPRISE" id="ENTERPRISE" nullable="yes" desc="分公司" />
+									</div>
+									<div class="more"></div>
+								</li>
+								<li class="link" ontap="forwardPopup('UI-popup','UI-SHOP')">
+									<div class="label">门店</div>
+									<div class="value">
+										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" nullable="yes" desc="门店" />
+										<input type="hidden" id="SHOP" name="SHOP" nullable="yes" desc="门店" />
+									</div>
+									<div class="more"></div>
 								</li>
 							</ul>
 						</div>
+						<!-- 客户列表 结束 -->
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
 							<button type="button" class="e_button-l e_button-green" ontap="QueryCondPopup.confirm(this)">查询</button>
@@ -130,10 +143,44 @@
 					</div>
 				</div>
 			</div>
+			<div class="c_popupGroup">
+				<div class="c_popupItem" id="UI-ENTERPRISE">
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this)">请选择分公司</div>
+					</div>
+					<div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+						<!-- 列表 开始 -->
+						<div class="c_list c_list-col-2 c_list-line c_list-border c_list-fixWrapSpace">
+							<ul id="BIZ_ENTERPRISE">
+
+							</ul>
+						</div>
+						<!-- 列表 结束 -->
+						<div class="c_line"></div>
+					</div>
+				</div>
+				<div class="c_popupItem" id="UI-SHOP">
+					<!-- 标题栏 开始 -->
+					<div class="c_header">
+						<div class="back" ontap="backPopup(this);">请选择门店</div>
+					</div>
+					<!-- 标题栏 结束 -->
+					<!-- 滚动（替换为 java 组件） 开始 -->
+					<div class="c_scroll c_scroll-float c_scroll-header">
+						<!-- 列表 开始 -->
+						<div class="c_list c_list-col-2 c_list-line c_list-border c_list-fixWrapSpace">
+							<ul id="BIZ_SHOP">
+
+							</ul>
+						</div>
+						<!-- 列表 结束 -->
+					</div>
+					<!-- 滚动 结束 -->
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
--->
 
 <script type="text/javascript">
     Wade.setRatio();
