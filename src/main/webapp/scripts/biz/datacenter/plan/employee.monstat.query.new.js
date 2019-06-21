@@ -34,6 +34,22 @@ var EmployeeMonStatQueryNew = {
 
         $('#COND_MON_DATE').val(nowYYYYMM);
 
+        $.ajaxPost('initMyControlEnterprise',null,function(data){
+            var rst = new Wade.DataMap(data);
+            var enterprises = rst.get("ENTERPRISES");
+
+            if(enterprises != null){
+                var length = enterprises.length;
+                var html=[];
+                html.push("<li class=\"link e_center\" ontap=\"EmployeeMonStatQueryNew.afterSelectEnterprise(\'\',\'所有分公司\')\"><div class=\"main\">所有分公司</div></li>");
+                for(var i=0;i<length;i++){
+                    var enterprise = enterprises.get(i);
+                    html.push("<li class=\"link e_center\" ontap=\"EmployeeMonStatQueryNew.afterSelectEnterprise(\'"+enterprise.get("ORG_ID")+"\',\'"+enterprise.get("NAME")+"\')\"><div class=\"main\">"+enterprise.get("NAME")+"</div></li>");
+                }
+                $.insertHtml('beforeend', $("#BIZ_ENTERPRISE"), html.join(""));
+            }
+        });
+
         EmployeeMonStatQueryNew.queryEmployeeDailySheetList(nowYYYYMM);
     },
     queryEmployeeDailySheetList : function(month, houseCounselorName, orgId) {
@@ -59,6 +75,36 @@ var EmployeeMonStatQueryNew = {
             }
         });
     },
+
+    afterSelectEnterprise : function(value, text){
+        backPopup(document.getElementById("UI-ENTERPRISE"));
+        $("#ENTERPRISE_TEXT").val(text);
+        $("#ENTERPRISE").val(value);
+        if(value == ""){
+            return;
+        }
+        $.ajaxPost('initMyControlShop','&ENTERPRISE='+value,function(data){
+            var obj = new Wade.DataMap(data);
+
+            var shops = obj.get("SHOPS");
+            if(shops != null){
+                var length = shops.length;
+                var html = [];
+                for(var i=0;i<length;i++){
+                    var shop = shops.get(i);
+                    html.push("<li class=\"link e_center\" ontap=\"EmployeeMonStatQueryNew.afterSelectShop(\'"+shop.get("ORG_ID")+"\',\'"+shop.get("NAME")+"\')\"><div class=\"main\">"+shop.get("NAME")+"</div></li>");
+                }
+                $.insertHtml('beforeend', $("#BIZ_SHOP"), html.join(""));
+            }
+        });
+    },
+
+    afterSelectShop : function(value, text){
+        backPopup(document.getElementById('UI-SHOP'));
+        $("#SHOP_TEXT").val(text);
+        $("#SHOP").val(value);
+    },
+
     clickQueryButton : function() {
         QueryCondPopup.showQueryCond(function(monDate, houseCounselorName, orgId) {
             $('#QUERY_COND_TEXT').val(monDate);
