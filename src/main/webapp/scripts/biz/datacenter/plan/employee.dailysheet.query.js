@@ -39,7 +39,6 @@ var EmployeeDailySheetQuery = {
             if(enterprises != null){
                 var length = enterprises.length;
                 var html=[];
-                html.push("<li class=\"link e_center\" ontap=\"EmployeeDailySheetQuery.afterSelectEnterprise(\'\',\'所有分公司\')\"><div class=\"main\">所有分公司</div></li>");
                 for(var i=0;i<length;i++){
                     var enterprise = enterprises.get(i);
                     html.push("<li class=\"link e_center\" ontap=\"EmployeeDailySheetQuery.afterSelectEnterprise(\'"+enterprise.get("ORG_ID")+"\',\'"+enterprise.get("NAME")+"\')\"><div class=\"main\">"+enterprise.get("NAME")+"</div></li>");
@@ -62,6 +61,7 @@ var EmployeeDailySheetQuery = {
             var obj = new Wade.DataMap(data);
 
             var shops = obj.get("SHOPS");
+            $("#BIZ_SHOP").empty();
             if(shops != null){
                 var length = shops.length;
                 var html = [];

@@ -41,7 +41,6 @@ var EmployeeMonStatQueryNew = {
             if(enterprises != null){
                 var length = enterprises.length;
                 var html=[];
-                html.push("<li class=\"link e_center\" ontap=\"EmployeeMonStatQueryNew.afterSelectEnterprise(\'\',\'所有分公司\')\"><div class=\"main\">所有分公司</div></li>");
                 for(var i=0;i<length;i++){
                     var enterprise = enterprises.get(i);
                     html.push("<li class=\"link e_center\" ontap=\"EmployeeMonStatQueryNew.afterSelectEnterprise(\'"+enterprise.get("ORG_ID")+"\',\'"+enterprise.get("NAME")+"\')\"><div class=\"main\">"+enterprise.get("NAME")+"</div></li>");
@@ -87,9 +86,11 @@ var EmployeeMonStatQueryNew = {
             var obj = new Wade.DataMap(data);
 
             var shops = obj.get("SHOPS");
+            $("#BIZ_SHOP").empty();
             if(shops != null){
                 var length = shops.length;
                 var html = [];
+                html.push("<li class=\"link e_center\" ontap=\"EmployeeMonStatQueryNew.afterSelectShop(\'\',\'所有门店\')\"><div class=\"main\">所有门店</div></li>");
                 for(var i=0;i<length;i++){
                     var shop = shops.get(i);
                     html.push("<li class=\"link e_center\" ontap=\"EmployeeMonStatQueryNew.afterSelectShop(\'"+shop.get("ORG_ID")+"\',\'"+shop.get("NAME")+"\')\"><div class=\"main\">"+shop.get("NAME")+"</div></li>");
