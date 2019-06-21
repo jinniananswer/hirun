@@ -117,7 +117,7 @@
 										<input type="text" id="COND_HOUSE_COUNSELOR_NAME" name="COND_HOUSE_COUNSELOR_NAME" nullable="no" desc="家装顾问姓名"/>
 									</div>
 								</li>
-								<li class="link" ontap="forwardPopup(this,'UI-ENTERPRISE')">
+								<li class="link" ontap="$('#ENTERPRISE_TEXT').focus();$('#ENTERPRISE_TEXT').blur();forwardPopup(this,'UI-ENTERPRISE')">
 									<div class="label">分公司</div>
 									<div class="value">
 										<input type="text" id="ENTERPRISE_TEXT" name="ENTERPRISE_TEXT" nullable="yes" desc="" />
@@ -125,7 +125,7 @@
 									</div>
 									<div class="more"></div>
 								</li>
-								<li class="link" ontap="forwardPopup('UI-popup','UI-SHOP')">
+								<li class="link" ontap="$('#SHOP_TEXT').focus();$('#SHOP_TEXT').blur();forwardPopup('UI-popup','UI-SHOP')">
 									<div class="label">门店</div>
 									<div class="value">
 										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" nullable="yes" desc="门店" />

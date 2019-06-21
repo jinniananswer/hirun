@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>家装顾问日报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/plan/employee.dailysheet.query.js?a=3"></script>
+	<script src="scripts/biz/datacenter/plan/employee.dailysheet.query.js?v=20190621"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
@@ -126,15 +126,15 @@
 										<input type="text" id="COND_HOUSE_COUNSELOR_NAME" name="COND_HOUSE_COUNSELOR_NAME" nullable="no" desc="家装顾问姓名"/>
 									</div>
 								</li>
-								<li class="link" ontap="forwardPopup(this,'UI-ENTERPRISE')">
+								<li class="link" ontap="$('#ENTERPRISE_TEXT').focus();$('#ENTERPRISE_TEXT').blur();forwardPopup(this,'UI-ENTERPRISE')">
 									<div class="label">分公司</div>
 									<div class="value">
-										<input type="text" id="ENTERPRISE_TEXT" name="ENTERPRISE_TEXT" nullable="yes" desc="" />
+										<input type="text" id="ENTERPRISE_TEXT" readonly="true" name="ENTERPRISE_TEXT" nullable="yes" desc="" />
 										<input type="hidden" name="ENTERPRISE" id="ENTERPRISE" nullable="yes" desc="分公司" />
 									</div>
 									<div class="more"></div>
 								</li>
-								<li class="link" ontap="forwardPopup('UI-popup','UI-SHOP')">
+								<li class="link" ontap="$('#SHOP_TEXT').focus();$('#SHOP_TEXT').blur();forwardPopup('UI-popup','UI-SHOP')">
 									<div class="label">门店</div>
 									<div class="value">
 										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" nullable="yes" desc="门店" />
