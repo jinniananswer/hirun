@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>家装顾问月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/plan/employee.monstat.query.new.js?a=12"></script>
+	<script src="scripts/biz/datacenter/plan/employee.monstat.query.new.js?v=20190622"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
@@ -120,7 +120,7 @@
 								<li class="link" ontap="$('#ENTERPRISE_TEXT').focus();$('#ENTERPRISE_TEXT').blur();forwardPopup(this,'UI-ENTERPRISE')">
 									<div class="label">分公司</div>
 									<div class="value">
-										<input type="text" id="ENTERPRISE_TEXT" name="ENTERPRISE_TEXT" nullable="yes" desc="" />
+										<input type="text" id="ENTERPRISE_TEXT" name="ENTERPRISE_TEXT" readonly="true" nullable="yes" desc="" />
 										<input type="hidden" name="ENTERPRISE" id="ENTERPRISE" nullable="yes" desc="分公司" />
 									</div>
 									<div class="more"></div>
@@ -128,7 +128,7 @@
 								<li class="link" ontap="$('#SHOP_TEXT').focus();$('#SHOP_TEXT').blur();forwardPopup('UI-popup','UI-SHOP')">
 									<div class="label">门店</div>
 									<div class="value">
-										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" nullable="yes" desc="门店" />
+										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" readonly="true" nullable="yes" desc="门店" />
 										<input type="hidden" id="SHOP" name="SHOP" nullable="yes" desc="门店" />
 									</div>
 									<div class="more"></div>

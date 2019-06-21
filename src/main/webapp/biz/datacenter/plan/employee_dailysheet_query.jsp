@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>家装顾问日报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/plan/employee.dailysheet.query.js?v=20190621"></script>
+	<script src="scripts/biz/datacenter/plan/employee.dailysheet.query.js?v=20190622"></script>
 </head>
 <body>
 <%--<div class="c_header">--%>
@@ -137,7 +137,7 @@
 								<li class="link" ontap="$('#SHOP_TEXT').focus();$('#SHOP_TEXT').blur();forwardPopup('UI-popup','UI-SHOP')">
 									<div class="label">门店</div>
 									<div class="value">
-										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" nullable="yes" desc="门店" />
+										<input type="text" id="SHOP_TEXT" name="SHOP_TEXT" readonly="true" nullable="yes" desc="门店" />
 										<input type="hidden" id="SHOP" name="SHOP" nullable="yes" desc="门店" />
 									</div>
 									<div class="more"></div>
