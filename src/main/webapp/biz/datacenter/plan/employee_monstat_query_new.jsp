@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>家装顾问月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/plan/employee.monstat.query.new.js?a=3"></script>
+	<script src="scripts/biz/datacenter/plan/employee.monstat.query.new.js?a=12"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
