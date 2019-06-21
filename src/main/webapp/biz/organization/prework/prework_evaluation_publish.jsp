@@ -42,7 +42,7 @@
                 <li class="link required">
                     <div class="label">岗前考评地址</div>
                     <div class="value">
-                        <input type="text" id="TRAIN_ADDRESS" name="TRAIN_ADDRESS" value="长沙市鑫天大厦12楼大会议室" placeholder="请输入培训地址" nullable="no" desc="培训地址" />
+                        <input type="text" id="TRAIN_ADDRESS" name="TRAIN_ADDRESS" value="兴业银行大厦（原六都国际综合大楼 长沙市雨花区东塘街道芙蓉中路三段567号）21楼会议室" placeholder="请输入培训地址" nullable="no" desc="培训地址" />
                     </div>
                 </li>
                 <li class="link required">
