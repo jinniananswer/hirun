@@ -3,6 +3,7 @@ package com.hirun.app.biz.employee;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.authority.AuthorityJudgement;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
@@ -721,7 +722,14 @@ public class EmployeeService extends GenericService {
         if (StringUtils.equals("122", enterpriseOrg.getOrgId())) {
             OrgDAO dao = DAOFactory.createDAO(OrgDAO.class);
             RecordSet enterprises = dao.queryCompany();
-            response.set("ENTERPRISES", ConvertTool.toJSONArray(enterprises));
+            JSONObject temp = new JSONObject();
+            temp.put("ORG_ID", "");
+            temp.put("NAME", "所有分公司");
+            JSONArray arrays = new JSONArray();
+            arrays.add(temp);
+            JSONArray temps = ConvertTool.toJSONArray(enterprises);
+            arrays.addAll(temps);
+            response.set("ENTERPRISES", arrays);
         }
         else{
             JSONArray array = new JSONArray();
@@ -740,7 +748,21 @@ public class EmployeeService extends GenericService {
             return response;
         }
         List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
-        List<OrgEntity> shops = OrgBean.findSubordinateOrg(enterpriseOrgId, allOrgs, "4");
+        boolean hasAllShop = AuthorityJudgement.hasAllShop();
+        List<OrgEntity> shops = new ArrayList<OrgEntity>();
+        if (hasAllShop) {
+            OrgEntity temp = new OrgEntity();
+            temp.setOrgId("");
+            temp.setName("所有门店");
+            shops.add(temp);
+            List<OrgEntity> temps = OrgBean.findSubordinateOrg(enterpriseOrgId, allOrgs, "4");
+            shops.addAll(temps);
+        } else{
+            AppSession session = SessionManager.getSession();
+            String orgId = OrgBean.getOrgId(session.getSessionEntity());
+            OrgEntity org = OrgBean.getAssignTypeOrg(orgId, "4", allOrgs);
+            shops.add(org);
+        }
         response.set("SHOPS", ConvertTool.toJSONArray(shops));
         return response;
     }
