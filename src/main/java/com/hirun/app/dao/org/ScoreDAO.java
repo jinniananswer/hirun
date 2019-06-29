@@ -91,10 +91,11 @@ public class ScoreDAO extends GenericDAO {
 
         StringBuilder sb = new StringBuilder();
 
-        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE,e.org_id, e.name org_name, e.city , f.NAME parent_org_name ,h.TRAIN_ID ,g.score ,it.name train_name, g.item , i.ITEM sign_item   ");
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE,e.org_id, e.name org_name, e.city , f.NAME parent_org_name ,h.TRAIN_ID ,g.score ,it.name train_name, g.item , i.ITEM sign_item, x.late_time, x.money   ");
         sb.append("from ins_user a, ins_employee b ,  ins_train_sign_item i , ");
         sb.append("ins_train_sign h  ");
-        sb.append("left join ins_train_exam_score g on (h.EMPLOYEE_ID=g.EMPLOYEE_ID AND g.train_id = h.train_id) , ");
+        sb.append("left join ins_train_exam_score g on (h.EMPLOYEE_ID=g.EMPLOYEE_ID AND g.train_id = h.train_id) ");
+        sb.append("left join ins_train_exam_score_ext x on (x.train_id = h.train_id and x.employee_id = h.employee_id), ");
 
         sb.append("ins_employee_job_role d, ins_train it , ins_org e  ");
         sb.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
