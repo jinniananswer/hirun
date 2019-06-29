@@ -174,6 +174,8 @@ public class ScoreService extends GenericService {
         parm.put("TRAIN_ID",train_id);
         Record trainRecord=dao.queryByPk("INS_TRAIN",parm);
         String type=trainRecord.get("TYPE");
+
+
         if(StringUtils.equals(type,"1")){
             scores=dao.queryPreWorkScore(request.getString("NAME"),orgId,train_id);
             scores=this.filterTrainScore(scores);
@@ -190,7 +192,6 @@ public class ScoreService extends GenericService {
                     if (StringUtils.equals("-1", key)) {
                         record.put("NEED_COMM","TRUE");
                         record.put("NEED_PRO","TRUE");
-
                     }
                     else if(StringUtils.equals("0", key)) {
                         record.put("NEED_COMM","TRUE");
@@ -226,26 +227,104 @@ public class ScoreService extends GenericService {
 
         JSONObject company = new JSONObject();
 
+        JSONObject companyPass = new JSONObject();
+
         if(ArrayTool.isNotEmpty(scores)) {
+            int passComm = 0;
+            int passPro = 0;
+            int totalComm = 0;
+            int totalPro = 0;
+
             int size = scores.size();
-            List<OrgEntity> orgs = OrgBean.getAllOrgs();
             for(int i=0;i<size;i++) {
                 Record score = scores.get(i);
                 String employeeOrgId = score.get("ORG_ID");
-                OrgEntity rootOrg = OrgBean.findEmployeeRoot(employeeOrgId, orgs);
+                OrgEntity rootOrg = OrgBean.findEmployeeRoot(employeeOrgId, allOrgs);
                 JSONArray companyScores = company.getJSONArray(rootOrg.getName());
                 if(companyScores == null) {
                     companyScores = new JSONArray();
                     company.put(rootOrg.getName(), companyScores);
                 }
 
+                if (StringUtils.equals("1", type)) {
+
+                    String needComm = score.get("NEED_COMM");
+                    String needPro = score.get("NEED_PRO");
+
+                    if (StringUtils.equals("TRUE", needComm)) {
+                        String commStr = score.get("ITEM_0");
+                        String companyTotalCommStr = companyPass.getString(rootOrg.getName()+"_COMM_TOTAL");
+                        int companyTotalComm = 0;
+
+                        if (StringUtils.isNotBlank(companyTotalCommStr)) {
+                            companyTotalComm = Integer.parseInt(companyTotalCommStr);
+                        }
+
+                        companyTotalComm++;
+                        companyPass.put(rootOrg.getName() + "_COMM_TOTAL", companyTotalComm);
+
+                        totalComm++;
+                        if (StringUtils.isNotBlank(commStr)) {
+                            double commScore = Double.parseDouble(commStr);
+                            if (commScore >= 80) {
+                                passComm ++;
+                                String companyPassCommStr = companyPass.getString(rootOrg.getName()+"_COMM_PASS");
+                                int companyPassComm = 0;
+
+                                if (StringUtils.isNotBlank(companyPassCommStr)) {
+                                    companyPassComm = Integer.parseInt(companyPassCommStr);
+                                }
+
+                                companyPassComm++;
+                                companyPass.put(rootOrg.getName()+"_COMM_PASS", companyPassComm);
+                            }
+                        }
+                    }
+
+                    if (StringUtils.equals("TRUE", needPro)) {
+                        String proStr = score.get("ITEM_1");
+                        String companyTotalProStr = companyPass.getString(rootOrg.getName()+"_PRO_TOTAL");
+                        int companyTotalPro = 0;
+
+                        if (StringUtils.isNotBlank(companyTotalProStr)) {
+                            companyTotalPro = Integer.parseInt(companyTotalProStr);
+                        }
+
+                        companyTotalPro++;
+                        companyPass.put(rootOrg.getName() + "_PRO_TOTAL", companyTotalPro);
+
+                        totalPro++;
+                        if (StringUtils.isNotBlank(proStr)) {
+                            double proScore = Double.parseDouble(proStr);
+                            if (proScore >= 80) {
+                                passPro ++;
+                                String companyPassProStr = companyPass.getString(rootOrg.getName()+"_PRO_PASS");
+                                int companyPassPro = 0;
+
+                                if (StringUtils.isNotBlank(companyPassProStr)) {
+                                    companyPassPro = Integer.parseInt(companyPassProStr);
+                                }
+
+                                companyPassPro++;
+                                companyPass.put(rootOrg.getName()+"_PRO_PASS", companyPassPro);
+                            }
+                        }
+                    }
+                }
+
                 companyScores.add(ConvertTool.toJSONObject(score));
             }
-        }
 
+            response.set("COMPANY_PASS", companyPass);
+            response.set("TOTAL_COMM", totalComm);
+            response.set("TOTAL_PRO", totalPro);
+            response.set("PASS_COMM", passComm);
+            response.set("PASS_PRO", passPro);
+        }
 
         response.set("DATAS", ConvertTool.toJSONArray(scores));
         response.set("COMPANY_SCORES", company);
+
         return response;
     }
 
@@ -400,15 +479,16 @@ public class ScoreService extends GenericService {
 
         for (String key : mobjec.keySet()) {
             String value = mobjec.get(key);
-            if (value == null || StringUtils.equals(key,"TRAIN_ID") ) { // 过滤空的key
+            if (value == null || StringUtils.equals(key,"TRAIN_ID") || key.contains("late") || key.contains("money")) { // 过滤空的key
                 continue;
             }
             Map<String, String> param = new HashMap<String, String>();
             String[] arrys=key.split("\\_");
 
             param.put("EMPLOYEE_ID",arrys[0]);
-            if(arrys.length>1)
-              param.put("ITEM",arrys[1]);
+            if(arrys.length>1) {
+                param.put("ITEM", arrys[1]);
+            }
 
 
             param.put("TRAIN_ID",train_id);
@@ -419,8 +499,56 @@ public class ScoreService extends GenericService {
             param.put("UPDATE_TIME",session.getCreateTime());
             parameters.add(param);
         }
-            dao.deleteBatch("ins_train_exam_score",cols,parameters);
-            dao.insertBatch("ins_train_exam_score",parameters);
+        dao.deleteBatch("ins_train_exam_score",cols,parameters);
+        dao.insertBatch("ins_train_exam_score",parameters);
+
+        Map<String, Map<String, String>> employeeExt = new HashMap<String, Map<String, String>>();
+
+        for (String key : mobjec.keySet()) {
+            if (!key.contains("late") && !key.contains("money")) {
+                continue;
+            }
+
+            String[] arrys=key.split("\\_");
+            String value = mobjec.get(key);
+
+            if (StringUtils.isNotBlank(value)) {
+                Map<String, String> ext = employeeExt.get(arrys[0]);
+
+                if (ext == null) {
+                    ext = new HashMap<String, String>();
+                    ext.put("TRAIN_ID", train_id);
+                    ext.put("EMPLOYEE_ID", arrys[0]);
+                    ext.put("CREATE_USER_ID",userId);
+                    ext.put("CREATE_DATE",session.getCreateTime());
+                    ext.put("UPDATE_USER_ID",userId);
+                    ext.put("UPDATE_TIME",session.getCreateTime());
+                    employeeExt.put(arrys[0], ext);
+                }
+
+                if (key.contains("late")) {
+                    ext.put("LATE_TIME", value);
+                } else {
+                    ext.put("MONEY", value);
+                }
+
+            }
+        }
+
+        if (!employeeExt.isEmpty()) {
+            List<Map<String, String>> exts = new ArrayList<Map<String, String>>();
+
+            Set<String> keySet = employeeExt.keySet();
+            for (String key : keySet) {
+                Map<String, String> ext = employeeExt.get(key);
+                exts.add(ext);
+            }
+
+            if (ArrayTool.isNotEmpty(exts)) {
+                dao.deleteBatch("ins_train_exam_score_ext",cols,exts);
+                dao.insertBatch("ins_train_exam_score_ext",exts);
+            }
+        }
 
         return response;
     }
