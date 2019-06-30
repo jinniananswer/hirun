@@ -304,5 +304,8 @@ public class EmployeeBean {
         return employeeDAO.queryEmployeeJobRoleByEmpId(employeeId);
     }
 
-
+    public static RecordSet queryEmployeeByEmpIdsAndName(String employeeIds,String name) throws Exception {
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryEmployeeByEmpIdsAndName(employeeIds,name);
+    }
 }
