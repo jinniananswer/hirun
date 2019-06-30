@@ -137,6 +137,55 @@
     <entity name="OperationCenter.plan.PlanService.setMonPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="setMonPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.initPlanEntry"  class="com.hirun.app.biz.plan.PlanService" method="initPlanEntry"/>
 
+    <!--初始化客户流程-->
+    <entity name="OperationCenter.custservice.CustServService.initCsrTraceFlow"  class="com.hirun.app.biz.custservice.CustServService" method="initCsrTraceFlow"/>
+    <entity name="OperationCenter.custservice.CustServService.queryGZGZHDetailByPartyId"  class="com.hirun.app.biz.custservice.CustServService" method="queryGZGZHDetailByPartyId"/>
+    <entity name="OperationCenter.custservice.CustServService.queryDesignerByEmployeeId"  class="com.hirun.app.biz.custservice.CustServService" method="queryDesignerByEmployeeId"/>
+    <entity name="OperationCenter.custservice.CustServService.chooseDesigner"  class="com.hirun.app.biz.custservice.CustServService" method="chooseDesigner"/>
+    <entity name="OperationCenter.custservice.CustServService.initQueryForCustClear"  class="com.hirun.app.biz.custservice.CustServService" method="initQueryForCustClear"/>
+    <entity name="OperationCenter.custservice.CustServService.submitCustClearApply"  class="com.hirun.app.biz.custservice.CustServService" method="submitCustClearApply"/>
+    <entity name="OperationCenter.custservice.CustServService.queryApplyInfo4Audit"  class="com.hirun.app.biz.custservice.CustServService" method="queryApplyInfo4Audit"/>
+    <entity name="OperationCenter.custservice.CustServService.auditConfirm"  class="com.hirun.app.biz.custservice.CustServService" method="auditConfirm"/>
+    <entity name="OperationCenter.custservice.CustServService.initQuery4PartyVisit"  class="com.hirun.app.biz.custservice.CustServService" method="initQuery4PartyVisit"/>
+    <entity name="OperationCenter.custservice.CustServService.addPartyVisit"  class="com.hirun.app.biz.custservice.CustServService" method="addPartyVisit"/>
+    <entity name="OperationCenter.custservice.CustServService.queryCityCabinByName"  class="com.hirun.app.biz.custservice.CustServService" method="queryCityCabinByName"/>
+
+    <!--初始化新增好看好住信息界面-->
+    <entity name="OperationCenter.custservice.CustServService.initCreateGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="initCreateGoodSeeLiveInfo"/>
+    <entity name="OperationCenter.custservice.CustServService.createGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="createGoodSeeLiveInfo"/>
+    <!--客户管理界面-->
+    <entity name="OperationCenter.custservice.CustServService.initPartyManager"  class="com.hirun.app.biz.custservice.CustServService" method="initPartyManager"/>
+    <entity name="OperationCenter.custservice.CustServService.queryPartyByCustServicerEmployeeId"  class="com.hirun.app.biz.custservice.CustServService" method="queryPartyByCustServicerEmployeeId"/>
+    <!--初始化修改好看好住信息界面-->
+    <entity name="OperationCenter.custservice.CustServService.initChangeGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="initChangeGoodSeeLiveInfo"/>
+    <entity name="OperationCenter.custservice.CustServService.changeGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="changeGoodSeeLiveInfo"/>
+
+    <!--查询party信息用作变更客户代表-->
+    <entity name="OperationCenter.custservice.CustServService.queryPartyInfo4ChangeCustService"  class="com.hirun.app.biz.custservice.CustServService" method="queryPartyInfo4ChangeCustService"/>
+    <!--初始化变更客户客户代表-->
+    <entity name="OperationCenter.custservice.CustServService.initchangecustservice"  class="com.hirun.app.biz.custservice.CustServService" method="initchangecustservice"/>
+    <entity name="OperationCenter.custservice.CustServService.searchNewCustService"  class="com.hirun.app.biz.custservice.CustServService" method="searchNewCustService"/>
+
+    <!--确认变更客户代表-->
+    <entity name="OperationCenter.custservice.CustServService.confirmChangeCustService"  class="com.hirun.app.biz.custservice.CustServService" method="confirmChangeCustService"/>
+    <!--确认带看城市木屋数据-->
+    <entity name="OperationCenter.custservice.CustServService.confirmScanCityCabin"  class="com.hirun.app.biz.custservice.CustServService" method="confirmScanCityCabin"/>
+
+    <!--扫客户代表码进入全流程数据导-->
+    <entity name="OperationCenter.custservice.ScanDataImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.ScanDataImportTaskService" method="hirunplusDataImport"/>
+    <!--扫码登陆PC端数据导入-->
+    <entity name="OperationCenter.custservice.SignInDataImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.SignInDataImportTaskService" method="hirunplusDataImport"/>
+    <!--需求蓝图二信息导入-->
+    <entity name="OperationCenter.custservice.XQLTEImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.XQLTEDataImportTaskService" method="hirunplusDataImport"/>
+    <!--城市木屋管理初始化-->
+    <entity name="OperationCenter.custservice.citycabin.CityCabinService.initManagerCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="initManagerCityCabin"/>
+    <entity name="OperationCenter.custservice.citycabin.CityCabinService.createCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="createCityCabin"/>
+    <entity name="OperationCenter.custservice.citycabin.CityCabinService.initChangeCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="initChangeCityCabin"/>
+    <entity name="OperationCenter.custservice.citycabin.CityCabinService.changeCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="changeCityCabin"/>
+    <entity name="OperationCenter.custservice.citycabin.CityCabinService.deleteCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="deleteCityCabin"/>
+    <entity name="OperationCenter.custservice.citycabin.CityCabinService.queryCityCabinInfo"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="queryCityCabinInfo"/>
+
+
     <!--客户中心服务-->
     <entity name="CustCenter.cust.CustService.addCust"  class="com.hirun.app.biz.cust.CustService" method="addCust"/>
     <entity name="CustCenter.cust.CustService.editCust"  class="com.hirun.app.biz.cust.CustService" method="editCust"/>
@@ -161,6 +210,10 @@
     <entity name="DataCenter.plan.PlanReportService.queryUnEntryPlanList"  class="com.hirun.app.biz.datacenter.plan.PlanReportService" method="queryUnEntryPlanList"/>
     <entity name="DataCenter.plan.PlanReportService.queryEmployeeMonthSheet2"  class="com.hirun.app.biz.datacenter.plan.PlanReportService" method="queryEmployeeMonthSheet2"/>
     <entity name="DataCenter.plan.PlanReportService.queryEmployeeListByPlanType"  class="com.hirun.app.biz.datacenter.plan.PlanReportService" method="queryEmployeeListByPlanType"/>
+    <entity name="DataCenter.custservice.CustServiceReportService.queryCustServFinishActionInfo"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="queryCustServFinishActionInfo"/>
+    <entity name="DataCenter.custservice.CustServiceReportService.initQueryActionFinishInfo"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="initQueryActionFinishInfo"/>
+    <entity name="DataCenter.custservice.CustServiceReportService.queryCustServiceByName"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="queryCustServiceByName"/>
+    <entity name="DataCenter.custservice.CustServiceReportService.queryCustServMonStatInfo"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="queryCustServMonStatInfo"/>
 
     <!--公共-->
     <entity name="Common.static.StaticDataService.getCodeTypeDatas"  class="com.hirun.app.biz.common.StaticDataService" method="getCodeTypeDatas"/>
