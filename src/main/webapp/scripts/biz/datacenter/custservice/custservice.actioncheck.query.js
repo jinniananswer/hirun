@@ -123,8 +123,8 @@
                     var scanCityCabins=data.get("CITYCABINNAMES");
                     var experience=data.get("EXPERIENCE");
                     var finishTime=data.get("FINISH_TIME");
-                    var funcPrintTime=data.get("FUNCPRINTTIME");
-                    var stylePrintTime=data.get("STYLEPRINTTIME");
+                    var funcPrintTime=data.get("FUNCPRINT_CREATE_TIME");
+                    var stylePrintTime=data.get("STYLEPRINT_CREATE_TIME");
                     var wxnick=data.get("WX_NICK");
 
                     html.push("<tr>");
