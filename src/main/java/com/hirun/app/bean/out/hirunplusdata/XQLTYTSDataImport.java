@@ -5,9 +5,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.out.OutBean;
 import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.pub.tools.time.TimeTool;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.utils.DateUtils;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -31,6 +33,7 @@ public class XQLTYTSDataImport {
     public static void dataImport(String start, String end) throws Exception {
 //        CloseableHttpClient httpclient = HttpClients.createDefault();
         List<Map<String, String>> dbList = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> insModeList = new ArrayList<Map<String, String>>();
 
         /*
         long total = getTotal(httpclient, start, end);
@@ -81,8 +84,11 @@ public class XQLTYTSDataImport {
             dbParam.put("DEAL_TAG", "0");
 
             dbList.add(dbParam);
-        }
 
+            //新增mode数据处理
+            addModeDataAndTransToIns(jsonData);
+
+        }
         dao.insertBatch("out_hirunplus_commends",dbList);
 
         String api = "http://" + host + path;
@@ -168,4 +174,52 @@ public class XQLTYTSDataImport {
         return jsonDataList;
     }
     */
+    public static void addModeDataAndTransToIns(JSONObject jsonData){
+        try {
+
+
+            GenericDAO dao = new GenericDAO("out");
+
+            if(StringUtils.equals(jsonData.getString("mode"),"false") ||jsonData==null){
+                return;
+            }
+            JSONObject modeJsonObject =jsonData.getJSONObject("mode");
+            Map<String, String> modeParam = new HashMap<String, String>();
+            modeParam.put("PROJECT_ID", jsonData.getString("project_id"));
+            modeParam.put("MODE_ID", modeJsonObject.getString("mode_id"));
+            modeParam.put("MODE_TIME", jsonData.getString("mode_time"));
+            modeParam.put("UID", modeJsonObject.getString("uid"));
+            modeParam.put("CONTENT", modeJsonObject.getString("content"));
+            modeParam.put("ADD_TIME", modeJsonObject.getString("add_time"));
+            modeParam.put("NAME", modeJsonObject.getString("name"));
+            modeParam.put("MIANJI", modeJsonObject.getString("mianji"));
+            modeParam.put("FENGGE", modeJsonObject.getString("fenge"));
+            modeParam.put("FUNS", modeJsonObject.getString("funs"));
+            modeParam.put("DESCRIPT", modeJsonObject.getString("descript"));
+            modeParam.put("TYPE", modeJsonObject.getString("type"));
+            modeParam.put("TITLE", modeJsonObject.getString("title"));
+            modeParam.put("AGE", modeJsonObject.getString("age"));
+            modeParam.put("HUXING", modeJsonObject.getString("huxing"));
+            modeParam.put("MIANJI1", modeJsonObject.getString("mianji1"));
+            modeParam.put("TOUZI", modeJsonObject.getString("touzi"));
+            modeParam.put("YONGTU", modeJsonObject.getString("yongtu"));
+            modeParam.put("WYJG", modeJsonObject.getString("wyjg"));
+            modeParam.put("OLD_MODE_ID", modeJsonObject.getString("old_mode_id"));
+            modeParam.put("UPDATE_TIME", modeJsonObject.getString("update_time"));
+            modeParam.put("STYLE", modeJsonObject.getString("Style"));
+            modeParam.put("FUNC", modeJsonObject.getString("Func"));
+            modeParam.put("OPENID", jsonData.getString("openid"));
+            modeParam.put("STAFF_ID", jsonData.getString("staff_id"));
+            modeParam.put("INDB_TIME", TimeTool.now());
+            modeParam.put("DEAL_TAG", "0");
+
+            dao.insertAutoIncrement("out_hirunplus_commends_mode",modeParam);
+
+            //将新增的mode数据插入mode表
+        }catch (Exception e){
+
+        }
+
+
+    }
 }
