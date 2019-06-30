@@ -9,6 +9,7 @@ import com.most.core.app.cache.localcache.interfaces.IReadOnlyCache;
 import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.pub.tools.transform.ConvertTool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -39,5 +40,19 @@ public class HirunPlusStaffDataCache extends AbstractReadOnlyCache{
         IReadOnlyCache cache = CacheFactory.getReadOnlyCache(HirunPlusStaffDataCache.class);
 
         return (String) cache.get(staffId);
+    }
+
+    public static String getStaffIdByMobile(String mobile) throws Exception
+    {
+        IReadOnlyCache cache = CacheFactory.getReadOnlyCache(HirunPlusStaffDataCache.class);
+        Set<String> set=cache.keySet();
+        String staffId="";
+        for(String key : set){
+            String mobile1=getMobileByStaffId(key);
+            if(StringUtils.equals(mobile1,mobile)){
+                staffId=key;
+            }
+        }
+        return staffId;
     }
 }
