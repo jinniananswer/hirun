@@ -204,7 +204,7 @@ public class PartyBean {
         String roleId=jsonObject.getString("sjs_role_id");
 
 
-        if(!StringUtils.equals(roleId,"19") ){
+        if(!StringUtils.equals(roleId,"11") ){
             return isSuccess;
         }
 
