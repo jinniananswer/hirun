@@ -331,19 +331,23 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     }
 
 
-    public RecordSet queryCustServFinishActionInfo(String startDate,String endDate,String employeeIds) throws Exception {
+    public RecordSet queryCustServFinishActionInfo(String startDate,String endDate,String employeeIds,String orgIds) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
+        sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME from ");
+        sb.append(" ( ");
         sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.CREATE_DATE,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS from ");
-        sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ");
+        sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ,ins_employee e , ins_employee_job_role f ");
         sb.append("WHERE a.PARTY_ID = b.PARTY_ID ");
         sb.append("AND b.PROJECT_ID = c.PROJECT_ID ");
         sb.append("AND b.PROJECT_ID = d.PROJECT_ID ");
         sb.append("AND c.ROLE_TYPE = 'CUSTOMERSERVICE' ");
         sb.append("AND a.PARTY_STATUS = '0' ");
         sb.append("AND d.ACTION_CODE = 'SMJRLC' ");
-
-
+        sb.append("AND e.EMPLOYEE_ID=f.EMPLOYEE_ID ");
+        sb.append("AND e.STATUS='0' ");
+        sb.append("AND NOW() BETWEEN f.START_DATE AND f.END_DATE ");
+        sb.append("AND c.LINK_EMPLOYEE_ID=e.EMPLOYEE_ID ");
 
 
         if(StringUtils.isNotBlank(startDate)){
@@ -357,10 +361,18 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         }
 
         if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and c.LINK_EMPLOYEE_ID IN ("+employeeIds+") ");
+            sb.append("and e.EMPLOYEE_ID IN ("+employeeIds+") ");
+        }
+
+        if(StringUtils.isNotBlank(orgIds)){
+            sb.append("and f.org_id in ( "+orgIds+") ");
         }
 
         sb.append(" order by c.LINK_EMPLOYEE_ID, a.CREATE_DATE desc ");
+
+        sb.append(" ) v");
+        sb.append(" left join (select * from ins_scan_citycabin x where x.SCAN_ID in (select min(y.scan_id) from ins_scan_citycabin y group by y.PARTY_ID))  s on (s.PARTY_ID = v.PARTY_ID) ");
+        sb.append(" left join (select * from ins_blueprint_action r where r.BLUEPRINT_ACTION_ID in (select min(t.BLUEPRINT_ACTION_ID) from ins_blueprint_action t where t.ACTION_CODE='XQLTE' group by t.OPEN_ID, t.REL_EMPLOYEE_ID)) u on (u.OPEN_ID = v.OPEN_ID and u.REL_EMPLOYEE_ID = v.LINK_EMPLOYEE_ID) ");
 
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
