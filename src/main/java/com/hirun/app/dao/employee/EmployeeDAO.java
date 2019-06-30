@@ -1,6 +1,7 @@
 package com.hirun.app.dao.employee;
 
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
+import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.pub.data.Record;
@@ -188,6 +189,27 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("and now() < b.end_date ");
 
         RecordSet employees = this.queryBySql(sb.toString(), new HashMap<String, String>());
+        return employees;
+    }
+
+    public RecordSet querySubordinatesEmployeeBypEmpIdAndVaild(String parentEmployeeIds,String vaild) throws Exception{
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.*,b.job_role from ins_employee a, ins_employee_job_role b ");
+        sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
+        sb.append("and b.employee_id = a.employee_id ");
+
+
+
+        if(StringUtils.equals("0",vaild)){
+            sb.append("and a.status = '0' ");
+            sb.append("and now() < b.end_date ");
+        }
+        if(StringUtils.equals("1",vaild)){
+            sb.append("and a.status != '0' ");
+            sb.append("and now() > b.end_date ");
+        }
+        RecordSet employees = this.queryBySql(sb.toString(), new HashMap<String,String>());
         return employees;
     }
 
@@ -405,5 +427,48 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("order by user_id ");
 
         return this.queryBySql(sb.toString(), parameter);
+    }
+
+
+    public RecordSet queryEmployeeJobRoleByOrgId(String orgId,String name) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT * FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
+        sb.append("AND b.`JOB_ROLE` IN ('46','118','103','0','45','69','119') ");
+        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.status = '0' ");
+
+        if(StringUtils.isNotBlank(orgId)){
+            sb.append("and b.org_id in ( "+orgId+") ");
+        }
+
+        if (StringUtils.isNotBlank(name)) {
+            sb.append("and a.NAME like concat('%',:NAME,'%') ");
+            parameter.put("NAME", name);
+        }
+
+        RecordSet employeeJobRoleEntities = this.queryBySql(sb.toString(), parameter);
+        return employeeJobRoleEntities;
+    }
+
+    public EmployeeJobRoleEntity queryEmployeeJobRoleByEmpId(String employeeId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT b.* FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
+        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.status = '0' ");
+        sb.append("AND a.employee_id = :EMPLOYEE_ID");
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+
+        List<EmployeeJobRoleEntity> employeeJobRoleEntities = this.query(EmployeeJobRoleEntity.class, "ins_employee_job_role", parameter);
+        if(ArrayTool.isEmpty(employeeJobRoleEntities)){
+            return null;
+        }
+
+        return employeeJobRoleEntities.get(0);
     }
 }
