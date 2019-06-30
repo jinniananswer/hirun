@@ -263,13 +263,13 @@
                 var project_id=$("#PROJECT_ID").val();
 
                  if("GZGZH"==action_code){
-                 $.ajaxPost('queryGZGZHDetailByPartyId', '&PARTY_ID='+party_id, function (data) {
-                     var partyinfo = data.PARTY_INFO;
-                     var wx_nick=partyinfo.WX_NICK;
-                     $("#WX_NICK").val(wx_nick);
-                     showPopup('UI-popup','GZGZHUI-popup-query-cond');
+                     $.ajaxPost('queryGZGZHDetailByPartyId', '&PARTY_ID='+party_id, function (data) {
+                         var partyinfo = data.PARTY_INFO;
+                         var wx_nick=partyinfo.WX_NICK;
+                         $("#WX_NICK").val(wx_nick);
+                         showPopup('UI-popup','GZGZHUI-popup-query-cond');
 
-                 });
+                     });
                  }
                  if("APSJS"==action_code){
                      $("#submitButton").css("display","none");
@@ -279,7 +279,8 @@
 
                  }
                  if("HZHK"==action_code){
-                 $.redirect.open('redirectToChangeGoodSeeLiveInfo?PARTY_ID='+party_id+'&PROJECT_ID='+project_id, '好看好住修改界面');
+                     window.location.href = "/redirectToChangeGoodSeeLiveInfo?PARTY_ID="+party_id+"&PROJECT_ID="+project_id;
+                    //$.redirect.open('redirectToChangeGoodSeeLiveInfo?PARTY_ID='+party_id+'&PROJECT_ID='+project_id, '好看好住修改界面');
                  }
                  if("XQLTY"==action_code){
                      showPopup('UI-popup','XQLTYUI-popup-query-cond');
@@ -290,7 +291,7 @@
                      showPopup('UI-popup','SCANCITYINFOUI-popup-query-cond');
 
                  }
-                 },
+             },
 
             queryDesigners :function(){
                 var param=$.buildJsonData("desingersearchArea");

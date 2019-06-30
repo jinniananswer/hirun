@@ -488,7 +488,7 @@
                         $.endPageLoading();
                         MessageBox.success("修改成功","点击确定返回修改页面，点击取消关闭当前页面", function(btn){
                             if("ok" == btn) {
-                                document.location.reload();
+                                $.changegoodseeliveinfo.backToFlow();
                             }
                             else {
                                 $.redirect.closeCurrentPage();
@@ -573,6 +573,14 @@
                 $("#PLAN_LIVE_TIME").val(projectIntentionInfo.PLAN_LIVE_TIME);
 
             },
+
+            backToFlow : function() {
+                //$.redirect.open('redirectToProjectFlow?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '客户流程');
+                var partyId = $("#PARTY_ID").val();
+                var projectId = $("#PROJECT_ID").val();
+
+                window.location.href = "/redirectToProjectFlow?PARTY_ID="+partyId+"&PROJECT_ID="+projectId;
+            }
 
         }});
 })($);

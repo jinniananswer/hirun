@@ -6,8 +6,9 @@
                     visible:false,
                     mask:true
                 });
-
+                $.beginPageLoading();
                 $.ajaxPost('initPartyManager',null,function(data) {
+                    $.endPageLoading();
                     var rst = new Wade.DataMap(data);
                     var flag=rst.get("FLAG");
                     $.custservicemanager.isShowQueryCond(flag);
