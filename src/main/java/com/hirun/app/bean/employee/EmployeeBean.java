@@ -105,6 +105,34 @@ public class EmployeeBean {
         return rst;
     }
 
+    public static RecordSet recursiveAllSubordinatesByPempIdAndVaild(String parentEmployeeIds,String vaild) throws Exception{
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        RecordSet subordinates = dao.querySubordinatesEmployeeBypEmpIdAndVaild(parentEmployeeIds,vaild);
+        if(subordinates == null || subordinates.size() <= 0)
+            return subordinates;
+
+        RecordSet rst = new RecordSet();
+        rst.addAll(subordinates);
+
+        String recursiveParentEmployeeIds = "";
+        int size = subordinates.size();
+        for(int i=0;i<size;i++){
+            Record employee = subordinates.get(i);
+            recursiveParentEmployeeIds += employee.get("EMPLOYEE_ID") + ",";
+        }
+
+        recursiveParentEmployeeIds = recursiveParentEmployeeIds.substring(0, recursiveParentEmployeeIds.length() - 1);
+        if(StringUtils.isNotEmpty(recursiveParentEmployeeIds)){
+            RecordSet tmpSubordinates = recursiveAllSubordinatesByPempIdAndVaild(recursiveParentEmployeeIds,vaild);
+            if(tmpSubordinates != null && tmpSubordinates.size() > 0)
+                rst.addAll(tmpSubordinates);
+        }
+
+        return rst;
+    }
+
+
+
     public static RecordSet getAllSubordinatesCounselorRecordSet(String parentEmployeeIds) throws Exception{
         RecordSet subordinates = recursiveAllSubordinatesReordSet(parentEmployeeIds);
 
@@ -265,4 +293,16 @@ public class EmployeeBean {
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
         return employeeDAO.queryEmployeeListByPlanType(planDate, planType);
     }
+
+    public static RecordSet queryEmployeeJobRoleByOrgId(String orgId,String name) throws Exception{
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryEmployeeJobRoleByOrgId(orgId,name);
+    }
+
+    public static EmployeeJobRoleEntity queryEmployeeJobRoleByEmpId(String employeeId) throws Exception {
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryEmployeeJobRoleByEmpId(employeeId);
+    }
+
+
 }
