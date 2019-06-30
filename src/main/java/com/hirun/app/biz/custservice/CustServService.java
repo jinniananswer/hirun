@@ -246,6 +246,10 @@ public class CustServService extends GenericService {
 
         if(StringUtils.equals("off",crossSwitch)) {
             OrgEntity orgEntity = OrgBean.getAssignTypeOrg(orgId, "2", allOrgs);
+
+            if (orgEntity == null) {
+                orgEntity = OrgBean.getAssignTypeOrg(orgId, "3", allOrgs);
+            }
             orgId = OrgBean.getOrgLine(orgEntity.getOrgId(), allOrgs);
             RecordSet recordSet = dao.queryDesignerByOrgId(orgId, name);
 
