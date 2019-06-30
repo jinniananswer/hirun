@@ -124,6 +124,43 @@ public class OutBean {
         return isExist;
     }
 
+    public static boolean isExistData4CustServiceScan(String openId,String staffId, String addTime) throws Exception{
+        boolean isExist = false;
+        GenericDAO dao = new GenericDAO("out");
+
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("OPENID", openId);
+        parameter.put("STAFF_ID", staffId);
+        parameter.put("ADD_TIME", addTime);
+
+        //查在线表
+        sql.append(" select * from out_hirunplus_custservice_scan ");
+        sql.append(" where 1=1 ");
+        sql.append(" and OPENID = :OPENID");
+        sql.append(" and STAFF_ID = :STAFF_ID");
+        sql.append(" and ADD_TIME = :ADD_TIME");
+        RecordSet set = dao.queryBySql(sql.toString(), parameter);
+        if(set == null || set.size() == 0) {
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_custservice_scan ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPENID = :OPENID");
+            sql.append(" and STAFF_ID = :STAFF_ID");
+            sql.append(" and ADD_TIME = :ADD_TIME");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
+        } else {
+            isExist = true;
+        }
+
+        return isExist;
+    }
+
+
     public static boolean isExistData4Projects(String openId,String staffId, String commTime) throws Exception{
         boolean isExist = false;
         GenericDAO dao = new GenericDAO("out");
@@ -221,6 +258,79 @@ public class OutBean {
             sql.append(" and OPENID = :OPENID");
             sql.append(" and STAFF_ID = :STAFF_ID");
             sql.append(" and CREATE_TIME = :CREATE_TIME");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
+        } else {
+            isExist = true;
+        }
+
+        return isExist;
+    }
+
+    public static boolean isExistData4SignIn(String openId, String sign_time) throws Exception{
+        boolean isExist = false;
+        GenericDAO dao = new GenericDAO("out");
+
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("OPEN_ID", openId);
+       // parameter.put("STAFF_ID", staffId);
+        parameter.put("SIGN_TIME", sign_time);
+
+        //查在线表
+        sql.append(" select * from out_hirunplus_signpc ");
+        sql.append(" where 1=1 ");
+        sql.append(" and OPEN_ID = :OPEN_ID");
+       // sql.append(" and STAFF_ID = :STAFF_ID");
+        sql.append(" and SIGN_TIME = :SIGN_TIME");
+        RecordSet set = dao.queryBySql(sql.toString(), parameter);
+        if(set == null || set.size() == 0) {
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_signpc ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPEN_ID = :OPEN_ID");
+            sql.append(" and SIGN_TIME = :SIGN_TIME");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
+        } else {
+            isExist = true;
+        }
+
+        return isExist;
+    }
+
+    public static boolean isExistData4XQLTE(String openId,String staffId, String gnltUpdateTime) throws Exception{
+        boolean isExist = false;
+        GenericDAO dao = new GenericDAO("out");
+
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("OPEN_ID", openId);
+        parameter.put("STAFF_ID", staffId);
+        parameter.put("LT2_UPDATE_TIME", gnltUpdateTime);
+
+
+        //查在线表
+        sql.append(" select * from out_hirunplus_xqlte ");
+        sql.append(" where 1=1 ");
+        sql.append(" and OPEN_ID = :OPEN_ID");
+        sql.append(" and SJS_STAFF_ID = :STAFF_ID");
+        sql.append(" and LT2_UPDATE_TIME = :LT2_UPDATE_TIME");
+
+        RecordSet set = dao.queryBySql(sql.toString(), parameter);
+        if(set == null || set.size() == 0) {
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_xqlte ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPEN_ID = :OPEN_ID");
+            sql.append(" and SJS_STAFF_ID = :STAFF_ID");
+            sql.append(" and LT2_UPDATE_TIME = :LT2_UPDATE_TIME");
             set = dao.queryBySql(sql.toString(), parameter);
             if(set != null && set.size() > 0) {
                 isExist = true;
