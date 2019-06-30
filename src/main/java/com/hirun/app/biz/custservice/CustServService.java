@@ -967,9 +967,13 @@ public class CustServService extends GenericService {
         ServiceResponse response=new ServiceResponse();
         AppSession session = SessionManager.getSession();
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
+        SessionEntity sessionEntity = SessionManager.getSession().getSessionEntity();
         String mySwitch=request.getString("mySwitch");
         String searchName=request.getString("SEARCH_TEXT");
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+        String orgId = OrgBean.getOrgId(sessionEntity);
+
         if(StringUtils.equals("off",mySwitch)) {
             RecordSet childEmployeeRecordSet = EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
 
@@ -991,7 +995,9 @@ public class CustServService extends GenericService {
             }
             response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(custServiceRecodSet));
         }else{
-            RecordSet allCustServiceRecordSet=dao.queryAllCustServiceByName(searchName,"");
+            OrgEntity  orgEntity = OrgBean.getAssignTypeOrg(orgId, "3", allOrgs);
+            orgId = OrgBean.getOrgLine(orgEntity.getOrgId(), allOrgs);
+            RecordSet allCustServiceRecordSet=dao.queryAllCustServiceByName(searchName,orgId);
             if(allCustServiceRecordSet.size()<=0){
                 return response;
             }
