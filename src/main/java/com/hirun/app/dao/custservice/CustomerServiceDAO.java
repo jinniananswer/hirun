@@ -144,6 +144,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" where a.PROJECT_ID=b.PROJECT_ID ");
         sb.append(" and b.PARTY_ID=c.PARTY_ID  ");
         sb.append(" and a.ROLE_TYPE= :ROLE_TYPE  ");
+        sb.append(" and c.PARYT_STATUS='0'  ");
+
 
         if (StringUtils.isNotBlank(name)) {
             sb.append("and c.party_name like concat('%',:PARTY_NAME,'%') ");
