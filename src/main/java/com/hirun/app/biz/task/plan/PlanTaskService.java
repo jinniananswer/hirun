@@ -2,6 +2,7 @@ package com.hirun.app.biz.task.plan;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.out.hirunplusdata.DataImportUtil;
 import com.hirun.app.bean.out.hirunplusdata.YJALDataImport;
 import com.hirun.app.bean.plan.ActionCheckRuleProcess;
@@ -9,7 +10,10 @@ import com.hirun.app.bean.plan.PlanBean;
 import com.hirun.app.biz.common.PerformDueTaskService;
 import com.hirun.app.cache.HirunPlusStaffDataCache;
 import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.app.dao.custservice.CustomerServiceDAO;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
+import com.hirun.pub.domain.entity.custservice.PartyEntity;
+import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
@@ -175,6 +179,8 @@ public class PlanTaskService extends GenericService {
                 signToDone(id, now, "out_hirunplus_yjal", "out_his_hirunplus_yjal");
             }
         }
+        //mode数据转换
+        transModeToAction();
 
         return response;
     }
@@ -202,6 +208,77 @@ public class PlanTaskService extends GenericService {
         sql.append(" DELETE FROM ").append(tableName).append(" ");
         sql.append(" WHERE ID = :ID");
         dao.executeUpdate(sql.toString(), dbParam);
+    }
+
+    private  void transModeToAction(){
+        try {
+            GenericDAO dao = new GenericDAO("out");
+            CustomerServiceDAO customerServiceDAO=DAOFactory.createDAO(CustomerServiceDAO.class);
+
+            StringBuilder sql = new StringBuilder();
+            sql.append(" SELECT ID,MODE_ID,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') MODE_TIME,STAFF_ID,OPENID,STYLE,FUNC,NAME,AGE,MIANJI,HUXING,YONGTU ");
+            sql.append(" FROM out_hirunplus_commends_mode ");
+            sql.append(" WHERE DEAL_TAG = '0' ");
+            sql.append(" ORDER BY INDB_TIME ");
+            JSONArray jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
+
+            if(jsonProjectList.size()<0){
+                return;
+            }
+
+            for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+                JSONObject jsonProject = jsonProjectList.getJSONObject(i);
+                Map<String,String> param=new HashMap<String, String>();
+               // Map<String,String> partyActionParam=new HashMap<String, String>();
+
+                String id = jsonProject.getString("ID");
+                String mode_id= jsonProject.getString("MODE_ID");
+                String mode_time= jsonProject.getString("MODE_TIME");
+                String style=jsonProject.getString("STYLE");
+                String func=jsonProject.getString("FUNC");
+                String staff_id=jsonProject.getString("STAFF_ID");
+                String openid = jsonProject.getString("OPENID");
+                String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(staff_id);
+                 /*
+                EmployeeEntity employeeEntity= EmployeeBean.getEmployeeByEmployeeId(employeeId);
+                PartyEntity partyEntity=customerServiceDAO.queryPartyInfoByOpenId(openid);
+                if(partyEntity==null){
+                    continue;
+                }
+                String party_id=partyEntity.getParytId();*/
+                param.put("OPEN_ID",openid);
+                param.put("ACTION_CODE","XQLTY");
+                param.put("MODE_ID",mode_id);
+                param.put("MODE_TIME",mode_time);
+                param.put("NAME",jsonProject.getString("NAME"));
+                param.put("AGE",jsonProject.getString("AGE"));
+                param.put("HOUSE_KIND",jsonProject.getString("HUXING"));
+                param.put("HOUSE_AREA",jsonProject.getString("MIANJI"));
+                param.put("APPLICATION",jsonProject.getString("YONGTU"));
+                param.put("STAFF_ID",staff_id);
+                param.put("STYLE",style);
+                param.put("FUNC",func);
+                param.put("REL_EMPLOYEE_ID",employeeId);
+                param.put("CREATE_DATE",TimeTool.now());
+                customerServiceDAO.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图一的内容转换成ins数据
+                /*
+                partyActionParam.put("PARTY_ID",party_id);
+                partyActionParam.put("STATUS","1");
+                partyActionParam.put("FINISH_TIME",mode_time);
+                partyActionParam.put("ACTION_CODE","XQLTY");
+                partyActionParam.put("UPDATE_USER_ID",employeeEntity.getUserId());
+                partyActionParam.put("UPDATE_TIME",TimeTool.now());
+
+                customerServiceDAO.save("ins_project_original_action",new String[]{"PARTY_ID","ACTION_CODE"},partyActionParam);//更新转换action数据
+                 */
+                signToDone(id, TimeTool.now(), "out_hirunplus_commends_mode", "out_his_hirunplus_commends_mode");//搬历史表
+
+            }
+
+            }catch (Exception e){
+            log.error("mode数据转换异常：", e);
+        }
+
     }
 
     public ServiceResponse test(ServiceRequest request) throws Exception {
