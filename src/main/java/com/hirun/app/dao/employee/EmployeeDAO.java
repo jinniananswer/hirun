@@ -453,6 +453,56 @@ public class EmployeeDAO extends StrongObjectDAO{
         return employeeJobRoleEntities;
     }
 
+    public RecordSet queryEmployeeJobRoleByOrgId1(String orgId,String name,String employeeIDs) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT * FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
+        sb.append("AND b.`JOB_ROLE` IN ('46','118','103','0','45','69','119') ");
+        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.status = '0' ");
+
+        if(StringUtils.isNotBlank(orgId)){
+            sb.append("and b.org_id in ( "+orgId+") ");
+        }
+
+        if (StringUtils.isNotBlank(name)) {
+            sb.append("and a.NAME like concat('%',:NAME,'%') ");
+            parameter.put("NAME", name);
+        }
+
+        if(StringUtils.isNotBlank(employeeIDs)){
+            sb.append("and a.EMPLOYEE_ID in ( "+employeeIDs+") ");
+        }
+
+        RecordSet employeeJobRoleEntities = this.queryBySql(sb.toString(), parameter);
+        return employeeJobRoleEntities;
+    }
+
+
+    public RecordSet queryEmployeeByEmpIdsAndOrgId(String empIds,String orgId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT * FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
+        sb.append("AND b.`JOB_ROLE` IN ('46','118','103','0','45','69','119') ");
+        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.status = '0' ");
+
+        if(StringUtils.isNotBlank(orgId)){
+            sb.append("and b.org_id in ( "+orgId+") ");
+        }
+
+        if(StringUtils.isNotBlank(empIds)){
+            sb.append("and a.EMPLOYEE_ID in ( "+empIds+") ");
+        }
+
+        RecordSet employeeJobRoleEntities = this.queryBySql(sb.toString(), parameter);
+        return employeeJobRoleEntities;
+    }
+
     public RecordSet queryEmployeeByEmpIdsAndName(String employeeIds,String name) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
 
