@@ -49,6 +49,17 @@
 
 					</tbody>
 				</table>
+                <div class="c_msg c_msg-warn" id="queryMessage" style="display:none">
+                    <div class="wrapper">
+                        <div class="emote"></div>
+                        <div class="info">
+                            <div class="text">
+                                <div class="title">提示信息</div>
+                                <div class="content">sorry,没有找到您想要的信息~</div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
 			</div>
 		</div>
 		<div class="top">
