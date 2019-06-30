@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="c_header e_show">
-    <div class="back" ontap="$.redirect.closeCurrentPage();">客户需求信息录入</div>
+    <div class="back" ontap="$.changegoodseeliveinfo.backToFlow();">客户需求信息录入</div>
     <div class="fn">
 
     </div>
