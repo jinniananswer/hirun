@@ -167,7 +167,6 @@ public class PartyBean {
             dao.insertBatch("ins_project_original_action", partyProjectActionList);
         }
 
-        CustServiceStatBean.updateCustServiceStat(employeeId,"GOODSEEGOODLIVE");
         CustServiceStatBean.updateCustServiceStat(employeeId,"SCANDATA");
 
         return true;
@@ -326,7 +325,6 @@ public class PartyBean {
         if(StringUtils.equals(funs,"false") || StringUtils.isBlank(funs) || "null".equals(funs)){
             CustServiceStatBean.updateCustServiceStat(employeeId,"GOODSEEGOODLIVE");
         }else{
-            CustServiceStatBean.updateCustServiceStat(employeeId,"GOODSEEGOODLIVE");
             CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         }
         return true;
