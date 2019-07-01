@@ -324,10 +324,10 @@ public class PartyBean {
 
         String funs= jsonObject.getString("funs");
         if(StringUtils.equals(funs,"false") || StringUtils.isBlank(funs) || "null".equals(funs)){
-            CustServiceStatBean.updateCustServiceStat("employeeId","GOODSEEGOODLIVE");
+            CustServiceStatBean.updateCustServiceStat(employeeId,"GOODSEEGOODLIVE");
         }else{
-            CustServiceStatBean.updateCustServiceStat("employeeId","GOODSEEGOODLIVE");
-            CustServiceStatBean.updateCustServiceStat("employeeId","XQLTEFUNC");
+            CustServiceStatBean.updateCustServiceStat(employeeId,"GOODSEEGOODLIVE");
+            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         }
         return true;
     }
