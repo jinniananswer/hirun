@@ -117,40 +117,40 @@
                     html.push("</div></div>");
                     html.push("<div class=\"main\">");
                     if(party_name!='undefined'&& party_name != null){
-                        html.push("<div class=\"content\">");
+                        html.push("<div class=\"content content-auto\">");
                         html.push("客户姓名: " +party_name);
                         html.push("</div>")
                     }else {
-                        html.push("<div class=\"content \">");
+                        html.push("<div class=\"content content-auto \">");
                         html.push("客户姓名: " );
                         html.push("</div>")
                     }
 
 
                     if(mobile!='undefined'&& mobile != null){
-                        html.push("<div class=\"content\">");
+                        html.push("<div class=\"content content-auto\">");
                         html.push("联系电话: " +mobile);
                         html.push("</div>")
                     }else {
-                        html.push("<div class=\"content \">");
+                        html.push("<div class=\"content content-auto\">");
                         html.push("联系电话: " );
                         html.push("</div>")
                     }
 
-                    html.push("<div class=\"content \">");
+                    html.push("<div class=\"content content-auto\">");
                     html.push("咨询时间: " + create_date.substr(0,19));
                     html.push("</div>")
 
-                    html.push("<div class=\"content\">");
+                    html.push("<div class=\"content content-auto\">");
                     html.push("客户代表: " +custserviceName);
                     html.push("</div>")
 
                     if(wxnick!='undefined'&& wxnick != null){
-                        html.push("<div class=\"content\">");
+                        html.push("<div class=\"content content-auto\">");
                         html.push("微信昵称: " +wxnick);
                         html.push("</div>")
                     }else {
-                        html.push("<div class=\"content \">");
+                        html.push("<div class=\"content content-auto\">");
                         html.push("微信昵称: " );
                         html.push("</div>")
                     }
