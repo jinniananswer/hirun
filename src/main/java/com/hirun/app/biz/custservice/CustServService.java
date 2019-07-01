@@ -546,8 +546,22 @@ public class CustServService extends GenericService {
         Record record=new Record();
         record.put("NAME",employeeEntity.getName());
         record.put("EMPLOYEE_ID",employeeEntity.getEmployeeId());
-
         RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+
+        childEmployeeRecordSet.add(record);
+        response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
+
+        if(childEmployeeRecordSet.size()<=0){
+            Record flag=new Record();//用来判断是否展示客户代表可选项
+            flag.put("FLAG","FALSE");
+            response.set("FLAG",ConvertTool.toJSONObject(flag));
+        }else{
+            Record flag=new Record();//用来判断是否展示客户代表可选项
+            flag.put("FLAG","TRUE");
+            response.set("FLAG",ConvertTool.toJSONObject(flag));
+        }
+
+
         RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeId(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeId);
         if(partyInfoList.size()<=0){
             return response;
@@ -560,18 +574,7 @@ public class CustServService extends GenericService {
         }
 
 
-        if(childEmployeeRecordSet.size()<=0){
-            Record flag=new Record();//用来判断是否展示客户代表可选项
-            flag.put("FLAG","FALSE");
-            response.set("FLAG",ConvertTool.toJSONObject(flag));
-        }else{
-            Record flag=new Record();//用来判断是否展示客户代表可选项
-            flag.put("FLAG","TRUE");
-            response.set("FLAG",ConvertTool.toJSONObject(flag));
-        }
 
-        childEmployeeRecordSet.add(record);
-        response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
         response.set("PARTYINFOLIST",ConvertTool.toJSONArray(partyInfoList));
 
         return response;
