@@ -154,6 +154,8 @@ public class PartyBean {
             if(StringUtils.equals(actionCode,"SMJRLC")){
                 partyProjectActionInfo.put("STATUS","1");
                 partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("add_time")));
+            }else if(StringUtils.equals(actionCode,"GZGZH")){
+                partyProjectActionInfo.put("STATUS","1");
             }else{
                 partyProjectActionInfo.put("STATUS","0");
             }
@@ -298,9 +300,15 @@ public class PartyBean {
             if(StringUtils.equals(actionCode,"XQLTE")){
                 partyProjectActionInfo.put("STATUS","1");
                 partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-            }else{
+            }else if(StringUtils.equals(actionCode,"GZGZH")){
+                partyProjectActionInfo.put("STATUS","1");
+            }
+            else{
                 partyProjectActionInfo.put("STATUS","0");
             }
+
+
+
             partyProjectActionInfo.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
             partyProjectActionInfo.put("CREATE_DATE",TimeTool.now());
             partyProjectActionInfo.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
