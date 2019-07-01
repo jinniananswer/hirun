@@ -83,7 +83,7 @@ public class CustServiceStatBean {
                 Map<String, String> custservicestat = new HashMap<String, String>();
                 custservicestat.put("STAT_MONTH", monthDate);
                 custservicestat.put("OBJECT_ID", employeeId);
-                custservicestat.put("CONSULT_COUNT", "1");
+                custservicestat.put("CONSULT_COUNT", "0");
                 custservicestat.put("STYLE_COUNT", "0");
                 custservicestat.put("FUNC_COUNT", "1");
                 custservicestat.put("SCAN_COUNT", "0");
@@ -181,10 +181,10 @@ public class CustServiceStatBean {
                 Map<String, String> custservicestat = new HashMap<String, String>();
                 DecimalFormat df = new DecimalFormat("0.00%");
 
-                int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"))+1;
+                int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"));
                 int styleCount=Integer.parseInt(record.get("STYLE_COUNT"));
                 int funcCount=Integer.parseInt(record.get("FUNC_COUNT"))+1;
-                //int XQLTECount=Integer.parseInt(record.get("XQLTE_COUNT")+1);
+                //int XQLTECount=Integer.parseInt(record.get("FUNC_COUNT")+1);
                 int scanCount=Integer.parseInt(record.get("SCAN_COUNT"));
                 int scancityhouseCount=Integer.parseInt(record.get("SCANCITYHOUSE_COUNT"));
 
