@@ -949,7 +949,7 @@ public class CustServService extends GenericService {
         ServiceResponse response=new ServiceResponse();
         AppSession session = SessionManager.getSession();
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
-        RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"1");
+        RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
         EmployeeEntity employeeEntity=EmployeeBean.getEmployeeByEmployeeId(employeeId);
         Record record=new Record();
         record.put("NAME",employeeEntity.getName());
