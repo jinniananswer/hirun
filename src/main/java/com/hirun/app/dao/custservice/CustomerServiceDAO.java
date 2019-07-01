@@ -243,14 +243,13 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     }
 
 
-    public RecordSet querySignInInfoByOpenIdAndEmpId(String openid, String employeeId) throws Exception {
+    public RecordSet querySignInInfoByOpenIdAndEmpId(String openid) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_signin_action ");
-        sb.append("where OPEN_ID=:OPEN_ID AND EMPLOYEE_ID=:EMPLOYEE_ID ");
+        sb.append("where OPEN_ID=:OPEN_ID ");
         sb.append("order by SIGNIN_TIME  ");
         parameter.put("OPEN_ID", openid);
-        parameter.put("EMPLOYEE_ID", employeeId);
         RecordSet recordSet = queryBySql(sb.toString(), parameter);
 
         return recordSet;
