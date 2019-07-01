@@ -230,6 +230,12 @@ public class PartyBean {
                 param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+
+                RecordSet bulePrintSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",employeeId);
+                if(bulePrintSet.size()<=0){
+                    CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+                }
+
                 dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
                 return true;
         }
@@ -321,12 +327,14 @@ public class PartyBean {
         param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
 
+        /*
         String funs= jsonObject.getString("funs");
         if(StringUtils.equals(funs,"false") || StringUtils.isBlank(funs) || "null".equals(funs)){
-            CustServiceStatBean.updateCustServiceStat(employeeId,"GOODSEEGOODLIVE");
+            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         }else{
             CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
-        }
+        }*/
+        CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         return true;
     }
 
