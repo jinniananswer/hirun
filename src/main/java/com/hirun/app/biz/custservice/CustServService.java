@@ -87,7 +87,7 @@ public class CustServService extends GenericService {
 
         }else{
             Record flagRecord=new Record();
-            flagRecord.put("FLAG","FLASE");
+            flagRecord.put("FLAG","FALSE");
             response.set("FLAG",ConvertTool.toJSONObject(flagRecord));
         }
 
