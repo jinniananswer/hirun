@@ -166,7 +166,7 @@ public class CustServService extends GenericService {
                             RecordSet xqlteRecordSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",custServlinkEmpId);
                             if(xqlteRecordSet.size()>0) {
                                 partyAction.put("STATUS", "1");
-                                partyAction.put("XQLTE_FINISHTIME", xqlteRecordSet.get(0).get("XQLTE_CREATE_TIME"));
+                                partyAction.put("XQLTE_FINISHTIME", xqlteRecordSet.get(0).get("XQLTE_UPDATE_TIME"));
                             }
                         }
                     }
