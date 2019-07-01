@@ -151,7 +151,7 @@ public class CustServService extends GenericService {
                     if(StringUtils.equals(actionCode,"SMDLUPCD")){
                         String openid=partyAction.get("OPEN_ID");
                         if(StringUtils.isNotBlank(openid)){
-                            RecordSet signInRecordSet=dao.querySignInInfoByOpenIdAndEmpId(openid,custServlinkEmpId);
+                            RecordSet signInRecordSet=dao.querySignInInfoByOpenIdAndEmpId(openid);
                             if(signInRecordSet.size()>0) {
                                 partyAction.put("STATUS", "1");
                                 partyAction.put("SMDLUPCD_FINISHTIME", signInRecordSet.get(0).get("SIGNIN_TIME"));
