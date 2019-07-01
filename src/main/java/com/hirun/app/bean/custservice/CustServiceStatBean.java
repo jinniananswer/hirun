@@ -86,7 +86,7 @@ public class CustServiceStatBean {
                 custservicestat.put("CONSULT_COUNT", "1");
                 custservicestat.put("STYLE_COUNT", "0");
                 custservicestat.put("FUNC_COUNT", "1");
-                custservicestat.put("SCAN_COUNT", "1");
+                custservicestat.put("SCAN_COUNT", "0");
                 custservicestat.put("SCANCITYHOUSE_COUNT", "0");
                 custservicestat.put("STYLE_SCALE", "0.00%");
                 custservicestat.put("FUNC_SCALE", "100.00%");
