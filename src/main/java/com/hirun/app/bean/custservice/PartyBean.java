@@ -228,9 +228,9 @@ public class PartyBean {
                 param.put("FUNC",jsonObject.getString("funs"));
                 param.put("REL_EMPLOYEE_ID",employeeId);
                 param.put("CREATE_DATE",TimeTool.now());
-                param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+                param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-                param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+                param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
 
                 RecordSet bulePrintSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",employeeId);
@@ -329,9 +329,9 @@ public class PartyBean {
         param.put("FUNC",jsonObject.getString("funs"));
         param.put("REL_EMPLOYEE_ID",employeeId);
         param.put("CREATE_DATE",TimeTool.now());
-        param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+        param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-        param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+        param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
 
