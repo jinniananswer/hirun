@@ -525,12 +525,14 @@
 
                              </ul>
                         </div>
-                        <div class="l_bottom">
-                            <div class="c_submit c_submit-full">
-                                <button type="button" ontap="$.goodseelive.confirmElderinfo();" class="e_button-l e_button-green">确定</button>
-                            </div>
+                        <div class="c_space-3"></div>
+                        <div class="">
+                           <div class="c_submit c_submit-full">
+                               <button type="button" ontap="$.goodseelive.confirmElderinfo();" class="e_button-l e_button-green">确定</button>
+                           </div>
                         </div>
                     </div>
+
                 </div>
                         <!-- 小孩信息弹出浮层 -->
                 <div class="c_popupItem" id="UI-CHILDINFO">
@@ -551,12 +553,15 @@
 
                              </ul>
                         </div>
-                        <div class="l_bottom">
+                        <div class="c_space-3"></div>
+
+                        <div class="">
                             <div class="c_submit c_submit-full">
-                                <button type="button" ontap="$.goodseelive.confirmChildinfo();" class="e_button-l e_button-green">确定</button>
-                            </div>
+                            <button type="button" ontap="$.goodseelive.confirmChildinfo();" class="e_button-l e_button-green">确定</button>
+                             </div>
                         </div>
                     </div>
+
                 </div>
                  <!-- 兴趣爱好选择 -->
                 <div class="c_popupItem" id="UI-HOBBYLIST">
@@ -638,13 +643,13 @@
                   </div>
                 </div>
                     <!-- 现代之源 -->
-                               <div class="c_popupItem" id="UI-MODERNSOURCE">
+                              <div class="c_popupItem" id="UI-MODERNSOURCE">
                                    <!-- 标题栏 开始 -->
                                    <div class="c_header">
                                        <div class="back" ontap="hidePopup(this);">现代之源</div>
                                    </div>
                                    <!-- 标题栏 结束 -->
-                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                                <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                                    <div class="l_padding">
                                        <div class="c_box">
                                            <!-- 表单 开始 -->
@@ -655,19 +660,23 @@
                                            </div>
                                            <!-- 表单 结束 -->
 
-                            <div class="c_space-3"></div>
-                            <div class="c_space-3"></div>
-                            <div class="c_space-3"></div>
+                                            <div class="c_space-3"></div>
+                                            <div class="c_space-3"></div>
+                                         <div class="c_space-3"></div>
 
+
+                                       </div>
+                                   </div>
+                                </div>
                                     <div class="l_bottom">
                                         <div class="c_submit c_submit-full">
                                             <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.goodseelive.confirmModernSource();" class="e_button-l e_button-green">确定</button>
                                         </div>
                                     </div>
-                                       </div>
-                                   </div>
-                                </div>
-                                </div>
+                                         <div class="c_space-3"></div>
+                                         <div class="c_space-3"></div>
+
+                               </div>
                     <!-- 功能系统 -->
 
                 <div class="c_popupItem" id="UI-FUNCSYSTEM">
@@ -688,14 +697,15 @@
                             <!-- 表单 结束 -->
                         <div class="c_space-3"></div>
                         <div class="c_space-3"></div>
-                                <div class="l_bottom">
-                                   <div class="c_submit c_submit-full">
-                                       <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.goodseelive.confirmFuncs();" class="e_button-l e_button-green">确定</button>
-                                   </div>
-                               </div>
+
                         </div>
                   </div>
                   </div>
+                            <div class="l_bottom">
+                                   <div class="c_submit c_submit-full">
+                                       <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.goodseelive.confirmFuncs();" class="e_button-l e_button-green">确定</button>
+                                   </div>
+                             </div>
                 </div>
 
                 <div class="c_popupItem" id="UI-ADVANTAGE">
@@ -716,14 +726,17 @@
                             <!-- 表单 结束 -->
                         <div class="c_space-3"></div>
                         <div class="c_space-3"></div>
-                                <div class="l_bottom">
-                                   <div class="c_submit c_submit-full">
-                                       <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.goodseelive.confirmAdvantages();" class="e_button-l e_button-green">确定</button>
-                                   </div>
-                               </div>
                         </div>
                   </div>
                   </div>
+                   <div class="l_bottom">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.goodseelive.confirmAdvantages();" class="e_button-l e_button-green">确定</button>
+                        </div>
+                    </div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
+
                 </div>
 
                 <div class="c_popupItem" id="UI-CRITICALPROCESS">
