@@ -106,16 +106,6 @@ public class CustServiceReportService extends GenericService{
 
         String employeeIds="";
 
-        if(StringUtils.isNotBlank(custserviceempid)){
-            employeeIds=custserviceempid;
-        }else{
-            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
-            for(int i=0;i<childEmployeeRecordSet.size();i++){
-                Record childRecord=childEmployeeRecordSet.get(i);
-                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
-            }
-            employeeIds=employeeIds+employeeId;
-        }
 
 
 
@@ -140,7 +130,9 @@ public class CustServiceReportService extends GenericService{
         }
         orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
-        if(Permission.hasAllCity()){
+        if(StringUtils.isNotBlank(custserviceempid)){
+            employeeIds=custserviceempid;
+        } else if(Permission.hasAllCity()){
             RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
             for(int i=0;i<allCustServiceEmpEntity.size();i++){
                 Record childRecord=allCustServiceEmpEntity.get(i);
@@ -154,7 +146,15 @@ public class CustServiceReportService extends GenericService{
                 employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
             }
             employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else {
+            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+            for(int i=0;i<childEmployeeRecordSet.size();i++){
+                Record childRecord=childEmployeeRecordSet.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds+employeeId;
         }
+
 
 
    /*     RecordSet employeeRecordSet=EmployeeBean.queryEmployeeByEmpIdsAndOrgId(employeeIds,orgId);
@@ -248,16 +248,6 @@ public class CustServiceReportService extends GenericService{
 
         String employeeIds="";
 
-        if(StringUtils.isNotBlank(custServiceEmpId)){
-            employeeIds=custServiceEmpId;
-        }else{
-            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
-            for(int i=0;i<childEmployeeRecordSet.size();i++){
-                Record childRecord=childEmployeeRecordSet.get(i);
-                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
-            }
-            employeeIds=employeeIds+employeeId;
-        }
 
         if(StringUtils.isBlank(orgId)) {
             if(Permission.hasAllCity()) {
@@ -270,7 +260,9 @@ public class CustServiceReportService extends GenericService{
         }
         orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
-        if(Permission.hasAllCity()){
+        if(StringUtils.isNotBlank(custServiceEmpId)){
+            employeeIds=custServiceEmpId;
+        }else if(Permission.hasAllCity()){
             RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
             for(int i=0;i<allCustServiceEmpEntity.size();i++){
                 Record childRecord=allCustServiceEmpEntity.get(i);
@@ -285,8 +277,14 @@ public class CustServiceReportService extends GenericService{
             }
             employeeIds=employeeIds.substring(0,employeeIds.length()-1);
         }else{
-
+            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+            for(int i=0;i<childEmployeeRecordSet.size();i++){
+                Record childRecord=childEmployeeRecordSet.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds+employeeId;
         }
+
         /*
         //如果前台选择的客户代表不为空或者登录查询报表的员工为普通客户代表只能查询自己本身或者指定的数据
         if(StringUtils.isNotBlank(custServiceEmpId)){
