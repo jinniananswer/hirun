@@ -47,10 +47,19 @@
         </div>
 
     </div>
-    <div class="c_space-4"></div>
-    <div class="c_space-4"></div>
+   <div class="c_space-4"></div>
+   <div class="c_space-4"></div>
+
+
+
 </div>
 <!-- 滚动 结束 -->
+    <div class="l_bottom  c_submit-full ">
+          <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.custservicemanager.init();" class="e_button-r e_button-l e_button-green">刷新</button>
+    </div>
+    <div class="c_space-4"></div>
+    <div class="c_space-4"></div>
+
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 
 <!-- 弹窗 开始 -->
