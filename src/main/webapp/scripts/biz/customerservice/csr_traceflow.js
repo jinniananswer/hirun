@@ -21,7 +21,7 @@
                     switchOn:false,
                     onValue:"on",
                     offValue:"off",
-                    disabled:true
+                    disabled:false
                 });
 
                 $("#mySwitch").val("off");
@@ -41,13 +41,14 @@
                     var xqltyInfo=rst.get("PROJECTXQLTYINFO");
                     var cityCabinInfo=rst.get("CITYCABININFO");
                     var insScanCityInfo=rst.get("INSSCANCITYINFO");
+                    var partyInfo=rst.get("PARTYINFO");
                     var flag=rst.get("FLAG");
                     $.csrTraceFlow.isShowQueryCond(flag);
                     $.csrTraceFlow.drawFlow(datas,projectDesignerInfo);
                     $.csrTraceFlow.drawXQLTY(xqltyInfo);
                     $.csrTraceFlow.drawCityhouseInfo(insScanCityInfo);
                     $.csrTraceFlow.drawCityCabin(cityCabinInfo);
-
+                    $.csrTraceFlow.drawPartyInfo(partyInfo);
 
                     hidePopup('UI-popup','GZGZHUI-popup-query-cond');
                     hidePopup('UI-popup','XQLTYUI-popup-query-cond');
@@ -62,11 +63,58 @@
             isShowQueryCond :function(flag){
                 var flag1=flag.get("FLAG");
                 if("TRUE"==flag1){
-                    $("#mySwitch").attr("disabled", false);
+                    //$("#mySwitch").attr("disabled", false);
+                    $("#isSwitch").css("display", "");
+
                 }else{
-                    $("#mySwitch").attr("disabled", true);
+                    $("#isSwitch").css("display", "none");
                 }
             },
+
+            drawPartyInfo : function(datas){
+                $.endPageLoading();
+
+                $("#preworks").empty();
+                var html = [];
+
+                if(datas == null || datas.length <= 0){
+                    $("#messagebox").css("display","");
+                    return;
+                }
+
+                $("#messagebox").css("display","none");
+
+                    var partyname=datas.get("PARTY_NAME");
+                    var wxnick=datas.get("WX_NICK");
+
+                    if(partyname=='undefined'|| partyname == null) {
+                        partyname='';
+                    }
+                    if(wxnick=='undefined'|| wxnick == null) {
+                        wxnick='';
+                    }
+
+                    html.push("<li class='link'><div class=\"group\"><div class=\"content content-auto\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    html.push("</div></div>");
+                    html.push("<div class=\"main\"><div class=\"content content-auto\">");
+                    html.push("<span class='e_strong'>客户姓名：</span>")
+                    html.push(partyname);
+                    html.push("</div>");
+
+                    html.push("<div class=\"content content-auto\">");
+                    html.push("<span class='e_strong'>微信昵称：</span>"+wxnick);
+                    html.push("</div>");
+
+                    html.push("</div>");
+
+
+                    html.push("</div></div>");
+                    html.push("</li>");
+
+
+                $.insertHtml('beforeend', $("#preworks"), html.join(""));
+            },
+
 
             drawFlow :function (datas,projectDesignerInfo) {
                 $.endPageLoading();
