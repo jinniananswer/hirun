@@ -5,18 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表流程</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/csr_traceflow.js"></script>
+    <script src="/scripts/biz/customerservice/csr_traceflow.js?v=20190703"></script>
 </head>
 <body>
         <div class="c_header">
             <div class="back" ontap="$.redirect.closeCurrentPage();">客户流程</div>
         </div>
         <div class="c_scroll c_scroll-float c_scroll-header" id="scroll_div">
+           <div class="l_padding">
+            <div class="c_title">
+                        <div class="text">基本信息</div>
+                        <div class="fn">
+
+                        </div>
+            </div>
+            <div class="c_list c_list-line c_list-border c_list-space l_padding">
+                <ul id="preworks">
+
+                </ul>
+            </div>
             <input type="hidden" id="PARTY_ID" name="PARTY_ID" nullable="no" value="${pageContext.request.getParameter("PARTY_ID") }" desc="参与人ID" />
             <input type="hidden" id="PROJECT_ID" name="PROJECT_ID" nullable="no" value="${pageContext.request.getParameter("PROJECT_ID") }" desc="参与人ID" />
             <div class="l_col l_col-full l_col-middle">
                 <div class="l_colItem">
-                    <div class="c_scroll c_scroll-white">
+                    <div class="">
                        <div class="l_padding l_padding-u" style="padding-right:0">
                             <div class="c_timeline c_timeline-border">
                                 <ul id="traceflow">
@@ -28,7 +40,10 @@
                        <div class="c_space-3"></div>
 
                     </div>
+                       <div class="c_space-3"></div>
                </div>
+                       <div class="c_space-3"></div>
+
             </div>
 
              <div class="c_msg c_msg-warn" id="queryMessage" style="display:none">
@@ -42,6 +57,7 @@
                      </div>
                  </div>
              </div>
+           </div>
         </div>
 
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
@@ -126,13 +142,13 @@
                                                 </div>
                                             </li>
 
-                                             <li class="link">
+                                             <li class="link" id="isSwitch">
                                                 <div class="label">是否跨店:</div>
                                                 <div class="value">
                                                     <div class="e_switch" >
                                                     	<div class="e_switchOn"></div>
  	                                                <div class="e_switchOff"></div>
- 	                                                <input type="hidden" id="mySwitch" name="mySwitch"  />
+ 	                                                <input type="hidden"   />
                                                     </div>
                                                 </div>
                                              </li>
