@@ -189,7 +189,7 @@ public class CustServService extends GenericService {
         response.set("PROJECTXQLTYINFO",ConvertTool.toJSONArray(projectBluePrintInfo));
         response.set("CITYCABININFO",ConvertTool.toJSONArray(cityCabinList));
         response.set("INSSCANCITYINFO",ConvertTool.toJSONArray(insScanCityInfo));
-
+        response.set("PARTYINFO",partyEntity.toJson());
         return response;
     }
 
