@@ -44,6 +44,18 @@ public class CustServiceReportService extends GenericService{
         AppSession session = SessionManager.getSession();
         String name=request.getString("CUSTSERVICE_NAME");
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
+        String orgId="";
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+
+            if(Permission.hasAllCity()) {
+                orgId = "7";
+            } else if(Permission.hasAllShop()) {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
+            } else {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
+            }
+
+        orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
         RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
         if(childEmployeeRecordSet.size()<=0){
@@ -55,6 +67,24 @@ public class CustServiceReportService extends GenericService{
             employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
         }
         employeeIds=employeeIds+employeeId;
+
+        if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else{
+
+        }
 
         RecordSet employeeRecord=EmployeeBean.queryEmployeeByEmpIdsAndName(employeeIds,name);
         if(employeeRecord.size() <=0){
@@ -88,6 +118,7 @@ public class CustServiceReportService extends GenericService{
         }
 
 
+
         if(StringUtils.isNotBlank(startDate)){
             startDate=startDate+" 00:00:00";
         }
@@ -108,6 +139,23 @@ public class CustServiceReportService extends GenericService{
             }
         }
         orgId=OrgBean.getOrgLine(orgId,allOrgs);
+
+        if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }
+
 
    /*     RecordSet employeeRecordSet=EmployeeBean.queryEmployeeByEmpIdsAndOrgId(employeeIds,orgId);
         if(employeeRecordSet.size()<=0){
@@ -222,6 +270,23 @@ public class CustServiceReportService extends GenericService{
         }
         orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
+        if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else{
+
+        }
         /*
         //如果前台选择的客户代表不为空或者登录查询报表的员工为普通客户代表只能查询自己本身或者指定的数据
         if(StringUtils.isNotBlank(custServiceEmpId)){
