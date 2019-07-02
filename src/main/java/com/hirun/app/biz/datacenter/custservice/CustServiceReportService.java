@@ -45,6 +45,7 @@ public class CustServiceReportService extends GenericService{
         String name=request.getString("CUSTSERVICE_NAME");
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
         String orgId="";
+        String employeeIds="";
         List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
 
             if(Permission.hasAllCity()) {
@@ -57,16 +58,7 @@ public class CustServiceReportService extends GenericService{
 
         orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
-        RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
-        if(childEmployeeRecordSet.size()<=0){
-            return response;
-        }
-        String employeeIds="";
-        for(int i=0;i<childEmployeeRecordSet.size();i++){
-            Record childRecord=childEmployeeRecordSet.get(i);
-            employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
-        }
-        employeeIds=employeeIds+employeeId;
+
 
         if(Permission.hasAllCity()){
             RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
@@ -83,7 +75,15 @@ public class CustServiceReportService extends GenericService{
             }
             employeeIds=employeeIds.substring(0,employeeIds.length()-1);
         }else{
-
+            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+            if(childEmployeeRecordSet.size()<=0){
+                return response;
+            }
+            for(int i=0;i<childEmployeeRecordSet.size();i++){
+                Record childRecord=childEmployeeRecordSet.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds+employeeId;
         }
 
         RecordSet employeeRecord=EmployeeBean.queryEmployeeByEmpIdsAndName(employeeIds,name);
