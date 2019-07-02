@@ -4,13 +4,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>客户需求信息录入</title>
+    <title>客户需求信息修改</title>
     <jsp:include page="/common.jsp"></jsp:include>
     <script src="/scripts/biz/customerservice/change.goodseeliveinfo.js?v=20190701"></script>
 </head>
 <body>
 <div class="c_header e_show">
-    <div class="back" ontap="$.changegoodseeliveinfo.backToFlow();">客户需求信息录入</div>
+    <div class="back" ontap="$.changegoodseeliveinfo.backToFlow();">客户需求信息修改</div>
     <div class="fn">
 
     </div>
@@ -528,7 +528,8 @@
 
                              </ul>
                         </div>
-                        <div class="l_bottom">
+                        <div class="c_space-3"></div>
+                        <div class="">
                             <div class="c_submit c_submit-full">
                                 <button type="button" ontap="$.changegoodseeliveinfo.confirmElderinfo();" class="e_button-l e_button-green">确定</button>
                             </div>
@@ -554,7 +555,9 @@
 
                              </ul>
                         </div>
-                        <div class="l_bottom">
+                        <div class="c_space-3"></div>
+
+                        <div class="">
                             <div class="c_submit c_submit-full">
                                 <button type="button" ontap="$.changegoodseeliveinfo.confirmChildinfo();" class="e_button-l e_button-green">确定</button>
                             </div>
@@ -577,12 +580,14 @@
                                 </ul>
                             </div>
                             <!-- 表单 结束 -->
-                     <div class="l_bottom">
-                         <div class="c_submit c_submit-full">
-                             <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmSelectHobby();" class="e_button-l e_button-green">确定</button>
-                         </div>
-                     </div>
                         </div>
+                        <div class="c_space-3"></div>
+
+                        <div class="">
+                            <div class="c_submit c_submit-full">
+                                <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmSelectHobby();" class="e_button-l e_button-green">确定</button>
+                            </div>
+                         </div>
                     </div>
                 </div>
                  <!-- 中国风骨 -->
@@ -601,7 +606,6 @@
                                 </ul>
                             </div>
                             <!-- 表单 结束 -->
-                        <div class="c_space-3"></div>
                         <div class="c_space-3"></div>
                         <div class="c_space-3"></div>
 
@@ -647,7 +651,7 @@
                                        <div class="back" ontap="hidePopup(this);">现代之源</div>
                                    </div>
                                    <!-- 标题栏 结束 -->
-                    <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                                <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
                                    <div class="l_padding">
                                        <div class="c_box">
                                            <!-- 表单 开始 -->
@@ -662,13 +666,14 @@
                             <div class="c_space-3"></div>
                             <div class="c_space-3"></div>
 
-                                    <div class="l_bottom">
-                                        <div class="c_submit c_submit-full">
-                                            <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmModernSource();" class="e_button-l e_button-green">确定</button>
-                                        </div>
-                                    </div>
+
                                        </div>
                                    </div>
+                                </div>
+                                <div class="l_bottom">
+                                         <div class="c_submit c_submit-full">
+                                             <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmModernSource();" class="e_button-l e_button-green">确定</button>
+                                         </div>
                                 </div>
                                 </div>
                     <!-- 功能系统 -->
@@ -691,14 +696,14 @@
                             <!-- 表单 结束 -->
                         <div class="c_space-3"></div>
                         <div class="c_space-3"></div>
-                                <div class="l_bottom">
-                                   <div class="c_submit c_submit-full">
-                                       <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmFuncs();" class="e_button-l e_button-green">确定</button>
-                                   </div>
-                               </div>
                         </div>
                   </div>
                   </div>
+                   <div class="l_bottom">
+                       <div class="c_submit c_submit-full">
+                          <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmFuncs();" class="e_button-l e_button-green">确定</button>
+                       </div>
+                   </div>
                 </div>
 
                 <div class="c_popupItem" id="UI-ADVANTAGE">
@@ -719,14 +724,14 @@
                             <!-- 表单 结束 -->
                         <div class="c_space-3"></div>
                         <div class="c_space-3"></div>
-                                <div class="l_bottom">
-                                   <div class="c_submit c_submit-full">
-                                       <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmAdvantages();" class="e_button-l e_button-green">确定</button>
-                                   </div>
-                               </div>
                         </div>
                   </div>
                   </div>
+                   <div class="l_bottom">
+                         <div class="c_submit c_submit-full">
+                             <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmAdvantages();" class="e_button-l e_button-green">确定</button>
+                         </div>
+                    </div>
                 </div>
 
                 <div class="c_popupItem" id="UI-CRITICALPROCESS">
@@ -746,14 +751,12 @@
                             </div>
                             <!-- 表单 结束 -->
                         <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                                <div class="l_bottom">
-                                   <div class="c_submit c_submit-full">
-                                       <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmCriticalProcess();" class="e_button-l e_button-green">确定</button>
-                                   </div>
-                               </div>
+
                         </div>
                   </div>
+                         <div class="c_submit c_submit-full">
+                                <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmCriticalProcess();" class="e_button-l e_button-green">确定</button>
+                         </div>
                   </div>
                 </div>
 
@@ -774,14 +777,13 @@
                             </div>
                             <!-- 表单 结束 -->
                         <div class="c_space-3"></div>
-                        <div class="c_space-3"></div>
-                                <div class="l_bottom">
-                                   <div class="c_submit c_submit-full">
-                                       <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmInformationSource();" class="e_button-l e_button-green">确定</button>
-                                   </div>
-                               </div>
                         </div>
                   </div>
+                   <div class="">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changegoodseeliveinfo.confirmInformationSource();" class="e_button-l e_button-green">确定</button>
+                        </div>
+                   </div>
                   </div>
                 </div>
 
