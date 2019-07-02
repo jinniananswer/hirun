@@ -42,9 +42,9 @@
                     </div>
                        <div class="c_space-3"></div>
                </div>
+            </div>
                        <div class="c_space-3"></div>
 
-            </div>
 
              <div class="c_msg c_msg-warn" id="queryMessage" style="display:none">
                  <div class="wrapper">
