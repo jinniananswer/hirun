@@ -529,11 +529,10 @@ public class EmployeeDAO extends StrongObjectDAO{
     public EmployeeJobRoleEntity queryEmployeeJobRoleByEmpId(String employeeId) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT b.* FROM ins_employee a, ins_employee_job_role b ");
-        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
-        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
-        sb.append("AND a.status = '0' ");
-        sb.append("AND a.employee_id = :EMPLOYEE_ID");
+        sb.append("SELECT * FROM ns_employee_job_role b ");
+        sb.append("WHERE  ");
+        sb.append(" NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND b.employee_id = :EMPLOYEE_ID");
         parameter.put("EMPLOYEE_ID", employeeId);
 
 
