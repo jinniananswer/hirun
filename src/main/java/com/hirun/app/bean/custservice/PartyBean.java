@@ -23,10 +23,8 @@ import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class PartyBean {
@@ -46,9 +44,6 @@ public class PartyBean {
 
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
         RecordSet recordSet = dao.queryPartyInfoByOpenIdAndEmployeeId(openid,employeeid);
-        if(recordSet.size() < 0){
-            return null;
-        }
         return recordSet;
     }
 
@@ -233,8 +228,14 @@ public class PartyBean {
                 param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
 
+                Record partyRecord=recordSet.get(0);
+                String createDate=getMonth(partyRecord.get("CREATE_DATE"));
+                String gnltTime=transUnixTimeToNormal(jsonObject.getString("gnlt_update_time"));
+                
+
+            //判断需求蓝图二的推送时间是否与咨询时间是同一个月，如果不是同一个月则不更新报表数据，否则就更新报表数据
                 RecordSet bulePrintSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",employeeId);
-                if(bulePrintSet.size()<=0){
+                if(bulePrintSet.size()<=0 && StringUtils.equals(createDate,getMonth(gnltTime))){
                     CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
                 }
 
@@ -342,7 +343,7 @@ public class PartyBean {
         }else{
             CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         }*/
-        CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+        //CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         return true;
     }
 
@@ -355,4 +356,22 @@ public class PartyBean {
         String date = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(timestamp));
         return date;
     }
+
+
+    public static String getMonth (String stringDate){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        if(StringUtils.isBlank(stringDate)){
+            return "";
+        }
+        try {
+            Date date = format.parse(stringDate);
+            String newDate=format.format(date);
+            return newDate;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }
+
