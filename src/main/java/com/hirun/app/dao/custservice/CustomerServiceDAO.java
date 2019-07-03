@@ -270,7 +270,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     public RecordSet queryPartyInfoByOpenIdAndEmployeeId(String openid, String employeeid) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from ins_project_linkman a ,ins_project b, ins_party c ");
+        sb.append("select * from  ins_party c , ins_project_linkman a ,ins_project b ");
         sb.append(" where a.PROJECT_ID=b.PROJECT_ID ");
         sb.append(" and b.PARTY_ID=c.PARTY_ID  ");
         sb.append(" and a.ROLE_TYPE= 'CUSTOMERSERVICE'  ");
