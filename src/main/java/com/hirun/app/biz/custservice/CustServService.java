@@ -549,7 +549,6 @@ public class CustServService extends GenericService {
         record.put("EMPLOYEE_ID",employeeEntity.getEmployeeId());
         RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
 
-        childEmployeeRecordSet.add(record);
         response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
 
         if(childEmployeeRecordSet.size()<=0){
@@ -561,6 +560,8 @@ public class CustServService extends GenericService {
             flag.put("FLAG","TRUE");
             response.set("FLAG",ConvertTool.toJSONObject(flag));
         }
+
+        childEmployeeRecordSet.add(record);
 
 
         RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeId(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeId);
