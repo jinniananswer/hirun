@@ -80,6 +80,7 @@ public class CustServService extends GenericService {
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
         EmployeeJobRoleEntity employeeJobRoleEntity=EmployeeBean.queryEmployeeJobRoleByEmpId(employeeId);
         String jobRole=employeeJobRoleEntity.getJobRole();
+
         if(StringUtils.equals("103",jobRole) || StringUtils.equals("45",jobRole)){
             Record flagRecord=new Record();
             flagRecord.put("FLAG","TRUE");
