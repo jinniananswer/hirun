@@ -182,27 +182,13 @@ public class CustServiceStatBean {
                 DecimalFormat df = new DecimalFormat("0.00%");
 
                 int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"));
-                int styleCount=Integer.parseInt(record.get("STYLE_COUNT"));
                 int funcCount=Integer.parseInt(record.get("FUNC_COUNT"))+1;
-                //int XQLTECount=Integer.parseInt(record.get("FUNC_COUNT")+1);
-                int scanCount=Integer.parseInt(record.get("SCAN_COUNT"));
-                int scancityhouseCount=Integer.parseInt(record.get("SCANCITYHOUSE_COUNT"));
 
-
-                String styleScale=df.format(styleCount/(counsultCount*1.0));
                 String funcScale=df.format(funcCount/(counsultCount*1.0));
-                String xqlteScale=df.format(funcCount/(counsultCount*1.0));
-                String scanScale=df.format(scanCount/(counsultCount*1.0));
-                String scanCityHouseScale=df.format(scancityhouseCount/(counsultCount*1.0));
 
-                custservicestat.put("CONSULT_COUNT",counsultCount+"");
-                custservicestat.put("STYLE_SCALE", styleScale);
                 custservicestat.put("FUNC_SCALE", funcScale);
-                custservicestat.put("XQLTE_SCALE", xqlteScale);
-                custservicestat.put("SCAN_SCALE",scanScale);
                 custservicestat.put("FUNC_COUNT",funcCount+"");
 
-                custservicestat.put("SCANCITYHOUSE_SCALE",scanCityHouseScale);
                 custservicestat.put("OBJECT_ID",employeeId);
                 custservicestat.put("STAT_MONTH",monthDate);
                 dao.save("stat_custservice_month",new String[]{"OBJECT_ID","STAT_MONTH"},custservicestat);
