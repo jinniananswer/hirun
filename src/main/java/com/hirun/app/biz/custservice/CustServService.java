@@ -58,6 +58,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.Service;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -1105,8 +1106,11 @@ public class CustServService extends GenericService {
         scaninfo.put("CREATE_DATE",TimeTool.now());
 
         RecordSet insScanCityInfo=dao.queryInsScanCityInfoByProIdAndPId(project_id,party_id);
-
-        if(insScanCityInfo.size() <=0 || insScanCityInfo==null){
+        PartyEntity partyEntity=dao.queryPartyInfoByPartyId(party_id);
+        String month=TimeTool.now("yyyy-MM");
+        String createDate=partyEntity.getCreateDate();
+        //属于同一个月报表才加1
+        if(insScanCityInfo.size() <=0 && StringUtils.equals(month,getMonth(createDate))){
             dao.insertAutoIncrement("ins_scan_citycabin",scaninfo);
             CustServiceStatBean.updateCustServiceStat(employeeId,"DKCSMW");
         }else {
@@ -1389,4 +1393,18 @@ public class CustServService extends GenericService {
         return response;
     }
 
+    public static String getMonth (String stringDate){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        if(StringUtils.isBlank(stringDate)){
+            return "";
+        }
+        try {
+            Date date = format.parse(stringDate);
+            String newDate=format.format(date);
+            return newDate;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
 }
