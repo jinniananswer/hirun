@@ -184,6 +184,9 @@
                                 <div class="c_space-3"></div>
                             </div>
                           </div>
+                            <div class="c_space-3"></div>
+                            <div class="c_space-3"></div>
+
                              <div id="submitButton" class="l_bottom c_submit c_submit-full">
                                   <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.csrTraceFlow.chooseDesigner()">确认</button>
                             </div>
