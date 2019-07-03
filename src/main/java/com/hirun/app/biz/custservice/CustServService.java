@@ -544,12 +544,9 @@ public class CustServService extends GenericService {
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
 
         EmployeeEntity employeeEntity=EmployeeBean.getEmployeeByEmployeeId(employeeId);
-        Record record=new Record();
-        record.put("NAME",employeeEntity.getName());
-        record.put("EMPLOYEE_ID",employeeEntity.getEmployeeId());
+
         RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
 
-        response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
 
         if(childEmployeeRecordSet.size()<=0){
             Record flag=new Record();//用来判断是否展示客户代表可选项
@@ -561,7 +558,11 @@ public class CustServService extends GenericService {
             response.set("FLAG",ConvertTool.toJSONObject(flag));
         }
 
+        Record record=new Record();
+        record.put("NAME",employeeEntity.getName());
+        record.put("EMPLOYEE_ID",employeeEntity.getEmployeeId());
         childEmployeeRecordSet.add(record);
+        response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
 
 
         RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeId(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeId);
