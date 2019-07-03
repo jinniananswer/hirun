@@ -18,10 +18,9 @@
                 );
 
                 window["mySwitch"] = new Wade.Switch("mySwitch",{
-                    switchOn:false,
+                    switchOn:true,
                     onValue:"on",
                     offValue:"off",
-                    disabled:false
                 });
 
                 $("#mySwitch").val("off");
