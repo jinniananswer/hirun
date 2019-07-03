@@ -84,12 +84,12 @@ public class XQLTEdataImport {
                 dbParam.put("ISZJGD", jsonData.getString("iszjgd"));
                 dbParam.put("TMPINT", jsonData.getString("tmpint"));
                 dbParam.put("URL", jsonData.getString("url"));
-                dbParam.put("LT2_TIME", jsonData.getString("gnlt_create_time"));
+                dbParam.put("LT2_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("LT3_TIME", jsonData.getString("lt3time"));
-                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("lt3update_time"));
+                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("LT3_UPDATE_TIME", jsonData.getString("lt3update_time"));
                 //新增返回功能蓝图保存时间
-                dbParam.put("GNLT_CREATE_TIME", jsonData.getString("gnlt_create_time"));
+                dbParam.put("GNLT_CREATE_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("GNLT_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
 
                 dbParam.put("IS_CHANGE", jsonData.getString("ischange"));
@@ -185,7 +185,7 @@ public class XQLTEdataImport {
                 dbParam.put("LT2_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("LT3_TIME", jsonData.getString("lt3time"));
                 dbParam.put("LT2_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
-                dbParam.put("LT3_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("LT3_UPDATE_TIME", jsonData.getString("lt3update_time"));
 
                 dbParam.put("GNLT_CREATE_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("GNLT_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
