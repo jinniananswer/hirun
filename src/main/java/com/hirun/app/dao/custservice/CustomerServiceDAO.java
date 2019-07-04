@@ -372,6 +372,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" ) v");
         sb.append(" left join (select * from ins_scan_citycabin x where x.SCAN_ID in (select min(y.scan_id) from ins_scan_citycabin y group by y.PARTY_ID))  s on (s.PARTY_ID = v.PARTY_ID) ");
         sb.append(" left join (select * from ins_blueprint_action r where r.BLUEPRINT_ACTION_ID in (select min(t.BLUEPRINT_ACTION_ID) from ins_blueprint_action t where t.ACTION_CODE='XQLTE' group by t.OPEN_ID, t.REL_EMPLOYEE_ID)) u on (u.OPEN_ID = v.OPEN_ID and u.REL_EMPLOYEE_ID = v.LINK_EMPLOYEE_ID) ");
+        sb.append(" order by v.create_date desc ");
 
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
