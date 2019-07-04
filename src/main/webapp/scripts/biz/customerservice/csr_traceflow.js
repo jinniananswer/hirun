@@ -142,7 +142,14 @@
 
                    html += '<li id="'+action_code+'_li">';
                    html += '<div class="box" onclick="$.csrTraceFlow.showFlowDetail(this);" id="'+action_code+'">';
-                   html += '<div class="ico"></div>';
+
+                   if("APSJS"==action_code || "DKCSMW"==action_code || "HZHK"==action_code){
+                       html += '<div class="ico e_ico-task"></div>';
+
+                   }else{
+                       html += '<div class="ico"></div>';
+                   }
+
                    html += '<div class="title" id="' + action_code + '_title">' +action_name + '</div>';
                    if("XQLTY"==action_code ){
                        if(mode_time!="undefined" && mode_time!=null){
@@ -186,7 +193,6 @@
                    html += '</li>';
 
                     $('#traceflow').empty().append(html);
-
                 }
 
             },
