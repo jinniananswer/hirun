@@ -1107,9 +1107,9 @@ public class CustServService extends GenericService {
 
         RecordSet insScanCityInfo=dao.queryInsScanCityInfoByProIdAndPId(project_id,party_id);
         PartyEntity partyEntity=dao.queryPartyInfoByPartyId(party_id);
-        String month=TimeTool.now("yyyy-MM");
+        String month=getMonth(experiencetime);
         String createDate=partyEntity.getCreateDate();
-        //属于同一个月报表才加1
+        //城市木屋带看时间与咨询时间同月报表才加1
         if(insScanCityInfo.size() <=0 && StringUtils.equals(month,getMonth(createDate))){
             dao.insertAutoIncrement("ins_scan_citycabin",scaninfo);
             CustServiceStatBean.updateCustServiceStat(employeeId,"DKCSMW");
