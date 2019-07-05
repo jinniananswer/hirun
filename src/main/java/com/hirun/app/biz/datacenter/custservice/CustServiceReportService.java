@@ -108,7 +108,6 @@ public class CustServiceReportService extends GenericService{
 
 
 
-
         if(StringUtils.isNotBlank(startDate)){
             startDate=startDate+" 00:00:00";
         }
@@ -156,64 +155,17 @@ public class CustServiceReportService extends GenericService{
         }
 
 
-
-   /*     RecordSet employeeRecordSet=EmployeeBean.queryEmployeeByEmpIdsAndOrgId(employeeIds,orgId);
-        if(employeeRecordSet.size()<=0){
-            return response;
-        }
-
-        String queryEmployeeIds="";
-        for(int i=0;i<employeeRecordSet.size();i++){
-            Record empRecord=employeeRecordSet.get(i);
-            queryEmployeeIds +=empRecord.get("EMPLOYEE_ID")+",";
-        }
-*/
         RecordSet custServFinishActionInfo=dao.queryCustServFinishActionInfo(startDate,endDate,employeeIds,orgId);
         if(custServFinishActionInfo.size()<=0 || custServFinishActionInfo==null){
             return response;
         }
+        //将多条数据做合并
+        custServFinishActionInfo=filterCustAction(custServFinishActionInfo);
 
         for(int i=0;i<custServFinishActionInfo.size();i++){
             Record record=custServFinishActionInfo.get(i);
             String linkemployeeid=record.get("LINK_EMPLOYEE_ID");
-            String partyId=record.get("PARTY_ID");
-            String projectId=record.get("PROJECT_ID");
-            String openId=record.get("OPEN_ID");
 
-            //RecordSet insScanCityRecordSet=dao.queryInsScanCityInfoByProIdAndPId(projectId,partyId);//查询带看城市木屋数据
-
-            /*
-            //获取需求蓝图二的内容
-            if(StringUtils.isNotBlank(openId)){
-                RecordSet xqlteInfo=dao.queryXQLTEByOpenIdAndActionCode(openId,"XQLTE",linkemployeeid);
-                if(xqlteInfo.size() > 0 && xqlteInfo != null){
-                    record.put("FUNCPRINTTIME",xqlteInfo.get(0).get("FUNCPRINT_CREATE_TIME"));
-                    record.put("STYLEPRINTTIME",xqlteInfo.get(0).get("STYLEPRINT_CREATE_TIME"));
-                }
-
-            }
-            */
-            /*
-            if(insScanCityRecordSet.size()>0){
-                String cityCabinIds=insScanCityRecordSet.get(0).get("CITY_CABINS");
-                String  experienceTime=insScanCityRecordSet.get(0).get("EXPERIENCE_TIME");
-                String experience=insScanCityRecordSet.get(0).get("EXPERIENCE");
-
-                record.put("EXPERIENCE_TIME",experienceTime);
-                record.put("EXPERIENCE",experience);
-            //转译城市木屋的名字
-            if(StringUtils.isNotBlank(cityCabinIds)){
-                String[] cityCabinId=cityCabinIds.split(",");
-                String cityCabinName="";
-                for(int j=0;j<cityCabinId.length;j++){
-                    Record cityCabinRecord =dao.getCityCabinById(cityCabinId[j]);
-                    cityCabinName +=cityCabinRecord.get("CITYCABIN_ADDRESS")+"、";
-                }
-                record.put("CITYCABINNAMES",cityCabinName.substring(0,cityCabinName.length()-1));
-
-            }
-            }
-            */
             String cityCabinIds=record.get("CITY_CABINS");
             if(StringUtils.isNotBlank(cityCabinIds)){
                 String[] cityCabinId=cityCabinIds.split(",");
@@ -285,42 +237,7 @@ public class CustServiceReportService extends GenericService{
             employeeIds=employeeIds+employeeId;
         }
 
-        /*
-        //如果前台选择的客户代表不为空或者登录查询报表的员工为普通客户代表只能查询自己本身或者指定的数据
-        if(StringUtils.isNotBlank(custServiceEmpId)){
-            RecordSet custServiceStatSet=dao.queryCustServMonStatInfo(custServiceEmpId,monDate);
-            JSONArray sheetList1 = new JSONArray();
-            sheetList1.add(dealStatRecord(custServiceStatSet,custServiceEmpId));
-            response.set("CUSTSERVICESTATINFO",sheetList1);
-            return response;
-        }
-        if(StringUtils.equals("46",emproleEntity.getJobRole()) || StringUtils.equals("69",emproleEntity.getJobRole()) || StringUtils.equals("119",emproleEntity.getJobRole())){
-            JSONArray sheetList2 = new JSONArray();
-            RecordSet custServiceStatSet=dao.queryCustServMonStatInfo(employeeId,monDate);
-            sheetList2.add(dealStatRecord(custServiceStatSet,employeeId));
-            response.set("CUSTSERVICESTATINFO",sheetList2);
-            return response;
-        }
-        //组长或者客户主管只能查询自己以及下面员工的数据
-        if(StringUtils.equals("118",emproleEntity.getJobRole()) || StringUtils.equals("103",emproleEntity.getJobRole())){
-            RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesReordSet(employeeId);
-            Record record=new Record();
-            record.put("EMPLOYEE_ID",employeeId);
-            childEmployeeRecordSet.add(record);
-            JSONArray sheetList3 = new JSONArray();
 
-            for(int i=0;i<childEmployeeRecordSet.size();i++){
-                Record childEmployeeRecord=childEmployeeRecordSet.get(i);
-                RecordSet custServiceStatSet=dao.queryCustServMonStatInfo(childEmployeeRecord.get("EMPLOYEE_ID"),monDate);
-                sheetList3.add(dealStatRecord(custServiceStatSet,childEmployeeRecord.get("EMPLOYEE_ID")));
-            }
-
-            response.set("CUSTSERVICESTATINFO",sheetList3);
-            return response;
-        }
-
-        */
-        //OrgEntity orgEntity=OrgBean.getAssignTypeOrg(orgId,"1");
 
         RecordSet employeeJobRoleEntities=EmployeeBean.queryEmployeeJobRoleByOrgId1(orgId,"",employeeIds);
         if(employeeJobRoleEntities.size()<=0){
@@ -512,7 +429,38 @@ public class CustServiceReportService extends GenericService{
         }
     }
 
+    public static RecordSet filterCustAction(RecordSet custActionRecordSet){
+        if(custActionRecordSet.size()<=0){
+            return custActionRecordSet;
+        }
+        Map<String,Record> actionMap=new LinkedHashMap<String,Record>();
 
+        for(int i=0;i<custActionRecordSet.size();i++){
+            Record custActionRecord=custActionRecordSet.get(i);
+            String partyId=custActionRecord.get("PARTY_ID");
+            String finishTime=custActionRecord.get("FINISH_TIME");
+            String acitonCode=custActionRecord.get("ACTION_CODE");
+
+            if(!actionMap.containsKey(partyId)){
+                custActionRecord.put(acitonCode+"_FINISHTIME",finishTime);
+                actionMap.put(partyId,custActionRecord);
+            }else{
+                Record record=actionMap.get(partyId);
+                if(record.containsKey(acitonCode+"_FINISHTIME")){
+                    continue;
+                }else{
+                    record.put(acitonCode+"_FINISHTIME",finishTime);
+                    actionMap.put(partyId,record);
+                }
+            }
+        }
+        RecordSet newRecordSet=new RecordSet();
+        Set<String> keys = actionMap.keySet();
+        for(String key : keys){
+            newRecordSet.add(actionMap.get(key));
+        }
+        return newRecordSet;
+    }
 
 
 
