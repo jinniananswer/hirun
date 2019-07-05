@@ -1221,7 +1221,7 @@ public class CustServService extends GenericService {
         if(parentEntity!=null){
             StringBuilder msgContent = new StringBuilder();
             msgContent.append(EmployeeCache.getEmployeeNameEmployeeId(employeeId))
-                    .append("发起了客户清理申请，请审批处理！");
+                    .append("发起了客户清理申请！");
             MsgBean.sendMsg(parentEntity.getUserId(),msgContent.toString(),"0",TimeTool.now(), MsgType.sys);
         }
 
