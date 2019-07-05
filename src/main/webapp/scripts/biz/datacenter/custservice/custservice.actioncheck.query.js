@@ -7,6 +7,7 @@
                     mask:true
                 });
 
+
                 window["COND_START_DATE"] = new Wade.DateField(
                     "COND_START_DATE",
                     {
@@ -122,7 +123,10 @@
                     var scanCityTime=data.get("EXPERIENCE_TIME");
                     var scanCityCabins=data.get("CITYCABINNAMES");
                     var experience=data.get("EXPERIENCE");
-                    var finishTime=data.get("FINISH_TIME");
+                    var smjrlcfinishTime=data.get("SMJRLC_FINISHTIME");
+                    var hzhkfinishTime=data.get("HZHK_FINISHTIME");
+                    var apsjsfinishTime=data.get("APSJS_FINISHTIME");
+
                     var funcPrintTime=data.get("FUNCPRINT_CREATE_TIME");
                     var stylePrintTime=data.get("STYLEPRINT_CREATE_TIME");
                     var wxnick=data.get("WX_NICK");
@@ -153,10 +157,10 @@
                     html.push("<th class='red'>");
                     html.push(custservName)
                     html.push("</th><th class='red'>");
-                    if(finishTime=="undefined" || finishTime ==null){
+                    if(smjrlcfinishTime=="undefined" || smjrlcfinishTime ==null){
                         html.push("");
                     }else{
-                        html.push(finishTime.substr(0,19))
+                        html.push(smjrlcfinishTime.substr(0,19))
                     }
                     html.push("</th><th class='red'>");
                     if(stylePrintTime=="undefined" || stylePrintTime ==null){
@@ -171,8 +175,22 @@
                     }else{
                         html.push(funcPrintTime.substr(0,19))
                     }
-
                     html.push("</th><th class='red'>");
+
+                    if(hzhkfinishTime!="undefined" && hzhkfinishTime !=null){
+                        html.push(hzhkfinishTime.substr(0,19));
+                    }else{
+                        html.push("");
+                    }
+                    html.push("</th><th class='red'>");
+
+                    if(apsjsfinishTime!="undefined" && apsjsfinishTime !=null){
+                        html.push(apsjsfinishTime.substr(0,19));
+                    }else{
+                        html.push("");
+                    }
+                    html.push("</th><th class='red'>");
+
                     if(scanCityTime!="undefined" && scanCityTime !=null){
                         html.push(scanCityTime.substr(0,10));
                     }else{
