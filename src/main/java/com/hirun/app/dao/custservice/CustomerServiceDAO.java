@@ -335,14 +335,14 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         StringBuilder sb = new StringBuilder();
         sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME from ");
         sb.append(" ( ");
-        sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.CREATE_DATE,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS from ");
+        sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.CREATE_DATE,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS,d.ACTION_CODE from ");
         sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ,ins_employee e , ins_employee_job_role f ");
         sb.append("WHERE a.PARTY_ID = b.PARTY_ID ");
         sb.append("AND b.PROJECT_ID = c.PROJECT_ID ");
         sb.append("AND b.PROJECT_ID = d.PROJECT_ID ");
         sb.append("AND c.ROLE_TYPE = 'CUSTOMERSERVICE' ");
         sb.append("AND a.PARTY_STATUS = '0' ");
-        sb.append("AND d.ACTION_CODE = 'SMJRLC' ");
+        sb.append("AND d.ACTION_CODE in ('SMJRLC','HZHK','APSJS') ");
         sb.append("AND e.EMPLOYEE_ID=f.EMPLOYEE_ID ");
         sb.append("AND e.STATUS='0' ");
         sb.append("AND NOW() BETWEEN f.START_DATE AND f.END_DATE ");
