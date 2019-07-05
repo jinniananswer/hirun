@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190705"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -39,6 +39,8 @@
 						<th class="e_red" col="FINISH_XQLTE">进入全流程的时间</th>
 						<th class="e_red" col="FINISH_APSJS">生成风格蓝图的时间</th>
 						<th class="e_red" col="FINISH_DKCSMW">生成功能蓝图的时间</th>
+						<th class="e_red" col="FINISH_HZHK">录入客户需求信息时间</th>
+						<th class="e_red" col="FINISH_APSJS">安排设计师时间</th>
 						<th class="e_red" col="FINISH_DKCSMW">看城市木屋时间</th>
 						<th class="e_red" col="FINISH_DKCSMW">带看城市木屋楼盘地址</th>
 						<th class="e_red" col="FINISH_DKCSMW">带看后反馈情况</th>
