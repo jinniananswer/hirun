@@ -96,7 +96,7 @@ public class PartyBean {
         party_info.put("PARTY_NAME",jsonObject.getString("name"));
         party_info.put("MOBILE_NO",jsonObject.getString("phone"));
         party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
-        party_info.put("CREATE_DATE", TimeTool.now());
+        party_info.put("CREATE_DATE", transUnixTimeToNormal(jsonObject.getString("add_time")));
         party_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
         party_info.put("UPDATE_TIME",TimeTool.now());
         party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//正常客户状态
@@ -231,7 +231,7 @@ public class PartyBean {
                 Record partyRecord=recordSet.get(0);
                 String createDate=getMonth(partyRecord.get("CREATE_DATE"));
                 String gnltTime=transUnixTimeToNormal(jsonObject.getString("gnlt_update_time"));
-                
+
 
             //判断需求蓝图二的推送时间是否与咨询时间是同一个月，如果不是同一个月则不更新报表数据，否则就更新报表数据
                 RecordSet bulePrintSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",employeeId);
@@ -248,7 +248,7 @@ public class PartyBean {
         party_info.put("PARTY_NAME",jsonObject.getString("name"));
         party_info.put("MOBILE_NO",jsonObject.getString("phone"));
         party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
-        party_info.put("CREATE_DATE", TimeTool.now());
+        party_info.put("CREATE_DATE",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")) );
         party_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
         party_info.put("UPDATE_TIME",TimeTool.now());
         party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//代表虚拟party信息
