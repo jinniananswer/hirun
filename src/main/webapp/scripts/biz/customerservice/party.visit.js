@@ -63,6 +63,8 @@
                     return;
                 }
                 var length = datas.length;
+                $.insertHtml('beforeend', $("#visitCount"), "合计回访次数："+length+"");
+
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
                     var visittypename=data.get("VISIT_TYPE_NAME");
