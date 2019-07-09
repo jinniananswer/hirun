@@ -444,9 +444,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             sb.append("and a.AUDIT_EMPLOYEE_ID IN ("+aduitEmpId+") ");
         }
 
-        if(StringUtils.isNotBlank(aduitEmpId)){
-            sb.append("and a.APPLY_EMPLOYEE_ID IN ("+aduitEmpId+") ");
-        }
+
 
 
         return this.queryBySql(sb.toString(),parameter);
