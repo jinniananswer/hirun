@@ -144,6 +144,7 @@
     <entity name="OperationCenter.custservice.CustServService.chooseDesigner"  class="com.hirun.app.biz.custservice.CustServService" method="chooseDesigner"/>
     <entity name="OperationCenter.custservice.CustServService.initQueryForCustClear"  class="com.hirun.app.biz.custservice.CustServService" method="initQueryForCustClear"/>
     <entity name="OperationCenter.custservice.CustServService.submitCustClearApply"  class="com.hirun.app.biz.custservice.CustServService" method="submitCustClearApply"/>
+    <entity name="OperationCenter.custservice.CustServService.initCustServiceAudit"  class="com.hirun.app.biz.custservice.CustServService" method="initCustServiceAudit"/>
     <entity name="OperationCenter.custservice.CustServService.queryApplyInfo4Audit"  class="com.hirun.app.biz.custservice.CustServService" method="queryApplyInfo4Audit"/>
     <entity name="OperationCenter.custservice.CustServService.auditConfirm"  class="com.hirun.app.biz.custservice.CustServService" method="auditConfirm"/>
     <entity name="OperationCenter.custservice.CustServService.initQuery4PartyVisit"  class="com.hirun.app.biz.custservice.CustServService" method="initQuery4PartyVisit"/>
