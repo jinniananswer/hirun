@@ -1228,6 +1228,52 @@ public class CustServService extends GenericService {
         return response;
     }
 
+    public ServiceResponse initCustServiceAudit(ServiceRequest request) throws Exception{
+        ServiceResponse response=new ServiceResponse();
+        AppSession session = SessionManager.getSession();
+        CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
+        String applyCustServiceEmpId="";
+        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
+        RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+
+        response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
+
+        if(childEmployeeRecordSet.size()<=0){
+            applyCustServiceEmpId=employeeId;
+        }else{
+            for(int i=0;i<childEmployeeRecordSet.size();i++){
+                Record employeeRecord=childEmployeeRecordSet.get(i);
+                applyCustServiceEmpId +=employeeRecord.get("EMPLOYEE_ID")+",";
+            }
+            applyCustServiceEmpId=applyCustServiceEmpId+employeeId;
+        }
+        RecordSet applyInfoRecordSet=dao.queryCustClearInfo("","0",applyCustServiceEmpId,"");
+        if(applyInfoRecordSet.size()<=0){
+            return response;
+        }
+
+        for(int i=0;i<applyInfoRecordSet.size();i++){
+            Record applyRecord=applyInfoRecordSet.get(i);
+            String applyEmpId=applyRecord.get("APPLY_EMPLOYEE_ID");
+            String auditEmpId=applyRecord.get("AUDIT_EMPLOYEE_ID");
+            String partyId=applyRecord.get("PARTY_ID");
+
+            applyRecord.put("APPLY_EMPLOYEE_NAME",EmployeeCache.getEmployeeNameEmployeeId(applyEmpId));
+
+            PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyId);
+            if(partyEntity !=null){
+                applyRecord.put("PARTY_NAME",partyEntity.getPartyName());
+            }
+            if(StringUtils.isNotBlank(auditEmpId)){
+                applyRecord.put("AUDIT_EMPLOYEE_NAME",EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
+
+            }
+        }
+        response.set("APPLYINFOLIST",ConvertTool.toJSONArray(applyInfoRecordSet));
+
+        return response;
+    }
+
     public ServiceResponse queryApplyInfo4Audit(ServiceRequest request) throws Exception{
         ServiceResponse response = new ServiceResponse();
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
