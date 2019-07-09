@@ -55,11 +55,14 @@
                 $("#BUSITYPE").val("1");
 
                 $.beginPageLoading();
-                $.ajaxPost('initchangecustservice',null,function(data) {
+                $.ajaxPost('initCustServiceAudit',null,function(data) {
                     $.endPageLoading();
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("CUSTSERVICEINFO");
+                    var applyinfolist = rst.get("APPLYINFOLIST");
+
                     $.custserviceaudit.drawCustServiceInfo4Query(datas);
+                    $.custserviceaudit.drawApplyInfo(applyinfolist);
                 });
             },
 
