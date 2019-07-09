@@ -182,6 +182,12 @@ public class CustServiceController extends RootController {
         return response.toJsonString();
     }
 
+    @RequestMapping(value = "initCustServiceAudit")
+    public @ResponseBody String initCustServiceAudit(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.initCustServiceAudit", paramter);
+        return response.toJsonString();
+    }
+
     @RequestMapping(value = "queryApplyInfo4Audit")
     public @ResponseBody String queryApplyInfo4Audit(@RequestParam Map paramter) throws Exception {
         ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.queryApplyInfo4Audit", paramter);
