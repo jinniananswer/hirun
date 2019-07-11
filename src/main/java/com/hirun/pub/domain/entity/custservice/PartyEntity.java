@@ -53,6 +53,14 @@ public class PartyEntity extends GenericEntity{
 	public void setWxNick(String wxNick){
 		this.set("WX_NICK", wxNick);
 	}
+
+	public String getHeadUrl(){
+		return this.get("HEAD_URL");
+	}
+
+	public void setHeadUrl(String headUrl){
+		this.set("HEAD_URL", headUrl);
+	}
 	
 	public String getCustStatus(){
 		return this.get("PARTY_STATUS");
