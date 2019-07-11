@@ -112,8 +112,15 @@
                     var create_date=data.get("CREATE_DATE");
                     var party_name=data.get("PARTY_NAME");
                     var custserviceName=data.get("CUSTSERVICENAME");
+                    var headUrl=data.get("HEAD_URL");
                     /*ontap=\"$.custservicemanager.redirectFlow(\'"+data.get("PARTY_ID")+"\',\'"+data.get("PROJECT_ID")+"\')\"*/
                     html.push("<li class='link' ><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+
+                    if(headUrl!='undefined'&& headUrl != null){
+                        html.push("<img src=\""+headUrl+"\" class='e_pic-r' style='width:2em;height:2em'/>");
+                    }else {
+                    }
+
                     html.push("</div></div>");
                     html.push("<div class=\"main\">");
                     if(party_name!='undefined'&& party_name != null){
