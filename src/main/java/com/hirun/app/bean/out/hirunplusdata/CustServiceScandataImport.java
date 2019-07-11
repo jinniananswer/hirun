@@ -58,6 +58,7 @@ public class CustServiceScandataImport {
                 //如果已经存在该数据了，则保存到历史表
                 dbParam.put("PROJECT_ID", jsonData.getString("project_id"));
                 dbParam.put("UID", jsonData.getString("uid"));
+                dbParam.put("HEAD_URL", jsonData.getString("headimgurl"));
                 dbParam.put("NICKNAME", jsonData.getString("nickname"));
                 dbParam.put("SCAN_ID", jsonData.getString("scan_id"));
                 dbParam.put("ROLE_ID", jsonData.getString("role_id"));
@@ -84,6 +85,7 @@ public class CustServiceScandataImport {
             if(isSuccess){
                 dbParam.put("PROJECT_ID", jsonData.getString("project_id"));
                 dbParam.put("UID", jsonData.getString("uid"));
+                dbParam.put("HEAD_URL", jsonData.getString("headimgurl"));
                 dbParam.put("NICKNAME", jsonData.getString("nickname"));
                 dbParam.put("SCAN_ID", jsonData.getString("scan_id"));
                 dbParam.put("ROLE_ID", jsonData.getString("role_id"));
@@ -105,6 +107,7 @@ public class CustServiceScandataImport {
             }else {
                 dbParam.put("PROJECT_ID", jsonData.getString("project_id"));
                 dbParam.put("UID", jsonData.getString("uid"));
+                dbParam.put("HEAD_URL", jsonData.getString("headimgurl"));
                 dbParam.put("NICKNAME", jsonData.getString("nickname"));
                 dbParam.put("SCAN_ID", jsonData.getString("scan_id"));
                 dbParam.put("ROLE_ID", jsonData.getString("role_id"));
