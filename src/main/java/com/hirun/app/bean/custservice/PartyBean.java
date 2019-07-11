@@ -93,6 +93,7 @@ public class PartyBean {
         //生成party信息
         party_info.put("OPEN_ID",openid);
         party_info.put("WX_NICK",jsonObject.getString("nickname"));
+        party_info.put("HEAD_URL",jsonObject.getString("headimgurl"));
         party_info.put("PARTY_NAME",jsonObject.getString("name"));
         party_info.put("MOBILE_NO",jsonObject.getString("phone"));
         party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
@@ -245,6 +246,7 @@ public class PartyBean {
         //生成party信息
         party_info.put("OPEN_ID",openid);
         party_info.put("WX_NICK",jsonObject.getString("nickname"));
+        party_info.put("HEAD_URL",jsonObject.getString("headimgurl"));
         party_info.put("PARTY_NAME",jsonObject.getString("name"));
         party_info.put("MOBILE_NO",jsonObject.getString("phone"));
         party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
