@@ -15,7 +15,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -41,6 +43,8 @@ public class SignIndataImport {
 
         JSONArray jsonDataList = getData(httpclient, totalPageSize, start, end);
 
+        List<Map<String,String>> arrayList=new ArrayList<Map<String,String>>();
+        List<Map<String,String>> hisarrayList=new ArrayList<Map<String,String>>();
 
         GenericDAO dao = new GenericDAO("out");
         for(int i = 0, size = jsonDataList.size(); i < size; i++) {
@@ -50,7 +54,22 @@ public class SignIndataImport {
 
 
             if(OutBean.isExistData4SignIn(openid, jsonData.getString("signin_time"))) {
-                //如果已经存在该数据了，则过滤掉
+                //如果已经存在该数据了，则直接插入历史表
+                dbParam.put("UID", jsonData.getString("uid"));
+                dbParam.put("SIGNIN_IP", jsonData.getString("signin_ip"));
+                dbParam.put("SIGN_TIME", jsonData.getString("signin_time"));
+                dbParam.put("APPID", jsonData.getString("appid"));
+                dbParam.put("PROJECT_ID", jsonData.getString("project_id"));
+                dbParam.put("NICKNAME", jsonData.getString("nickname"));
+                dbParam.put("NAME", jsonData.getString("name"));
+                dbParam.put("STAFF_ID", jsonData.getString("staff_id"));
+                dbParam.put("PHONE", jsonData.getString("phone"));
+                dbParam.put("ADDRESS", jsonData.getString("address"));
+                dbParam.put("OPEN_ID", jsonData.getString("openid"));
+                dbParam.put("INDB_TIME", TimeTool.now());
+                dbParam.put("DEAL_TAG", "1");
+                dbParam.put("DEAL_TIME", TimeTool.now());
+                hisarrayList.add(dbParam);
                 continue;
             }
 
@@ -70,7 +89,7 @@ public class SignIndataImport {
                     dbParam.put("INDB_TIME", TimeTool.now());
                     dbParam.put("DEAL_TAG", "1");
                     dbParam.put("DEAL_TIME", TimeTool.now());
-                    dao.insertAutoIncrement("out_his_hirunplus_signpc", dbParam);
+                    hisarrayList.add(dbParam);
                 }else{
                     dbParam.put("UID", jsonData.getString("uid"));
                     dbParam.put("SIGNIN_IP", jsonData.getString("signin_ip"));
@@ -85,11 +104,11 @@ public class SignIndataImport {
                     dbParam.put("OPEN_ID", jsonData.getString("openid"));
                     dbParam.put("INDB_TIME", TimeTool.now());
                     dbParam.put("DEAL_TAG", "0");
-                    dao.insertAutoIncrement("out_hirunplus_signpc", dbParam);
-
+                    arrayList.add(dbParam);
                 }
         }
-
+        dao.insertBatch("out_hirunplus_signpc",arrayList);
+        dao.insertBatch("out_his_hirunplus_signpc",hisarrayList);
 
         String api = "http://" + host + path;
         JSONObject reqestData = new JSONObject();
