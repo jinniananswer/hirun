@@ -538,6 +538,8 @@ public class CustServService extends GenericService {
         String wxnick=request.getString("WXNICK");
         String moblie=request.getString("MOBLIE");
         String houseaddress=request.getString("HOUSEADDRESS");
+        String queryTagId=request.getString("QUERY_TAG_ID");
+
 
         ServiceResponse response= new ServiceResponse();
         AppSession session=SessionManager.getSession();
@@ -566,7 +568,7 @@ public class CustServService extends GenericService {
         response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
 
 
-        RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeId(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeId);
+        RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeIdAndTag(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeId,"");
         if(partyInfoList.size()<=0){
             return response;
         }
@@ -574,12 +576,21 @@ public class CustServService extends GenericService {
         for(int i=0;i<partyInfoList.size();i++){
             Record partyRecord=partyInfoList.get(i);
             String linkemployeeid=partyRecord.get("LINK_EMPLOYEE_ID");
+            if(StringUtils.equals(employeeId,linkemployeeid)){
+                partyRecord.put("SHOWMOBILE","YES");
+            }else{
+                partyRecord.put("SHOWMOBILE","NO");
+            }
+            String tagId=partyRecord.get("TAG_ID");
             partyRecord.put("CUSTSERVICENAME",EmployeeCache.getEmployeeNameEmployeeId(linkemployeeid));
+            partyRecord.put("PARTYTAGNAME",StaticDataTool.getCodeName("PARTY_TAG",tagId));
+
         }
 
-
+        RecordSet tagSet=StaticDataTool.getCodeTypeDatas("PARTY_TAG");
 
         response.set("PARTYINFOLIST",ConvertTool.toJSONArray(partyInfoList));
+        response.set("TAGINFO",ConvertTool.toJSONArray(tagSet));
 
         return response;
     }
@@ -599,6 +610,7 @@ public class CustServService extends GenericService {
         String moblie=request.getString("MOBLIE");
         String houseaddress=request.getString("HOUSEADDRESS");
         String childCustEmpId=request.getString("CUSTSERVICEEMPLOYEEID");
+        String queryTagId=request.getString("QUERY_TAG_ID");
 
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
 
@@ -620,7 +632,7 @@ public class CustServService extends GenericService {
         }
 
 
-        RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeId(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeIds);
+        RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeIdAndTag(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeIds,queryTagId);
 
         if(partyInfoList.size()<=0 || partyInfoList==null){
             return response;
@@ -628,12 +640,48 @@ public class CustServService extends GenericService {
         for(int i=0;i<partyInfoList.size();i++){
             Record record=partyInfoList.get(i);
             String linkemployeeid=record.get("LINK_EMPLOYEE_ID");
-            record.put("CUSTSERVICENAME",EmployeeCache.getEmployeeNameEmployeeId(linkemployeeid));
-        }
 
+            if(StringUtils.equals(custServicerEmployeeId,linkemployeeid)){
+                record.put("SHOWMOBILE","YES");
+            }else{
+                record.put("SHOWMOBILE","NO");
+            }
+
+            String tagId=record.get("TAG_ID");
+            record.put("CUSTSERVICENAME",EmployeeCache.getEmployeeNameEmployeeId(linkemployeeid));
+            record.put("PARTYTAGNAME",StaticDataTool.getCodeName("PARTY_TAG",tagId));
+        }
 
         response.set("PARTYINFOLIST",ConvertTool.toJSONArray(partyInfoList));
         return response;
+    }
+
+    public static JSONObject filterPartysByTag(RecordSet partySet) throws Exception{
+        JSONObject rst = new JSONObject();
+        if(ArrayTool.isEmpty(partySet)) {
+            return rst;
+        }
+
+        int size = partySet.size();
+        for(int i=0;i<size;i++) {
+            Record party = partySet.get(i);
+            String tagId = party.get("TAG_ID");
+
+            if(StringUtils.isBlank(tagId)){
+                tagId="other";
+            }
+
+            JSONArray datas = null;
+            if(rst.containsKey(tagId)) {
+                datas = rst.getJSONArray(tagId);
+            }
+            else {
+                datas = new JSONArray();
+                rst.put(tagId, datas);
+            }
+            datas.add(ConvertTool.toJSONObject(party));
+        }
+        return rst;
     }
 
     /**
@@ -642,14 +690,32 @@ public class CustServService extends GenericService {
     public ServiceResponse initChangeGoodSeeLiveInfo (ServiceRequest request) throws Exception{
         ServiceResponse response=new ServiceResponse();
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
+        AppSession session=SessionManager.getSession();
+        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
         response=this.initCreateGoodSeeLiveInfo(request);
 
         String partyId=request.getString("PARTY_ID");
         String projectId=request.getString("PROJECT_ID");
 
+
+
         JSONObject partyInfo = new JSONObject();
         String  elderText="";
         String  childText="";
+
+        RecordSet partyLinkInfo=dao.queryLinkmanByProjectIdAndRoleType(projectId,CustomerServiceConst.CUSTOMERSERVICEROLETYPE);
+
+        if(partyLinkInfo.size()<=0){
+            partyInfo.put("SHOWMOBILE","YES");
+        }else{
+            String linkEmpId=partyLinkInfo.get(0).get("LINK_EMPLOYEE_ID");
+            if(StringUtils.equals(employeeId,linkEmpId)){
+                partyInfo.put("SHOWMOBILE","YES");
+            }else {
+                partyInfo.put("SHOWMOBILE","NO");
+            }
+        }
+
         //拼装party信息
         PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyId);
         partyInfo.put("NAME",partyEntity.getPartyName());
@@ -1453,5 +1519,43 @@ public class CustServService extends GenericService {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public ServiceResponse initPartyTagManager(ServiceRequest request) throws Exception{
+        ServiceResponse response=new ServiceResponse();
+        RecordSet recordSet=StaticDataTool.getCodeTypeDatas("PARTY_TAG");
+        if(recordSet.size()<=0){
+            return response;
+        }
+        response.set("PARTYTAGINFO",ConvertTool.toJSONArray(recordSet));
+        return response;
+    }
+
+    public ServiceResponse submitPartyTagInfo(ServiceRequest request) throws Exception{
+        ServiceResponse response=new ServiceResponse();
+        AppSession session=SessionManager.getSession();
+        CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
+        String tagId=request.getString("TAG_ID");
+        String partyId=request.getString("PARTY_ID");
+        Map<String,String> partyTagInfoMap=new HashMap<String,String>();
+
+        partyTagInfoMap.put("PARTY_ID",partyId);
+        partyTagInfoMap.put("TAG_ID",tagId);
+        partyTagInfoMap.put("STATUS","0");
+
+        partyTagInfoMap.put("UPDATE_USER_ID",session.getSessionEntity().getUserId());
+        partyTagInfoMap.put("UPDATE_TIME",session.getCreateTime());
+
+        RecordSet partyTagInfoSet=dao.queryPartyTagInfoByPartyId(partyId);
+
+        if(partyTagInfoSet.size()<=0){
+            partyTagInfoMap.put("CREATE_USER_ID",session.getSessionEntity().getUserId());
+            partyTagInfoMap.put("CREATE_DATE",session.getCreateTime());
+            dao.insertAutoIncrement("ins_party_tag",partyTagInfoMap);
+        }else{
+            dao.save("ins_party_tag",new String[]{"PARTY_ID","STATUS"},partyTagInfoMap);
+        }
+
+        return response;
     }
 }
