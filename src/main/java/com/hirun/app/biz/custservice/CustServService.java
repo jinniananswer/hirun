@@ -567,6 +567,8 @@ public class CustServService extends GenericService {
         childEmployeeRecordSet.add(record);
         response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
 
+        RecordSet tagSet=StaticDataTool.getCodeTypeDatas("PARTY_TAG");
+        response.set("TAGINFO",ConvertTool.toJSONArray(tagSet));
 
         RecordSet partyInfoList=dao.queryPartyInfoByLinkEmployeeIdAndTag(CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,wxnick,moblie,houseaddress,employeeId,"");
         if(partyInfoList.size()<=0){
@@ -587,10 +589,8 @@ public class CustServService extends GenericService {
 
         }
 
-        RecordSet tagSet=StaticDataTool.getCodeTypeDatas("PARTY_TAG");
 
         response.set("PARTYINFOLIST",ConvertTool.toJSONArray(partyInfoList));
-        response.set("TAGINFO",ConvertTool.toJSONArray(tagSet));
 
         return response;
     }
