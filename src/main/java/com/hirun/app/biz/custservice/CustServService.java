@@ -738,10 +738,10 @@ public class CustServService extends GenericService {
         partyInfo.put("ELDER_TEXT",elderText);
         partyInfo.put("CHILD_BOY",partyEntity.getBoyCount());
         partyInfo.put("CHILD_GIRL",partyEntity.getGirlCount());
-        if(StringUtils.isNotBlank(partyEntity.getOldmanCount())){
+        if(StringUtils.isNotBlank(partyEntity.getBoyCount())){
             childText="男："+partyEntity.getBoyCount()+"人 ";
         }
-        if(StringUtils.isNotBlank(partyEntity.getOldwomanCount())){
+        if(StringUtils.isNotBlank(partyEntity.getGirlCount())){
             childText +="女："+partyEntity.getGirlCount()+"人";
         }
         partyInfo.put("CHILD_TEXT",childText);
