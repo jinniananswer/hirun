@@ -216,4 +216,16 @@ public class CustServiceController extends RootController {
         ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.addPartyVisit", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "initPartyTagManager")
+    public @ResponseBody String initPartyTagManager(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.initPartyTagManager", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "submitPartyTagInfo")
+    public @ResponseBody String submitPartyTagInfo(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.submitPartyTagInfo", paramter);
+        return response.toJsonString();
+    }
 }
