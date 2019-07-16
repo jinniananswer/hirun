@@ -157,6 +157,9 @@
     <!--客户管理界面-->
     <entity name="OperationCenter.custservice.CustServService.initPartyManager"  class="com.hirun.app.biz.custservice.CustServService" method="initPartyManager"/>
     <entity name="OperationCenter.custservice.CustServService.queryPartyByCustServicerEmployeeId"  class="com.hirun.app.biz.custservice.CustServService" method="queryPartyByCustServicerEmployeeId"/>
+    <entity name="OperationCenter.custservice.CustServService.initPartyTagManager"  class="com.hirun.app.biz.custservice.CustServService" method="initPartyTagManager"/>
+    <entity name="OperationCenter.custservice.CustServService.submitPartyTagInfo"  class="com.hirun.app.biz.custservice.CustServService" method="submitPartyTagInfo"/>
+
     <!--初始化修改好看好住信息界面-->
     <entity name="OperationCenter.custservice.CustServService.initChangeGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="initChangeGoodSeeLiveInfo"/>
     <entity name="OperationCenter.custservice.CustServService.changeGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="changeGoodSeeLiveInfo"/>
