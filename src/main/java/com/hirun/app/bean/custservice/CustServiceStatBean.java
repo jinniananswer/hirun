@@ -187,6 +187,7 @@ public class CustServiceStatBean {
                 String funcScale=df.format(funcCount/(counsultCount*1.0));
 
                 custservicestat.put("FUNC_SCALE", funcScale);
+                custservicestat.put("XQLTE_SCALE", funcScale);
                 custservicestat.put("FUNC_COUNT",funcCount+"");
 
                 custservicestat.put("OBJECT_ID",employeeId);
