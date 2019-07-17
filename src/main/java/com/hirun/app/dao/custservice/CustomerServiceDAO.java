@@ -568,7 +568,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("and b.status = '0' " );
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
-        sb.append("and d.job_role in ('46','118','0','69','119') ");
+        sb.append("and d.job_role in ('46','118','69','119') ");
+        sb.append("and e.name='客户部' ");
 
         if(StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
