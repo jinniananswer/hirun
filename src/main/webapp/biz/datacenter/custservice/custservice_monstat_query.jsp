@@ -158,7 +158,7 @@
                                             <li>
                                                  <div class="value">
                                                      <span class="e_mix">
-                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入岗位名称（模糊搜索）" nullable="no" desc="查询条件"/>
+                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入客户代表姓名（模糊搜索）" nullable="no" desc="查询条件"/>
                                                          <button type="button" class="e_button-blue" ontap="$.custServiceMonstatQuery.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
                                                      </span>
                                                  </div>
