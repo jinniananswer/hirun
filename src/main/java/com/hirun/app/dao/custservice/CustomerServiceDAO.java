@@ -535,6 +535,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
 
+
+
         if(StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
             parameter.put("NAME", name);
