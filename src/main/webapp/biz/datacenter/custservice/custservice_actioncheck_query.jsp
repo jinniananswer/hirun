@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190705"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190717"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -123,7 +123,8 @@
                                 </div>
             						<div class="c_space"></div>
             						<div class="c_submit c_submit-full">
-            							<button type="button" class="e_button-l e_button-green" ontap="$.custServiceActionQuery.query();">查询</button>
+            							<button type="button" class="e_button-r e_button-l e_button-green" ontap="$.custServiceActionQuery.clearCond();">重置</button>
+            							<button type="button" class="e_button-r e_button-l e_button-green" ontap="$.custServiceActionQuery.query();">查询</button>
             						</div>
                             </div>
                         </div>
