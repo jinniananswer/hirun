@@ -93,7 +93,8 @@
                                 <!-- 列表 结束 -->
                                  <div class="c_space"></div>
                                 <div class="c_submit c_submit-full">
-                                    <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changecustomerservice.query();" class="e_button-l e_button-green">查询</button>
+                                    <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.changecustomerservice.clearCond()">重置</button>
+                                    <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changecustomerservice.query();" class="e_button-r e_button-l e_button-green">查询</button>
                                 </div>
                                   <div class="c_space-3"></div>
                             </div>
