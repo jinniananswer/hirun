@@ -26,7 +26,7 @@
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("CUSTSERVICEINFO");
                     //$.changecustomerservice.drawCustServiceInfo(datas);
-                    $.changecustomerservice.drawCustServiceInfo4Query(datas);
+                    //$.changecustomerservice.drawCustServiceInfo4Query(datas);
 
                     hidePopup('UI-popup','UI-popup-query-cond');
                     hidePopup('UI-popup','UI-CHOOSECUSTSERVICE');
@@ -38,7 +38,19 @@
 
             },
 
+            queryCustService :function(){
+                $.beginPageLoading("查询中。。。");
 
+                var custServiceName=$("#CUSTSERVICE_NAME").val();
+
+                var param='&CUSTSERVICE_NAME='+custServiceName;
+                $.ajaxPost('queryCustServiceByName',param,function(data) {
+                    var rst = new Wade.DataMap(data);
+                    var datas=rst.get("CUSTSERVICEINFO");
+                    $.changecustomerservice.drawCustServiceInfo4Query(datas);
+
+                });
+            },
 
             query :function(){
                 if($.validate.verifyAll("queryArea")) {
@@ -221,12 +233,12 @@
                 var html = [];
 
                 if(datas == null || datas.length <= 0){
-                    $("#messagebox").css("display","");
+                    $("#custservicemessagebox").css("display","");
                     $("#submitButton").css("display","none");
                     return;
                 }
 
-                $("#messagebox").css("display","none");
+                $("#custservicemessagebox").css("display","none");
                 $("#submitButton").css("display","");
 
 
@@ -239,6 +251,7 @@
                     html.push(data.get("NAME"));
                     html.push("</div>");
                     html.push("<div class=\"content\">");
+                    html.push(data.get("PARENT_ORG_NAME")+"-"+data.get("ORG_NAME"));
                     html.push("</div>");
                     html.push("</div>")
                     html.push("</div></div></li>");
@@ -319,6 +332,13 @@
                         }
                     },{"cancel":"取消"})
                 })
+            },
+
+            clearCond : function () {
+                $('#NAME').val('');
+                $('#MOBILE').val('');
+                $('#CUSTSERVICEEMPLOYEENAME').val('');
+                $('#CUSTSERVICEEMPLOYEEID').val('');
             },
 
         }});
