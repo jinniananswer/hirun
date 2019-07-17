@@ -7,6 +7,7 @@ import com.hirun.app.bean.common.PerformDueTaskBean;
 import com.hirun.app.bean.custservice.CustServiceStatBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.bean.plan.*;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.EmployeeCache;
@@ -540,18 +541,19 @@ public class CustServService extends GenericService {
         String houseaddress=request.getString("HOUSEADDRESS");
         String queryTagId=request.getString("QUERY_TAG_ID");
 
-
         ServiceResponse response= new ServiceResponse();
         AppSession session=SessionManager.getSession();
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
 
-        EmployeeEntity employeeEntity=EmployeeBean.getEmployeeByEmployeeId(employeeId);
 
         RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
 
-
-        if(childEmployeeRecordSet.size()<=0){
+        if(Permission.hasAllCity() || Permission.hasAllShop()){
+            Record flag=new Record();//用来判断是否展示客户代表可选项
+            flag.put("FLAG","TRUE");
+            response.set("FLAG",ConvertTool.toJSONObject(flag));
+        }else if(childEmployeeRecordSet.size()<=0){
             Record flag=new Record();//用来判断是否展示客户代表可选项
             flag.put("FLAG","FALSE");
             response.set("FLAG",ConvertTool.toJSONObject(flag));
@@ -561,11 +563,6 @@ public class CustServService extends GenericService {
             response.set("FLAG",ConvertTool.toJSONObject(flag));
         }
 
-        Record record=new Record();
-        record.put("NAME",employeeEntity.getName());
-        record.put("EMPLOYEE_ID",employeeEntity.getEmployeeId());
-        childEmployeeRecordSet.add(record);
-        response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
 
         RecordSet tagSet=StaticDataTool.getCodeTypeDatas("PARTY_TAG");
         response.set("TAGINFO",ConvertTool.toJSONArray(tagSet));
