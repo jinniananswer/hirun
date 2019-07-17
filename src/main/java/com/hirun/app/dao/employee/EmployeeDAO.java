@@ -507,18 +507,25 @@ public class EmployeeDAO extends StrongObjectDAO{
         Map<String, String> parameter = new HashMap<String, String>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM ins_employee a, ins_employee_job_role b ");
-        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
-        sb.append("AND b.`JOB_ROLE` IN ('46','118','103','0','45','69','119') ");
-        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
-        sb.append("AND a.status = '0' ");
+        sb.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,a.mobile_no contact_no, d.JOB_ROLE, e.name org_name, e.city, f.NAME parent_org_name ");
+        sb.append("from ins_user a, ins_employee b , ");
+        sb.append("ins_employee_job_role d,ins_org e ");
+        sb.append("left join ins_org f on(f.ORG_ID = e.PARENT_ORG_ID) ");
+        sb.append("where b.USER_ID = a.USER_ID ");
+        sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
+        sb.append("and a.status = '0' ");
+        sb.append("and b.status = '0' " );
+        sb.append("and now() < d.end_date ");
+        sb.append("and e.ORG_ID = d.ORG_ID ");
+        sb.append("AND d.`JOB_ROLE` IN ('46','118','103','45','69','119') ");
+        sb.append("and e.name='客户部' ");
 
         if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and a.EMPLOYEE_ID in ( "+employeeIds+") ");
+            sb.append("and b.EMPLOYEE_ID in ( "+employeeIds+") ");
         }
 
         if (StringUtils.isNotBlank(name)) {
-            sb.append("and a.NAME like concat('%',:NAME,'%') ");
+            sb.append("and b.NAME like concat('%',:NAME,'%') ");
             parameter.put("NAME", name);
         }
 
@@ -529,10 +536,11 @@ public class EmployeeDAO extends StrongObjectDAO{
     public EmployeeJobRoleEntity queryEmployeeJobRoleByEmpId(String employeeId) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM ns_employee_job_role b ");
-        sb.append("WHERE  ");
-        sb.append(" NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
-        sb.append("AND b.employee_id = :EMPLOYEE_ID");
+        sb.append("SELECT b.* FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
+        sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
+        sb.append("AND a.status = '0' ");
+        sb.append("AND a.employee_id = :EMPLOYEE_ID");
         parameter.put("EMPLOYEE_ID", employeeId);
 
 
