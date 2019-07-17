@@ -608,13 +608,39 @@ public class CustServService extends GenericService {
         String houseaddress=request.getString("HOUSEADDRESS");
         String childCustEmpId=request.getString("CUSTSERVICEEMPLOYEEID");
         String queryTagId=request.getString("QUERY_TAG_ID");
-
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
 
         String employeeIds="";
+        String orgId="";
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+
+        if(Permission.hasAllCity()) {
+            orgId = "7";
+        } else if(Permission.hasAllShop()) {
+            orgId = EmployeeBean.queryOrgByEmployee(custServicerEmployeeId, "3").getOrgId();
+        } else {
+            orgId = EmployeeBean.queryOrgByEmployee(custServicerEmployeeId, "2").getOrgId();
+        }
+
+        orgId=OrgBean.getOrgLine(orgId,allOrgs);
+
 
         if(StringUtils.isNotBlank(childCustEmpId)){
             employeeIds=childCustEmpId;
+        }else if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
         }else{
             RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(custServicerEmployeeId,"0");
             if(childEmployeeRecordSet.size()<=0 || childEmployeeRecordSet == null){
