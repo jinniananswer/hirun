@@ -1112,20 +1112,50 @@ public class CustServService extends GenericService {
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
         String employeeIds="";
-        RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesReordSet(employeeId);
+        String orgId="";
 
-        if(childEmployeeRecordSet.size()<=0 || childEmployeeRecordSet == null){
-            employeeIds=employeeId;
-        }else{
-            for(int i=0;i<childEmployeeRecordSet.size();i++){
-                Record record=childEmployeeRecordSet.get(i);
-                employeeIds +=record.get("EMPLOYEE_ID")+",";
-            }
-                employeeIds +=employeeId;
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+
+        if(Permission.hasAllCity()) {
+            orgId = "7";
+        } else if(Permission.hasAllShop()) {
+            orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
+        } else {
+            orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
         }
 
+        orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
-        RecordSet recordSet=dao.queryPartyInfoByLinkEmployeeIds(employeeIds,CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,mobile,custserviceEmpId);
+        if(StringUtils.isNotBlank(custserviceEmpId)){
+            employeeIds=custserviceEmpId;
+        } else if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else {
+            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+            if(childEmployeeRecordSet.size()<=0 || childEmployeeRecordSet == null){
+                employeeIds=employeeId;
+            }else {
+                for (int i = 0; i < childEmployeeRecordSet.size(); i++) {
+                    Record childRecord = childEmployeeRecordSet.get(i);
+                    employeeIds += childRecord.get("EMPLOYEE_ID") + ",";
+                }
+                employeeIds = employeeIds + employeeId;
+            }
+        }
+
+        RecordSet recordSet=dao.queryPartyInfoByLinkEmployeeIds(employeeIds,CustomerServiceConst.CUSTOMERSERVICEROLETYPE,name,mobile,"");
         if(recordSet.size()<=0){
             return response;
         }
@@ -1371,23 +1401,50 @@ public class CustServService extends GenericService {
         String auditStatus=request.getString("AUDITSTATUS");
         AppSession session = SessionManager.getSession();
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
+        String orgId="";
+        List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+        String employeeIds="";
 
+        if(Permission.hasAllCity()) {
+            orgId = "7";
+        } else if(Permission.hasAllShop()) {
+            orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
+        } else {
+            orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
+        }
+        orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
-        if(StringUtils.isBlank(custServiceEmpId)){
-            RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesReordSet(employeeId);
+        if(StringUtils.isNotBlank(custServiceEmpId)){
+            employeeIds=custServiceEmpId;
+        }else if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else{
+            RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
             if(childEmployeeRecordSet.size() <=0){
-                custServiceEmpId=employeeId;
+                employeeIds=employeeId;
             }else{
                 for(int i=0;i<childEmployeeRecordSet.size();i++){
                     Record employeeRecord=childEmployeeRecordSet.get(i);
-                    custServiceEmpId +=employeeRecord.get("EMPLOYEE_ID")+",";
+                    employeeIds +=employeeRecord.get("EMPLOYEE_ID")+",";
                 }
-                custServiceEmpId=custServiceEmpId+employeeId;
-
+                employeeIds=employeeIds+employeeId;
             }
         }
 
-        RecordSet applyInfoRecordSet=dao.queryCustClearInfo("",auditStatus,custServiceEmpId,"");
+
+        RecordSet applyInfoRecordSet=dao.queryCustClearInfo("",auditStatus,employeeIds,"");
         if(applyInfoRecordSet.size()<=0){
             return response;
         }
