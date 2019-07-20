@@ -182,6 +182,12 @@ public class CustServiceController extends RootController {
         return response.toJsonString();
     }
 
+    @RequestMapping(value = "initCustServiceAudit")
+    public @ResponseBody String initCustServiceAudit(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.initCustServiceAudit", paramter);
+        return response.toJsonString();
+    }
+
     @RequestMapping(value = "queryApplyInfo4Audit")
     public @ResponseBody String queryApplyInfo4Audit(@RequestParam Map paramter) throws Exception {
         ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.queryApplyInfo4Audit", paramter);
@@ -208,6 +214,18 @@ public class CustServiceController extends RootController {
     @RequestMapping(value = "addPartyVisit")
     public @ResponseBody String addPartyVisit(@RequestParam Map paramter) throws Exception {
         ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.addPartyVisit", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "initPartyTagManager")
+    public @ResponseBody String initPartyTagManager(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.initPartyTagManager", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "submitPartyTagInfo")
+    public @ResponseBody String submitPartyTagInfo(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.submitPartyTagInfo", paramter);
         return response.toJsonString();
     }
 }

@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户代表月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?a=3"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190717"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -49,6 +49,17 @@
 
 					</tbody>
 				</table>
+                <div class="c_msg c_msg-warn" id="queryMessage" style="display:none">
+                    <div class="wrapper">
+                        <div class="emote"></div>
+                        <div class="info">
+                            <div class="text">
+                                <div class="title">提示信息</div>
+                                <div class="content">sorry,没有找到您想要的信息~</div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
 			</div>
 		</div>
 		<div class="top">
@@ -116,7 +127,8 @@
 						</div>
 						<div class="c_space"></div>
 						<div class="c_submit c_submit-full">
-							<button type="button" class="e_button-l e_button-green" ontap="$.custServiceMonstatQuery.query();">查询</button>
+							<button type="button" class="e_button-r e_button-l e_button-green" ontap="$.custServiceMonstatQuery.clearCond();">重置</button>
+							<button type="button" class="e_button-r e_button-l e_button-green" ontap="$.custServiceMonstatQuery.query();">查询</button>
 						</div>
 					</div>
 				</div>
@@ -147,7 +159,7 @@
                                             <li>
                                                  <div class="value">
                                                      <span class="e_mix">
-                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入岗位名称（模糊搜索）" nullable="no" desc="查询条件"/>
+                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入客户代表姓名（模糊搜索）" nullable="no" desc="查询条件"/>
                                                          <button type="button" class="e_button-blue" ontap="$.custServiceMonstatQuery.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
                                                      </span>
                                                  </div>
@@ -165,7 +177,6 @@
                                             </ul>
                                         </div>
                                     </div>
-                                     <div class="c_space-3"></div>
                                      <div class="c_space-3"></div>
                                      <div class="c_space-3"></div>
                                      <div class="c_space-3"></div>

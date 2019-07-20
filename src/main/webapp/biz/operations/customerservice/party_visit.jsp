@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户清理申请</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/party.visit.js?v=20190321"></script>
+    <script src="/scripts/biz/customerservice/party.visit.js?v=20190706"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -44,14 +44,14 @@
             </ul>
         </div>
 
-        <div class="c_title">
+        <div class="c_title" ontap="$(this).next().toggle();">
             <div class="text">回访记录</div>
             <div class="fn">
-
+			    <ul><li><span id="visitCount"></span><span class="e_ico-unfold"></span></li></ul>
             </div>
         </div>
 
-        <div class="c_list c_list-line c_list-border c_list-space l_padding">
+        <div class="c_list c_list-line c_list-border c_list-space l_padding" style="display:none">
             <ul id="partyVisit">
 
             </ul>

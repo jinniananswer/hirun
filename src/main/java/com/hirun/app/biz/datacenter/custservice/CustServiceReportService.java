@@ -44,28 +44,54 @@ public class CustServiceReportService extends GenericService{
         AppSession session = SessionManager.getSession();
         String name=request.getString("CUSTSERVICE_NAME");
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
-
+        String orgId="";
+        String employeeIds="";
         List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
-        String orgId=OrgBean.getOrgId(session.getSessionEntity());
-        orgId = OrgBean.getOrgLine(orgId, allOrgs);
 
-        EmployeeJobRoleEntity emproleEntity=EmployeeBean.queryEmployeeJobRoleByEmpId(employeeId);//获取当前登录员工的ROLE_JOB
-        String roleJob=emproleEntity.getJobRole();
-        RecordSet childEmployeeRecordSet=new RecordSet();
+            if(Permission.hasAllCity()) {
+                orgId = "7";
+            } else if(Permission.hasAllShop()) {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
+            } else {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
+            }
 
-        if(StringUtils.equals("46",roleJob) || StringUtils.equals("118",roleJob)|| StringUtils.equals("103",roleJob) ){
-            childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
-            EmployeeEntity employeeEntity=EmployeeBean.getEmployeeByEmployeeId(employeeId);
-            Record record=new Record();
-            record.put("NAME",employeeEntity.getName());
-            record.put("EMPLOYEE_ID",employeeEntity.getEmployeeId());
-            childEmployeeRecordSet.add(record);
-            response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(childEmployeeRecordSet));
+        orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
+
+
+        if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
         }else{
-            RecordSet employeeJobRoleEntities=EmployeeBean.queryEmployeeJobRoleByOrgId(orgId,name);
-            response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(employeeJobRoleEntities));
+            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+            if(childEmployeeRecordSet.size()<=0){
+                return response;
+            }
+            for(int i=0;i<childEmployeeRecordSet.size();i++){
+                Record childRecord=childEmployeeRecordSet.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds+employeeId;
         }
+
+        RecordSet employeeRecord=EmployeeBean.queryEmployeeByEmpIdsAndName(employeeIds,name);
+        if(employeeRecord.size() <=0){
+            return response;
+        }
+        response.set("CUSTSERVICEINFO",ConvertTool.toJSONArray(employeeRecord));
+
         return response;
     }
 
@@ -75,70 +101,72 @@ public class CustServiceReportService extends GenericService{
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
         String startDate=request.getString("START_DATE");
         String endDate=request.getString("END_DATE");
+        String custserviceempid=request.getString("CUSTSERVICEEMPID");//选择的客户代表ID
+        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
+
+        String employeeIds="";
+
+
+
         if(StringUtils.isNotBlank(startDate)){
             startDate=startDate+" 00:00:00";
         }
         if(StringUtils.isNotBlank(endDate)){
             endDate=endDate+" 23:59:59";
         }
-        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");//获取当前登录员工ID
-        EmployeeJobRoleEntity emproleEntity=EmployeeBean.queryEmployeeJobRoleByEmpId(employeeId);//获取当前登录员工的ROLE_JOB
-        String custserviceempid=request.getString("CUSTSERVICEEMPID");//选择的客户代表ID
+
         String orgId=request.getString("ORG_ID");
-        String employeeIds="";
         List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
+
+        if(StringUtils.isBlank(orgId)) {
+            if(Permission.hasAllCity()) {
+                orgId = "7";
+            } else if(Permission.hasAllShop()) {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
+            } else {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
+            }
+        }
+        orgId=OrgBean.getOrgLine(orgId,allOrgs);
 
         if(StringUtils.isNotBlank(custserviceempid)){
             employeeIds=custserviceempid;
-        }else if(StringUtils.equals("46",emproleEntity.getJobRole())){
-            //如果角色就是客户代表的话只能查自己,否则的话可以查询选择部门下的所有客户代表
-            employeeIds=employeeId;
-        }else{
-            //如果传入的org_id为空就取当前登录员工的ORG_ID
-            if(StringUtils.isBlank(orgId)){
-                orgId=OrgBean.getOrgId(session.getSessionEntity());
+        } else if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
             }
-            orgId = OrgBean.getOrgLine(orgId, allOrgs);
-            RecordSet employeeJobRoleEntities=EmployeeBean.queryEmployeeJobRoleByOrgId(orgId,"");
-            if(employeeJobRoleEntities.size()>0){
-                for(int i=0;i<employeeJobRoleEntities.size();i++){
-                    Record employeeJobRoleEntity=employeeJobRoleEntities.get(i);
-                    employeeIds +=employeeJobRoleEntity.get("EMPLOYEE_ID")+",";
-                }
-                employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
             }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else {
+            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+            for(int i=0;i<childEmployeeRecordSet.size();i++){
+                Record childRecord=childEmployeeRecordSet.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds+employeeId;
         }
 
-        RecordSet custServFinishActionInfo=dao.queryCustServFinishActionInfo(startDate,endDate,employeeIds);
+
+        RecordSet custServFinishActionInfo=dao.queryCustServFinishActionInfo(startDate,endDate,employeeIds,orgId);
         if(custServFinishActionInfo.size()<=0 || custServFinishActionInfo==null){
             return response;
         }
+        //将多条数据做合并
+        custServFinishActionInfo=filterCustAction(custServFinishActionInfo);
+
         for(int i=0;i<custServFinishActionInfo.size();i++){
             Record record=custServFinishActionInfo.get(i);
             String linkemployeeid=record.get("LINK_EMPLOYEE_ID");
-            String partyId=record.get("PARTY_ID");
-            String projectId=record.get("PROJECT_ID");
-            String openId=record.get("OPEN_ID");
-            RecordSet insScanCityRecordSet=dao.queryInsScanCityInfoByProIdAndPId(projectId,partyId);//查询带看城市木屋数据
 
-            //获取需求蓝图二的内容
-            if(StringUtils.isNotBlank(openId)){
-                RecordSet xqlteInfo=dao.queryXQLTEByOpenIdAndActionCode(openId,"XQLTE",linkemployeeid);
-                if(xqlteInfo.size() > 0 && xqlteInfo != null){
-                    record.put("FUNCPRINTTIME",xqlteInfo.get(0).get("FUNCPRINT_CREATE_TIME"));
-                    record.put("STYLEPRINTTIME",xqlteInfo.get(0).get("STYLEPRINT_CREATE_TIME"));
-                }
-
-            }
-
-            if(insScanCityRecordSet.size()>0){
-                String cityCabinIds=insScanCityRecordSet.get(0).get("CITY_CABINS");
-                String  experienceTime=insScanCityRecordSet.get(0).get("EXPERIENCE_TIME");
-                String experience=insScanCityRecordSet.get(0).get("EXPERIENCE");
-
-                record.put("EXPERIENCE_TIME",experienceTime);
-                record.put("EXPERIENCE",experience);
-            //转译城市木屋的名字
+            String cityCabinIds=record.get("CITY_CABINS");
             if(StringUtils.isNotBlank(cityCabinIds)){
                 String[] cityCabinId=cityCabinIds.split(",");
                 String cityCabinName="";
@@ -149,10 +177,8 @@ public class CustServiceReportService extends GenericService{
                 record.put("CITYCABINNAMES",cityCabinName.substring(0,cityCabinName.length()-1));
 
             }
-            }
             //翻译客户代表名字
-            EmployeeEntity employeeEntity=EmployeeBean.getEmployeeByEmployeeId(linkemployeeid);
-            record.put("CUSTSERVICENAME",employeeEntity.getName());
+            record.put("CUSTSERVICENAME",EmployeeCache.getEmployeeNameEmployeeId(linkemployeeid));
         }
         response.set("CUSTSERVICEFINISHACTIONINFO", ConvertTool.toJSONArray(custServFinishActionInfo));
         return response;
@@ -164,55 +190,56 @@ public class CustServiceReportService extends GenericService{
         AppSession session = SessionManager.getSession();
         String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
         EmployeeJobRoleEntity emproleEntity=EmployeeBean.queryEmployeeJobRoleByEmpId(employeeId);//获取当前登录员工的ROLE_JOB
-
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
         OrgDAO orgDAO = DAOFactory.createDAO(OrgDAO.class);
-
         String custServiceEmpId=request.getString("CUSTSERVICEEMPID");
         String orgId=request.getString("ORG_ID");
         String monDate=request.getString("MON_DATE");
-        if(StringUtils.isBlank(orgId)) {
-            orgId = OrgBean.getOrgId(session.getSessionEntity());
-        }
-        //如果前台选择的客户代表不为空或者登录查询报表的员工为普通客户代表只能查询自己本身或者指定的数据
-        if(StringUtils.isNotBlank(custServiceEmpId)){
-            RecordSet custServiceStatSet=dao.queryCustServMonStatInfo(custServiceEmpId,monDate);
-            JSONArray sheetList1 = new JSONArray();
-            sheetList1.add(dealStatRecord(custServiceStatSet,custServiceEmpId));
-            response.set("CUSTSERVICESTATINFO",sheetList1);
-            return response;
-        }
-        if(StringUtils.equals("46",emproleEntity.getJobRole()) || StringUtils.equals("69",emproleEntity.getJobRole()) || StringUtils.equals("119",emproleEntity.getJobRole())){
-            JSONArray sheetList2 = new JSONArray();
-            RecordSet custServiceStatSet=dao.queryCustServMonStatInfo(employeeId,monDate);
-            sheetList2.add(dealStatRecord(custServiceStatSet,employeeId));
-            response.set("CUSTSERVICESTATINFO",sheetList2);
-            return response;
-        }
-        //组长或者客户主管只能查询自己以及下面员工的数据
-        if(StringUtils.equals("118",emproleEntity.getJobRole()) || StringUtils.equals("103",emproleEntity.getJobRole())){
-            RecordSet childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesReordSet(employeeId);
-            Record record=new Record();
-            record.put("EMPLOYEE_ID",employeeId);
-            childEmployeeRecordSet.add(record);
-            JSONArray sheetList3 = new JSONArray();
-
-            for(int i=0;i<childEmployeeRecordSet.size();i++){
-                Record childEmployeeRecord=childEmployeeRecordSet.get(i);
-                RecordSet custServiceStatSet=dao.queryCustServMonStatInfo(childEmployeeRecord.get("EMPLOYEE_ID"),monDate);
-                sheetList3.add(dealStatRecord(custServiceStatSet,childEmployeeRecord.get("EMPLOYEE_ID")));
-            }
-
-            response.set("CUSTSERVICESTATINFO",sheetList3);
-            return response;
-        }
-
         List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
 
-        OrgEntity orgEntity=OrgBean.getAssignTypeOrg(orgId,"1");
 
-        orgId = OrgBean.getOrgLine(orgId, allOrgs);
-        RecordSet employeeJobRoleEntities=EmployeeBean.queryEmployeeJobRoleByOrgId(orgId,"");
+        String employeeIds="";
+
+
+        if(StringUtils.isBlank(orgId)) {
+            if(Permission.hasAllCity()) {
+                orgId = "7";
+            } else if(Permission.hasAllShop()) {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "3").getOrgId();
+            } else {
+                orgId = EmployeeBean.queryOrgByEmployee(employeeId, "2").getOrgId();
+            }
+        }
+        orgId=OrgBean.getOrgLine(orgId,allOrgs);
+
+        if(StringUtils.isNotBlank(custServiceEmpId)){
+            employeeIds=custServiceEmpId;
+        }else if(Permission.hasAllCity()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else if(Permission.hasAllShop()){
+            RecordSet allCustServiceEmpEntity=EmployeeBean.queryEmployeeByEmpIdsAndOrgId("",orgId);
+            for(int i=0;i<allCustServiceEmpEntity.size();i++){
+                Record childRecord=allCustServiceEmpEntity.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds.substring(0,employeeIds.length()-1);
+        }else{
+            RecordSet  childEmployeeRecordSet=EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(employeeId,"0");
+            for(int i=0;i<childEmployeeRecordSet.size();i++){
+                Record childRecord=childEmployeeRecordSet.get(i);
+                employeeIds +=childRecord.get("EMPLOYEE_ID")+",";
+            }
+            employeeIds=employeeIds+employeeId;
+        }
+
+
+
+        RecordSet employeeJobRoleEntities=EmployeeBean.queryEmployeeJobRoleByOrgId1(orgId,"",employeeIds);
         if(employeeJobRoleEntities.size()<=0){
             return response;
         }
@@ -334,14 +361,14 @@ public class CustServiceReportService extends GenericService{
                 sheetList.add(shopSheet);
 
             }
-            if(StringUtils.equals("2",orgEntity.getType())){
+            if(Permission.hasAllShop()){//
                 companySheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(companyKey).getName() + "合计");
                 companySheet=reckonScale(companySheet);
                 sheetList.add(companySheet);
 
             }
             }
-            if(StringUtils.equals("1",orgEntity.getType())){
+            if(Permission.hasAllCity()){//Permission.hasAllCity()
                  buSheet.put("EMPLOYEE_NAME",  "事业部合计");
                  buSheet=reckonScale(buSheet);
                  sheetList.add(buSheet);
@@ -402,7 +429,38 @@ public class CustServiceReportService extends GenericService{
         }
     }
 
+    public static RecordSet filterCustAction(RecordSet custActionRecordSet){
+        if(custActionRecordSet.size()<=0){
+            return custActionRecordSet;
+        }
+        Map<String,Record> actionMap=new LinkedHashMap<String,Record>();
 
+        for(int i=0;i<custActionRecordSet.size();i++){
+            Record custActionRecord=custActionRecordSet.get(i);
+            String partyId=custActionRecord.get("PARTY_ID");
+            String finishTime=custActionRecord.get("FINISH_TIME");
+            String acitonCode=custActionRecord.get("ACTION_CODE");
+
+            if(!actionMap.containsKey(partyId)){
+                custActionRecord.put(acitonCode+"_FINISHTIME",finishTime);
+                actionMap.put(partyId,custActionRecord);
+            }else{
+                Record record=actionMap.get(partyId);
+                if(record.containsKey(acitonCode+"_FINISHTIME")){
+                    continue;
+                }else{
+                    record.put(acitonCode+"_FINISHTIME",finishTime);
+                    actionMap.put(partyId,record);
+                }
+            }
+        }
+        RecordSet newRecordSet=new RecordSet();
+        Set<String> keys = actionMap.keySet();
+        for(String key : keys){
+            newRecordSet.add(actionMap.get(key));
+        }
+        return newRecordSet;
+    }
 
 
 

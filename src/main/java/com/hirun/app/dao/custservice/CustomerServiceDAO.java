@@ -9,6 +9,8 @@ import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.common.protocol.types.Field;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,6 +139,53 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return this.queryBySql(sb.toString(), parameter);
     }
 
+    public RecordSet queryPartyInfoByLinkEmployeeIdAndTag( String roleType, String name, String wxnick, String mobile, String houseaddress,String employeeIds,String tagId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select c.*, a.*, b.*, d.* from  ins_project_linkman a ,ins_project b, ins_party c  ");
+        sb.append("left join ins_party_tag d on ");
+        sb.append("(c.PARTY_ID=d.PARTY_ID AND d.Status='0') ");
+        sb.append(" where a.PROJECT_ID=b.PROJECT_ID ");
+        sb.append(" and b.PARTY_ID=c.PARTY_ID  ");
+        sb.append(" and a.ROLE_TYPE= :ROLE_TYPE  ");
+        sb.append(" and c.PARTY_STATUS= '0'  ");
+
+
+        if (StringUtils.isNotBlank(name)) {
+            sb.append("and c.party_name like concat('%',:PARTY_NAME,'%') ");
+            parameter.put("PARTY_NAME", name);
+        }
+
+        if(StringUtils.isNotBlank(employeeIds)){
+            sb.append("and a.LINK_EMPLOYEE_ID in ( "+employeeIds+") ");
+        }
+
+        if (StringUtils.isNotBlank(wxnick)) {
+            sb.append("and c.WX_NICK like concat('%',:WX_NICK,'%') ");
+            parameter.put("WX_NICK", wxnick);
+        }
+
+        if (StringUtils.isNotBlank(mobile)) {
+            sb.append("and c.MOBILE_NO=:MOBILE_NO ");
+            parameter.put("MOBILE_NO", mobile);
+        }
+
+        if (StringUtils.isNotBlank(houseaddress)) {
+            sb.append("and b.HOUSE_ADDRESS like concat('%',:HOUSE_ADDRESS,'%') ");
+            parameter.put("HOUSE_ADDRESS", houseaddress);
+        }
+
+        if(StringUtils.isNotBlank(tagId)){
+            sb.append("and d.TAG_ID= :TAG_ID");
+            parameter.put("TAG_ID",tagId);
+        }
+        sb.append(" order by c.create_date desc ");
+
+
+        parameter.put("ROLE_TYPE", roleType);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
     public RecordSet queryPartyInfoByLinkEmployeeIds(String employeeIds, String roleType, String name,  String mobile, String custservieEmpId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
@@ -243,14 +292,13 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     }
 
 
-    public RecordSet querySignInInfoByOpenIdAndEmpId(String openid, String employeeId) throws Exception {
+    public RecordSet querySignInInfoByOpenIdAndEmpId(String openid) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_signin_action ");
-        sb.append("where OPEN_ID=:OPEN_ID AND EMPLOYEE_ID=:EMPLOYEE_ID ");
+        sb.append("where OPEN_ID=:OPEN_ID ");
         sb.append("order by SIGNIN_TIME  ");
         parameter.put("OPEN_ID", openid);
-        parameter.put("EMPLOYEE_ID", employeeId);
         RecordSet recordSet = queryBySql(sb.toString(), parameter);
 
         return recordSet;
@@ -271,7 +319,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     public RecordSet queryPartyInfoByOpenIdAndEmployeeId(String openid, String employeeid) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from ins_project_linkman a ,ins_project b, ins_party c ");
+        sb.append("select * from  ins_party c , ins_project_linkman a ,ins_project b ");
         sb.append(" where a.PROJECT_ID=b.PROJECT_ID ");
         sb.append(" and b.PARTY_ID=c.PARTY_ID  ");
         sb.append(" and a.ROLE_TYPE= 'CUSTOMERSERVICE'  ");
@@ -331,19 +379,23 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     }
 
 
-    public RecordSet queryCustServFinishActionInfo(String startDate,String endDate,String employeeIds) throws Exception {
+    public RecordSet queryCustServFinishActionInfo(String startDate,String endDate,String employeeIds,String orgIds) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.CREATE_DATE,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS from ");
-        sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ");
+        sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME from ");
+        sb.append(" ( ");
+        sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.CREATE_DATE,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS,d.ACTION_CODE from ");
+        sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ,ins_employee e , ins_employee_job_role f ");
         sb.append("WHERE a.PARTY_ID = b.PARTY_ID ");
         sb.append("AND b.PROJECT_ID = c.PROJECT_ID ");
         sb.append("AND b.PROJECT_ID = d.PROJECT_ID ");
         sb.append("AND c.ROLE_TYPE = 'CUSTOMERSERVICE' ");
         sb.append("AND a.PARTY_STATUS = '0' ");
-        sb.append("AND d.ACTION_CODE = 'SMJRLC' ");
-
-
+        sb.append("AND d.ACTION_CODE in ('SMJRLC','HZHK','APSJS') ");
+        sb.append("AND e.EMPLOYEE_ID=f.EMPLOYEE_ID ");
+        sb.append("AND e.STATUS='0' ");
+        sb.append("AND NOW() BETWEEN f.START_DATE AND f.END_DATE ");
+        sb.append("AND c.LINK_EMPLOYEE_ID=e.EMPLOYEE_ID ");
 
 
         if(StringUtils.isNotBlank(startDate)){
@@ -357,10 +409,19 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         }
 
         if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and c.LINK_EMPLOYEE_ID IN ("+employeeIds+") ");
+            sb.append("and e.EMPLOYEE_ID IN ("+employeeIds+") ");
+        }
+
+        if(StringUtils.isNotBlank(orgIds)){
+            sb.append("and f.org_id in ( "+orgIds+") ");
         }
 
         sb.append(" order by c.LINK_EMPLOYEE_ID, a.CREATE_DATE desc ");
+
+        sb.append(" ) v");
+        sb.append(" left join (select * from ins_scan_citycabin x where x.SCAN_ID in (select min(y.scan_id) from ins_scan_citycabin y group by y.PARTY_ID))  s on (s.PARTY_ID = v.PARTY_ID) ");
+        sb.append(" left join (select * from ins_blueprint_action r where r.BLUEPRINT_ACTION_ID in (select min(t.BLUEPRINT_ACTION_ID) from ins_blueprint_action t where t.ACTION_CODE='XQLTE' group by t.OPEN_ID, t.REL_EMPLOYEE_ID)) u on (u.OPEN_ID = v.OPEN_ID and u.REL_EMPLOYEE_ID = v.LINK_EMPLOYEE_ID) ");
+        sb.append(" order by v.create_date desc ");
 
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
@@ -432,9 +493,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             sb.append("and a.AUDIT_EMPLOYEE_ID IN ("+aduitEmpId+") ");
         }
 
-        if(StringUtils.isNotBlank(aduitEmpId)){
-            sb.append("and a.APPLY_EMPLOYEE_ID IN ("+aduitEmpId+") ");
-        }
+
 
 
         return this.queryBySql(sb.toString(),parameter);
@@ -476,6 +535,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
 
+
+
         if(StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
             parameter.put("NAME", name);
@@ -507,7 +568,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("and b.status = '0' " );
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
-        sb.append("and d.job_role in ('46','118','0','45','69','119') ");
+        sb.append("and d.job_role in ('46','118','69','119') ");
+        sb.append("and e.name='客户部' ");
 
         if(StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
@@ -521,5 +583,17 @@ public class CustomerServiceDAO extends StrongObjectDAO {
 
 
         return this.queryBySql(sb.toString(),parameter);
+    }
+
+    public RecordSet queryPartyTagInfoByPartyId(String partyId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_party_tag a ");
+        sb.append("where a.PARTY_ID= :PARTY_ID ");
+        sb.append("and a.STATUS= '0' ");
+        parameter.put("PARTY_ID",partyId);
+
+        RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
+        return recordSet;
     }
 }

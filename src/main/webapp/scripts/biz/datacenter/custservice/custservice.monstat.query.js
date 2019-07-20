@@ -182,6 +182,7 @@
                     html.push(data.get("NAME"));
                     html.push("</div>");
                     html.push("<div class=\"content\">");
+                    html.push(data.get("PARENT_ORG_NAME")+"-"+data.get("ORG_NAME"));
                     html.push("</div>");
                     html.push("</div>")
                     html.push("</div></div></li>");
@@ -200,6 +201,12 @@
 
             },
 
+            clearCond : function () {
+                $('#CUSTSERVICEEMPLOYEENAME').val('');
+                $('#CUSTSERVICEEMPLOYEEID').val('');
+                $('#ORG_TEXT').val('');
+                $('#ORG_ID').val('');
+            },
 
 
 

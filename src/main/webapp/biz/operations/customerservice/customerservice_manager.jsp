@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title></title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/customerservice.manager.js"></script>
+    <script src="/scripts/biz/customerservice/customerservice.manager.js?v=201907017"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -47,10 +47,19 @@
         </div>
 
     </div>
-    <div class="c_space-4"></div>
-    <div class="c_space-4"></div>
+   <div class="c_space-4"></div>
+   <div class="c_space-4"></div>
+
+
+
 </div>
 <!-- 滚动 结束 -->
+    <div class="l_bottom  c_submit-full ">
+          <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.custservicemanager.init();" class="e_button-r e_button-l e_button-green">刷新</button>
+    </div>
+    <div class="c_space-4"></div>
+    <div class="c_space-4"></div>
+
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 
 <!-- 弹窗 开始 -->
@@ -99,15 +108,50 @@
                                              </span>
                                          </div>
                                   </li>
+
+                                  <li class="link" ontap="$('#TAG_TEXT').focus();$('#TAG_TEXT').blur();forwardPopup('UI-popup','UI-TAG4QUERY')">
+                                    <div class="label">客户标签</div>
+                                    <div class="value">
+                                        <input type="text" id="TAG_TEXT" name="TAG_TEXT" nullable="yes" readonly="true" desc="标签ID" />
+                                        <input type="hidden" id="QUERY_TAG_ID" name="QUERY_TAG_ID" nullable="yes" desc="标签ID" />
+                                    </div>
+                                    <div class="more"></div>
+                                  </li>
                             </ul>
                         </div>
                         <!-- 列表 结束 -->
 						<div class="c_space"></div>
 
                             <div class="c_submit c_submit-full">
+                                <button type="button" id="SUBMIT_CLEAR" name="SUBMIT_CLEAR" ontap="$.custservicemanager.clearCond();" class="e_button-r e_button-l e_button-green">重置</button>
                                 <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.custservicemanager.query();" class="e_button-r e_button-l e_button-green">查询</button>
                             </div>
 
+                    </div>
+
+                    <!-- 滚动 结束 -->
+                </div>
+                <div class="c_popupItem" id="UI-popup-tag-cond">
+                    <div class="c_header">
+                        <div class="back" ontap="hidePopup(this)">标签管理</div>
+                    </div>
+                    <input type="hidden" id="PARTY_ID" name="PARTY_ID" placeholder="" nullable="yes" desc="" />
+
+                    <div class="c_scroll c_scroll-float c_scroll-header ">
+                        <!-- 列表 开始 -->
+                     <div class="l_padding">
+                        <div class="c_list c_list-v c_list-col-3 c_list-phone-col-3 c_list-space c_list-line c_list-s">
+                            <ul id="partyTagInfo">
+
+                            </ul>
+                        </div>
+                        <!-- 列表 结束 -->
+						<div class="c_space"></div>
+
+                            <div class="c_submit c_submit-full">
+                                <button type="button" id="SUBMIT_PARTYTAGINFO" name="SUBMIT_PARTYTAGINFO" ontap="$.custservicemanager.submitPartyTagInfo();" class="e_button-r e_button-l e_button-green">保存</button>
+                            </div>
+                     </div>
                     </div>
 
                     <!-- 滚动 结束 -->
@@ -117,11 +161,38 @@
                     <div class="c_popupGroup">
                         <div class="c_popupItem" id="UI-QUERYCUSTSERVICE">
                             <div class="c_header">
-                                <div class="back" ontap="hidePopup(this);">请选择客户代表</div>
+                                <div class="back" ontap="backPopup(this);">请选择客户代表</div>
                             </div>
-                            <div class="l_padding">
 
+                            <div class="l_padding">
+                                 <div class="c_box">
+                                     <div class="c_list c_list-line">
+                                        <ul id="jobArea">
+                                            <li>
+                                                 <div class="value">
+                                                     <span class="e_mix">
+                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入客户代表姓名（模糊搜索）" nullable="no" desc="查询条件"/>
+                                                         <button type="button" class="e_button-blue" ontap="$.custservicemanager.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
+                                                     </span>
+                                                 </div>
+                                            </li>
+                                        </ul>
+                                     </div>
+                                 </div>
                             </div>
+
+                            <div class="c_msg c_msg-warn" id="custservicemessagebox" style="display:none">
+                                <div class="wrapper">
+                                    <div class="emote"></div>
+                                    <div class="info">
+                                        <div class="text">
+                                            <div class="title">提示信息</div>
+                                            <div class="content">没有找到相关的信息~~</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="c_scroll">
                                 <div class="l_padding">
                                     <div class="c_box">
@@ -133,10 +204,31 @@
                                     </div>
                                      <div class="c_space-3"></div>
                                      <div class="c_space-3"></div>
-                                     <div class="c_space-3"></div>
                                 </div>
+                                     <div class="c_space-3"></div>
+                                     <div class="c_space-3"></div>
                             </div>
                         </div>
+                        <div class="c_popupItem" id="UI-TAG4QUERY">
+                            <div class="c_header">
+                                <div class="back" ontap="backPopup(this)">客户标签</div>
+                            </div>
+
+                            <div class="c_scroll c_scroll-float c_scroll-header ">
+                            <!-- 列表 开始 -->
+                                <div class="l_padding">
+                                    <div class="c_list c_list-v c_list-col-3 c_list-phone-col-3 c_list-space c_list-line c_list-s">
+                                        <ul id="TagInfo">
+
+                                        </ul>
+                                    </div>
+                            <!-- 列表 结束 -->
+ 						        <div class="c_space"></div>
+                                </div>
+                            </div>
+
+                            <!-- 滚动 结束 -->
+                         </div>
                     </div>
 
             </div>

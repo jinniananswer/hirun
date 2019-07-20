@@ -544,7 +544,7 @@
                 $("#HOBBY").val(partyInfo.HOBBY);
                 $("#HOBBY_TEXT").val(partyInfo.HOBBY_TEXT);
                 $("#ELDER_TEXT").val(partyInfo.ELDER_TEXT);
-                $("#CHILD_TEXT").val(partyInfo.ELDER_TEXT);
+                $("#CHILD_TEXT").val(partyInfo.CHILD_TEXT);
 
             },
 

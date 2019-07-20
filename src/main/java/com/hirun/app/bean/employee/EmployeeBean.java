@@ -299,10 +299,23 @@ public class EmployeeBean {
         return employeeDAO.queryEmployeeJobRoleByOrgId(orgId,name);
     }
 
+    public static RecordSet queryEmployeeJobRoleByOrgId1(String orgId,String name,String employeeIds) throws Exception{
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryEmployeeJobRoleByOrgId1(orgId,name,employeeIds);
+    }
+
+    public static RecordSet queryEmployeeByEmpIdsAndOrgId(String empIds,String orgId) throws Exception{
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryEmployeeByEmpIdsAndOrgId(empIds,orgId);
+    }
+
     public static EmployeeJobRoleEntity queryEmployeeJobRoleByEmpId(String employeeId) throws Exception {
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
         return employeeDAO.queryEmployeeJobRoleByEmpId(employeeId);
     }
 
-
+    public static RecordSet queryEmployeeByEmpIdsAndName(String employeeIds,String name) throws Exception {
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        return employeeDAO.queryEmployeeByEmpIdsAndName(employeeIds,name);
+    }
 }

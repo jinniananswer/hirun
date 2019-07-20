@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>变更客户代表</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/change.customerservice.js?v=20190419"></script>
+    <script src="/scripts/biz/customerservice/change.customerservice.js?v=20190717"></script>
 </head>
 <body>
     <div class="c_header">
@@ -93,7 +93,8 @@
                                 <!-- 列表 结束 -->
                                  <div class="c_space"></div>
                                 <div class="c_submit c_submit-full">
-                                    <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changecustomerservice.query();" class="e_button-l e_button-green">查询</button>
+                                    <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.changecustomerservice.clearCond()">重置</button>
+                                    <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changecustomerservice.query();" class="e_button-r e_button-l e_button-green">查询</button>
                                 </div>
                                   <div class="c_space-3"></div>
                             </div>
@@ -162,9 +163,37 @@
                             <div class="c_header">
                                 <div class="back" ontap="hidePopup(this);">请选择客户代表</div>
                             </div>
-                            <div class="l_padding">
 
+
+                            <div class="l_padding">
+                                 <div class="c_box">
+                                     <div class="c_list c_list-line">
+                                        <ul id="jobArea">
+                                            <li>
+                                                 <div class="value">
+                                                     <span class="e_mix">
+                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入客户代表姓名（模糊搜索）" nullable="no" desc="查询条件"/>
+                                                         <button type="button" class="e_button-blue" ontap="$.changecustomerservice.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
+                                                     </span>
+                                                 </div>
+                                            </li>
+                                        </ul>
+                                     </div>
+                                 </div>
                             </div>
+
+                            <div class="c_msg c_msg-warn" id="custservicemessagebox" style="display:none">
+                                <div class="wrapper">
+                                    <div class="emote"></div>
+                                    <div class="info">
+                                        <div class="text">
+                                            <div class="title">提示信息</div>
+                                            <div class="content">没有找到相关的信息~~</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="c_scroll">
                                 <div class="l_padding">
                                     <div class="c_box">

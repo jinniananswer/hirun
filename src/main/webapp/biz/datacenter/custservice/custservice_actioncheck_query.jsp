@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190717"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -39,6 +39,8 @@
 						<th class="e_red" col="FINISH_XQLTE">进入全流程的时间</th>
 						<th class="e_red" col="FINISH_APSJS">生成风格蓝图的时间</th>
 						<th class="e_red" col="FINISH_DKCSMW">生成功能蓝图的时间</th>
+						<th class="e_red" col="FINISH_HZHK">录入客户需求信息时间</th>
+						<th class="e_red" col="FINISH_APSJS">安排设计师时间</th>
 						<th class="e_red" col="FINISH_DKCSMW">看城市木屋时间</th>
 						<th class="e_red" col="FINISH_DKCSMW">带看城市木屋楼盘地址</th>
 						<th class="e_red" col="FINISH_DKCSMW">带看后反馈情况</th>
@@ -121,7 +123,8 @@
                                 </div>
             						<div class="c_space"></div>
             						<div class="c_submit c_submit-full">
-            							<button type="button" class="e_button-l e_button-green" ontap="$.custServiceActionQuery.query();">查询</button>
+            							<button type="button" class="e_button-r e_button-l e_button-green" ontap="$.custServiceActionQuery.clearCond();">重置</button>
+            							<button type="button" class="e_button-r e_button-l e_button-green" ontap="$.custServiceActionQuery.query();">查询</button>
             						</div>
                             </div>
                         </div>
@@ -152,7 +155,7 @@
                                             <li>
                                                  <div class="value">
                                                      <span class="e_mix">
-                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入岗位名称（模糊搜索）" nullable="no" desc="查询条件"/>
+                                                         <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入客户代表姓名（模糊搜索）" nullable="no" desc="查询条件"/>
                                                          <button type="button" class="e_button-blue" ontap="$.custServiceActionQuery.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
                                                      </span>
                                                  </div>

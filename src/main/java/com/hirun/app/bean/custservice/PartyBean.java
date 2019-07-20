@@ -23,10 +23,8 @@ import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 public class PartyBean {
@@ -46,9 +44,6 @@ public class PartyBean {
 
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
         RecordSet recordSet = dao.queryPartyInfoByOpenIdAndEmployeeId(openid,employeeid);
-        if(recordSet.size() < 0){
-            return null;
-        }
         return recordSet;
     }
 
@@ -98,10 +93,11 @@ public class PartyBean {
         //生成party信息
         party_info.put("OPEN_ID",openid);
         party_info.put("WX_NICK",jsonObject.getString("nickname"));
+        party_info.put("HEAD_URL",jsonObject.getString("headimgurl"));
         party_info.put("PARTY_NAME",jsonObject.getString("name"));
         party_info.put("MOBILE_NO",jsonObject.getString("phone"));
         party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
-        party_info.put("CREATE_DATE", TimeTool.now());
+        party_info.put("CREATE_DATE", transUnixTimeToNormal(jsonObject.getString("add_time")));
         party_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
         party_info.put("UPDATE_TIME",TimeTool.now());
         party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//正常客户状态
@@ -154,6 +150,8 @@ public class PartyBean {
             if(StringUtils.equals(actionCode,"SMJRLC")){
                 partyProjectActionInfo.put("STATUS","1");
                 partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("add_time")));
+            }else if(StringUtils.equals(actionCode,"GZGZH")){
+                partyProjectActionInfo.put("STATUS","1");
             }else{
                 partyProjectActionInfo.put("STATUS","0");
             }
@@ -167,7 +165,6 @@ public class PartyBean {
             dao.insertBatch("ins_project_original_action", partyProjectActionList);
         }
 
-        CustServiceStatBean.updateCustServiceStat(employeeId,"GOODSEEGOODLIVE");
         CustServiceStatBean.updateCustServiceStat(employeeId,"SCANDATA");
 
         return true;
@@ -204,7 +201,7 @@ public class PartyBean {
         String roleId=jsonObject.getString("sjs_role_id");
 
 
-        if(!StringUtils.equals(roleId,"19") ){
+        if(!StringUtils.equals(roleId,"11") ){
             return isSuccess;
         }
 
@@ -227,20 +224,33 @@ public class PartyBean {
                 param.put("FUNC",jsonObject.getString("funs"));
                 param.put("REL_EMPLOYEE_ID",employeeId);
                 param.put("CREATE_DATE",TimeTool.now());
-                param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+                param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-                param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+                param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+
+                Record partyRecord=recordSet.get(0);
+                String createDate=getMonth(partyRecord.get("CREATE_DATE"));
+                String gnltTime=transUnixTimeToNormal(jsonObject.getString("gnlt_update_time"));
+
+
+            //判断需求蓝图二的推送时间是否与咨询时间是同一个月，如果不是同一个月则不更新报表数据，否则就更新报表数据
+                RecordSet bulePrintSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",employeeId);
+                if(bulePrintSet.size()<=0 && StringUtils.equals(createDate,getMonth(gnltTime))){
+                    CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+                }
+
                 dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
                 return true;
         }
         //生成party信息
         party_info.put("OPEN_ID",openid);
         party_info.put("WX_NICK",jsonObject.getString("nickname"));
+        party_info.put("HEAD_URL",jsonObject.getString("headimgurl"));
         party_info.put("PARTY_NAME",jsonObject.getString("name"));
         party_info.put("MOBILE_NO",jsonObject.getString("phone"));
         party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
-        party_info.put("CREATE_DATE", TimeTool.now());
+        party_info.put("CREATE_DATE",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")) );
         party_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
         party_info.put("UPDATE_TIME",TimeTool.now());
         party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//代表虚拟party信息
@@ -293,9 +303,15 @@ public class PartyBean {
             if(StringUtils.equals(actionCode,"XQLTE")){
                 partyProjectActionInfo.put("STATUS","1");
                 partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-            }else{
+            }else if(StringUtils.equals(actionCode,"GZGZH")){
+                partyProjectActionInfo.put("STATUS","1");
+            }
+            else{
                 partyProjectActionInfo.put("STATUS","0");
             }
+
+
+
             partyProjectActionInfo.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
             partyProjectActionInfo.put("CREATE_DATE",TimeTool.now());
             partyProjectActionInfo.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
@@ -316,19 +332,20 @@ public class PartyBean {
         param.put("FUNC",jsonObject.getString("funs"));
         param.put("REL_EMPLOYEE_ID",employeeId);
         param.put("CREATE_DATE",TimeTool.now());
-        param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+        param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-        param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_create_time")));
+        param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
 
+        /*
         String funs= jsonObject.getString("funs");
         if(StringUtils.equals(funs,"false") || StringUtils.isBlank(funs) || "null".equals(funs)){
-            CustServiceStatBean.updateCustServiceStat("employeeId","GOODSEEGOODLIVE");
+            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         }else{
-            CustServiceStatBean.updateCustServiceStat("employeeId","GOODSEEGOODLIVE");
-            CustServiceStatBean.updateCustServiceStat("employeeId","XQLTEFUNC");
-        }
+            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+        }*/
+        //CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         return true;
     }
 
@@ -341,4 +358,22 @@ public class PartyBean {
         String date = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(timestamp));
         return date;
     }
+
+
+    public static String getMonth (String stringDate){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+        if(StringUtils.isBlank(stringDate)){
+            return "";
+        }
+        try {
+            Date date = format.parse(stringDate);
+            String newDate=format.format(date);
+            return newDate;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 }
+
