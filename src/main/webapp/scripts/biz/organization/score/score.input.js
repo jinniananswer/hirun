@@ -6,6 +6,8 @@
             totalPro : 0,
             passComm : 0,
             passPro : 0,
+            totalComposite : 0,
+            passComposite : 0,
             init : function(){
                 window["UI-popup"] = new Wade.Popup("UI-popup");
 
@@ -48,6 +50,15 @@
                     $.score.passPro = rst.get("PASS_PRO");
                     if ($.score.passPro == null || $.score.passPro == "undefined") {
                         $.score.passPro = 0;
+                    }
+
+                    $.score.totalComposite = rst.get("TOTAL_COMPOSITE");
+                    if ($.score.totalComposite == null || $.score.totalComposite == "undefined") {
+                        $.score.totalComposite = 0;
+                    }
+                    $.score.passComposite = rst.get("PASS_COMPOSITE");
+                    if ($.score.passComposite == null || $.score.passComposite == "undefined") {
+                        $.score.passComposite = 0;
                     }
                     $.score.drawScore(datas);
 
@@ -156,8 +167,18 @@
                             } else {
                                 html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "' name='" + data.get("EMPLOYEE_ID") + "' nullable=\"yes\"   desc=\"课程内容\" />");
                             }
-                            html.push("</span>")
-                            html.push("</li>")
+                            html.push("</span>");
+                            html.push("</li>");
+
+                            html.push("<li>");
+                            html.push("<span class=\"label\">"+"违纪行为："+"</span>");
+                            html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "_late' name='" + data.get("EMPLOYEE_ID")+"_late" + "'nullable=\"yes\" value='" + lateTime + "'  desc=\"违纪行为\"   />");
+                            html.push("</li>");
+
+                            html.push("<li>");
+                            html.push("<span class=\"label\">"+"罚款金额："+"</span>");
+                            html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "_money' name='" + data.get("EMPLOYEE_ID")+"_money" + "'nullable=\"yes\" value='" + money + "'  desc=\"罚款金额\"   />");
+                            html.push("</li>");
                         } else {
                             if(needComm=="TRUE"){
                                 html.push("<li >")
@@ -191,7 +212,7 @@
 
                             html.push("<li>");
                             html.push("<span class=\"label\">"+"罚款金额："+"</span>");
-                            html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "_late' name='" + data.get("EMPLOYEE_ID")+"_money" + "'nullable=\"yes\" value='" + money + "'  desc=\"罚款金额\"   />");
+                            html.push("<input type=\"text\" id='" + data.get("EMPLOYEE_ID") + "_money' name='" + data.get("EMPLOYEE_ID")+"_money" + "'nullable=\"yes\" value='" + money + "'  desc=\"罚款金额\"   />");
                             html.push("</li>");
                         }
                         html.push("</ul>");
@@ -222,6 +243,16 @@
                             companyPassPro = 0;
                         }
 
+                        var companyTotalComposite = $.score.companyPass.get(key + "_COMPOSITE_TOTAL");
+                        if (companyTotalComposite == null || companyTotalComposite == "undefined") {
+                            companyTotalComposite = 0;
+                        }
+
+                        var companyPassComposite = $.score.companyPass.get(key + "_COMPOSITE_PASS");
+                        if (companyPassComposite == null || companyPassComposite == "undefined") {
+                            companyPassComposite = 0;
+                        }
+
 
                         if (companyTotalComm > 0) {
                             html.push("<div class='c_list l_padding'><ul><li class='link'>");
@@ -238,6 +269,15 @@
                             pass = pass * 100;
                             pass = pass.toFixed(2);
                             html.push(key+"专业成绩通过率："+pass+"%");
+                            html.push("</li></ul></div>");
+                        }
+
+                        if (companyTotalComposite > 0) {
+                            html.push("<div class='c_list l_padding'><ul><li class='link'>");
+                            var pass = companyPassComposite / companyTotalComposite;
+                            pass = pass * 100;
+                            pass = pass.toFixed(2);
+                            html.push(key+"综合成绩通过率："+pass+"%");
                             html.push("</li></ul></div>");
                         }
                     }
@@ -264,6 +304,16 @@
                     pass = pass * 100;
                     pass = pass.toFixed(2);
                     html.push("专业成绩总通过率："+pass+"%");
+                    html.push("</li></ul></div>");
+                    html.push("<div class='c_space'></div>");
+                }
+
+                if (this.totalComposite > 0) {
+                    html.push("<div class='c_list c_list-border l_padding'><ul><li class='link'>");
+                    var pass = this.passComposite / this.totalComposite;
+                    pass = pass * 100;
+                    pass = pass.toFixed(2);
+                    html.push("综合成绩总通过率："+pass+"%");
                     html.push("</li></ul></div>");
                     html.push("<div class='c_space'></div>");
                 }
