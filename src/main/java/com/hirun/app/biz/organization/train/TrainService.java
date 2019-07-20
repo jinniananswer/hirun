@@ -514,10 +514,25 @@ public class TrainService extends GenericService {
 
         JSONArray employeeItems = request.getJSONArray("EMPLOYEE_ITEMS");
 
+        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
+
         for(String employeeId : addEmployeeIdArray) {
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("TRAIN_ID", request.getString("TRAIN_ID"));
             parameter.put("EMPLOYEE_ID", employeeId);
+            parameter.put("STATUS", "0");
+
+            RecordSet sames = dao.query("ins_train_sign", parameter);
+
+            if(ArrayTool.isNotEmpty(sames)) {
+                Record same = sames.get(0);
+                String signedEmployeeId = same.get("SIGN_EMPLOYEE_ID");
+
+                EmployeeEntity employee = EmployeeBean.getEmployeeByEmployeeId(employeeId);
+                EmployeeEntity signedEmployee = EmployeeBean.getEmployeeByEmployeeId(signedEmployeeId);
+                response.setError("HIRUN_TRAIN_000001", "员工"+employee.getName()+"已经由"+signedEmployee.getName()+"报过名了，请剔除后重新提交!");
+                return response;
+            }
             parameter.put("SIGN_EMPLOYEE_ID", signEmployeeId);
 
             if(ArrayTool.isNotEmpty(employeeItems)) {
@@ -537,8 +552,6 @@ public class TrainService extends GenericService {
             parameter.put("UPDATE_TIME", session.getCreateTime());
             parameters.add(parameter);
         }
-
-        TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
         dao.insertBatch("ins_train_sign", parameters);
         return response;
     }
