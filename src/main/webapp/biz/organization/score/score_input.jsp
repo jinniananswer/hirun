@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>成绩录入</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/score/score.input.js?v=20190630"></script>
+    <script src="/scripts/biz/organization/score/score.input.js?v=20190720"></script>
 </head>
 <body>
 <div class="c_header">
