@@ -8,6 +8,7 @@ import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.biz.organization.train.TrainService;
 import com.hirun.app.dao.org.TrainDAO;
+import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
@@ -156,6 +157,19 @@ public class PreWorkService extends GenericService {
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("TRAIN_ID", request.getString("TRAIN_ID"));
             parameter.put("EMPLOYEE_ID", employee.getString("EMPLOYEE_ID"));
+            parameter.put("STATUS", "0");
+
+            RecordSet sames = dao.query("ins_train_sign", parameter);
+
+            if(ArrayTool.isNotEmpty(sames)) {
+                Record same = sames.get(0);
+                String signedEmployeeId = same.get("SIGN_EMPLOYEE_ID");
+
+                EmployeeEntity sameEmployee = EmployeeBean.getEmployeeByEmployeeId(employee.getString("EMPLOYEE_ID"));
+                EmployeeEntity signedEmployee = EmployeeBean.getEmployeeByEmployeeId(signedEmployeeId);
+                response.setError("HIRUN_TRAIN_000001", "员工"+sameEmployee.getName()+"已经由"+signedEmployee.getName()+"报过名了，请剔除后重新提交!");
+                return response;
+            }
             parameter.put("SIGN_EMPLOYEE_ID", signEmployeeId);
             parameter.put("STATUS", "0");
             parameter.put("CREATE_USER_ID", userId);
