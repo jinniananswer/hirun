@@ -234,6 +234,8 @@ public class ScoreService extends GenericService {
             int passPro = 0;
             int totalComm = 0;
             int totalPro = 0;
+            int totalComposite = 0;
+            int passComposite = 0;
 
             int size = scores.size();
             for(int i=0;i<size;i++) {
@@ -310,6 +312,39 @@ public class ScoreService extends GenericService {
                             }
                         }
                     }
+                } else {
+                    String scoreStr = score.get("SCORE");
+                    String companyTotalCompositeStr = companyPass.getString(rootOrg.getName()+"_COMPOSITE_TOTAL");
+                    int companyTotalComposite = 0;
+
+                    if (StringUtils.isNotBlank(companyTotalCompositeStr)) {
+                        companyTotalComposite = Integer.parseInt(companyTotalCompositeStr);
+                    }
+                    companyTotalComposite++;
+                    companyPass.put(rootOrg.getName() + "_COMPOSITE_TOTAL", companyTotalComposite);
+                    totalComposite++;
+                    if (StringUtils.isNotBlank(scoreStr)) {
+                        double compositeScore = 0;
+                        try {
+                            compositeScore = Double.parseDouble(scoreStr);
+                        } catch (Exception e) {
+
+                        }
+
+                        if (compositeScore >= 80) {
+                            passComposite++;
+                            String companyPassCompositeStr = companyPass.getString(rootOrg.getName()+"_COMPOSITE_PASS");
+                            int companyPassComposite = 0;
+
+                            if (StringUtils.isNotBlank(companyPassCompositeStr)) {
+                                companyPassComposite = Integer.parseInt(companyPassCompositeStr);
+                            }
+                            companyPassComposite++;
+
+                            companyPass.put(rootOrg.getName()+"_COMPOSITE_PASS", companyPassComposite + "");
+
+                        }
+                    }
                 }
 
                 companyScores.add(ConvertTool.toJSONObject(score));
@@ -320,6 +355,8 @@ public class ScoreService extends GenericService {
             response.set("TOTAL_PRO", totalPro);
             response.set("PASS_COMM", passComm);
             response.set("PASS_PRO", passPro);
+            response.set("TOTAL_COMPOSITE", totalComposite);
+            response.set("PASS_COMPOSITE", passComposite);
         }
 
         response.set("DATAS", ConvertTool.toJSONArray(scores));
