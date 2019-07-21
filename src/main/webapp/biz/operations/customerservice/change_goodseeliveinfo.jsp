@@ -48,7 +48,7 @@
                     </div>
                 </li>
 
-               <li class="link required">
+               <li class="link required" id="li_mobile">
                                 <div class="label">电话号码</div>
                                 <div class="value">
                                     <input type="text" id="CONTACT" name="CONTACT" placeholder="" nullable="no" desc="电话号码" />
