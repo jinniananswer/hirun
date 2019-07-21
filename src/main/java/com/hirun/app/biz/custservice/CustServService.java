@@ -728,21 +728,21 @@ public class CustServService extends GenericService {
 
         RecordSet partyLinkInfo=dao.queryLinkmanByProjectIdAndRoleType(projectId,CustomerServiceConst.CUSTOMERSERVICEROLETYPE);
 
+        //拼装party信息
+        PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyId);
         if(partyLinkInfo.size()<=0){
-            partyInfo.put("SHOWMOBILE","YES");
+
         }else{
             String linkEmpId=partyLinkInfo.get(0).get("LINK_EMPLOYEE_ID");
             if(StringUtils.equals(employeeId,linkEmpId)){
-                partyInfo.put("SHOWMOBILE","YES");
-            }else {
-                partyInfo.put("SHOWMOBILE","NO");
+                partyInfo.put("NAME",partyEntity.getPartyName());
+                partyInfo.put("CONTACT",partyEntity.getMobileNo());
+            }else{
+                String name=nameDesensitization(partyEntity.getPartyName());
+                partyInfo.put("NAME",name);
+                partyInfo.put("CONTACT","***********");
             }
         }
-
-        //拼装party信息
-        PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyId);
-        partyInfo.put("NAME",partyEntity.getPartyName());
-        partyInfo.put("CONTACT",partyEntity.getMobileNo());
         partyInfo.put("QQCONTACT",partyEntity.getQQNO());
         partyInfo.put("WXCONTACT",partyEntity.getWXNO());
         partyInfo.put("COMPANY",partyEntity.getCompany());
@@ -963,9 +963,14 @@ public class CustServService extends GenericService {
         //1、保存party信息
         Map<String, String> party_info = new HashMap<String, String>();
         party_info.put("PARTY_ID",partyId);
-        party_info.put("PARTY_NAME",party_name);
+        if(party_name.toLowerCase().indexOf("*") == -1){
+            party_info.put("PARTY_NAME",party_name);
+        }
         party_info.put("AGE",age);
-        party_info.put("MOBILE_NO",moblie_no);
+
+        if(moblie_no.toLowerCase().indexOf("*") == -1){
+            party_info.put("MOBILE_NO",moblie_no);
+        }
         party_info.put("QQ_NO",qq_no);
         party_info.put("WX_NO",wx_no);
         party_info.put("COMPANY",company);
@@ -1258,6 +1263,8 @@ public class CustServService extends GenericService {
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
         String partyId=request.getString("PARTY_ID");
         String projectId=request.getString("PROJECT_ID");
+        AppSession session =SessionManager.getSession();
+        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
         RecordSet recordSet=dao.queryPartyInfoForCustClear(partyId,projectId);//查询基本信息
         RecordSet applyRecordSet=dao.queryCustClearInfo(partyId,"","","");//查询申请记录
         //转译申请记录部分数据
@@ -1275,6 +1282,8 @@ public class CustServService extends GenericService {
             }
             }
         }
+        response.set("APPLYINFO",ConvertTool.toJSONArray(applyRecordSet));
+
 
         if(recordSet.size()<=0){
             return response;
@@ -1305,16 +1314,19 @@ public class CustServService extends GenericService {
                      tempRecord.put("DESIGNERNAME",EmployeeCache.getEmployeeNameEmployeeId(linkEmpId));
                 }
                 }
-
             }
             Set<String> keys = partyRecord.keySet();
             for(String key : keys){
               rst.add(partyRecord.get(key));
             }
 
+            if(!StringUtils.equals(employeeId,rst.get(0).get("LINK_EMPLOYEE_ID"))){
+                String partyName=rst.get(0).get("PARTY_NAME");
+                rst.get(0).put("MOBILE_NO","***********");
+                rst.get(0).put("PARTY_NAME",nameDesensitization(partyName));
+            }
 
         response.set("CUSTSERVICEINFOLIST",ConvertTool.toJSONArray(rst));
-        response.set("APPLYINFO",ConvertTool.toJSONArray(applyRecordSet));
 
         return response;
     }
@@ -1506,6 +1518,8 @@ public class CustServService extends GenericService {
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
         String partyId=request.getString("PARTY_ID");
         String projectId=request.getString("PROJECT_ID");
+        AppSession session=SessionManager.getSession();
+        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
         RecordSet recordSet=dao.queryPartyInfoForCustClear(partyId,projectId);//查询基本信息
         RecordSet partyVisitRecordSet=dao.queryPartyVisitInfo(partyId,"");//查询回访记录
         //转译申请记录部分数据
@@ -1518,6 +1532,8 @@ public class CustServService extends GenericService {
                 partyVisitRecord.put("VISIT_TYPE_NAME",StaticDataTool.getCodeName("VISIT_TYPE",visitType));
             }
         }
+
+        response.set("PARTYVISITINFO",ConvertTool.toJSONArray(partyVisitRecordSet));
 
         if(recordSet.size()<=0){
             return response;
@@ -1555,9 +1571,14 @@ public class CustServService extends GenericService {
             rst.add(partyRecord.get(key));
         }
 
+        if(!StringUtils.equals(employeeId,rst.get(0).get("LINK_EMPLOYEE_ID"))){
+            String partyName=rst.get(0).get("PARTY_NAME");
+            rst.get(0).put("MOBILE_NO","***********");
+            rst.get(0).put("PARTY_NAME",nameDesensitization(partyName));
+        }
+
 
         response.set("CUSTSERVICEINFOLIST",ConvertTool.toJSONArray(rst));
-        response.set("PARTYVISITINFO",ConvertTool.toJSONArray(partyVisitRecordSet));
         return response;
     }
 
@@ -1638,4 +1659,21 @@ public class CustServService extends GenericService {
 
         return response;
     }
+
+        public static String nameDesensitization(String name){
+            String newName="";
+            if(StringUtils.isBlank(name)){
+                return "";
+            }
+            char[] chars = name.toCharArray();
+            if(chars.length==1) {
+                newName = name;
+            }else if(chars.length==2){
+                newName=name.replaceFirst(name.substring(1), "*");
+            }else{
+                newName =name.replaceAll(name.substring(1, chars.length-1), "*");
+            }
+            return newName;
+        }
+
 }
