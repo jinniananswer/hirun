@@ -504,7 +504,10 @@
                 }
                 $("#HOUSEKIND").val(projectInfo.HOUSEKIND);
                 $("#AREA").val(projectInfo.AREA);
-                $("#FIX_PLACE").val(projectInfo.FIX_PLACE);
+                var fix_place=projectInfo.FIX_PLACE;
+                if(fix_place !='null'){
+                    $("#FIX_PLACE").val(projectInfo.FIX_PLACE);
+                }
                 $("#ADVANTAGE").val(projectInfo.ADVANTAGE);
                 $("#ADVANTAGE_TEXT").val(projectInfo.ADVANTAG_TEXT);
                 $("#CRITICALPROCESS").val(projectInfo.CRITICALPROCESS);
