@@ -8,7 +8,7 @@
                 });
 
                 window["myTable"] = new Wade.Table("myTable", {
-                    fixedMode:true,
+                    fixedMode:false,
                     fixedLeftCols:2
 
                 });
