@@ -165,6 +165,9 @@ public class CustServiceReportService extends GenericService{
         for(int i=0;i<custServFinishActionInfo.size();i++){
             Record record=custServFinishActionInfo.get(i);
             String linkemployeeid=record.get("LINK_EMPLOYEE_ID");
+            if(!StringUtils.equals(employeeId,linkemployeeid)){
+                record.put("PARTY_NAME",nameDesensitization(record.get("PARTY_NAME")));
+            }
 
             String cityCabinIds=record.get("CITY_CABINS");
             if(StringUtils.isNotBlank(cityCabinIds)){
@@ -462,6 +465,20 @@ public class CustServiceReportService extends GenericService{
         return newRecordSet;
     }
 
-
+    public static String nameDesensitization(String name){
+        String newName="";
+        if(StringUtils.isBlank(name)){
+            return "";
+        }
+        char[] chars = name.toCharArray();
+        if(chars.length==1) {
+            newName = name;
+        }else if(chars.length==2){
+            newName=name.replaceFirst(name.substring(1), "*");
+        }else{
+            newName =name.replaceAll(name.substring(1, chars.length-1), "*");
+        }
+        return newName;
+    }
 
 }
