@@ -36,12 +36,12 @@
 						<th col="CREATE_DATE" ontap="$.sortTable(this, 'date')">咨询时间</th>
 						<th class="e_red" col="ADDRESS">楼盘地址</th>
 						<th class="e_red" col="CUST_SERVICE">客户代表</th>
-						<th class="e_red" col="SCAN_DATE">进入全流程的时间</th>
-						<th class="e_red" col="STYLE_DATE">生成风格蓝图的时间</th>
-						<th class="e_red" col="FUNC_DATE">生成功能蓝图的时间</th>
-						<th class="e_red" col="FINISH_HZHK">录入客户需求信息时间</th>
+						<th class="e_red" col="SCAN_DATE" ontap="$.sortTable(this, 'date')">进入全流程的时间</th>
+						<th class="e_red" col="STYLE_DATE" ontap="$.sortTable(this, 'date')">生成风格蓝图的时间</th>
+						<th class="e_red" col="FUNC_DATE" ontap="$.sortTable(this, 'date')">生成功能蓝图的时间</th>
+						<th class="e_red" col="FINISH_HZHK" ontap="$.sortTable(this, 'date')">录入客户需求信息时间</th>
 						<th class="e_red" col="FINISH_APSJS">安排设计师时间</th>
-						<th class="e_red" col="FINISH_DKCSMW">看城市木屋时间</th>
+						<th class="e_red" col="FINISH_DKCSMW" ontap="$.sortTable(this, 'date')">看城市木屋时间</th>
 						<th class="e_red" col="CITYCABIN">带看城市木屋楼盘地址</th>
 						<th class="e_red" col="EXCEPERICE">带看后反馈情况</th>
 						<th class="e_red" col="VISITCOUNT" ontap="$.sortTable(this, 'int')">回访次数</th>
