@@ -7,6 +7,11 @@
                     mask:true
                 });
 
+                window["myTable"] = new Wade.Table("myTable", {
+                    fixedMode:true,
+                    fixedLeftCols:2
+
+                });
 
                 window["COND_START_DATE"] = new Wade.DateField(
                     "COND_START_DATE",
@@ -126,27 +131,28 @@
                     var smjrlcfinishTime=data.get("SMJRLC_FINISHTIME");
                     var hzhkfinishTime=data.get("HZHK_FINISHTIME");
                     var apsjsfinishTime=data.get("APSJS_FINISHTIME");
-
                     var funcPrintTime=data.get("FUNCPRINT_CREATE_TIME");
                     var stylePrintTime=data.get("STYLEPRINT_CREATE_TIME");
                     var wxnick=data.get("WX_NICK");
+                    var visitcount=data.get("VISITCOUNT");
 
                     html.push("<tr>");
-                    html.push("<th class='red'>");
-                    html.push(create_date.substr(0,19));
-                    html.push("</th><th class='red'>")
+                    html.push("<th class=''>");
                     html.push(partyName);
                     html.push("</th>");
 
-                    html.push("<th class='red'>");
+                    html.push("<th class=''>");
                     if(wxnick=="undefined" || wxnick ==null || wxnick =="null"){
                         html.push("");
                     }else{
                         html.push(wxnick)
                     }
                     html.push("</th>");
-
                     html.push("<th class='red'>");
+                    html.push(create_date.substr(0,19));
+                    html.push("</th>");
+
+                    html.push("<th class=''>");
                     if(houseAddress=="undefined" || houseAddress ==null || houseAddress =="null"){
                         html.push("");
                     }else{
@@ -154,7 +160,7 @@
                     }
                     html.push("</th>");
 
-                    html.push("<th class='red'>");
+                    html.push("<th class=''>");
                     html.push(custservName)
                     html.push("</th><th class='red'>");
                     if(smjrlcfinishTime=="undefined" || smjrlcfinishTime ==null){
@@ -162,34 +168,34 @@
                     }else{
                         html.push(smjrlcfinishTime.substr(0,19))
                     }
-                    html.push("</th><th class='red'>");
+                    html.push("</th><th class=''>");
                     if(stylePrintTime=="undefined" || stylePrintTime ==null){
                         html.push("");
                     }else{
                         html.push(stylePrintTime.substr(0,19))
                     }
-                    html.push("</th><th class='red'>");
+                    html.push("</th><th class=''>");
 
                     if(funcPrintTime=="undefined" || funcPrintTime ==null){
                         html.push("");
                     }else{
                         html.push(funcPrintTime.substr(0,19))
                     }
-                    html.push("</th><th class='red'>");
+                    html.push("</th><th class=''>");
 
                     if(hzhkfinishTime!="undefined" && hzhkfinishTime !=null){
                         html.push(hzhkfinishTime.substr(0,19));
                     }else{
                         html.push("");
                     }
-                    html.push("</th><th class='red'>");
+                    html.push("</th><th class=''>");
 
                     if(apsjsfinishTime!="undefined" && apsjsfinishTime !=null){
                         html.push(apsjsfinishTime.substr(0,19));
                     }else{
                         html.push("");
                     }
-                    html.push("</th><th class='red'>");
+                    html.push("</th><th class=''>");
 
                     if(scanCityTime!="undefined" && scanCityTime !=null){
                         html.push(scanCityTime.substr(0,10));
@@ -201,6 +207,28 @@
                     html.push("</th><th class='red'>");
                     html.push(experience)
                     html.push("</th>")
+
+                    html.push("<th class='fn'>");
+                    if(visitcount!="undefined" && visitcount !=null){
+                        html.push("<span ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                        html.push(visitcount);
+                        html.push("</span>")
+                    }else{
+                        html.push("<span ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                        html.push('0');
+                        html.push("</span>");
+                    }
+                    html.push("</th>")
+
+                   // html.push("<th class='fn'>");
+                   // html.push("<span ontap='$.custServiceActionQuery.redirectHKHZ(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                   // html.push("<a ontap='$.custServiceActionQuery.redirectHKHZ(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                  //  html.push("详情");
+                   // html.push("</a>");
+                   // html.push("</span>");
+                   // html.push("</th>")
+
+
                     html.push("</tr>")
                 }
 
@@ -257,7 +285,13 @@
                 $('#ORG_ID').val('');
             },
 
+            redirectPartyVisit : function(parytId,projectId) {
+                $.redirect.open('redirectPartyVisit?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '客户回访');
+            },
 
+            redirectHKHZ : function(parytId,projectId) {
+                $.redirect.open('redirectToChangeGoodSeeLiveInfo?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '咨询信息');
+            },
 
         }});
 })($);
