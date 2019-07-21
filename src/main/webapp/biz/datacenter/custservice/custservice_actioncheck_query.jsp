@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190717"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190721"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -25,25 +25,27 @@
 	<div class="c_space"></div>
 	<div class="c_space"></div>
 
-	<div id="dailysheetTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10"  style="height: 34em;">
+	<div id="myTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10"  style="height: 34em;">
 		<div class="body">
 			<div class="wrapper">
 				<table>
 					<thead>
                        <tr>
-						<th col="EMPLOYEE_NAME">咨询时间</th>
-						<th class="e_red" col="FINISH_SMJRLC">客户姓名</th>
-						<th class="e_red" col="FINISH_SMJRLC">微信昵称</th>
-						<th class="e_red" col="FINISH_HZHK">楼盘地址</th>
-						<th class="e_red" col="FINISH_SMDLUPCD">客户代表</th>
-						<th class="e_red" col="FINISH_XQLTE">进入全流程的时间</th>
-						<th class="e_red" col="FINISH_APSJS">生成风格蓝图的时间</th>
-						<th class="e_red" col="FINISH_DKCSMW">生成功能蓝图的时间</th>
+						<th class="e_red" col="CUST_NAME">客户姓名</th>
+						<th class="e_red" col="WX_NICK">微信昵称</th>
+						<th col="CREATE_DATE" ontap="$.sortTable(this, 'date')">咨询时间</th>
+						<th class="e_red" col="ADDRESS">楼盘地址</th>
+						<th class="e_red" col="CUST_SERVICE">客户代表</th>
+						<th class="e_red" col="SCAN_DATE">进入全流程的时间</th>
+						<th class="e_red" col="STYLE_DATE">生成风格蓝图的时间</th>
+						<th class="e_red" col="FUNC_DATE">生成功能蓝图的时间</th>
 						<th class="e_red" col="FINISH_HZHK">录入客户需求信息时间</th>
 						<th class="e_red" col="FINISH_APSJS">安排设计师时间</th>
 						<th class="e_red" col="FINISH_DKCSMW">看城市木屋时间</th>
-						<th class="e_red" col="FINISH_DKCSMW">带看城市木屋楼盘地址</th>
-						<th class="e_red" col="FINISH_DKCSMW">带看后反馈情况</th>
+						<th class="e_red" col="CITYCABIN">带看城市木屋楼盘地址</th>
+						<th class="e_red" col="EXCEPERICE">带看后反馈情况</th>
+						<th class="e_red" col="VISITCOUNT" ontap="$.sortTable(this, 'int')">回访次数</th>
+						<!--<th class="e_red" col="detail">详情</th>-->
 					   </tr>
 					</thead>
 
@@ -64,9 +66,24 @@
                 </div>
 			</div>
 		</div>
+		<div class="top">
+    		<table><thead></thead><tbody></tbody></table>
+    	</div>
+    	<div class="left" style="display:none">
+    		<table><thead></thead><tbody></tbody></table>
+    	</div>
+    	<div class="right" style="display:none">
+    		<table><thead></thead><tbody></tbody></table>
+    	</div>
+    	<div class="leftTop" style="display:none">
+    		<table><thead></thead><tbody></tbody></table>
+    	</div>
+    	<div class="rightTop" style="display:none">
+    		<table><thead></thead><tbody></tbody></table>
+    	</div>
 	</div>
+		<div class="e_space"></div>
 	</div>
-	<div class="e_space"></div>
 </div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
 
