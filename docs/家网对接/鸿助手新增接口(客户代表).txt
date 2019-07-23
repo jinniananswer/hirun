@@ -1,0 +1,177 @@
+﻿1、获取《需求蓝图二/三》有效推送
+req:
+http://www.hi-run.net/api/projectlt?stage=2&staff_id=12&start=1562864122
+staff_id:员工ID
+start：开始时间戳（秒）
+end：结束时间戳（秒） 
+stage：阶段二/三(值为：2、3)
+PageNo：当前页
+PageSize：每页数量
+
+res:
+project_id:全流程项目ID
+uid: 用户ID
+nickname: 用户昵称
+headimgurl: 用户头像
+add_time: 添加时间
+stat: 0000000000 状态
+msg: 0000000000000000 信息状态
+name: 姓名
+phone: 电话
+address: 新宅地址
+ishide: 是否隐藏
+mode_id: 模板ID
+mode_time: 蓝图一时间 
+loupan: 楼盘
+lnumber: 楼栋号码
+cus_from: 客户来源
+staff_id: 员工ID
+iscommend: 是否推荐
+comm_time: 推荐时间  
+method: 是否参加活动
+isccmw: 是否带看城市木屋
+iszjgd: 是否带看在建工地 
+url: 优酷地址
+lt2time: 蓝图二推荐时间
+lt3time: 蓝图二推荐时间
+openid:客户openid
+
+
+2、获取《扫码登陆pc端数据》
+req:
+http://www.hi-run.net/api/usersigninlog?PageNo=1&PageSize=100&start=1562832000&end=1562834100
+staff_id:员工ID
+start：开始时间戳（秒）
+end：结束时间戳（秒）
+PageNo：当前页
+PageSize：每页数量
+
+res:
+staff_id：自动增加ID
+role_id：角色ID
+uid：绑定UID
+realname：姓名
+mobile：手机号码
+cid：所属公司部门
+project.project_id：工程ID
+project.name: 姓名
+project.phone: 电话
+project.address: 新宅地址
+project.mode_id: 模板ID
+project.mode_time: 蓝图一时间 
+project.loupan: 楼盘
+project.lnumber: 楼栋号码
+id：日志ID,
+uid：UID,
+signin_ip：登陆IP,
+signin_time：登陆时间,
+appid：登录来源
+
+
+
+3、获取《城市木屋》
+req:
+http://www.hi-run.net/api/csmw
+cid:城市ID(
+	9:长沙
+	44:宁乡
+	42:株洲
+	16:湘潭
+	20:衡阳
+	22:常德
+	67:益阳
+	28:怀化
+	63:浏阳
+	25:娄底
+	40:郴州
+	72:岳阳
+	30:宜春
+	34:萍乡
+	36:武汉
+	32:荆州)
+PageNo：当前页
+PageSize：每页数量
+
+res:
+case_id：ID
+name：标题
+pic：图片
+cid：分公司ID
+type_id：类型
+fg：风格
+hx：户型
+lp：楼盘
+content：URL
+uid：用户ID
+stat：状态
+create_time：创建时间
+
+4、获取《扫客户代表码进入全流程数据》
+req:
+http://www.hi-run.net/api/scanlog
+http://www.hi-run.net/api/scanlog?PageNo=1&PageSize=100&role_id=11&start=1562381248&end=1562643490&staff_id=615
+http://www.hi-run.net/api/scanlog?PageNo=1&PageSize=100&role_id=11&staff_id=615
+staff_id:员工ID
+role_id:角色id
+start：开始时间戳（秒）
+end：结束时间戳（秒）
+PageNo：当前页
+PageSize：每页数量
+
+res:
+staff_id：员工ID
+realname：姓名
+mobile：手机号码
+role_id：角色ID
+openid:客户openid
+scan_id：自动增加ID
+uid：用户ID
+add_time：扫码进入全流程时间
+project_id：工程ID
+name: 姓名
+phone: 电话
+address: 新宅地址
+mode_id: 模板ID
+mode_time: 蓝图一时间 
+loupan: 楼盘
+lnumber: 楼栋号码
+
+5、在《需求蓝图一》推送接口(http://www.hi-run.net/api/commends)中增加了模型（mode属性）
+mode.mode_id：自动增加ID
+mode.uid：员工用户ID
+mode.content：内容
+mode.add_time：添加时间 
+mode.Style：风格
+mode.Func：功能
+mode.descript：描述
+mode.type：类别 
+mode.age：年龄
+mode.huxing：户型
+mode.mianji1：面积
+mode.touzi：投资
+mode.yongtu：用途
+mode.wyjg：人员结构 
+last_update：最后更新时间
+
+
+
+
+/*获取《用户扫码登陆pc端数据》 
+	
+start：开始时间戳（秒）
+	
+end：结束时间戳（秒）
+	
+PageNo：当前页
+	
+PageSize：每页数量*/
+
+http://www.hi-run.net/api/usersigninlog?PageNo=1&PageSize=100&start=1563418713&end=1563422313
+
+
+84744581   84716732
+
+15574091459
+
+
+
