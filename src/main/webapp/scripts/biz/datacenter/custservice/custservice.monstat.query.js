@@ -7,10 +7,11 @@
                     mask:true
                 });
 
-                window["dailysheetTable"] = new Wade.Table("dailysheetTable", {
+                window["custserviceTable"] = new Wade.Table("custserviceTable", {
                     fixedMode:true,
                     fixedLeftCols:1,
-                    editMode:false
+                    editMode:false,
+                    useScroller:true
                 });
 
                 var now = $.date.now();
@@ -106,11 +107,10 @@
                 });
             },
 
+
+
             drawStatInfo : function(datas){
                 $.endPageLoading();
-                $("#statInfo").empty();
-                var html = [];
-
                 if(datas == null || datas.length <= 0){
                     $("#queryMessage").css("display","");
                     return;
@@ -134,35 +134,24 @@
                     var scancityhousecount=data.get("SCANCITYHOUSE_COUNT");
                     var scancityhousescale=data.get("SCANCITYHOUSE_SCALE");
 
-                    html.push("<tr>");
-                    html.push("<th class='red'>");
-                    html.push(employeename);
-                    html.push("</th><th class='red'>")
-                    html.push(consultcount);
-                    html.push("</th><th class='red'>");
-                    html.push(stylecount)
-                    html.push("</th><th class='red'>");
-                    html.push(stylescale)
-                    html.push("</th><th class='red'>");
-                    html.push(funccount)
-                    html.push("</th><th class='red'>");
-                    html.push(funcscale)
-                    html.push("</th><th class='red'>");
-                    html.push(xqltescale)
-                    html.push("</th><th class='red'>");
-                    html.push(scancount);
-                    html.push("</th><th class='red'>");
-                    html.push(scanscale);
-                    html.push("</th><th class='red'>");
-                    html.push(scancityhousecount)
-                    html.push("</th><th class='red'>")
-                    html.push(scancityhousescale)
-                    html.push("</th>")
-                    html.push("</tr>")
-                }
 
-                $.insertHtml('beforeend', $("#statInfo"), html.join(""));
+                    custserviceTable.addRow({
+                        "_className":"no",
+                        "CUSTSERVICE_NAME":employeename,
+                        "ZX_COUNT":consultcount,
+                        "FINISH_STYLE":stylecount,
+                        "FINISH_STYLECALE":stylescale,
+                        "FINISH_FUNC":funccount,
+                        "FINISH_FUNCCALE":funcscale,
+                        "FINISH_XQLTECALE":xqltescale,
+                        "FINISH_SMQLC":scancount,
+                        "FINISH_SMQLCCALE":scanscale,
+                        "FINISH_DKCSMW":scancityhousecount,
+                        "FINISH_DKCSMWCALE":scancityhousescale
+                    });
+                }
             },
+
 
             drawCustServiceInfo4Query : function(datas){
                 $.endPageLoading();
