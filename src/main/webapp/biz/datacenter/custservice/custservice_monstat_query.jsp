@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户代表月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190717"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190802"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -32,17 +32,17 @@
 				<table>
 					<thead>
 					<tr>
-						<th col="EMPLOYEE_NAME">客户代表</th>
-						<th col="EMPLOYEE_NAME">新客户咨询数</th>
-						<th class="" col="FINISH_SMJRLC">生成风格蓝图风格数</th>
-						<th class="e_red" col="FINISH_HZHK">生成风格蓝图比例</th>
-						<th class="" col="FINISH_SMDLUPCD">生成功能蓝图风格数</th>
-						<th class="e_red" col="FINISH_XQLTE">生成功能蓝图比例</th>
-						<th class="e_red" col="FINISH_APSJS">蓝图二生成比例</th>
-						<th class="" col="FINISH_DKCSMW">扫客户代表码进入全流程数</th>
-						<th class="e_red" col="FINISH_DKCSMW">扫客户代表码进入全流程比例</th>
-						<th class="e_red" col="FINISH_DKCSMW">带看城市木屋数</th>
-						<th class="e_red" col="FINISH_DKCSMW">带看城市木屋比例</th>
+						<th col="CUSTSERVICE_NAME">客户代表</th>
+						<th col="ZX_COUNT" ontap="$.sortTable(this, 'int')">新客户咨询数</th>
+						<th class="" ontap="$.sortTable(this, 'int')" col="FINISH_STYLE">生成风格蓝图风格数</th>
+						<th class="e_red" col="FINISH_STYLECALE">生成风格蓝图比例</th>
+						<th class="" ontap="$.sortTable(this, 'int')" col="FINISH_FUNC">生成功能蓝图风格数</th>
+						<th class="e_red" col="FINISH_FUNCCALE">生成功能蓝图比例</th>
+						<th class="e_red" col="FINISH_XQLTECALE">蓝图二生成比例</th>
+						<th class="" ontap="$.sortTable(this, 'int')" col="FINISH_SMQLC">扫客户代表码进入全流程数</th>
+						<th class="e_red" col="FINISH_SMQLCCALE">扫客户代表码进入全流程比例</th>
+						<th class="e_red" ontap="$.sortTable(this, 'int')" col="FINISH_DKCSMW">带看城市木屋数</th>
+						<th class="e_red" col="FINISH_DKCSMWCALE">带看城市木屋比例</th>
 					</tr>
 					</thead>
 					<tbody id="statInfo">
