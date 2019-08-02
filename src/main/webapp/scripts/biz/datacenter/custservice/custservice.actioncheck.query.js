@@ -9,7 +9,7 @@
 
                 window["myTable"] = new Wade.Table("myTable", {
                     fixedMode:true,
-                    fixedLeftCols:2,
+                    fixedLeftCols:1,
                     editMode:false
                 });
 
