@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190722"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190802"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -31,20 +31,20 @@
 				<table>
 					<thead>
                        <tr>
-						<th class="e_red" col="CUST_NAME">客户姓名</th>
-						<th class="e_red" col="WX_NICK">微信昵称</th>
+						<th col="CUST_NAME" >客户姓名</th>
+						<th col="WX_NICK" >微信昵称</th>
 						<th col="CREATE_DATE" ontap="$.sortTable(this, 'date')">咨询时间</th>
-						<th class="e_red" col="ADDRESS">楼盘地址</th>
-						<th class="e_red" col="CUST_SERVICE">客户代表</th>
-						<th class="e_red" col="SCAN_DATE" ontap="$.sortTable(this, 'date')">进入全流程的时间</th>
-						<th class="e_red" col="STYLE_DATE" ontap="$.sortTable(this, 'date')">生成风格蓝图的时间</th>
-						<th class="e_red" col="FUNC_DATE" ontap="$.sortTable(this, 'date')">生成功能蓝图的时间</th>
-						<th class="e_red" col="FINISH_HZHK" ontap="$.sortTable(this, 'date')">录入客户需求信息时间</th>
-						<th class="e_red" col="FINISH_APSJS">安排设计师时间</th>
-						<th class="e_red" col="FINISH_DKCSMW" ontap="$.sortTable(this, 'date')">看城市木屋时间</th>
-						<th class="e_red" col="CITYCABIN">带看城市木屋楼盘地址</th>
-						<th class="e_red" col="EXCEPERICE">带看后反馈情况</th>
-						<th class="e_red" col="VISITCOUNT" ontap="$.sortTable(this, 'int')">回访次数</th>
+						<th col="ADDRESS" >楼盘地址</th>
+						<th col="CUST_SERVICE" >客户代表</th>
+						<th col="SCAN_DATE" ontap="$.sortTable(this, 'date')">进入全流程的时间</th>
+						<th col="STYLE_DATE" ontap="$.sortTable(this, 'date')">生成风格蓝图的时间</th>
+						<th col="FUNC_DATE"   ontap="$.sortTable(this, 'date')">生成功能蓝图的时间</th>
+						<th col="FINISH_HZHK"  ontap="$.sortTable(this, 'date')">录入客户需求信息时间</th>
+						<th col="FINISH_APSJS">安排设计师时间</th>
+						<th col="FINISH_DKCSMW" ontap="$.sortTable(this, 'date')">看城市木屋时间</th>
+						<th col="CITYCABIN">带看城市木屋楼盘地址</th>
+						<th col="EXCEPERICE">带看后反馈情况</th>
+						<th col="VISITCOUNT" ontap="$.sortTable(this, 'int')">回访次数</th>
 						<!--<th class="e_red" col="detail">详情</th>-->
 					   </tr>
 					</thead>
@@ -86,7 +86,6 @@
 	</div>
 </div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
-
         <div class="c_popup" id="UI-popup">
       	    <div class="c_popupBg" id="UI-popup_bg"></div>
 	        <div class="c_popupBox">
