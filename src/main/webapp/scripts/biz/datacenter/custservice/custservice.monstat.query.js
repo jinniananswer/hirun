@@ -7,6 +7,12 @@
                     mask:true
                 });
 
+                window["dailysheetTable"] = new Wade.Table("dailysheetTable", {
+                    fixedMode:true,
+                    fixedLeftCols:1,
+                    editMode:false
+                });
+
                 var now = $.date.now();
                 var nowYYYYMM = $.date.now().substring(0,4) + $.date.now().substring(5,7);
 
