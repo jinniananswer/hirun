@@ -8,9 +8,9 @@
                 });
 
                 window["myTable"] = new Wade.Table("myTable", {
-                    fixedMode:false,
-                    fixedLeftCols:2
-
+                    fixedMode:true,
+                    fixedLeftCols:2,
+                    editMode:false
                 });
 
                 window["COND_START_DATE"] = new Wade.DateField(
@@ -136,89 +136,73 @@
                     var wxnick=data.get("WX_NICK");
                     var visitcount=data.get("VISITCOUNT");
 
-                    html.push("<tr>");
-                    html.push("<th class=''>");
-                    html.push(partyName);
-                    html.push("</th>");
-
-                    html.push("<th class=''>");
                     if(wxnick=="undefined" || wxnick ==null || wxnick =="null"){
-                        html.push("");
-                    }else{
-                        html.push(wxnick)
+                        wxnick='';
                     }
-                    html.push("</th>");
-                    html.push("<th class='red'>");
-                    html.push(create_date.substr(0,19));
-                    html.push("</th>");
-
-                    html.push("<th class=''>");
                     if(houseAddress=="undefined" || houseAddress ==null || houseAddress =="null"){
-                        html.push("");
-                    }else{
-                        html.push(houseAddress)
+                        houseAddress='';
                     }
-                    html.push("</th>");
 
-                    html.push("<th class=''>");
-                    html.push(custservName)
-                    html.push("</th><th class='red'>");
                     if(smjrlcfinishTime=="undefined" || smjrlcfinishTime ==null){
-                        html.push("");
+                        smjrlcfinishTime='';
                     }else{
-                        html.push(smjrlcfinishTime.substr(0,19))
+                        smjrlcfinishTime=smjrlcfinishTime.substr(0,19)
                     }
-                    html.push("</th><th class=''>");
-                    if(stylePrintTime=="undefined" || stylePrintTime ==null){
-                        html.push("");
-                    }else{
-                        html.push(stylePrintTime.substr(0,19))
-                    }
-                    html.push("</th><th class=''>");
 
-                    if(funcPrintTime=="undefined" || funcPrintTime ==null){
-                        html.push("");
+                    if(stylePrintTime=="undefined" || stylePrintTime ==null ){
+                        stylePrintTime='';
                     }else{
-                        html.push(funcPrintTime.substr(0,19))
+                        stylePrintTime=stylePrintTime.substr(0,19)
                     }
-                    html.push("</th><th class=''>");
 
-                    if(hzhkfinishTime!="undefined" && hzhkfinishTime !=null){
-                        html.push(hzhkfinishTime.substr(0,19));
+                    if(funcPrintTime=="undefined" || funcPrintTime ==null ){
+                        funcPrintTime='';
                     }else{
-                        html.push("");
+                        funcPrintTime=funcPrintTime.substr(0,19)
                     }
-                    html.push("</th><th class=''>");
 
-                    if(apsjsfinishTime!="undefined" && apsjsfinishTime !=null){
-                        html.push(apsjsfinishTime.substr(0,19));
+                    if(hzhkfinishTime=="undefined" || hzhkfinishTime ==null ){
+                        hzhkfinishTime='';
                     }else{
-                        html.push("");
+                        hzhkfinishTime=hzhkfinishTime.substr(0,19)
                     }
-                    html.push("</th><th class=''>");
 
-                    if(scanCityTime!="undefined" && scanCityTime !=null){
-                        html.push(scanCityTime.substr(0,10));
+                    if(apsjsfinishTime=="undefined" || apsjsfinishTime ==null ){
+                        apsjsfinishTime='';
                     }else{
-                        html.push(scanCityTime);
+                        apsjsfinishTime=apsjsfinishTime.substr(0,19)
                     }
-                    html.push("</th><th class='red'>");
-                    html.push(scanCityCabins);
-                    html.push("</th><th class='red'>");
-                    html.push(experience)
-                    html.push("</th>")
 
-                    html.push("<th class='fn'>");
-                    if(visitcount!="undefined" && visitcount !=null){
-                        html.push("<span ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
-                        html.push(visitcount);
-                        html.push("</span>")
+                    if(scanCityTime=="undefined" || scanCityTime ==null ){
+                        scanCityTime='';
                     }else{
-                        html.push("<span ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
-                        html.push('0');
-                        html.push("</span>");
+                        scanCityTime=scanCityTime.substr(0,19)
                     }
-                    html.push("</th>")
+
+                    if(visitcount=="undefined" || visitcount ==null ){
+                        visitcount='0';
+                    }
+
+                    myTable.addRow({
+                        "_className":"no",
+                        "CUST_NAME":partyName,
+                        "WX_NICK":wxnick,
+                        "CREATE_DATE":create_date.substr(0,19),
+                        "ADDRESS":houseAddress,
+                        "CUST_SERVICE":custservName,
+                        "SCAN_DATE":smjrlcfinishTime,
+                        "STYLE_DATE":stylePrintTime,
+                        "FUNC_DATE":funcPrintTime,
+                        "FINISH_HZHK":hzhkfinishTime,
+                        "FINISH_APSJS":apsjsfinishTime,
+                        "FINISH_DKCSMW":scanCityTime,
+                        "CITYCABIN":scanCityCabins,
+                        "EXCEPERICE":experience,
+                        "VISITCOUNT":"<span ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>"+visitcount+"</span>"
+                    });
+
+
+
 
                    // html.push("<th class='fn'>");
                    // html.push("<span ontap='$.custServiceActionQuery.redirectHKHZ(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
@@ -227,12 +211,7 @@
                    // html.push("</a>");
                    // html.push("</span>");
                    // html.push("</th>")
-
-
-                    html.push("</tr>")
                 }
-
-                $.insertHtml('beforeend', $("#actioninfo"), html.join(""));
             },
 
             drawCustServiceInfo4Query : function(datas){
