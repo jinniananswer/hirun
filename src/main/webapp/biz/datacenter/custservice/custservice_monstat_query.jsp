@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户代表月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190802"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190803"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -22,11 +22,9 @@
 </div>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
 	<div class="c_space"></div>
-	<div class="l_padding l_padding-u">
 
-	</div>
 	<div class="c_space"></div>
-	<div id="dailysheetTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10" style="height: 34em;">
+	<div id="custserviceTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10" style="height: 34em;">
 		<div class="body">
 			<div class="wrapper">
 				<table>
@@ -34,18 +32,18 @@
 					<tr>
 						<th col="CUSTSERVICE_NAME">客户代表</th>
 						<th col="ZX_COUNT" ontap="$.sortTable(this, 'int')">新客户咨询数</th>
-						<th class="" ontap="$.sortTable(this, 'int')" col="FINISH_STYLE">生成风格蓝图风格数</th>
-						<th class="e_red" col="FINISH_STYLECALE">生成风格蓝图比例</th>
-						<th class="" ontap="$.sortTable(this, 'int')" col="FINISH_FUNC">生成功能蓝图风格数</th>
-						<th class="e_red" col="FINISH_FUNCCALE">生成功能蓝图比例</th>
-						<th class="e_red" col="FINISH_XQLTECALE">蓝图二生成比例</th>
-						<th class="" ontap="$.sortTable(this, 'int')" col="FINISH_SMQLC">扫客户代表码进入全流程数</th>
-						<th class="e_red" col="FINISH_SMQLCCALE">扫客户代表码进入全流程比例</th>
-						<th class="e_red" ontap="$.sortTable(this, 'int')" col="FINISH_DKCSMW">带看城市木屋数</th>
-						<th class="e_red" col="FINISH_DKCSMWCALE">带看城市木屋比例</th>
+						<th col="FINISH_STYLE"class="" ontap="$.sortTable(this, 'int')" >生成风格蓝图风格数</th>
+						<th col="FINISH_STYLECALE" class="e_red" >生成风格蓝图比例</th>
+						<th col="FINISH_FUNC" ontap="$.sortTable(this, 'int')" >生成功能蓝图风格数</th>
+						<th col="FINISH_FUNCCALE" class="e_red" >生成功能蓝图比例</th>
+						<th col="FINISH_XQLTECALE" class="e_red" >蓝图二生成比例</th>
+						<th col="FINISH_SMQLC" class="" ontap="$.sortTable(this, 'int')" >扫客户代表码进入全流程数</th>
+						<th col="FINISH_SMQLCCALE" class="e_red" >扫客户代表码进入全流程比例</th>
+						<th col="FINISH_DKCSMW" class="e_red" ontap="$.sortTable(this, 'int')" >带看城市木屋数</th>
+						<th col="FINISH_DKCSMWCALE" class="e_red" >带看城市木屋比例</th>
 					</tr>
 					</thead>
-					<tbody id="statInfo">
+					<tbody >
 
 					</tbody>
 				</table>
@@ -134,61 +132,58 @@
 				</div>
 			</div>
 
-                    <div class="c_popupGroup">
-                         <div class="c_popupItem" id="UI-ORG">
-                             <div class="c_header">
-                                 <div class="back" ontap="hidePopup(this);">请选择部门</div>
-                             </div>
-                             <div class="c_scroll c_scroll-float c_scroll-header">
-                                 <div class="c_box">
-                                    <div class="l_padding">
-                                        <div id="orgTree" class="c_tree"></div>
-                                    </div>
-                                 </div>
-                             </div>
-                         </div>
+            <div class="c_popupGroup">
+                 <div class="c_popupItem" id="UI-ORG">
+                      <div class="c_header">
+                           <div class="back" ontap="hidePopup(this);">请选择部门</div>
+                      </div>
+                      <div class="c_scroll c_scroll-float c_scroll-header">
+                           <div class="c_box">
+                               <div class="l_padding">
+                                   <div id="orgTree" class="c_tree"></div>
+                               </div>
+                           </div>
+                      </div>
+                 </div>
 
-                         <div class="c_popupItem" id="UI-QUERYCUSTSERVICE">
-                            <div class="c_header">
-                                <div class="back" ontap="hidePopup(this);">请选择客户代表</div>
-                            </div>
-                            <div class="l_padding">
-                                 <div class="c_box">
-                                     <div class="c_list c_list-line">
-                                        <ul id="jobArea">
-                                            <li>
-                                                 <div class="value">
-                                                     <span class="e_mix">
+                 <div class="c_popupItem" id="UI-QUERYCUSTSERVICE">
+                      <div class="c_header">
+                           <div class="back" ontap="hidePopup(this);">请选择客户代表</div>
+                      </div>
+                      <div class="l_padding">
+                           <div class="c_box">
+                               <div class="c_list c_list-line">
+                                   <ul id="jobArea">
+                                       <li>
+                                           <div class="value">
+                                                <span class="e_mix">
                                                          <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入客户代表姓名（模糊搜索）" nullable="no" desc="查询条件"/>
                                                          <button type="button" class="e_button-blue" ontap="$.custServiceMonstatQuery.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
-                                                     </span>
-                                                 </div>
-                                            </li>
+                                                 </span>
+                                           </div>
+                                       </li>
+                                   </ul>
+                               </div>
+                           </div>
+                      </div>
+                      <div class="c_scroll">
+                           <div class="l_padding">
+                                <div class="c_box">
+                                    <div class="c_list c_list-line">
+                                        <ul id="querycustservicesinfo">
+
                                         </ul>
                                      </div>
-                                 </div>
-                            </div>
-                            <div class="c_scroll">
-                                <div class="l_padding">
-                                    <div class="c_box">
-                                        <div class="c_list c_list-line">
-                                            <ul id="querycustservicesinfo">
-
-                                            </ul>
-                                        </div>
-                                    </div>
-                                     <div class="c_space-3"></div>
-                                     <div class="c_space-3"></div>
-                                     <div class="c_space-3"></div>
-
                                 </div>
-                                     <div class="c_space-3"></div>
-                                     <div class="c_space-3"></div>
-
-                            </div>
-                         </div>
-                    </div>
-
+                                <div class="c_space-3"></div>
+                                <div class="c_space-3"></div>
+                                <div class="c_space-3"></div>
+                           </div>
+                                 <div class="c_space-3"></div>
+                                 <div class="c_space-3"></div>
+                      </div>
+                 </div>
+            </div>
 		</div>
 	</div>
 </div>
