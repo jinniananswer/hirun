@@ -457,11 +457,15 @@ public class EmployeeDAO extends StrongObjectDAO{
         Map<String, String> parameter = new HashMap<String, String>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("SELECT * FROM ins_employee a, ins_employee_job_role b , ins_org e ");
         sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
-        sb.append("AND b.`JOB_ROLE` IN ('46','118','103','0','45','69','119') ");
+        sb.append("AND b.`JOB_ROLE` IN ('46','118','103','45','69','119') ");
         sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
         sb.append("AND a.status = '0' ");
+        sb.append("AND b.org_id = e.org_id ");
+        sb.append("AND e.name ='客户部' ");
+
+
 
         if(StringUtils.isNotBlank(orgId)){
             sb.append("and b.org_id in ( "+orgId+") ");
