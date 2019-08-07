@@ -65,6 +65,9 @@
                     }
 
                 }
+                else if($.os.pad) {
+                    $.redirect.open('redirectToViewPdf?FILE_ID='+fileId,'资料详情');
+                }
                 else{
                     $.redirect.open('redirectToViewFile?FILE_ID='+fileId,'资料详情');
                 }
