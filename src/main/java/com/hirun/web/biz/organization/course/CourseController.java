@@ -115,6 +115,18 @@ public class CourseController extends RootController {
         return "/biz/organization/course/view_courseware";
     }
 
+    @RequestMapping("/redirectToViewPdf")
+    public String redirectToViewPdf(HttpServletRequest request) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("FILE_ID", request.getParameter("FILE_ID"));
+        ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryCourseFile", parameter);
+        JSONObject file = response.getJSONObject("FILE");
+        String filePath = file.getString("STORAGE_PATH");
+        filePath = "/biz/organization/course/view_pdf.jsp?"+filePath;
+        request.setAttribute("PATH", filePath);
+        return "/biz/organization/course/view_pad_pdf";
+    }
+
     @RequestMapping("/initCourseFile")
     public @ResponseBody String initCourseFile(@RequestParam Map parameter) throws Exception{
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.initCourseFile", parameter);
