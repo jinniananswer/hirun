@@ -111,6 +111,7 @@
 
             drawStatInfo : function(datas){
                 $.endPageLoading();
+                $("#custservicestatinfo").empty();
                 if(datas == null || datas.length <= 0){
                     $("#queryMessage").css("display","");
                     return;
