@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户需求信息录入</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/create.goodseeliveinfo.js?v=20190419"></script>
+    <script src="/scripts/biz/customerservice/create.goodseeliveinfo.js?v=20190809"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -48,14 +48,14 @@
                <li class="link required">
                                 <div class="label">电话号码</div>
                                 <div class="value">
-                                    <input type="text" id="CONTACT" name="CONTACT" placeholder="" nullable="yes" desc="电话号码" />
+                                    <input type="text" id="CONTACT" name="CONTACT" placeholder="请填写正确的电话号码" nullable="yes" desc="电话号码" />
                                 </div>
                 </li>
 
                <li class="link required">
                                 <div class="label">装修地点</div>
                                 <div class="value">
-                                    <input type="text" id="FIX_PLACE" name="FIX_PLACE" placeholder="" nullable="yes" desc="装修地点" />
+                                    <input type="text" id="FIX_PLACE" name="FIX_PLACE" placeholder="请填写楼盘地址、栋号" nullable="yes" desc="装修地点" />
                                 </div>
                 </li>
                <li class="link ">
@@ -123,29 +123,23 @@
                          <li class="link ">
                                  <div class="label">常驻人口</div>
                                  <div class="value">
-                                     <input type="text" id="PEOPLE_COUNT" name="PEOPLE_COUNT" placeholder="" nullable="yes" desc="常驻人口" />
+                                     <input type="text" id="PEOPLE_COUNT" name="PEOPLE_COUNT" placeholder="请填写家里人口数" nullable="yes" desc="常驻人口" />
                                  </div>
                                  <div class="label">人</div>
                         </li>
 
-                         <li class="link " ontap="$('#ELDER_TEXT').focus();$('#ELDER_TEXT').blur();showPopup('UI-popup','UI-ELDERINFO');">
-                                 <div class="label">老人</div>
+                         <li class="link ">
+                                 <div class="label">老人详情</div>
                                  <div class="value">
-                                     <input type="text" id="ELDER_TEXT" name="ELDER_TEXT" readonly="true" placeholder="" nullable="yes" desc="老人" />
-                                     <input type="hidden" id="ELDER_MAN" name="ELDER_MAN" placeholder="" nullable="yes" desc="男老人" />
-                                     <input type="hidden" id="ELDER_WOMAN" name="ELDER_WOMAN" placeholder="" nullable="yes" desc="女老人" />
+                                     <textarea  class="e_textarea-row-2" id="OLDER_DETAIL" name="OLDER_DETAIL"  placeholder="可填写家里老人数量、老人家装需求" nullable="yes" desc="老人详情"></textarea>
                                  </div>
-                                 <div class="more"></div>
                         </li>
 
-                         <li class="link " ontap="$('#CHILD_TEXT').focus();$('#CHILD_TEXT').blur();showPopup('UI-popup','UI-CHILDINFO');">
-                                 <div class="label">小孩</div>
+                         <li class="link">
+                                 <div class="label">小孩详情</div>
                                  <div class="value">
-                                     <input type="text" id="CHILD_TEXT" name="CHILD_TEXT" placeholder="" readonly="true" nullable="yes" desc="小孩" />
-                                     <input type="hidden" id="CHILD_BOY" name="CHILD_BOY" placeholder="" nullable="yes" desc="小男孩" />
-                                     <input type="hidden" id="CHILD_GIRL" name="CHILD_GIRL" placeholder="" nullable="yes" desc="小女孩" />
+                                     <textarea  class="e_textarea-row-2" id="CHILD_DETAIL" name="CHILD_DETAIL"  placeholder="可填写家里小孩数量、小孩家装需求" nullable="yes" desc="小孩详情"></textarea>
                                  </div>
-                                 <div class="more"></div>
                         </li>
 
                          <li class="link " ontap="$('#HOBBY_TEXT').focus();$('#HOBBY_TEXT').blur();showPopup('UI-popup','UI-HOBBYLIST');">
@@ -506,63 +500,6 @@
     <div class="c_popupBox">
         <div class="c_popupWrapper" id="UI-popup_wrapper">
             <div class="c_popupGroup">
-                                    <!-- 老人信息弹出浮层 -->
-                <div class="c_popupItem" id="UI-ELDERINFO">
-                    <div class="c_header">
-                        <div class="back" ontap="hidePopup(this);">老人信息</div>
-                    </div>
-                    <div class="c_scroll c_scroll-float c_scroll-header">
-                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
-                             <ul id="elderinfolist">
-                                <li class="link">
-                                    <div class="label">男:</div>
-                                    <div class="value"><input id="OLDMANCOUNT" name="OLDMANCOUNT" type="text" nullable="yes" desc="老男人"/></div>
-                                </li>
-                                <li class="link">
-                                    <div class="label">女:</div>
-                                    <div class="value"><input id="OLDWOMANCOUNT" name="OLDWOMANCOUNT" type="text" nullable="yes" desc="老女人"/></div>
-                                </li>
-
-                             </ul>
-                        </div>
-                        <div class="c_space-3"></div>
-                        <div class="">
-                           <div class="c_submit c_submit-full">
-                               <button type="button" ontap="$.goodseelive.confirmElderinfo();" class="e_button-l e_button-green">确定</button>
-                           </div>
-                        </div>
-                    </div>
-
-                </div>
-                        <!-- 小孩信息弹出浮层 -->
-                <div class="c_popupItem" id="UI-CHILDINFO">
-                    <div class="c_header">
-                        <div class="back" ontap="hidePopup(this);">小孩信息</div>
-                    </div>
-                    <div class="c_scroll c_scroll-float c_scroll-header">
-                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
-                             <ul id="childinfolist">
-                                <li class="link">
-                                    <div class="label">男:</div>
-                                    <div class="value"><input id="CHILDBOYCOUNT" name="OLDMANCOUNT" type="text" nullable="yes" desc="小男孩"/></div>
-                                </li>
-                                <li class="link">
-                                    <div class="label">女:</div>
-                                    <div class="value"><input id="CHILDGIRLCOUNT" name="OLDWOMANCOUNT" type="text" nullable="yes" desc="小女孩"/></div>
-                                </li>
-
-                             </ul>
-                        </div>
-                        <div class="c_space-3"></div>
-
-                        <div class="">
-                            <div class="c_submit c_submit-full">
-                            <button type="button" ontap="$.goodseelive.confirmChildinfo();" class="e_button-l e_button-green">确定</button>
-                             </div>
-                        </div>
-                    </div>
-
-                </div>
                  <!-- 兴趣爱好选择 -->
                 <div class="c_popupItem" id="UI-HOBBYLIST">
                     <!-- 标题栏 开始 -->
