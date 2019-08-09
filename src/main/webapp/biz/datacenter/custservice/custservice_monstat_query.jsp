@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户代表月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190803"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190809"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -43,7 +43,7 @@
 						<th col="FINISH_DKCSMWCALE" class="e_red" >带看城市木屋比例</th>
 					</tr>
 					</thead>
-					<tbody >
+					<tbody id="custservicestatinfo">
 
 					</tbody>
 				</table>
