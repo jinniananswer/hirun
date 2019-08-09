@@ -170,6 +170,13 @@ public class CustServService extends GenericService {
                             if(xqlteRecordSet.size()>0) {
                                 partyAction.put("STATUS", "1");
                                 partyAction.put("XQLTE_FINISHTIME", xqlteRecordSet.get(0).get("XQLTE_UPDATE_TIME"));
+                                /*
+                                Record xqlteRecord=xqlteRecordSet.get(0);
+                                JSONObject jsonObject=getFuncTree(xqlteRecord);
+                                if(jsonObject !=null){
+                                response.set("FUNC_TREE", jsonObject);
+                                }
+                                */
                             }
                         }
                     }
@@ -384,10 +391,12 @@ public class CustServService extends GenericService {
         String educate=request.getString("EDUCATE");//学历
         String company=request.getString("COMPANY");
         String family_members_count=request.getString("PEOPLE_COUNT");//常驻人口
-        String oldman_count=request.getString("ELDER_MAN");//老男人个数
-        String oldwoman_count=request.getString("ELDER_WOMAN");//老女人个数
-        String boy_count=request.getString("CHILD_BOY");//小男孩个数
-        String girl_count=request.getString("CHILD_GIRL");//小女孩个数
+        //String oldman_count=request.getString("ELDER_MAN");//老男人个数
+        //String oldwoman_count=request.getString("ELDER_WOMAN");//老女人个数
+        //String boy_count=request.getString("CHILD_BOY");//小男孩个数
+        //String girl_count=request.getString("CHILD_GIRL");//小女孩个数
+        String oldDetail=request.getString("OLDER_DETAIL");
+        String childDetail=request.getString("CHILD_DETAIL");
         String hobby=request.getString("HOBBY");//个人爱好
         String other_hobby=request.getString("OTHER_HOBBY");//其他个人爱好
         String chineseStlye=request.getString("CHINESESTYLE");//中国骨风
@@ -432,10 +441,12 @@ public class CustServService extends GenericService {
         party_info.put("COMPANY",company);
         party_info.put("EDUCATIONAL",educate);
         party_info.put("FAMILY_MEMBERS_COUNT",family_members_count);
-        party_info.put("OLDMAN_COUNT",oldman_count);
-        party_info.put("OLDWOMAN_COUNT",oldwoman_count);
-        party_info.put("BOY_COUNT",boy_count);
-        party_info.put("GIRL_COUNT",girl_count);
+        //party_info.put("OLDMAN_COUNT",oldman_count);
+        //party_info.put("OLDWOMAN_COUNT",oldwoman_count);
+        //party_info.put("BOY_COUNT",boy_count);
+        //party_info.put("GIRL_COUNT",girl_count);
+        party_info.put("OLDER_DETAIL",oldDetail);
+        party_info.put("CHILD_DETAIL",childDetail);
         party_info.put("HOBBY",hobby);
         party_info.put("OTHER_HOBBY",other_hobby);
         party_info.put("CREATE_USER_ID",session.getSessionEntity().getUserId());
@@ -749,25 +760,28 @@ public class CustServService extends GenericService {
         partyInfo.put("AGE",partyEntity.getAge());
         partyInfo.put("EDUCATE",partyEntity.getEducational());
         partyInfo.put("PEOPLE_COUNT",partyEntity.getfamilyMembersCount());
-        partyInfo.put("ELDER_MAN",partyEntity.getOldmanCount());
-        partyInfo.put("ELDER_WOMAN",partyEntity.getOldwomanCount());
+        //partyInfo.put("ELDER_MAN",partyEntity.getOldmanCount());
+        //partyInfo.put("ELDER_WOMAN",partyEntity.getOldwomanCount());
+        /*
         if(StringUtils.isNotBlank(partyEntity.getOldmanCount())){
             elderText="男："+partyEntity.getOldmanCount()+"人 ";
         }
         if(StringUtils.isNotBlank(partyEntity.getOldwomanCount())){
             elderText +="女："+partyEntity.getOldwomanCount()+"人";
         }
-
-        partyInfo.put("ELDER_TEXT",elderText);
-        partyInfo.put("CHILD_BOY",partyEntity.getBoyCount());
-        partyInfo.put("CHILD_GIRL",partyEntity.getGirlCount());
+        */
+        partyInfo.put("OLDER_DETAIL",partyEntity.getOlderDetail());
+        //partyInfo.put("CHILD_BOY",partyEntity.getBoyCount());
+        //partyInfo.put("CHILD_GIRL",partyEntity.getGirlCount());
+        /*
         if(StringUtils.isNotBlank(partyEntity.getBoyCount())){
             childText="男："+partyEntity.getBoyCount()+"人 ";
         }
         if(StringUtils.isNotBlank(partyEntity.getGirlCount())){
             childText +="女："+partyEntity.getGirlCount()+"人";
         }
-        partyInfo.put("CHILD_TEXT",childText);
+        */
+        partyInfo.put("CHILD_DETAIL",partyEntity.getChildDetail());
         partyInfo.put("OTHER_HOBBY",partyEntity.getOtherHobby());
         partyInfo.put("HOBBY",partyEntity.getHobby());
 
@@ -923,10 +937,13 @@ public class CustServService extends GenericService {
         String educate=request.getString("EDUCATE");//学历
         String company=request.getString("COMPANY");
         String family_members_count=request.getString("PEOPLE_COUNT");//常驻人口
-        String oldman_count=request.getString("ELDER_MAN");//老男人个数
-        String oldwoman_count=request.getString("ELDER_WOMAN");//老女人个数
-        String boy_count=request.getString("CHILD_BOY");//小男孩个数
-        String girl_count=request.getString("CHILD_GIRL");//小女孩个数
+        //String oldman_count=request.getString("ELDER_MAN");//老男人个数
+        //String oldwoman_count=request.getString("ELDER_WOMAN");//老女人个数
+        //String boy_count=request.getString("CHILD_BOY");//小男孩个数
+        //String girl_count=request.getString("CHILD_GIRL");//小女孩个数
+        String oldDetail=request.getString("OLDER_DETAIL");
+        String childDetail=request.getString("CHILD_DETAIL");
+
         String hobby=request.getString("HOBBY");//个人爱好
         String other_hobby=request.getString("OTHER_HOBBY");//其他个人爱好
         String chineseStlye=request.getString("CHINESESTYLE");//中国骨风
@@ -976,10 +993,14 @@ public class CustServService extends GenericService {
         party_info.put("COMPANY",company);
         party_info.put("EDUCATIONAL",educate);
         party_info.put("FAMILY_MEMBERS_COUNT",family_members_count);
-        party_info.put("OLDMAN_COUNT",oldman_count);
-        party_info.put("OLDWOMAN_COUNT",oldwoman_count);
-        party_info.put("BOY_COUNT",boy_count);
-        party_info.put("GIRL_COUNT",girl_count);
+        //party_info.put("OLDMAN_COUNT",oldman_count);
+        //party_info.put("OLDWOMAN_COUNT",oldwoman_count);
+        //party_info.put("BOY_COUNT",boy_count);
+        //party_info.put("GIRL_COUNT",girl_count);
+
+        party_info.put("OLDER_DETAIL",oldDetail);
+        party_info.put("CHILD_DETAIL",childDetail);
+
         party_info.put("HOBBY",hobby);
         party_info.put("OTHER_HOBBY",other_hobby);
         party_info.put("UPDATE_USER_ID",session.getSessionEntity().getUserId());
@@ -1674,6 +1695,83 @@ public class CustServService extends GenericService {
                 newName =name.replaceAll(name.substring(1, chars.length-1), "*");
             }
             return newName;
+        }
+
+        public static JSONObject getFuncTree(Record record){
+            if(record==null){
+                return null;
+            }
+            JSONObject jsonObject=new JSONObject();
+
+            String func=record.get("FUNC");
+            if(StringUtils.isBlank(func) || StringUtils.equals("flase",func)){
+                return null;
+            }
+            JSONArray funcArray=JSONArray.parseArray(func);
+            int size=funcArray.size();
+
+            JSONObject root = new JSONObject();
+            root.put("text", "功能蓝图");
+            root.put("id", "-1");
+            root.put("dataid", "-1");
+            root.put("expand", "true");
+            root.put("order", "0");
+            root.put("disabled", "false");
+            root.put("complete", "false");
+            root.put("showcheck", "false");
+            root.put("haschild", "true");
+            root.put("value", "-1");
+
+
+            List children=buildFuncTree(funcArray,"-1",new ArrayList<JSONObject>());
+
+            if (children == null) {
+                root.put("haschild", "false");
+            }
+            else {
+                root.put("haschild", "true");
+                root.put("childNodes", children);
+            }
+            jsonObject.put("-1",root);
+            return jsonObject;
+        }
+
+        public static List<JSONObject> buildFuncTree(Object objJson, String prefix, List<JSONObject> allNode){
+
+            if(objJson == null){
+                return null;
+            }
+
+            if(objJson instanceof JSONArray){
+                JSONArray objArray = (JSONArray)objJson;
+                for(int i=0;i<objArray.size();i++){
+                    JSONObject childNode=new JSONObject();
+                    JSONObject jsonObject=(JSONObject)objArray.get(i);
+                        childNode.put("text", jsonObject.getString("name"));
+                        childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+                        childNode.put("id", jsonObject.getString("caid"));
+                        childNode.put("disabled", "false");
+                        childNode.put("value", jsonObject.getString("caid"));
+                        allNode.add(childNode);
+                        if(jsonObject.get("subs")!=null){
+                        buildFuncTree(jsonObject.get("subs"), prefix + "●" + jsonObject.getString("caid"), allNode);
+                        }
+                }
+            }
+            return allNode;
+        }
+
+        public JSONObject transTree(List<JSONObject> allNodes){
+            if(allNodes.size()<=0 || allNodes == null){
+                return null;
+            }
+            JSONObject jsonObject=new JSONObject();
+            for(int i=0;i<allNodes.size();i++){
+                JSONObject tempJsonObject=allNodes.get(i);
+                String dataid=tempJsonObject.getString("dataid");
+                jsonObject.put(tempJsonObject.getString("id"),tempJsonObject);
+            }
+            return jsonObject;
         }
 
 }
