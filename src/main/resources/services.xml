@@ -181,6 +181,8 @@
     <entity name="OperationCenter.custservice.SignInDataImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.SignInDataImportTaskService" method="hirunplusDataImport"/>
     <!--需求蓝图二信息导入-->
     <entity name="OperationCenter.custservice.XQLTEImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.XQLTEDataImportTaskService" method="hirunplusDataImport"/>
+    <entity name="OperationCenter.custservice.TransCustServiceDataToInsService.transCustServiceDataToIns"  class="com.hirun.app.biz.task.out.TransCustServiceDataToInsService" method="transCustServiceDataToIns"/>
+
     <!--城市木屋管理初始化-->
     <entity name="OperationCenter.custservice.citycabin.CityCabinService.initManagerCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="initManagerCityCabin"/>
     <entity name="OperationCenter.custservice.citycabin.CityCabinService.createCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="createCityCabin"/>
