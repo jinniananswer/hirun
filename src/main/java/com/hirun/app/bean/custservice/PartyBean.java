@@ -103,7 +103,6 @@ public class PartyBean {
         party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//正常客户状态
 
 
-
         long party_id=dao.insertAutoIncrement("INS_PARTY",party_info);
 
         //保存project信息
@@ -150,6 +149,112 @@ public class PartyBean {
             if(StringUtils.equals(actionCode,"SMJRLC")){
                 partyProjectActionInfo.put("STATUS","1");
                 partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("add_time")));
+            }else if(StringUtils.equals(actionCode,"GZGZH")){
+                partyProjectActionInfo.put("STATUS","1");
+            }else{
+                partyProjectActionInfo.put("STATUS","0");
+            }
+            partyProjectActionInfo.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+            partyProjectActionInfo.put("CREATE_DATE",TimeTool.now());
+            partyProjectActionInfo.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+            partyProjectActionInfo.put("UPDATE_TIME",TimeTool.now());
+            partyProjectActionList.add(partyProjectActionInfo);
+        }
+        if(ArrayTool.isNotEmpty(partyProjectActionList)) {
+            dao.insertBatch("ins_project_original_action", partyProjectActionList);
+        }
+
+        CustServiceStatBean.updateCustServiceStat(employeeId,"SCANDATA");
+
+        return true;
+    }
+
+    public static boolean transScanDataFromTableToIns(JSONObject jsonObject) throws Exception{
+        boolean isSuccess = false;
+        Map<String, String> party_info = new HashMap<String, String>();
+        CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
+        String openid=jsonObject.getString("OPENID");
+        //将家网的操作员转换成鸿助手的操作员
+        String employeeId = PartyBean.getEmployeeIdByHirunPlusStaffId(jsonObject.getString("STAFF_ID"));
+
+        if(StringUtils.isBlank(employeeId)) {
+            return isSuccess;
+        }
+        //这个地方加上employee的判断是因为可以允许同一个客户属于不同的客户代表
+        RecordSet recordSet=PartyBean.getPartyInfoByOpenIdAndEmployeeId(openid,employeeId);
+        if(recordSet.size() > 0 ){
+            Record record=recordSet.get(0);
+            Map<String, String> updateActionInfo = new HashMap<String, String>();
+            updateActionInfo.put("PROJECT_ID",record.get("PROJECT_ID"));
+            updateActionInfo.put("PARTY_ID",record.get("PARTY_ID"));
+            updateActionInfo.put("ACTION_CODE","SMJRLC");
+            updateActionInfo.put("STATUS","1");
+            updateActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("ADD_TIME")));
+            updateActionInfo.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+            updateActionInfo.put("UPDATE_TIME",TimeTool.now());
+            dao.save("ins_project_original_action",new String[]{"PROJECT_ID","PARTY_ID","ACTION_CODE"},updateActionInfo);
+
+            return true;
+        }
+        //生成party信息
+        party_info.put("OPEN_ID",openid);
+        party_info.put("WX_NICK",jsonObject.getString("NICKNAME"));
+        party_info.put("HEAD_URL",jsonObject.getString("HEAD_URL"));
+        party_info.put("PARTY_NAME",jsonObject.getString("NAME"));
+        party_info.put("MOBILE_NO",jsonObject.getString("PHONE"));
+        party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        party_info.put("CREATE_DATE", transUnixTimeToNormal(jsonObject.getString("ADD_TIME")));
+        party_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        party_info.put("UPDATE_TIME",TimeTool.now());
+        party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//正常客户状态
+
+
+        long party_id=dao.insertAutoIncrement("INS_PARTY",party_info);
+
+        //保存project信息
+        Map<String, String> project_info = new HashMap<String, String>();
+        project_info.put("PARTY_ID",party_id+"");
+        project_info.put("HOUSE_ADDRESS",jsonObject.getString("ADDRESS")+jsonObject.getString("LOUPAN")+jsonObject.getString("LNUMBER"));
+        project_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_info.put("CREATE_DATE", TimeTool.now());
+        project_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_info.put("UPDATE_TIME",TimeTool.now());
+
+        long project_id=dao.insertAutoIncrement("ins_project",project_info);
+        //保存项目意向信息
+        Map<String, String> project_intention_info = new HashMap<String, String>();
+        project_intention_info.put("PROJECT_ID",project_id+"");
+        project_intention_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_intention_info.put("CREATE_DATE", TimeTool.now());
+        project_intention_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_intention_info.put("UPDATE_TIME",TimeTool.now());
+
+        dao.insertAutoIncrement("ins_project_intention",project_intention_info);
+        //生成项目联系人信息
+        Map<String, String> project_link_info = new HashMap<String, String>();
+        project_link_info.put("PROJECT_ID",project_id+"");
+        project_link_info.put("ROLE_TYPE", CustomerServiceConst.CUSTOMERSERVICEROLETYPE);
+        project_link_info.put("LINK_EMPLOYEE_ID",employeeId);
+        project_link_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_link_info.put("CREATE_DATE", TimeTool.now());
+        project_link_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_link_info.put("UPDATE_TIME",TimeTool.now());
+
+        dao.insertAutoIncrement("ins_project_linkman",project_link_info);
+
+        //生成项目_action信息
+        List<ActionEntity> actionEntityList = ActionCache.getActionListByType("2");
+        List<Map<String, String>> partyProjectActionList = new ArrayList<Map<String, String>>();
+        for(int i=0;i<actionEntityList.size();i++){
+            ActionEntity actionEntity=actionEntityList.get(i);
+            String actionCode=actionEntity.getActionCode();
+            Map<String, String> partyProjectActionInfo = new HashMap<String, String>();
+            partyProjectActionInfo.put("PROJECT_ID",project_id+"");
+            partyProjectActionInfo.put("PARTY_ID",party_id+"");
+            partyProjectActionInfo.put("ACTION_CODE",actionCode);
+            if(StringUtils.equals(actionCode,"SMJRLC")){
+                partyProjectActionInfo.put("STATUS","1");
+                partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("ADD_TIME")));
             }else if(StringUtils.equals(actionCode,"GZGZH")){
                 partyProjectActionInfo.put("STATUS","1");
             }else{
@@ -311,7 +416,6 @@ public class PartyBean {
             }
 
 
-
             partyProjectActionInfo.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
             partyProjectActionInfo.put("CREATE_DATE",TimeTool.now());
             partyProjectActionInfo.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
@@ -348,6 +452,160 @@ public class PartyBean {
         //CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
         return true;
     }
+
+    public static boolean transXQLTEDataFromTableToIns(JSONObject jsonObject) throws Exception{
+        boolean isSuccess = false;
+        Map<String, String> party_info = new HashMap<String, String>();
+        CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
+        String openid=jsonObject.getString("OPEN_ID");
+        String roleId=jsonObject.getString("SJS_ROLE_ID");
+
+
+        if(!StringUtils.equals(roleId,"11") ){
+            return isSuccess;
+        }
+
+        //将家网的操作员转换成鸿助手的操作员
+        String employeeId = PartyBean.getEmployeeIdByHirunPlusStaffId(jsonObject.getString("SJS_STAFF_ID"));
+
+        if(StringUtils.isBlank(employeeId)) {
+            return isSuccess;
+        }
+        //这个地方加上employee的判断是因为可以允许同一个客户属于不同的客户代表
+        RecordSet recordSet=PartyBean.getPartyInfoByOpenIdAndEmployeeId(openid,employeeId);
+        if(recordSet.size() > 0 ){
+            Map<String,String> param=new HashMap<String, String>();
+            param.put("OPEN_ID",openid);
+            param.put("ACTION_CODE","XQLTE");
+            param.put("MODE_ID",jsonObject.getString("MODE_ID"));
+            param.put("MODE_TIME",jsonObject.getString("MODE_TIME"));
+            param.put("NAME",jsonObject.getString("NAME"));
+            param.put("STAFF_ID",jsonObject.getString("SJS_STAFF_ID"));
+            param.put("FUNC",jsonObject.getString("FUNC"));
+            param.put("REL_EMPLOYEE_ID",employeeId);
+            param.put("CREATE_DATE",TimeTool.now());
+            param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+            param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+            param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+            param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+
+            Record partyRecord=recordSet.get(0);
+            String createDate=getMonth(partyRecord.get("CREATE_DATE"));
+            String gnltTime=transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME"));
+
+
+            //判断需求蓝图二的推送时间是否与咨询时间是同一个月，如果不是同一个月则不更新报表数据，否则就更新报表数据
+            RecordSet bulePrintSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",employeeId);
+            if(bulePrintSet.size()<=0 && StringUtils.equals(createDate,getMonth(gnltTime))){
+                CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+            }
+
+            dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
+            return true;
+        }
+        //生成party信息
+        party_info.put("OPEN_ID",openid);
+        party_info.put("WX_NICK",jsonObject.getString("NICKNAME"));
+        party_info.put("HEAD_URL",jsonObject.getString("HEADIMGURL"));
+        party_info.put("PARTY_NAME",jsonObject.getString("NAME"));
+        party_info.put("MOBILE_NO",jsonObject.getString("PHONE"));
+        party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        party_info.put("CREATE_DATE",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")) );
+        party_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        party_info.put("UPDATE_TIME",TimeTool.now());
+        party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//代表虚拟party信息
+
+
+
+        long party_id=dao.insertAutoIncrement("INS_PARTY",party_info);
+
+        //保存project信息
+        Map<String, String> project_info = new HashMap<String, String>();
+        project_info.put("PARTY_ID",party_id+"");
+        project_info.put("HOUSE_ADDRESS",jsonObject.getString("ADDRESS")+jsonObject.getString("LOUPAN")+jsonObject.getString("LNUMBER"));
+        project_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_info.put("CREATE_DATE", TimeTool.now());
+        project_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_info.put("UPDATE_TIME",TimeTool.now());
+
+        long project_id=dao.insertAutoIncrement("ins_project",project_info);
+        //保存项目意向信息
+        Map<String, String> project_intention_info = new HashMap<String, String>();
+        project_intention_info.put("PROJECT_ID",project_id+"");
+        project_intention_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_intention_info.put("CREATE_DATE", TimeTool.now());
+        project_intention_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_intention_info.put("UPDATE_TIME",TimeTool.now());
+
+        dao.insertAutoIncrement("ins_project_intention",project_intention_info);
+        //生成项目联系人信息
+        Map<String, String> project_link_info = new HashMap<String, String>();
+        project_link_info.put("PROJECT_ID",project_id+"");
+        project_link_info.put("ROLE_TYPE", CustomerServiceConst.CUSTOMERSERVICEROLETYPE);
+        project_link_info.put("LINK_EMPLOYEE_ID",employeeId);
+        project_link_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_link_info.put("CREATE_DATE", TimeTool.now());
+        project_link_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+        project_link_info.put("UPDATE_TIME",TimeTool.now());
+
+        dao.insertAutoIncrement("ins_project_linkman",project_link_info);
+
+        //生成项目_action信息
+        List<ActionEntity> actionEntityList = ActionCache.getActionListByType("2");
+        List<Map<String, String>> partyProjectActionList = new ArrayList<Map<String, String>>();
+        for(int i=0;i<actionEntityList.size();i++){
+            ActionEntity actionEntity=actionEntityList.get(i);
+            String actionCode=actionEntity.getActionCode();
+            Map<String, String> partyProjectActionInfo = new HashMap<String, String>();
+            partyProjectActionInfo.put("PROJECT_ID",project_id+"");
+            partyProjectActionInfo.put("PARTY_ID",party_id+"");
+            partyProjectActionInfo.put("ACTION_CODE",actionCode);
+            if(StringUtils.equals(actionCode,"XQLTE")){
+                partyProjectActionInfo.put("STATUS","1");
+                partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+            }else if(StringUtils.equals(actionCode,"GZGZH")){
+                partyProjectActionInfo.put("STATUS","1");
+            }
+            else{
+                partyProjectActionInfo.put("STATUS","0");
+            }
+            partyProjectActionInfo.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+            partyProjectActionInfo.put("CREATE_DATE",TimeTool.now());
+            partyProjectActionInfo.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
+            partyProjectActionInfo.put("UPDATE_TIME",TimeTool.now());
+            partyProjectActionList.add(partyProjectActionInfo);
+        }
+        if(ArrayTool.isNotEmpty(partyProjectActionList)) {
+            dao.insertBatch("ins_project_original_action", partyProjectActionList);
+        }
+
+        Map<String,String> param=new HashMap<String, String>();
+        param.put("OPEN_ID",openid);
+        param.put("ACTION_CODE","XQLTE");
+        param.put("MODE_ID",jsonObject.getString("MODE_ID"));
+        param.put("MODE_TIME",jsonObject.getString("MODE_TIME"));
+        param.put("NAME",jsonObject.getString("NAME"));
+        param.put("STAFF_ID",jsonObject.getString("SJS_STAFF_ID"));
+        param.put("FUNC",jsonObject.getString("FUNC"));
+        param.put("REL_EMPLOYEE_ID",employeeId);
+        param.put("CREATE_DATE",TimeTool.now());
+        param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+        param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+        param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+        param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("GNLT_UPDATE_TIME")));
+        dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
+
+        /*
+        String funs= jsonObject.getString("funs");
+        if(StringUtils.equals(funs,"false") || StringUtils.isBlank(funs) || "null".equals(funs)){
+            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+        }else{
+            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+        }*/
+        //CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+        return true;
+    }
+
 
     //将unix时间转换成正常时间
     private static   String transUnixTimeToNormal (String timestampString){
