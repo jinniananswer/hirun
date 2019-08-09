@@ -539,15 +539,15 @@
                 $("#EDUCATE").val(partyInfo.EDUCATE);
                 $("#PEOPLE_COUNT").val(partyInfo.PEOPLE_COUNT);
                 $("#COMPANY").val(partyInfo.COMPANY);
-                $("#ELDER_MAN").val(partyInfo.ELDER_MAN);
-                $("#ELDER_WOMAN").val(partyInfo.ELDER_WOMAN);
-                $("#CHILD_BOY").val(partyInfo.CHILD_BOY);
-                $("#CHILD_GIRL").val(partyInfo.CHILD_GIRL);
+                //$("#ELDER_MAN").val(partyInfo.ELDER_MAN);
+                //$("#ELDER_WOMAN").val(partyInfo.ELDER_WOMAN);
+                //$("#CHILD_BOY").val(partyInfo.CHILD_BOY);
+                //$("#CHILD_GIRL").val(partyInfo.CHILD_GIRL);
                 $("#OTHER_HOBBY").val(partyInfo.OTHER_HOBBY);
                 $("#HOBBY").val(partyInfo.HOBBY);
                 $("#HOBBY_TEXT").val(partyInfo.HOBBY_TEXT);
-                $("#ELDER_TEXT").val(partyInfo.ELDER_TEXT);
-                $("#CHILD_TEXT").val(partyInfo.CHILD_TEXT);
+                $("#OLDER_DETAIL").val(partyInfo.OLDER_DETAIL);
+                $("#CHILD_DETAIL").val(partyInfo.CHILD_DETAIL);
 
             },
 
