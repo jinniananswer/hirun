@@ -131,6 +131,15 @@ public class PartyEntity extends GenericEntity{
 		return this.get("OLDMAN_COUNT");
 	}
 
+	public void setOlderDetail(String olderDetail){
+		this.set("OLDER_DETAIL", olderDetail);
+	}
+
+	public String getOlderDetail(){
+		return this.get("OLDER_DETAIL");
+	}
+
+
 	public void setOldwomanCount(String oldwomanCount){
 		this.set("OLDWOMAN_COUNT", oldwomanCount);
 	}
@@ -154,6 +163,15 @@ public class PartyEntity extends GenericEntity{
 	public String getGirlCount(){
 		return this.get("GIRL_COUNT");
 	}
+
+	public void setChildDetail(String childDetail){
+		this.set("CHILD_DETAIL", childDetail);
+	}
+
+	public String getChildDetail(){
+		return this.get("CHILD_DETAIL");
+	}
+
 
 	public void setHobby(String hobby){
 		this.set("HOBBY", hobby);
