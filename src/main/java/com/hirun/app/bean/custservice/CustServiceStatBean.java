@@ -39,6 +39,7 @@ public class CustServiceStatBean {
                 custservicestat.put("STYLE_COUNT", "0");
                 custservicestat.put("FUNC_COUNT", "0");
                 custservicestat.put("SCAN_COUNT", "0");
+                custservicestat.put("XQLTE_COUNT", "0");
                 custservicestat.put("SCANCITYHOUSE_COUNT", "0");
                 custservicestat.put("STYLE_SCALE", "0.00%");
                 custservicestat.put("FUNC_SCALE", "0.00%");
@@ -55,6 +56,7 @@ public class CustServiceStatBean {
                     custservicestat.put("STYLE_COUNT", "0");
                     custservicestat.put("FUNC_COUNT", "0");
                     custservicestat.put("SCAN_COUNT", "0");
+                    custservicestat.put("XQLTE_COUNT", "0");
                     custservicestat.put("SCANCITYHOUSE_COUNT", "1");
                     custservicestat.put("STYLE_SCALE", "0.00%");
                     custservicestat.put("FUNC_SCALE", "0.00%");
@@ -70,6 +72,7 @@ public class CustServiceStatBean {
                 custservicestat.put("CONSULT_COUNT", "1");
                 custservicestat.put("STYLE_COUNT", "0");
                 custservicestat.put("FUNC_COUNT", "0");
+                custservicestat.put("XQLTE_COUNT", "0");
                 custservicestat.put("SCAN_COUNT", "1");
                 custservicestat.put("SCANCITYHOUSE_COUNT", "0");
                 custservicestat.put("STYLE_SCALE", "0.00%");
@@ -90,6 +93,41 @@ public class CustServiceStatBean {
                 custservicestat.put("SCANCITYHOUSE_COUNT", "0");
                 custservicestat.put("STYLE_SCALE", "0.00%");
                 custservicestat.put("FUNC_SCALE", "100.00%");
+                custservicestat.put("XQLTE_COUNT", "0");
+                custservicestat.put("XQLTE_SCALE", "0.00%");
+                custservicestat.put("SCAN_SCALE", "0.00%");
+                custservicestat.put("SCANCITYHOUSE_SCALE", "0.00%");
+                dao.insert("stat_custservice_month", custservicestat);
+            }
+            if (StringUtils.equals("XQLTESTYLE",actionCode)){
+                Map<String, String> custservicestat = new HashMap<String, String>();
+                custservicestat.put("STAT_MONTH", monthDate);
+                custservicestat.put("OBJECT_ID", employeeId);
+                custservicestat.put("CONSULT_COUNT", "0");
+                custservicestat.put("STYLE_COUNT", "1");
+                custservicestat.put("FUNC_COUNT", "0");
+                custservicestat.put("SCAN_COUNT", "0");
+                custservicestat.put("SCANCITYHOUSE_COUNT", "0");
+                custservicestat.put("STYLE_SCALE", "100.00%");
+                custservicestat.put("FUNC_SCALE", "0.00%");
+                custservicestat.put("XQLTE_COUNT", "0");
+                custservicestat.put("XQLTE_SCALE", "0.00%");
+                custservicestat.put("SCAN_SCALE", "0.00%");
+                custservicestat.put("SCANCITYHOUSE_SCALE", "0.00%");
+                dao.insert("stat_custservice_month", custservicestat);
+            }
+            if (StringUtils.equals("XQLTE",actionCode)){
+                Map<String, String> custservicestat = new HashMap<String, String>();
+                custservicestat.put("STAT_MONTH", monthDate);
+                custservicestat.put("OBJECT_ID", employeeId);
+                custservicestat.put("CONSULT_COUNT", "0");
+                custservicestat.put("STYLE_COUNT", "0");
+                custservicestat.put("FUNC_COUNT", "0");
+                custservicestat.put("SCAN_COUNT", "0");
+                custservicestat.put("SCANCITYHOUSE_COUNT", "0");
+                custservicestat.put("STYLE_SCALE", "0.00%");
+                custservicestat.put("FUNC_SCALE", "0.00%");
+                custservicestat.put("XQLTE_COUNT", "1");
                 custservicestat.put("XQLTE_SCALE", "100.00%");
                 custservicestat.put("SCAN_SCALE", "0.00%");
                 custservicestat.put("SCANCITYHOUSE_SCALE", "0.00%");
@@ -104,16 +142,17 @@ public class CustServiceStatBean {
                 int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"))+1;
                 int styleCount=Integer.parseInt(record.get("STYLE_COUNT"));
                 int funcCount=Integer.parseInt(record.get("FUNC_COUNT"));
-               // int XQLTECount=Integer.parseInt(record.get(""));
+                int xqtleCount=Integer.parseInt(record.get("XQLTE_COUNT"));
                 int scanCount=Integer.parseInt(record.get("SCAN_COUNT"));
                 int scancityhouseCount=Integer.parseInt(record.get("SCANCITYHOUSE_COUNT"));
 
 
                 String styleScale=df.format(styleCount/(counsultCount*1.0));
                 String funcScale=df.format(funcCount/(counsultCount*1.0));
-                String xqlteScale=df.format(funcCount/(counsultCount*1.0));
+                String xqlteScale=df.format(xqtleCount/(counsultCount*1.0));
                 String scanScale=df.format(scanCount/(counsultCount*1.0));
                 String scanCityHouseScale=df.format(scancityhouseCount/(counsultCount*1.0));
+
 
                 custservicestat.put("CONSULT_COUNT",counsultCount+"");
                 custservicestat.put("STYLE_SCALE", styleScale);
@@ -152,14 +191,14 @@ public class CustServiceStatBean {
                 int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"))+1;
                 int styleCount=Integer.parseInt(record.get("STYLE_COUNT"));
                 int funcCount=Integer.parseInt(record.get("FUNC_COUNT"));
-                // int XQLTECount=Integer.parseInt(record.get(""));
+                int xqlteCount=Integer.parseInt(record.get("XQLTE_COUNT"));
                 int scanCount=Integer.parseInt(record.get("SCAN_COUNT"))+1;
                 int scancityhouseCount=Integer.parseInt(record.get("SCANCITYHOUSE_COUNT"));
 
 
                 String styleScale=df.format(styleCount/(counsultCount*1.0));
                 String funcScale=df.format(funcCount/(counsultCount*1.0));
-                String xqlteScale=df.format(funcCount/(counsultCount*1.0));
+                String xqlteScale=df.format(xqlteCount/(counsultCount*1.0));
                 String scanScale=df.format(scanCount/(counsultCount*1.0));
                 String scanCityHouseScale=df.format(scancityhouseCount/(counsultCount*1.0));
 
@@ -176,24 +215,45 @@ public class CustServiceStatBean {
                 dao.save("stat_custservice_month",new String[]{"OBJECT_ID","STAT_MONTH"},custservicestat);
 
             }
-            if(StringUtils.equals("XQLTEFUNC",actionCode)){//需求蓝图二内容中只存在功能蓝图的情况
+            if(StringUtils.equals("XQLTEFUNC",actionCode)){
                 Record record=recordSet.get(0);
                 Map<String, String> custservicestat = new HashMap<String, String>();
                 DecimalFormat df = new DecimalFormat("0.00%");
-
                 int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"));
                 int funcCount=Integer.parseInt(record.get("FUNC_COUNT"))+1;
-
                 String funcScale=df.format(funcCount/(counsultCount*1.0));
-
                 custservicestat.put("FUNC_SCALE", funcScale);
-                custservicestat.put("XQLTE_SCALE", funcScale);
                 custservicestat.put("FUNC_COUNT",funcCount+"");
-
                 custservicestat.put("OBJECT_ID",employeeId);
                 custservicestat.put("STAT_MONTH",monthDate);
                 dao.save("stat_custservice_month",new String[]{"OBJECT_ID","STAT_MONTH"},custservicestat);
 
+            }
+            if(StringUtils.equals("XQLTESTYLE",actionCode)){
+                Record record=recordSet.get(0);
+                Map<String, String> custservicestat = new HashMap<String, String>();
+                DecimalFormat df = new DecimalFormat("0.00%");
+                int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"));
+                int styleCount=Integer.parseInt(record.get("STYLE_COUNT"))+1;
+                String styleScale=df.format(styleCount/(counsultCount*1.0));
+                custservicestat.put("STYLE_SCALE", styleScale);
+                custservicestat.put("STYLE_COUNT",styleCount+"");
+                custservicestat.put("OBJECT_ID",employeeId);
+                custservicestat.put("STAT_MONTH",monthDate);
+                dao.save("stat_custservice_month",new String[]{"OBJECT_ID","STAT_MONTH"},custservicestat);
+            }
+            if(StringUtils.equals("XQLTE",actionCode)){
+                Record record=recordSet.get(0);
+                Map<String, String> custservicestat = new HashMap<String, String>();
+                DecimalFormat df = new DecimalFormat("0.00%");
+                int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"));
+                int xqlteCount=Integer.parseInt(record.get("XQLTE_COUNT"))+1;
+                String xqlteScale=df.format(xqlteCount/(counsultCount*1.0));
+                custservicestat.put("XQLTE_SCALE", xqlteScale);
+                custservicestat.put("XQLTE_COUNT",xqlteCount+"");
+                custservicestat.put("OBJECT_ID",employeeId);
+                custservicestat.put("STAT_MONTH",monthDate);
+                dao.save("stat_custservice_month",new String[]{"OBJECT_ID","STAT_MONTH"},custservicestat);
             }
 
             }
