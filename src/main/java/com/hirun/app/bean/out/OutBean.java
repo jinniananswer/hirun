@@ -304,7 +304,7 @@ public class OutBean {
         return isExist;
     }
 
-    public static boolean isExistData4XQLTE(String openId,String staffId, String gnltUpdateTime) throws Exception{
+    public static boolean isExistData4XQLTE(String openId,String staffId, String updateTime) throws Exception{
         boolean isExist = false;
         GenericDAO dao = new GenericDAO("out");
 
@@ -312,7 +312,7 @@ public class OutBean {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("OPEN_ID", openId);
         parameter.put("STAFF_ID", staffId);
-        parameter.put("LT2_UPDATE_TIME", gnltUpdateTime);
+        parameter.put("LT2_UPDATE_TIME", updateTime);
 
 
         //查在线表
