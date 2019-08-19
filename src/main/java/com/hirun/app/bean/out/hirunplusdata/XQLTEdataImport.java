@@ -24,7 +24,7 @@ import java.util.Map;
 public class XQLTEdataImport {
 
     private static String host = "www.hi-run.net";
-    private static String path = "/api/projectlt";
+    private static String path = "/api/projectlttest";
     private static String pageSize = "100";
 
     public static void dataImport(String start, String end) throws Exception {
@@ -56,7 +56,7 @@ public class XQLTEdataImport {
             String openid=jsonData.getString("openid");
             String staffid=jsonData.getString("sjs_staff_id");
 
-            if(OutBean.isExistData4XQLTE(openid, staffid, jsonData.getString("gnlt_update_time"))) {
+            if(OutBean.isExistData4XQLTE(openid, staffid, jsonData.getString("update_time"))) {
                 //如果已经存在该数据了，则直接插历史表
                 dbParam.put("PROJECT_ID", jsonData.getString("project_id"));
                 dbParam.put("UID", jsonData.getString("uid"));
@@ -84,20 +84,25 @@ public class XQLTEdataImport {
                 dbParam.put("ISZJGD", jsonData.getString("iszjgd"));
                 dbParam.put("TMPINT", jsonData.getString("tmpint"));
                 dbParam.put("URL", jsonData.getString("url"));
-                dbParam.put("LT2_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("LT2_TIME", jsonData.getString("update_time"));
                 dbParam.put("LT3_TIME", jsonData.getString("lt3time"));
-                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("update_time"));
                 dbParam.put("LT3_UPDATE_TIME", jsonData.getString("lt3update_time"));
                 //新增返回功能蓝图保存时间
                 dbParam.put("GNLT_CREATE_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("GNLT_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
+
+                dbParam.put("FGLT_CREATE_TIME", jsonData.getString("fglt_update_time"));
+                dbParam.put("FGLT_UPDATE_TIME", jsonData.getString("fglt_update_time"));
+
 
                 dbParam.put("IS_CHANGE", jsonData.getString("ischange"));
                 dbParam.put("OPEN_ID", jsonData.getString("openid"));
                 dbParam.put("SJS_STAFF_ID", jsonData.getString("sjs_staff_id"));
                 dbParam.put("SJS_ROLE_ID", jsonData.getString("sjs_role_id"));
                 dbParam.put("FUNC", jsonData.getString("funs"));
-                //缺少风格蓝图内容
+                dbParam.put("STYLE", jsonData.getString("style"));
+
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "1");
                 dbParam.put("DEAL_TIME",TimeTool.now());
@@ -135,20 +140,24 @@ public class XQLTEdataImport {
                 dbParam.put("ISZJGD", jsonData.getString("iszjgd"));
                 dbParam.put("TMPINT", jsonData.getString("tmpint"));
                 dbParam.put("URL", jsonData.getString("url"));
-                dbParam.put("LT2_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("LT2_TIME", jsonData.getString("update_time"));
                 dbParam.put("LT3_TIME", jsonData.getString("lt3time"));
-                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("update_time"));
                 dbParam.put("LT3_UPDATE_TIME", jsonData.getString("lt3update_time"));
                 //新增返回功能蓝图保存时间
                 dbParam.put("GNLT_CREATE_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("GNLT_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
+
+                dbParam.put("FGLT_CREATE_TIME", jsonData.getString("fglt_update_time"));
+                dbParam.put("FGLT_UPDATE_TIME", jsonData.getString("fglt_update_time"));
 
                 dbParam.put("IS_CHANGE", jsonData.getString("ischange"));
                 dbParam.put("OPEN_ID", jsonData.getString("openid"));
                 dbParam.put("SJS_STAFF_ID", jsonData.getString("sjs_staff_id"));
                 dbParam.put("SJS_ROLE_ID", jsonData.getString("sjs_role_id"));
                 dbParam.put("FUNC", jsonData.getString("funs"));
-                //缺少风格蓝图内容
+                dbParam.put("STYLE", jsonData.getString("style"));
+
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "1");
                 dbParam.put("DEAL_TIME",TimeTool.now());
@@ -182,20 +191,22 @@ public class XQLTEdataImport {
                 dbParam.put("ISZJGD", jsonData.getString("iszjgd"));
                 dbParam.put("TMPINT", jsonData.getString("tmpint"));
                 dbParam.put("URL", jsonData.getString("url"));
-                dbParam.put("LT2_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("LT2_TIME", jsonData.getString("update_time"));
                 dbParam.put("LT3_TIME", jsonData.getString("lt3time"));
-                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("LT2_UPDATE_TIME", jsonData.getString("update_time"));
                 dbParam.put("LT3_UPDATE_TIME", jsonData.getString("lt3update_time"));
 
                 dbParam.put("GNLT_CREATE_TIME", jsonData.getString("gnlt_update_time"));
                 dbParam.put("GNLT_UPDATE_TIME", jsonData.getString("gnlt_update_time"));
+                dbParam.put("FGLT_CREATE_TIME", jsonData.getString("fglt_update_time"));
+                dbParam.put("FGLT_UPDATE_TIME", jsonData.getString("fglt_update_time"));
 
                 dbParam.put("IS_CHANGE", jsonData.getString("ischange"));
                 dbParam.put("OPEN_ID", jsonData.getString("openid"));
                 dbParam.put("SJS_STAFF_ID", jsonData.getString("sjs_staff_id"));
                 dbParam.put("SJS_ROLE_ID", jsonData.getString("sjs_role_id"));
                 dbParam.put("FUNC", jsonData.getString("funs"));
-                //缺少风格蓝图内容
+                dbParam.put("STYLE", jsonData.getString("style"));
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "0");
 
