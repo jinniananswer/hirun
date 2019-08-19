@@ -9,6 +9,6 @@
         <task taskName="hirunCustServiceScanDataImportTask" cronExpr="0 0/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusScanImportTask"/>
         <task taskName="hirunSignInDataImportTask" cronExpr="0 5/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusSignInDataImportTask"/>
         <task taskName="hirunXqlteDataImportTask" cronExpr="0 5/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusXQLTEImportTask"/>
-        <task taskName="hirunTransCustserviceFromTableToIns" cronExpr="0 15/30 0-23 * * ?" className="com.hirun.app.task.TransCustServiceDataToInsTask"/>
+        <!--<task taskName="hirunTransCustserviceFromTableToIns" cronExpr="0 15/30 0-23 * * ?" className="com.hirun.app.task.TransCustServiceDataToInsTask"/>-->
     </cronTask>
 </task>
