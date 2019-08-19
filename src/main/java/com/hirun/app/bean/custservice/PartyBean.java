@@ -304,7 +304,8 @@ public class PartyBean {
         CustomerServiceDAO dao=DAOFactory.createDAO(CustomerServiceDAO.class);
         String openid=jsonObject.getString("openid");
         String roleId=jsonObject.getString("sjs_role_id");
-
+        String func=jsonObject.getString("funs");//功能蓝图内容
+        String style=jsonObject.getString("style");//风格蓝图内容
 
         if(!StringUtils.equals(roleId,"11") ){
             return isSuccess;
@@ -329,22 +330,51 @@ public class PartyBean {
                 param.put("FUNC",jsonObject.getString("funs"));
                 param.put("REL_EMPLOYEE_ID",employeeId);
                 param.put("CREATE_DATE",TimeTool.now());
-                param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-                param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+                param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("update_time")));
+                param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("update_time")));
                 param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
                 param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+                param.put("STYLEPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
+                param.put("STYLEPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
+                param.put("STYLE",jsonObject.getString("style"));
+
 
                 Record partyRecord=recordSet.get(0);
                 String createDate=getMonth(partyRecord.get("CREATE_DATE"));
-                String gnltTime=transUnixTimeToNormal(jsonObject.getString("gnlt_update_time"));
+                String gnltTime=transUnixTimeToNormal(jsonObject.getString("update_time"));
 
 
             //判断需求蓝图二的推送时间是否与咨询时间是同一个月，如果不是同一个月则不更新报表数据，否则就更新报表数据
                 RecordSet bulePrintSet=dao.queryXQLTEByOpenIdAndActionCode(openid,"XQLTE",employeeId);
                 if(bulePrintSet.size()<=0 && StringUtils.equals(createDate,getMonth(gnltTime))){
-                    CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+                    if(StringUtils.isNotBlank(func) && !StringUtils.equals("false",func)) {
+                        CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTEFUNC");
+                    }
+                    if(StringUtils.isNotBlank(style) && !StringUtils.equals("false",style)){
+                        CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTESTYLE");
+                    }
+                    //如果风格蓝图和功能蓝图都不为空，则更新需求蓝图二
+                    if((StringUtils.isNotBlank(func)&& !StringUtils.equals("false",func))&&(StringUtils.isNotBlank(style)&& !StringUtils.equals("false",style))){
+                        CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTE");
+                    }
                 }
-
+                if(bulePrintSet.size()>0 && StringUtils.equals(createDate,getMonth(gnltTime))) {
+                    Record bulePrintRecord=bulePrintSet.get(0);
+                    String insFunc=bulePrintRecord.get("FUNC");
+                    String insStyle=bulePrintRecord.get("STYLE");
+                    if((StringUtils.isBlank(insFunc)||StringUtils.equals("false",insFunc))&&(StringUtils.isNotBlank(func) && !StringUtils.equals("false",func))){
+                        CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTEFUNC");
+                        if(StringUtils.isNotBlank(insStyle)&&!StringUtils.equals("false",insStyle)){
+                            CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTE");
+                        }
+                    }
+                    if((StringUtils.isBlank(insStyle)||StringUtils.equals("false",insStyle))&&(StringUtils.isNotBlank(style) && !StringUtils.equals("false",style))){
+                        CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTESTYLE");
+                        if(StringUtils.isNotBlank(insFunc)&&!StringUtils.equals("false",insFunc)){
+                            CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTE");
+                        }
+                    }
+                }
                 dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
                 return true;
         }
@@ -355,7 +385,7 @@ public class PartyBean {
         party_info.put("PARTY_NAME",jsonObject.getString("name"));
         party_info.put("MOBILE_NO",jsonObject.getString("phone"));
         party_info.put("CREATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
-        party_info.put("CREATE_DATE",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")) );
+        party_info.put("CREATE_DATE",transUnixTimeToNormal(jsonObject.getString("update_time")) );
         party_info.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
         party_info.put("UPDATE_TIME",TimeTool.now());
         party_info.put("PARTY_STATUS",CustomerServiceConst.PARTY_STATUS_0);//代表虚拟party信息
@@ -407,7 +437,7 @@ public class PartyBean {
             partyProjectActionInfo.put("ACTION_CODE",actionCode);
             if(StringUtils.equals(actionCode,"XQLTE")){
                 partyProjectActionInfo.put("STATUS","1");
-                partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+                partyProjectActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("update_time")));
             }else if(StringUtils.equals(actionCode,"GZGZH")){
                 partyProjectActionInfo.put("STATUS","1");
             }
@@ -436,20 +466,28 @@ public class PartyBean {
         param.put("FUNC",jsonObject.getString("funs"));
         param.put("REL_EMPLOYEE_ID",employeeId);
         param.put("CREATE_DATE",TimeTool.now());
-        param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-        param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+        param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("update_time")));
+        param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("update_time")));
         param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
         param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-        dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
+        param.put("STYLEPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
+        param.put("STYLEPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
+        param.put("STYLE",jsonObject.getString("style"));
 
-        /*
-        String funs= jsonObject.getString("funs");
-        if(StringUtils.equals(funs,"false") || StringUtils.isBlank(funs) || "null".equals(funs)){
-            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
-        }else{
-            CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
-        }*/
-        //CustServiceStatBean.updateCustServiceStat(employeeId,"XQLTEFUNC");
+        dao.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图二的内容转换成ins数据
+        //更新报表
+        CustServiceStatBean.updateCustServiceStat(employeeId, "GOODSEEGOODLIVE");
+        if(StringUtils.isNotBlank(func) && !StringUtils.equals("false",func)) {
+            CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTEFUNC");
+        }
+        if(StringUtils.isNotBlank(style) && !StringUtils.equals("false",style)){
+            CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTESTYLE");
+        }
+        //如果风格蓝图和功能蓝图都不为空，则更新需求蓝图二
+        if((StringUtils.isNotBlank(func)&& !StringUtils.equals("false",func))&&(StringUtils.isNotBlank(style)&& !StringUtils.equals("false",style))){
+            CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTE");
+        }
+
         return true;
     }
 
