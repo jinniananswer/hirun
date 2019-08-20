@@ -1,6 +1,12 @@
 (function($){
     $.extend({score:{
             jobs : null,
+            totalComm : 0,
+            totalPro : 0,
+            passComm : 0,
+            passPro : 0,
+            totalComposite : 0,
+            passComposite : 0,
             init : function(){
                 window["UI-popup"] = new Wade.Popup("UI-popup");
 
@@ -26,6 +32,33 @@
                     }
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("DATAS");
+
+                    $.score.companyPass = rst.get("COMPANY_PASS");
+                    $.score.totalComm = rst.get("TOTAL_COMM");
+                    if ($.score.totalComm == null || $.score.totalComm == "undefined") {
+                        $.score.totalComm = 0;
+                    }
+                    $.score.totalPro = rst.get("TOTAL_PRO");
+                    if ($.score.totalPro == null || $.score.totalPro == "undefined") {
+                        $.score.totalPro = 0;
+                    }
+                    $.score.passComm = rst.get("PASS_COMM");
+                    if ($.score.passComm == null || $.score.passComm == "undefined") {
+                        $.score.passComm = 0;
+                    }
+                    $.score.passPro = rst.get("PASS_PRO");
+                    if ($.score.passPro == null || $.score.passPro == "undefined") {
+                        $.score.passPro = 0;
+                    }
+
+                    $.score.totalComposite = rst.get("TOTAL_COMPOSITE");
+                    if ($.score.totalComposite == null || $.score.totalComposite == "undefined") {
+                        $.score.totalComposite = 0;
+                    }
+                    $.score.passComposite = rst.get("PASS_COMPOSITE");
+                    if ($.score.passComposite == null || $.score.passComposite == "undefined") {
+                        $.score.passComposite = 0;
+                    }
                     $.score.drawScore(datas);
 
                 });
@@ -94,18 +127,39 @@
                     html.push("<span class=\"label\">"+"培训名称："+"</span>")
                     var train_name=data.get("TRAIN_NAME");
                     html.push("<span class=\"value \">"+train_name+""+"</span>")
-                    html.push("</li>")
+                    html.push("</li>");
+
+                    var lateTime = data.get("LATE_TIME");
+                    var money = data.get("MONEY");
+
+                    if (lateTime == null || lateTime == "undefined") {
+                        lateTime = "";
+                    }
+
+                    if (money == null || money == "undefined") {
+                        money = "";
+                    }
 
                     if(2==type ||3==type){
-                    html.push("<li>")
-                    html.push("<span class=\"label\">"+"综合成绩："+"</span>")
-                    if(score==null){
-                    html.push("<span class=\"value e_red\">"+"未录入成绩"+"</span>")
-                    }
-                    else {
-                        html.push("<span class=\"value \">"+score+" 分"+"</span>")
-                    }
-                    html.push("</li>")
+                        html.push("<li>");
+                        html.push("<span class=\"label\">"+"综合成绩："+"</span>");
+                        if(score==null){
+                            html.push("<span class=\"value e_red\">"+"未录入成绩"+"</span>");
+                        }
+                        else {
+                            html.push("<span class=\"value \">"+score+" 分"+"</span>");
+                        }
+                        html.push("</li>");
+
+                        html.push("<li>");
+                        html.push("<span class=\"label\">"+"违纪行为："+"</span>");
+                        html.push("<span class=\"value e_red\">"+lateTime+"</span>");
+                        html.push("</li>");
+
+                        html.push("<li>");
+                        html.push("<span class=\"label\">"+"罚款金额："+"</span>");
+                        html.push("<span class=\"value e_red\">"+money+"</span>");
+                        html.push("</li>");
                     }else {
                         if(needComm=="TRUE"){
                             html.push("<li>")
@@ -131,6 +185,16 @@
                             html.push("</li>")
                         }
 
+                        html.push("<li>");
+                        html.push("<span class=\"label\">"+"迟到分钟："+"</span>");
+                        html.push("<span class=\"value e_red\">"+lateTime+"</span>");
+                        html.push("</li>");
+
+                        html.push("<li>");
+                        html.push("<span class=\"label\">"+"罚款金额："+"</span>");
+                        html.push("<span class=\"value e_red\">"+money+"</span>");
+                        html.push("</li>");
+
                     }
 
                     html.push("</ul>")
@@ -138,10 +202,41 @@
                     html.push("</div></div>")
                 }
 
+                var htmlPass=[];
+                if (this.totalComm > 0) {
+                    htmlPass.push("<div class='c_list c_list-border l_padding'><ul><li class='link'>");
+                    var pass = this.passComm / this.totalComm;
+                    pass = pass * 100;
+                    pass = pass.toFixed(2);
+                    htmlPass.push("通用成绩总通过率："+pass+"%");
+                    htmlPass.push("</li></ul></div>");
+                    htmlPass.push("<div class='c_space'></div>");
+                }
+
+                if (this.totalPro > 0) {
+                    htmlPass.push("<div class='c_list c_list-border l_padding'><ul><li class='link'>");
+                    var pass = this.passPro / this.totalPro;
+                    pass = pass * 100;
+                    pass = pass.toFixed(2);
+                    htmlPass.push("专业成绩总通过率："+pass+"%");
+                    htmlPass.push("</li></ul></div>");
+                    htmlPass.push("<div class='c_space'></div>");
+                }
+
+                if (this.totalComposite > 0) {
+                    htmlPass.push("<div class='c_list c_list-border l_padding'><ul><li class='link'>");
+                    var pass = this.passComposite / this.totalComposite;
+                    pass = pass * 100;
+                    pass = pass.toFixed(2);
+                    htmlPass.push("综合成绩总通过率："+pass+"%");
+                    htmlPass.push("</li></ul></div>");
+                    htmlPass.push("<div class='c_space'></div>");
+                }
 
 
 
                 $.insertHtml('beforeend', $("#scores"), html.join(""));
+                $.insertHtml('beforeend', $("#pass"), htmlPass.join(""));
             },
 
 
