@@ -12,6 +12,7 @@ import com.hirun.app.dao.org.OrgDAO;
 import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.consts.CustomerServiceConst;
 import com.hirun.pub.domain.entity.custservice.PartyEntity;
+import com.hirun.pub.domain.entity.custservice.PartyOriginalActionEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
@@ -78,15 +79,29 @@ public class PartyBean {
         RecordSet recordSet=PartyBean.getPartyInfoByOpenIdAndEmployeeId(openid,employeeId);
         if(recordSet.size() > 0 ){
             Record record=recordSet.get(0);
+            String projectId=record.get("PROJECT_ID");
+            String partyId=record.get("PARTY_ID");
+            String createDate=record.get("CREATE_DATE");
+            List<PartyOriginalActionEntity> partyOriginalActionEntityList=dao.queryPartyOriginalAction(partyId,projectId,"SMJRLC");
+            PartyOriginalActionEntity partyOriginalActionEntity=partyOriginalActionEntityList.get(0);
+            String finishTime=partyOriginalActionEntity.getFinishTime();
+
             Map<String, String> updateActionInfo = new HashMap<String, String>();
-            updateActionInfo.put("PROJECT_ID",record.get("PROJECT_ID"));
-            updateActionInfo.put("PARTY_ID",record.get("PARTY_ID"));
+            updateActionInfo.put("PROJECT_ID",projectId);
+            updateActionInfo.put("PARTY_ID",partyId);
             updateActionInfo.put("ACTION_CODE","SMJRLC");
             updateActionInfo.put("STATUS","1");
             updateActionInfo.put("FINISH_TIME",transUnixTimeToNormal(jsonObject.getString("add_time")));
             updateActionInfo.put("UPDATE_USER_ID",EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
             updateActionInfo.put("UPDATE_TIME",TimeTool.now());
             dao.save("ins_project_original_action",new String[]{"PROJECT_ID","PARTY_ID","ACTION_CODE"},updateActionInfo);
+            // 如果通过功能蓝图和风格蓝图生成的客户数据，后面再扫码，咨询时间与扫码进入全流程时间是同一个月，扫码数才+1
+             String addTime=transUnixTimeToNormal(jsonObject.getString("add_time"));
+             createDate=getMonth(createDate);
+
+            if(StringUtils.isBlank(finishTime)&&StringUtils.equals(createDate,getMonth(addTime))){
+                CustServiceStatBean.updateCustServiceStat(employeeId,"SCANDATASPEC");
+            }
 
             return true;
         }
@@ -332,10 +347,16 @@ public class PartyBean {
                 param.put("CREATE_DATE",TimeTool.now());
                 param.put("XQLTE_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("update_time")));
                 param.put("XQLTE_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("update_time")));
-                param.put("FUNCPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-                param.put("FUNCPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
-                param.put("STYLEPRINT_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
-                param.put("STYLEPRINT_UPDATE_TIME",transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
+
+                if(StringUtils.isNotBlank(func)&& !StringUtils.equals("false",func)) {
+                    param.put("FUNCPRINT_CREATE_TIME", transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+                    param.put("FUNCPRINT_UPDATE_TIME", transUnixTimeToNormal(jsonObject.getString("gnlt_update_time")));
+                }
+                //发现有风格蓝图内容为空，但是风格蓝图时间不为空的数据。增加判断如果风格蓝图为空，则不认为客户代表完成该动作
+                if(StringUtils.isNotBlank(style)&& !StringUtils.equals("false",style)) {
+                    param.put("STYLEPRINT_CREATE_TIME", transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
+                    param.put("STYLEPRINT_UPDATE_TIME", transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
+                }
                 param.put("STYLE",jsonObject.getString("style"));
 
 
