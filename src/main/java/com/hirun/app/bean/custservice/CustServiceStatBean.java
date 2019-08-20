@@ -255,7 +255,19 @@ public class CustServiceStatBean {
                 custservicestat.put("STAT_MONTH",monthDate);
                 dao.save("stat_custservice_month",new String[]{"OBJECT_ID","STAT_MONTH"},custservicestat);
             }
-
+            if(StringUtils.equals("SCANDATASPEC",actionCode)){
+                Record record=recordSet.get(0);
+                Map<String, String> custservicestat = new HashMap<String, String>();
+                DecimalFormat df = new DecimalFormat("0.00%");
+                int counsultCount=Integer.parseInt(record.get("CONSULT_COUNT"));
+                int scanCountCount=Integer.parseInt(record.get("SCAN_COUNT"))+1;
+                String scanScale=df.format(scanCountCount/(counsultCount*1.0));
+                custservicestat.put("SCAN_SCALE", scanScale);
+                custservicestat.put("SCAN_COUNT",scanCountCount+"");
+                custservicestat.put("OBJECT_ID",employeeId);
+                custservicestat.put("STAT_MONTH",monthDate);
+                dao.save("stat_custservice_month",new String[]{"OBJECT_ID","STAT_MONTH"},custservicestat);
+            }
             }
     }
 
