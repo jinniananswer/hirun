@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>成绩查询</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/score/score.query.js"></script>
+    <script src="/scripts/biz/organization/score/score.query.js?v=20190820"></script>
 </head>
 <body>
 <div class="c_header">
@@ -37,6 +37,9 @@
 
         </ul>
 
+
+    </div>
+    <div id="pass" class="l_padding">
 
     </div>
     <div class="c_space"></div>
