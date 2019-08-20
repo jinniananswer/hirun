@@ -1,6 +1,7 @@
 package com.hirun.app.dao.custservice;
 
 import com.hirun.pub.domain.entity.custservice.PartyEntity;
+import com.hirun.pub.domain.entity.custservice.PartyOriginalActionEntity;
 import com.hirun.pub.domain.entity.custservice.ProjectEntity;
 import com.hirun.pub.domain.entity.custservice.ProjectIntentionEntity;
 import com.most.core.app.database.dao.StrongObjectDAO;
@@ -595,5 +596,33 @@ public class CustomerServiceDAO extends StrongObjectDAO {
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
         return recordSet;
+    }
+
+    public List<PartyOriginalActionEntity> queryPartyOriginalAction(String partyId,String projectId,String actionCode) throws Exception{
+        Map<String,String> parameter=new HashMap<String,String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_project_original_action a ");
+        sb.append("where 1=1 ");
+
+        if(StringUtils.isNotBlank(partyId)){
+            sb.append("and a.PARTY_ID=:PARTY_ID ");
+            parameter.put("PARTY_ID",partyId);
+        }
+
+        if(StringUtils.isNotBlank(partyId)){
+            sb.append("and a.PROJECT_ID=:PROJECT_ID ");
+            parameter.put("PROJECT_ID",projectId);
+        }
+
+        if(StringUtils.isNotBlank(actionCode)){
+            sb.append("and a.ACTION_CODE=:ACTION_CODE ");
+            parameter.put("ACTION_CODE",actionCode);
+        }
+
+        List<PartyOriginalActionEntity> list=this.queryBySql(PartyOriginalActionEntity.class,sb.toString(),parameter);
+        if(list.size()<=0){
+            return null;
+        }
+        return list;
     }
 }
