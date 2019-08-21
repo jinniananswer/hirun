@@ -7,6 +7,15 @@
                     mask:true
                 });
 
+                window["funcTree"] = new Wade.Tree("funcTree");
+
+                $("#funcTree").textAction(function(e, nodeData){
+                    var id = nodeData.id;
+                    var text = nodeData.text;
+                    return false;
+                });
+
+
 
                 window["MW_EXPERIENCE_TIME"] = new Wade.DateField(
                     "MW_EXPERIENCE_TIME",
@@ -33,6 +42,12 @@
 
                 $.ajaxPost('initCsrTraceFlow','&PARTY_ID='+$("#PARTY_ID").val()+'&PROJECT_ID='+$("#PROJECT_ID").val(),function(data){
                     $.endPageLoading();
+                    var trees = data.FUNC_TREE;
+
+                    if(trees != null){
+                        window["funcTree"].data = trees;
+                        window["funcTree"].init();
+                    };
 
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("PARTYACTIONFLOW");
@@ -42,12 +57,14 @@
                     var insScanCityInfo=rst.get("INSSCANCITYINFO");
                     var partyInfo=rst.get("PARTYINFO");
                     var flag=rst.get("FLAG");
+                    var styleContent=rst.get("STYLECONTENT");
                     $.csrTraceFlow.isShowQueryCond(flag);
                     $.csrTraceFlow.drawFlow(datas,projectDesignerInfo);
                     $.csrTraceFlow.drawXQLTY(xqltyInfo);
                     $.csrTraceFlow.drawCityhouseInfo(insScanCityInfo);
                     $.csrTraceFlow.drawCityCabin(cityCabinInfo);
                     $.csrTraceFlow.drawPartyInfo(partyInfo);
+                    $.csrTraceFlow.drawStyleContent(styleContent);
 
                     hidePopup('UI-popup','GZGZHUI-popup-query-cond');
                     hidePopup('UI-popup','XQLTYUI-popup-query-cond');
@@ -62,7 +79,6 @@
             isShowQueryCond :function(flag){
                 var flag1=flag.get("FLAG");
                 if("TRUE"==flag1){
-                    //$("#mySwitch").attr("disabled", false);
                     $("#isSwitch").css("display", "");
 
                 }else{
@@ -99,17 +115,12 @@
                     html.push("<span class='e_strong'>客户姓名：</span>")
                     html.push(partyname);
                     html.push("</div>");
-
                     html.push("<div class=\"content content-auto\">");
                     html.push("<span class='e_strong'>微信昵称：</span>"+wxnick);
                     html.push("</div>");
-
                     html.push("</div>");
-
-
                     html.push("</div></div>");
                     html.push("</li>");
-
 
                 $.insertHtml('beforeend', $("#preworks"), html.join(""));
             },
@@ -340,8 +351,11 @@
                  }
                  if("DKCSMW"==action_code){
                      $("#querycitycabinmessage").css("display","none");
-                     //showPopup('UI-popup','UI-CHOOSECITYCABIN');SCANCITYINFOUI-popup-query-cond
                      showPopup('UI-popup','SCANCITYINFOUI-popup-query-cond');
+
+                 }
+                 if("XQLTE"==action_code){
+                     showPopup('UI-popup','UI-XQLTE');
 
                  }
              },
@@ -549,6 +563,33 @@
                 })
             },
 
+            drawStyleContent : function(datas){
+                $.endPageLoading();
+                $("#styles").empty();
+                var html = [];
+
+
+                var length = datas.length;
+
+                for(var i=0;i<length;i++) {
+                    var data = datas.get(i);
+                    var name=data.get("NAME");
+                    var content=data.get("CONTENT");
+                    html.push("<li class='link' ><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    html.push("</div></div>");
+                    html.push("<div class=\"main\"><div class=\"title\">");
+                    html.push("<span class=\"e_strong \">");
+                    html.push(name);
+                    html.push("<span>");
+                    html.push("</div>");
+                    html.push("<div class=\"content content-auto\">");
+                    html.push(content);
+                    html.push("</div>");
+                    html.push("</div></div>");
+                    html.push("<li>")
+                }
+                $.insertHtml('beforeend', $("#styles"), html.join(""));
+            },
 
 
         }});
