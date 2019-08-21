@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表流程</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/csr_traceflow.js?v=20190705"></script>
+    <script src="/scripts/biz/customerservice/csr_traceflow.js?v=20190821"></script>
 </head>
 <body>
         <div class="c_header">
@@ -93,6 +93,45 @@
                                 </div>
                             </div>
                         </div>
+
+                         <div class="c_popupItem" id="UI-XQLTE">
+                             <div class="c_header">
+                                 <div class="back" ontap="hidePopup(this);">关闭</div>
+                             </div>
+                             <div class="c_scroll c_scroll-float c_scroll-header">
+                                 <div class="c_box">
+                                    <div class="l_padding">
+                                        <div class="c_title">
+                                            <div class="text"></div>
+                                            <div class="fn">
+
+                                            </div>
+                                        </div>
+                                        <div id="funcTree" class="c_tree">
+
+                                        </div>
+                                    </div>
+                                 </div>
+                                 <div class="c_box">
+                                    <div class="l_padding">
+                                        <div class="c_title">
+                                            <div class="text">风格蓝图</div>
+                                            <div class="fn">
+
+                                            </div>
+                                        </div>
+
+
+                                       <div class="c_list c_list-line c_list-border c_list-space l_padding" id="submitarea">
+                                           <ul id="styles">
+
+                                           </ul>
+                                       </div>
+                                    </div>
+                                 </div>
+                             </div>
+                         </div>
+
                          <div class="c_popupItem" id="SCANCITYINFOUI-popup-query-cond">
                              <div class="c_header">
                                  <div class="back" ontap="hidePopup(this)">带看城市木屋列表</div>
@@ -152,9 +191,6 @@
                                                     </div>
                                                 </div>
                                              </li>
-
-
-
                                         </ul>
                                     </div>
                                 </div>
