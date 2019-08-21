@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.common.MsgBean;
 import com.hirun.app.bean.common.PerformDueTaskBean;
+import com.hirun.app.bean.custservice.BluePrintBean;
 import com.hirun.app.bean.custservice.CustServiceStatBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.org.OrgBean;
@@ -170,13 +171,18 @@ public class CustServService extends GenericService {
                             if(xqlteRecordSet.size()>0) {
                                 partyAction.put("STATUS", "1");
                                 partyAction.put("XQLTE_FINISHTIME", xqlteRecordSet.get(0).get("XQLTE_UPDATE_TIME"));
-                                /*
+
                                 Record xqlteRecord=xqlteRecordSet.get(0);
-                                JSONObject jsonObject=getFuncTree(xqlteRecord);
+                                //功能蓝图内容
+                                JSONObject jsonObject= BluePrintBean.getFuncTree(xqlteRecord);
                                 if(jsonObject !=null){
                                 response.set("FUNC_TREE", jsonObject);
                                 }
-                                */
+                                //风格蓝图内容
+                                JSONArray styleJsonObjectArray=BluePrintBean.getStyleContent(xqlteRecord);
+                                if(styleJsonObjectArray!=null&&styleJsonObjectArray.size()>0){
+                                    response.set("STYLECONTENT",styleJsonObjectArray);
+                                }
                             }
                         }
                     }
@@ -1697,81 +1703,6 @@ public class CustServService extends GenericService {
             return newName;
         }
 
-        public static JSONObject getFuncTree(Record record){
-            if(record==null){
-                return null;
-            }
-            JSONObject jsonObject=new JSONObject();
 
-            String func=record.get("FUNC");
-            if(StringUtils.isBlank(func) || StringUtils.equals("flase",func)){
-                return null;
-            }
-            JSONArray funcArray=JSONArray.parseArray(func);
-            int size=funcArray.size();
-
-            JSONObject root = new JSONObject();
-            root.put("text", "功能蓝图");
-            root.put("id", "-1");
-            root.put("dataid", "-1");
-            root.put("expand", "true");
-            root.put("order", "0");
-            root.put("disabled", "false");
-            root.put("complete", "false");
-            root.put("showcheck", "false");
-            root.put("haschild", "true");
-            root.put("value", "-1");
-
-
-            List children=buildFuncTree(funcArray,"-1",new ArrayList<JSONObject>());
-
-            if (children == null) {
-                root.put("haschild", "false");
-            }
-            else {
-                root.put("haschild", "true");
-                root.put("childNodes", children);
-            }
-            jsonObject.put("-1",root);
-            return jsonObject;
-        }
-
-        public static List<JSONObject> buildFuncTree(Object objJson, String prefix, List<JSONObject> allNode){
-
-            if(objJson == null){
-                return null;
-            }
-
-            if(objJson instanceof JSONArray){
-                JSONArray objArray = (JSONArray)objJson;
-                for(int i=0;i<objArray.size();i++){
-                    JSONObject childNode=new JSONObject();
-                    JSONObject jsonObject=(JSONObject)objArray.get(i);
-                        childNode.put("text", jsonObject.getString("name"));
-                        childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
-                        childNode.put("id", jsonObject.getString("caid"));
-                        childNode.put("disabled", "false");
-                        childNode.put("value", jsonObject.getString("caid"));
-                        allNode.add(childNode);
-                        if(jsonObject.get("subs")!=null){
-                        buildFuncTree(jsonObject.get("subs"), prefix + "●" + jsonObject.getString("caid"), allNode);
-                        }
-                }
-            }
-            return allNode;
-        }
-
-        public JSONObject transTree(List<JSONObject> allNodes){
-            if(allNodes.size()<=0 || allNodes == null){
-                return null;
-            }
-            JSONObject jsonObject=new JSONObject();
-            for(int i=0;i<allNodes.size();i++){
-                JSONObject tempJsonObject=allNodes.get(i);
-                String dataid=tempJsonObject.getString("dataid");
-                jsonObject.put(tempJsonObject.getString("id"),tempJsonObject);
-            }
-            return jsonObject;
-        }
 
 }
