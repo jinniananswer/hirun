@@ -2,31 +2,21 @@ package com.hirun.web.biz.datacenter.custservice;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hirun.pub.domain.enums.plan.PlanType;
 import com.most.core.pub.data.ServiceResponse;
-import com.most.core.pub.data.SessionEntity;
-import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.office.ExcelExport;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.web.RootController;
 import com.most.core.web.client.ServiceClient;
-import com.most.core.web.session.HttpSessionManager;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.DateUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.OutputStream;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 public class CustServiceReportController extends RootController {
