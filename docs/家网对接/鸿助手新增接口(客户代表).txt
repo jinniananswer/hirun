@@ -1,6 +1,7 @@
 ﻿1、获取《需求蓝图二/三》有效推送
 req:
-http://www.hi-run.net/api/projectlt?stage=2&staff_id=12&start=1562864122
+http://www.hi-run.net/api/projectlt?stage=2&staff_id=12&start=1562864122//8月前使用接口
+http://www.hi-run.net/api/projectlttest?stage=2&start=1565659665&end=1565746066//8月开始使用新接口
 staff_id:员工ID
 start：开始时间戳（秒）
 end：结束时间戳（秒） 
