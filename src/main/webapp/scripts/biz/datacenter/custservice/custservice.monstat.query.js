@@ -52,8 +52,6 @@
 
                 $.ajaxPost('initQueryActionFinishInfo',null,function(data){
                     var trees = data.ORG_TREE;
-                    var rst = new Wade.DataMap(data);
-                    //var datas = rst.get("CUSTSERVICEINFO");
 
                     if(trees != null){
                         window["orgTree"].data = trees;
@@ -61,7 +59,6 @@
 
                     }
 
-                    //$.custServiceActionQuery.drawCustServiceInfo4Query(datas);
                     hidePopup('UI-popup','QueryCondPopupItem');
                     hidePopup('UI-popup','UI-QUERYCUSTSERVICE');
                     hidePopup('UI-popup','UI-ORG');
@@ -160,12 +157,10 @@
                 var html = [];
 
                 if(datas == null || datas.length <= 0){
-                    //$("#messagebox").css("display","");
                     $("#submitButton").css("display","none");
                     return;
                 }
 
-                //$("#messagebox").css("display","none");
                 $("#submitButton").css("display","");
 
 
@@ -204,7 +199,12 @@
                 $('#ORG_ID').val('');
             },
 
-
+            export : function() {
+                var custServiceEmpId=$("#CUSTSERVICEEMPLOYEEID").val();
+                var orgId=$("#ORG_ID").val();
+                var monDate=$('#MON_DATE').val();
+                window.location.href = "/exportCustServiceMonStat?CUSTSERVICEEMPID=" + custServiceEmpId+"&ORG_ID="+orgId+"&MON_DATE="+monDate;
+            },
 
         }});
 })($);
