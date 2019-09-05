@@ -474,17 +474,21 @@ public class CustServiceReportService extends GenericService{
     }
 
     public static String nameDesensitization(String name){
-        String newName="";
-        if(StringUtils.isBlank(name)){
-            return "";
-        }
-        char[] chars = name.toCharArray();
-        if(chars.length==1) {
-            newName = name;
-        }else if(chars.length==2){
-            newName=name.replaceFirst(name.substring(1), "*");
-        }else{
-            newName =name.replaceAll(name.substring(1, chars.length-1), "*");
+        String newName = "";
+        try {
+            if (StringUtils.isBlank(name)) {
+                return "";
+            }
+            char[] chars = name.toCharArray();
+            if (chars.length == 1) {
+                newName = name;
+            } else if (chars.length == 2) {
+                newName = name.replaceFirst(name.substring(1), "*");
+            } else {
+                newName = name.replaceAll(name.substring(1, chars.length - 1), "*");
+            }
+        }catch (Exception e){
+                newName="***";
         }
         return newName;
     }
