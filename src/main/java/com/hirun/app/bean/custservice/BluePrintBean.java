@@ -156,16 +156,21 @@ public class BluePrintBean {
             childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
             childNode.put("value", jsonObject.getString("caid"));
-            JSONArray subsJsonArray=jsonObject.getJSONArray("types");
-
-            if(subsJsonArray.size()<=0 || subsJsonArray==null){
+            //todo
+            String types=jsonObject.getString("types");
+            if(StringUtils.equals(types,"false")||StringUtils.isBlank(types)){
                 childNode.put("haschild", "false");
-            }else{
-                JSONObject child= buildChildTree3(subsJsonArray,prefix + "●" + jsonObject.getString("caid"));
-                childNode.put("haschild", "true");
-                childNode.put("childNodes", child);
+            }else {
+                JSONArray subsJsonArray = jsonObject.getJSONArray("types");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree3(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
+                childJsonObject.put(jsonObject.getString("caid"), childNode);
             }
-            childJsonObject.put(jsonObject.getString("caid"),childNode);
         }
         return childJsonObject;
     }
