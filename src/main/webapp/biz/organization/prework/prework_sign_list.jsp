@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>报名详情</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/organization/prework/prework.sign.list.js?v=20190323"></script>
+    <script src="/scripts/biz/organization/prework/prework.sign.list.js?v=20190924"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -122,6 +122,22 @@
                     <div class="l_bottom">
                         <div class="c_submit c_submit-full">
                             <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.prework.confirmSelectEmployee();" class="e_button-l e_button-green">新增报名人员</button>
+                        </div>
+                    </div>
+                    <!-- 滚动 结束 -->
+                </div>
+                <div class="c_popupItem" id="EMPLOYEE_SCORE_TOP">
+                    <!-- 标题栏 开始 -->
+                    <div class="c_header">
+                        <div class="back" ontap="hidePopup(this);">在线测试成绩查看</div>
+                    </div>
+                    <!-- 标题栏 结束 -->
+                    <!-- 滚动（替换为 java 组件） 开始 -->
+                    <div class="c_scroll c_scroll-float c_scroll-header">
+                        <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
+                            <ul id="SCORE_LIST_TOP">
+
+                            </ul>
                         </div>
                     </div>
                     <!-- 滚动 结束 -->
