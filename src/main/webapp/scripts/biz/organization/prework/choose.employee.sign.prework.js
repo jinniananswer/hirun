@@ -73,6 +73,7 @@
                     }
                 });
 
+                $.beginPageLoading();
                 $.ajaxPost('initChooseEmployeeSignPreWork','&TRAIN_ID='+$("#TRAIN_ID").val(),function(data) {
                     var trees = data.ORG_TREE;
                     if(trees != null){
@@ -102,6 +103,7 @@
 
                     $.prework.drawSelectEmployees(needSignEmployees);
                     $.prework.drawMustSignEmployees(mustSignEmployees);
+                    $.endPageLoading();
                 });
             },
 
@@ -547,6 +549,8 @@
                         li.attr("examItemPro", examItemPro);
                         li.attr("inCanteen", isInCanteen);
 
+                        var isForce = li.attr("isForce");
+
                         var main = $(li.children()[2]);
                         html.push("<div class='content content-auto' ontap='$.prework.showExamParent(this);'>");
                         html.push("<span class='e_tag e_tag-green'>");
@@ -586,10 +590,13 @@
                         if(node != null) {
                             node.remove();
                         }
-                        html.push("<div class=\"content\" ontap='$.prework.deleteNewEmployee(this);'>");
-                        html.push("<span class=\"e_ico-delete e_ico-pic-r e_ico-pic-red e_ico-pic-xxs\">");
-                        html.push("</span>");
-                        html.push("</div>");
+                        if (isForce != "true") {
+                            html.push("<div class=\"content\" ontap='$.prework.deleteNewEmployee(this);'>");
+                            html.push("<span class=\"e_ico-delete e_ico-pic-r e_ico-pic-red e_ico-pic-xxs\">");
+                            html.push("</span>");
+                            html.push("</div>");
+                        }
+
                         $.insertHtml('beforeend', main, html.join(""));
 
                         var size = this.addEmployees.length;
@@ -738,7 +745,45 @@
                 var length = datas.length;
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
-                    html.push("<li class=\"link\" employeeId='"+data.get("EMPLOYEE_ID")+"' examType='0' inCanteen='1'>");
+                    var failItems = data.get("FAIL_ITEMS");
+                    var examItemComm = false;
+                    var examItemPro = false;
+                    var examType = "0";
+
+                    if (failItems == null || typeof(failItems) == "undefined") {
+                        html.push("<li class=\"link\" employeeId='"+data.get("EMPLOYEE_ID")+"' examType='0' inCanteen='1' isForce='true'>");
+                    }
+                    else {
+                        examType = "1";
+                        html.push("<li class=\"link\" employeeId='"+data.get("EMPLOYEE_ID")+"' examType='1' inCanteen='1' isForce='true' ");
+
+                        var failItemsLength = failItems.length;
+                        for (var j=0;j<failItemsLength;j++) {
+                            var failItem = failItems.get(j);
+                            var item = failItem.get("ITEM");
+
+                            if (item == "0") {
+                                examItemComm = true;
+                            }
+
+                            if (item == "1") {
+                                examItemPro = true;
+                            }
+                        }
+
+                        if (examItemComm) {
+                            html.push("examItemComm = 'true' ");
+                        } else {
+                            html.push("examItemComm = 'false'")
+                        }
+                        if (examItemPro) {
+                            html.push("examItemPro = 'true' ");
+                        } else {
+                            html.push("examItemPro = 'false' ");
+                        }
+
+                        html.push(">");
+                    }
                     html.push("<div class='c_space-2'></div>");
                     html.push("<div class=\"pic\">");
                     var sex = data.get("SEX");
@@ -753,11 +798,45 @@
                     html.push("<div class=\"content content-auto\">");
                     html.push(data.get("NAME"));
                     html.push("</div>");
+
+                    html.push("<div class=\"content content-auto\" ontap='$.prework.showExamParent(this);'>");
+                    html.push("<span class=\"e_tag e_tag-green\">");
+                    if(examType == "0") {
+                        html.push("初次考评");
+                    }
+                    else if(examType == "1") {
+                        html.push("补考");
+                    }
+                    else if(examType == "2") {
+                        html.push('转岗专业考评');
+                    }
+                    else if(examType = "3") {
+                        html.push("复职考评")
+                    }
+
+                    html.push("</span>");
+                    if (examType == "1" || examType == "3") {
+                        if (examItemComm) {
+                            html.push("&nbsp;<span class=\"e_tag e_tag-navy\">");
+                            html.push("通用");
+                            html.push("</span>");
+                        }
+                        if (examItemPro) {
+                            html.push("&nbsp;<span class=\"e_tag e_tag-navy\">");
+                            html.push("专业");
+                            html.push("</span>");
+                        }
+
+                        html.push("</span>");
+                    }
+                    html.push("</div>");
                     html.push("</div>");
                     html.push("</li>");
                     var map = new Wade.DataMap();
                     map.put("EMPLOYEE_ID", data.get("EMPLOYEE_ID"));
-                    map.put("EXAM_TYPE", "0");
+                    map.put("EXAM_TYPE", examType);
+                    map.put("EXAM_ITEM_COMM", examItemComm+"");
+                    map.put("EXAM_ITEM_PRO", examItemPro+"");
                     map.put("IN_CANTEEN", "1");
                     this.addEmployees.add(map);
                 }
