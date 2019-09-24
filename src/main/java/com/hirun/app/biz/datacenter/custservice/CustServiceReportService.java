@@ -281,6 +281,7 @@ public class CustServiceReportService extends GenericService{
                 custservicestat.put("CONSULT_COUNT", "0");
                 custservicestat.put("STYLE_COUNT", "0");
                 custservicestat.put("FUNC_COUNT", "0");
+                custservicestat.put("XQLTE_COUNT", "0");
                 custservicestat.put("SCAN_COUNT", "0");
                 custservicestat.put("SCANCITYHOUSE_COUNT", "0");
                 custservicestat.put("STYLE_SCALE", "0.00%");
@@ -296,6 +297,7 @@ public class CustServiceReportService extends GenericService{
                 custservicestat.put("STYLE_COUNT", statSet.get(0).get("STYLE_COUNT"));
                 custservicestat.put("FUNC_COUNT", statSet.get(0).get("FUNC_COUNT"));
                 custservicestat.put("SCAN_COUNT", statSet.get(0).get("SCAN_COUNT"));
+                custservicestat.put("XQLTE_COUNT", statSet.get(0).get("XQLTE_COUNT"));
                 custservicestat.put("SCANCITYHOUSE_COUNT", statSet.get(0).get("SCANCITYHOUSE_COUNT"));
                 custservicestat.put("STYLE_SCALE", statSet.get(0).get("STYLE_SCALE"));
                 custservicestat.put("FUNC_SCALE", statSet.get(0).get("FUNC_SCALE"));
@@ -343,12 +345,14 @@ public class CustServiceReportService extends GenericService{
                     shopSheet.put("FUNC_COUNT",shopSheet.getIntValue("FUNC_COUNT")+employeeSheet.getIntValue("FUNC_COUNT"));
                     shopSheet.put("SCAN_COUNT",shopSheet.getIntValue("SCAN_COUNT")+employeeSheet.getIntValue("SCAN_COUNT"));
                     shopSheet.put("SCANCITYHOUSE_COUNT",shopSheet.getIntValue("SCANCITYHOUSE_COUNT")+employeeSheet.getIntValue("SCANCITYHOUSE_COUNT"));
+                    shopSheet.put("XQLTE_COUNT",shopSheet.getIntValue("XQLTE_COUNT")+employeeSheet.getIntValue("XQLTE_COUNT"));
 
                     companySheet.put("CONSULT_COUNT",companySheet.getIntValue("CONSULT_COUNT") + employeeSheet.getIntValue("CONSULT_COUNT"));
                     companySheet.put("STYLE_COUNT",companySheet.getIntValue("STYLE_COUNT") + employeeSheet.getIntValue("STYLE_COUNT"));
                     companySheet.put("FUNC_COUNT",companySheet.getIntValue("FUNC_COUNT") + employeeSheet.getIntValue("FUNC_COUNT"));
                     companySheet.put("SCAN_COUNT",companySheet.getIntValue("SCAN_COUNT") + employeeSheet.getIntValue("SCAN_COUNT"));
                     companySheet.put("SCANCITYHOUSE_COUNT",companySheet.getIntValue("SCANCITYHOUSE_COUNT") + employeeSheet.getIntValue("SCANCITYHOUSE_COUNT"));
+                    companySheet.put("XQLTE_COUNT",companySheet.getIntValue("XQLTE_COUNT") + employeeSheet.getIntValue("XQLTE_COUNT"));
 
 
                     buSheet.put("CONSULT_COUNT",buSheet.getIntValue("CONSULT_COUNT") + employeeSheet.getIntValue("CONSULT_COUNT"));
@@ -356,6 +360,7 @@ public class CustServiceReportService extends GenericService{
                     buSheet.put("FUNC_COUNT",buSheet.getIntValue("FUNC_COUNT") + employeeSheet.getIntValue("FUNC_COUNT"));
                     buSheet.put("SCAN_COUNT",buSheet.getIntValue("SCAN_COUNT") + employeeSheet.getIntValue("SCAN_COUNT"));
                     buSheet.put("SCANCITYHOUSE_COUNT",buSheet.getIntValue("SCANCITYHOUSE_COUNT") + employeeSheet.getIntValue("SCANCITYHOUSE_COUNT"));
+                    buSheet.put("XQLTE_COUNT",buSheet.getIntValue("XQLTE_COUNT") + employeeSheet.getIntValue("XQLTE_COUNT"));
 
                 }
                 shopSheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(shopId).getName() + "合计");
@@ -386,6 +391,8 @@ public class CustServiceReportService extends GenericService{
         int styleCount=jsonObject.getIntValue("STYLE_COUNT");
         int funcCount=jsonObject.getIntValue("FUNC_COUNT");
         int scanCount=jsonObject.getIntValue("SCAN_COUNT");
+        int xqlteCount=jsonObject.getIntValue("XQLTE_COUNT");
+
         int scancityhouseCount=jsonObject.getIntValue("SCANCITYHOUSE_COUNT");
         String prcent="0.00%";
         DecimalFormat df = new DecimalFormat("0.00%");
@@ -393,11 +400,12 @@ public class CustServiceReportService extends GenericService{
         String funcScale=df.format(funcCount/(consultCount*1.0));
         String scanScale=df.format(scanCount/(consultCount*1.0));
         String scancityHouseScale=df.format(scancityhouseCount/(consultCount*1.0));
+        String xqlteScale=df.format(xqlteCount/(consultCount*1.0));
 
         if(consultCount!=0) {
             jsonObject.put("STYLE_SCALE", styleScale);
             jsonObject.put("FUNC_SCALE", funcScale);
-            jsonObject.put("XQLTE_SCALE", funcScale);
+            jsonObject.put("XQLTE_SCALE", xqlteScale);
             jsonObject.put("SCAN_SCALE", scanScale);
             jsonObject.put("SCANCITYHOUSE_SCALE", scancityHouseScale);
         }else{
@@ -466,17 +474,21 @@ public class CustServiceReportService extends GenericService{
     }
 
     public static String nameDesensitization(String name){
-        String newName="";
-        if(StringUtils.isBlank(name)){
-            return "";
-        }
-        char[] chars = name.toCharArray();
-        if(chars.length==1) {
-            newName = name;
-        }else if(chars.length==2){
-            newName=name.replaceFirst(name.substring(1), "*");
-        }else{
-            newName =name.replaceAll(name.substring(1, chars.length-1), "*");
+        String newName = "";
+        try {
+            if (StringUtils.isBlank(name)) {
+                return "";
+            }
+            char[] chars = name.toCharArray();
+            if (chars.length == 1) {
+                newName = name;
+            } else if (chars.length == 2) {
+                newName = name.replaceFirst(name.substring(1), "*");
+            } else {
+                newName = name.replaceAll(name.substring(1, chars.length - 1), "*");
+            }
+        }catch (Exception e){
+                newName="***";
         }
         return newName;
     }

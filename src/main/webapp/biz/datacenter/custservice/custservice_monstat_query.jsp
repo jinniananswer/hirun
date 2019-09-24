@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户代表月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190809"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.js?v=20190823"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -21,9 +21,14 @@
     </div>
 </div>
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
-	<div class="c_space"></div>
-
-	<div class="c_space"></div>
+        <div class="c_title">
+            <div class="text"></div>
+            <div class="fn">
+                <ul>
+                    <li ontap="$.custServiceMonstatQuery.export();" class=""><span class="e_ico-export"></span>数据导出</li>
+                </ul>
+            </div>
+        </div>
 	<div id="custserviceTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10" style="height: 34em;">
 		<div class="body">
 			<div class="wrapper">
@@ -76,6 +81,7 @@
 			<table><thead></thead><tbody></tbody></table>
 		</div>
 	</div>
+
 	<div class="e_space"></div>
 </div>
 <jsp:include page="/base/buttom/base_buttom.jsp"/>
