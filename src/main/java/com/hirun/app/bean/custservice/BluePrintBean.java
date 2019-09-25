@@ -167,11 +167,11 @@ public class BluePrintBean {
             childNode.put("disabled", "false");
             childNode.put("value", jsonObject.getString("caid"));
 
-            String types = jsonObject.getString("types");
+            String types = jsonObject.getString("subs");
             if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
                 childNode.put("haschild", "false");
             } else {
-                JSONArray subsJsonArray = jsonObject.getJSONArray("types");
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
                 if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
                     childNode.put("haschild", "false");
                 } else {
@@ -194,20 +194,25 @@ public class BluePrintBean {
             JSONObject childNode = new JSONObject();
             JSONObject jsonObject = subArray.getJSONObject(i);
             childNode.put("text", jsonObject.getString("name"));
-            childNode.put("dataid", prefix + "●" + jsonObject.getString("typeid"));
-            childNode.put("id", jsonObject.getString("typeid"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
-            childNode.put("value", jsonObject.getString("typeid"));
-            JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+            childNode.put("value", jsonObject.getString("caid"));
 
-            if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+            String types = jsonObject.getString("subs");
+            if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
                 childNode.put("haschild", "false");
-            } else {
-                JSONObject child = buildChildTree4(subsJsonArray, prefix + "●" + jsonObject.getString("typeid"));
-                childNode.put("haschild", "true");
-                childNode.put("childNodes", child);
+            }else {
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree4(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
             }
-            childJsonObject.put(jsonObject.getString("typeid"), childNode);
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
         }
         return childJsonObject;
     }
@@ -221,12 +226,44 @@ public class BluePrintBean {
             JSONObject childNode = new JSONObject();
             JSONObject jsonObject = subArray.getJSONObject(i);
             childNode.put("text", jsonObject.getString("name"));
-            childNode.put("dataid", prefix + "●" + jsonObject.getString("typeid"));
-            childNode.put("id", jsonObject.getString("typeid"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
-            childNode.put("value", jsonObject.getString("typeid"));
+            childNode.put("value", jsonObject.getString("caid"));
 
-            childJsonObject.put(jsonObject.getString("typeid"), childNode);
+            String types = jsonObject.getString("subs");
+            if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
+                childNode.put("haschild", "false");
+            }else {
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree5(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
+            }
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
+        }
+        return childJsonObject;
+    }
+
+    public static JSONObject buildChildTree5(JSONArray subArray, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (subArray == null) {
+            return null;
+        }
+        for (int i = 0; i < subArray.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = subArray.getJSONObject(i);
+            childNode.put("text", jsonObject.getString("name"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
+            childNode.put("disabled", "false");
+            childNode.put("value", jsonObject.getString("caid"));
+
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
         }
         return childJsonObject;
     }
