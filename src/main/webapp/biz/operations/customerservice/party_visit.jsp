@@ -89,6 +89,15 @@
                     </div>
                 </li>
                 <li class="link required">
+                    <div class="label">回访时间：</div>
+         			<div class="value">
+         				<span class="e_mix">
+         					<input type="text" id="VISIT_TIME" name="VISIT_TIME" datatype="date" nullable="no" desc="回访时间" readonly="true"/>
+         					<span class="e_ico-date"></span>
+         				</span>
+         			</div>
+                </li>
+                <li class="link required">
                     <div class="label">回访内容：</div>
                     <div class="value">
                         <textarea id="VISIT_CONTENT" name="VISIT_CONTENT" placeholder="请填写回访内容" nullable="no" desc="回访内容" class="e_textarea-row-2"></textarea>
