@@ -300,6 +300,53 @@ public class TrainDAO extends GenericDAO {
         return this.queryBySql(sql.toString(), parameter);
     }
 
+    public RecordSet queryMustSignPreWorkEmployee(String trainId, String orgId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("TRAIN_ID", trainId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("select a.USER_ID,b.NAME,b.employee_id,b.sex,date_format(b.in_date,'%Y-%m-%d') in_date,a.mobile_no contact_no, d.JOB_ROLE, e.org_id, e.name org_name ");
+        sql.append("from ins_user a, ins_employee b, ins_employee_job_role d,ins_org e ");
+        sql.append("where b.USER_ID = a.USER_ID ");
+        sql.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
+        sql.append("and a.status = '0' ");
+        sql.append("and b.status = '0' " );
+        sql.append("and now() < d.end_date ");
+        sql.append("and e.ORG_ID = d.ORG_ID ");
+        sql.append("and b.regular_date > now() ");
+        sql.append("and e.org_id in ("+orgId+") ");
+        sql.append("and not exists(select 1 from ins_train_sign f where f.employee_id = b.employee_id and f.train_id = :TRAIN_ID and f.status = '0') ");
+        sql.append("and (");
+        sql.append(" (exists(SELECT 1 FROM ins_train_exam_score x, ins_train y WHERE x.EMPLOYEE_ID = b.EMPLOYEE_ID AND x.TRAIN_ID = y.TRAIN_ID AND y.TYPE = '1' GROUP BY x.employee_id, x.item HAVING max(score) < 80)) ");
+        sql.append(" or ");
+        sql.append("(date_add(now(), interval - 75 day) > b.in_date ");
+        sql.append("and not exists(select 1 from ins_train_sign x, ins_train y where x.train_id = y.train_id and y.status = '0' and x.status = '0' and x.employee_id = b.employee_id and y.type = '1')  ");
+        sql.append("and exists(select 1 from ins_exam_score g where g.employee_id = b.employee_id and g.exam_id = 1 and g.score >= 80) ");
+        sql.append("and exists(select 1 from ins_exam_score h where h.employee_id = b.employee_id and h.exam_id = 2 and h.score >= 80) ");
+        sql.append("and exists(select 1 from ins_exam_score i where i.employee_id = b.employee_id and i.exam_id = 3 and i.score >= 80) ");
+        sql.append("and exists(select 1 from ins_exam_score j where j.employee_id = b.employee_id and j.exam_id = 4 and j.score >= 80) ");
+        sql.append("and exists(select 1 from ins_exam_score k where k.employee_id = b.employee_id and k.exam_id = 5 and k.score >= 80) ");
+        sql.append("and exists(select 1 from ins_train l, ins_train_exam_score m where m.train_id = l.train_id and l.type = '2' and l.status = '0' and m.employee_id = b.employee_id and m.score >= 80 ) )");
+        sql.append(")");
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
+    public RecordSet queryMustSignPreworkFailItem(String employeeId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT x.item FROM ins_train_exam_score x, ins_train y ");
+        sql.append("WHERE x.EMPLOYEE_ID = :EMPLOYEE_ID  ");
+        sql.append("AND x.TRAIN_ID = y.TRAIN_ID ");
+        sql.append("AND y.TYPE = '1' ");
+        sql.append("GROUP BY x.employee_id, x.item HAVING max(score) < 80 ");
+
+
+        return this.queryBySql(sql.toString(), parameter);
+    }
+
     public RecordSet queryMyTrain(String employeeId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("EMPLOYEE_ID", employeeId);

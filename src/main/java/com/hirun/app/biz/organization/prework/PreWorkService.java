@@ -85,7 +85,7 @@ public class PreWorkService extends GenericService {
             }
 
             orgId = OrgBean.getOrgLine(orgId, allOrgs);
-            RecordSet mustSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, true, true, orgId);
+            RecordSet mustSignEmployees = dao.queryMustSignPreWorkEmployee(trainId, orgId);
             TrainService.fillAllOrgName(mustSignEmployees);
             if(ArrayTool.isNotEmpty(mustSignEmployees)) {
                 int size = mustSignEmployees.size();
@@ -94,7 +94,19 @@ public class PreWorkService extends GenericService {
                     employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
                 }
             }
-            response.set("MUST_SIGN_EMPLOYEE", ConvertTool.toJSONArray(mustSignEmployees));
+
+            JSONArray mustSignEmployeeJsonArray = ConvertTool.toJSONArray(mustSignEmployees);
+            if (ArrayTool.isNotEmpty(mustSignEmployeeJsonArray)) {
+                for (Object object : mustSignEmployeeJsonArray) {
+                    JSONObject employee = (JSONObject)object;
+                    RecordSet failItems = dao.queryMustSignPreworkFailItem(employee.getString("EMPLOYEE_ID"));
+                    if (ArrayTool.isNotEmpty(failItems)) {
+                        employee.put("FAIL_ITEMS", ConvertTool.toJSONArray(failItems));
+                    }
+                }
+            }
+
+            response.set("MUST_SIGN_EMPLOYEE", mustSignEmployeeJsonArray);
 
             RecordSet needSignEmployees = dao.queryNeedSignPreWorkEmployee(trainId, false, true, orgId);
             TrainService.fillAllOrgName(needSignEmployees);

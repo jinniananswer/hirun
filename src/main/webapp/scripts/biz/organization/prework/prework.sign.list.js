@@ -222,6 +222,9 @@
                         html.push("<div class=\"content content-auto\">");
                         html.push("是否查看通知书："+isViewNotice);
                         html.push("</div>");
+                        html.push("<div class=\"content\">");
+                        html.push("<a href='javascript:void(0)' ontap='$.prework.showOnlineScore("+data.get("EMPLOYEE_ID")+", true)' >在线测试成绩查看</a>");
+                        html.push("</div>");
 
                         html.push("</div>");
 
@@ -383,12 +386,18 @@
                 $.endPageLoading();
             },
 
-            showOnlineScore : function(employeeId) {
+            showOnlineScore : function(employeeId, isTop) {
                 $.ajaxPost('showOnlineScore', "&EMPLOYEE_ID="+employeeId, function (data) {
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("SCORES");
-                    $.prework.drawEmployeeScore("SCORE_LIST", datas);
-                    forwardPopup('UI-popup','EMPLOYEE_SCORE');
+
+                    if (isTop) {
+                        showPopup('UI-popup', 'EMPLOYEE_SCORE_TOP');
+                        $.prework.drawEmployeeScore("SCORE_LIST_TOP", datas);
+                    } else {
+                        forwardPopup('UI-popup', 'EMPLOYEE_SCORE');
+                        $.prework.drawEmployeeScore("SCORE_LIST", datas);
+                    }
                 });
             },
 
