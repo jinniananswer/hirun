@@ -98,7 +98,7 @@
                     var data = datas.get(i);
                     html.push("<li class='link' custserviceEmpId='" + data.get("EMPLOYEE_ID") + "' custserviceEmpName='" + data.get("NAME") + "' ontap='$.custserviceaudit.selectCustService(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     html.push("</div></div>");
-                    html.push("<div class=\"main\"><div class=\"title\">");
+                    html.push("<div class=\"main\"><div class=\"title\"> ");
                     html.push(data.get("NAME"));
                     html.push("</div>");
                     html.push("<div class=\"content\">");
