@@ -162,6 +162,8 @@
                     var auditname=data.get("AUDIT_EMPLOYEE_NAME");
                     var applyName=data.get("APPLY_EMPLOYEE_NAME");
                     var partyName=data.get("PARTY_NAME");
+                    var createDate=data.get("CREATE_DATE");
+                    var wxNick=data.get("WX_NICK");
 
 
                     if(auditdate=='undefined'|| auditdate == null) {
@@ -175,12 +177,24 @@
                         partyName='';
                     }
 
+                    if(wxNick=='undefined'|| wxNick == null) {
+                        wxNick='';
+                    }
+
                     /*ontap=\"$.custservicemanager.redirectFlow(\'"+data.get("PARTY_ID")+"\',\'"+data.get("PROJECT_ID")+"\')\"*/
                     html.push("<li class='link'><div class=\"group\"><div class=\"content content-auto\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     html.push("</div></div>");
                     html.push("<div class=\"main\"><div class=\"content content-auto\">");
                     html.push("<span class=''>客户姓名：</span>")
                     html.push(partyName);
+                    html.push("</div>");
+
+                    html.push("<div class=\"content content-auto\">");
+                    html.push("<span class=''>微信名：</span>"+wxNick);
+                    html.push("</div>");
+
+                    html.push("<div class=\"content content-auto\">");
+                    html.push("<span class=''>咨询时间：</span>"+createDate);
                     html.push("</div>");
 
                     html.push("<div class=\"content content-auto\">");
