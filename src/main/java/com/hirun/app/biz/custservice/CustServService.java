@@ -1468,6 +1468,8 @@ public class CustServService extends GenericService {
             PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
             if (partyEntity != null) {
                 applyRecord.put("PARTY_NAME", partyEntity.getPartyName());
+                applyRecord.put("WX_NICK", partyEntity.getWxNick());
+                applyRecord.put("CREATE_DATE",partyEntity.getCreateDate());
             }
             if (StringUtils.isNotBlank(auditEmpId)) {
                 applyRecord.put("AUDIT_EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
