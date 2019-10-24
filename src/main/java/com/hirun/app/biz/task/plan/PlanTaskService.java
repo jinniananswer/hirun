@@ -239,6 +239,18 @@ public class PlanTaskService extends GenericService {
                 String staff_id=jsonProject.getString("STAFF_ID");
                 String openid = jsonProject.getString("OPENID");
                 String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(staff_id);
+
+                System.out.println(openid+"--mode_id="+mode_id+"--mode_time"+mode_time);
+                System.out.println(jsonProject.getString("NAME"));
+                System.out.println(jsonProject.getString("AGE"));
+                System.out.println(jsonProject.getString("HUXING"));
+                System.out.println(jsonProject.getString("MIANJI"));
+                System.out.println(jsonProject.getString("YONGTU"));
+                System.out.println(staff_id);
+                System.out.println(style);
+                System.out.println(func);
+                System.out.println(employeeId);
+                System.out.println(TimeTool.now());
                  /*
                 EmployeeEntity employeeEntity= EmployeeBean.getEmployeeByEmployeeId(employeeId);
                 PartyEntity partyEntity=customerServiceDAO.queryPartyInfoByOpenId(openid);
@@ -260,6 +272,20 @@ public class PlanTaskService extends GenericService {
                 param.put("FUNC",func);
                 param.put("REL_EMPLOYEE_ID",employeeId);
                 param.put("CREATE_DATE",TimeTool.now());
+
+                System.out.println(openid+"--mode_id="+mode_id+"--mode_time"+mode_time);
+                System.out.println(jsonProject.getString("NAME"));
+                System.out.println(jsonProject.getString("AGE"));
+                System.out.println(jsonProject.getString("HUXING"));
+                System.out.println(jsonProject.getString("MIANJI"));
+                System.out.println(jsonProject.getString("YONGTU"));
+                System.out.println(staff_id);
+                System.out.println(style);
+                System.out.println(func);
+                System.out.println(employeeId);
+                System.out.println(TimeTool.now());
+
+
                 customerServiceDAO.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图一的内容转换成ins数据
                 /*
                 partyActionParam.put("PARTY_ID",party_id);
