@@ -47,16 +47,16 @@ public class PlanTaskService extends GenericService {
         sql.append(" ORDER BY COMM_TIME ");
         JSONArray jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
-        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+        for (int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
             String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(jsonProject.getString("STAFF_ID"));
-            if(StringUtils.isBlank(employeeId)) {
+            if (StringUtils.isBlank(employeeId)) {
                 continue;
             }
             jsonProject.put("STAFF_ID", employeeId);
             boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "LTZDSTS");
-            if(isTrans) {
+            if (isTrans) {
                 signToDone(id, now, "OUT_HIRUNPLUS_PROJECTS", "OUT_HIS_HIRUNPLUS_PROJECTS");
             }
         }
@@ -69,19 +69,19 @@ public class PlanTaskService extends GenericService {
         sql.append(" ORDER BY SUBSCRIBE_TIME ");
         jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
-        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+        for (int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
             String openId = jsonProject.getString("OPENID");
             CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
             boolean isTrans = false;
-            if(customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
+            if (customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
                 jsonProject.put("STAFF_ID", customerEntity.getHouseCounselorId());
                 isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "GZHGZ");
             } else {
                 continue;
             }
-            if(isTrans) {
+            if (isTrans) {
                 signToDone(id, now, "out_hirunplus_reg", "out_his_hirunplus_reg");
             }
         }
@@ -94,24 +94,24 @@ public class PlanTaskService extends GenericService {
         sql.append(" ORDER BY ADD_TIME ");
         jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
-        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+        for (int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
             String openId = jsonProject.getString("OPENID");
             String roleId = jsonProject.getString("ROLE_ID");//11:客户代表；19:家装顾问
             boolean isTrans = false;
-            if("19".equals(roleId)) {
+            if ("19".equals(roleId)) {
                 //扫码
                 String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(jsonProject.getString("STAFF_ID"));
-                if(StringUtils.isBlank(employeeId)) {
+                if (StringUtils.isBlank(employeeId)) {
                     continue;
                 }
                 jsonProject.put("STAFF_ID", employeeId);
                 isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "SMJRQLC");
-            } else if("11".equals(roleId)) {
+            } else if ("11".equals(roleId)) {
                 //需要处理
                 CustomerEntity customerEntity = custDAO.getCustomerEntityByIdentifyCode(openId);
-                if(customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
+                if (customerEntity != null && StringUtils.isNotBlank(customerEntity.getHouseCounselorId())) {
                     jsonProject.put("STAFF_ID", customerEntity.getHouseCounselorId());
                     isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "ZX");
                 } else {
@@ -121,7 +121,7 @@ public class PlanTaskService extends GenericService {
                 isTrans = true;
             }
 
-            if(isTrans) {
+            if (isTrans) {
                 signToDone(id, now, "out_hirunplus_scan", "out_his_hirunplus_scan");
             }
         }
@@ -134,17 +134,17 @@ public class PlanTaskService extends GenericService {
         sql.append(" ORDER BY MODE_TIME ");
         jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
-        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+        for (int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
             String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(jsonProject.getString("STAFF_ID"));
-            if(StringUtils.isBlank(employeeId)) {
+            if (StringUtils.isBlank(employeeId)) {
                 continue;
             }
             jsonProject.put("STAFF_ID", employeeId);
             boolean isTrans = PlanBean.transOriginalDataToAction(jsonProject, today, "XQLTYTS");
 
-            if(isTrans) {
+            if (isTrans) {
                 signToDone(id, now, "out_hirunplus_commends", "out_his_hirunplus_commends");
             }
         }
@@ -157,15 +157,15 @@ public class PlanTaskService extends GenericService {
         sql.append(" ORDER BY CREATE_TIME ");
         jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
-        for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+        for (int i = 0, size = jsonProjectList.size(); i < size; i++) {
             JSONObject jsonProject = jsonProjectList.getJSONObject(i);
             String id = jsonProject.getString("ID");
             String staffId = jsonProject.getString("STAFF_ID");
             String roleId = jsonProject.getString("ROLE_ID");
             boolean isTrans = false;
-            if("19".equals(roleId)) {
+            if ("19".equals(roleId)) {
                 String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(staffId);
-                if(StringUtils.isBlank(employeeId)) {
+                if (StringUtils.isBlank(employeeId)) {
                     continue;
                 }
                 jsonProject.put("STAFF_ID", employeeId);
@@ -175,7 +175,7 @@ public class PlanTaskService extends GenericService {
                 isTrans = true;
             }
 
-            if(isTrans) {
+            if (isTrans) {
                 signToDone(id, now, "out_hirunplus_yjal", "out_his_hirunplus_yjal");
             }
         }
@@ -210,10 +210,10 @@ public class PlanTaskService extends GenericService {
         dao.executeUpdate(sql.toString(), dbParam);
     }
 
-    private  void transModeToAction(){
+    private void transModeToAction() {
         try {
             GenericDAO dao = new GenericDAO("out");
-            CustomerServiceDAO customerServiceDAO=DAOFactory.createDAO(CustomerServiceDAO.class);
+            CustomerServiceDAO customerServiceDAO = DAOFactory.createDAO(CustomerServiceDAO.class);
 
             StringBuilder sql = new StringBuilder();
             sql.append(" SELECT ID,MODE_ID,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') MODE_TIME,STAFF_ID,OPENID,STYLE,FUNC,NAME,AGE,MIANJI,HUXING,YONGTU ");
@@ -222,60 +222,47 @@ public class PlanTaskService extends GenericService {
             sql.append(" ORDER BY INDB_TIME ");
             JSONArray jsonProjectList = ConvertTool.toJSONArray(dao.queryBySql(sql.toString(), new HashMap<String, String>()));
 
-            if(jsonProjectList.size()<0){
+            if (jsonProjectList.size() < 0) {
                 return;
             }
 
-            for(int i = 0, size = jsonProjectList.size(); i < size; i++) {
+            for (int i = 0, size = jsonProjectList.size(); i < size; i++) {
                 JSONObject jsonProject = jsonProjectList.getJSONObject(i);
-                Map<String,String> param=new HashMap<String, String>();
-               // Map<String,String> partyActionParam=new HashMap<String, String>();
+                Map<String, String> param = new HashMap<String, String>();
+                // Map<String,String> partyActionParam=new HashMap<String, String>();
 
                 String id = jsonProject.getString("ID");
-                String mode_id= jsonProject.getString("MODE_ID");
-                String mode_time= jsonProject.getString("MODE_TIME");
-                String style=jsonProject.getString("STYLE");
-                String func=jsonProject.getString("FUNC");
-                String staff_id=jsonProject.getString("STAFF_ID");
+                String mode_id = jsonProject.getString("MODE_ID");
+                String mode_time = jsonProject.getString("MODE_TIME");
+                String style = jsonProject.getString("STYLE");
+                String func = jsonProject.getString("FUNC");
+                String staff_id = jsonProject.getString("STAFF_ID");
                 String openid = jsonProject.getString("OPENID");
                 String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(staff_id);
 
 
-                param.put("OPEN_ID",openid);
-                param.put("ACTION_CODE","XQLTY");
-                param.put("MODE_ID",mode_id);
-                param.put("MODE_TIME",mode_time);
-                param.put("NAME",jsonProject.getString("NAME"));
-                param.put("AGE",jsonProject.getString("AGE"));
-                param.put("HOUSE_KIND",jsonProject.getString("HUXING"));
-                param.put("HOUSE_AREA",jsonProject.getString("MIANJI"));
-                param.put("APPLICATION",jsonProject.getString("YONGTU"));
-                param.put("STAFF_ID",staff_id);
-                param.put("STYLE",style);
-                param.put("FUNC",func);
-                param.put("REL_EMPLOYEE_ID",employeeId);
-                param.put("CREATE_DATE",TimeTool.now());
+                param.put("OPEN_ID", openid);
+                param.put("ACTION_CODE", "XQLTY");
+                param.put("MODE_ID", mode_id);
+                param.put("MODE_TIME", mode_time);
+                param.put("NAME", jsonProject.getString("NAME"));
+                param.put("AGE", jsonProject.getString("AGE"));
+                param.put("HOUSE_KIND", jsonProject.getString("HUXING"));
+                param.put("HOUSE_AREA", jsonProject.getString("MIANJI"));
+                param.put("APPLICATION", jsonProject.getString("YONGTU"));
+                param.put("STAFF_ID", staff_id);
+                param.put("STYLE", style);
+                param.put("FUNC", func);
+                param.put("REL_EMPLOYEE_ID", employeeId);
+                param.put("CREATE_DATE", TimeTool.now());
 
-                System.out.println(openid+"--mode_id="+mode_id+"--mode_time"+mode_time);
-                System.out.println(jsonProject.getString("NAME"));
-                System.out.println(jsonProject.getString("AGE"));
-                System.out.println(jsonProject.getString("HUXING"));
-                System.out.println(jsonProject.getString("MIANJI"));
-                System.out.println(jsonProject.getString("YONGTU"));
-                System.out.println(staff_id);
-                System.out.println(style);
-                System.out.println(func);
-                System.out.println(employeeId);
-                System.out.println(TimeTool.now());
-
-
-                customerServiceDAO.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图一的内容转换成ins数据
+                customerServiceDAO.insertAutoIncrement("ins_blueprint_action", param);//将需求蓝图一的内容转换成ins数据
 
                 signToDone(id, TimeTool.now(), "out_hirunplus_commends_mode", "out_his_hirunplus_commends_mode");//搬历史表
 
             }
 
-            }catch (Exception e){
+        } catch (Exception e) {
             log.error("mode数据转换异常：", e);
         }
 
