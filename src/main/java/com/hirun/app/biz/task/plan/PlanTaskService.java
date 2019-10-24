@@ -240,24 +240,7 @@ public class PlanTaskService extends GenericService {
                 String openid = jsonProject.getString("OPENID");
                 String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(staff_id);
 
-                System.out.println(openid+"--mode_id="+mode_id+"--mode_time"+mode_time);
-                System.out.println(jsonProject.getString("NAME"));
-                System.out.println(jsonProject.getString("AGE"));
-                System.out.println(jsonProject.getString("HUXING"));
-                System.out.println(jsonProject.getString("MIANJI"));
-                System.out.println(jsonProject.getString("YONGTU"));
-                System.out.println(staff_id);
-                System.out.println(style);
-                System.out.println(func);
-                System.out.println(employeeId);
-                System.out.println(TimeTool.now());
-                 /*
-                EmployeeEntity employeeEntity= EmployeeBean.getEmployeeByEmployeeId(employeeId);
-                PartyEntity partyEntity=customerServiceDAO.queryPartyInfoByOpenId(openid);
-                if(partyEntity==null){
-                    continue;
-                }
-                String party_id=partyEntity.getParytId();*/
+
                 param.put("OPEN_ID",openid);
                 param.put("ACTION_CODE","XQLTY");
                 param.put("MODE_ID",mode_id);
@@ -273,30 +256,9 @@ public class PlanTaskService extends GenericService {
                 param.put("REL_EMPLOYEE_ID",employeeId);
                 param.put("CREATE_DATE",TimeTool.now());
 
-                System.out.println(openid+"--mode_id="+mode_id+"--mode_time"+mode_time);
-                System.out.println(jsonProject.getString("NAME"));
-                System.out.println(jsonProject.getString("AGE"));
-                System.out.println(jsonProject.getString("HUXING"));
-                System.out.println(jsonProject.getString("MIANJI"));
-                System.out.println(jsonProject.getString("YONGTU"));
-                System.out.println(staff_id);
-                System.out.println(style);
-                System.out.println(func);
-                System.out.println(employeeId);
-                System.out.println(TimeTool.now());
-
 
                 customerServiceDAO.insertAutoIncrement("ins_blueprint_action",param);//将需求蓝图一的内容转换成ins数据
-                /*
-                partyActionParam.put("PARTY_ID",party_id);
-                partyActionParam.put("STATUS","1");
-                partyActionParam.put("FINISH_TIME",mode_time);
-                partyActionParam.put("ACTION_CODE","XQLTY");
-                partyActionParam.put("UPDATE_USER_ID",employeeEntity.getUserId());
-                partyActionParam.put("UPDATE_TIME",TimeTool.now());
 
-                customerServiceDAO.save("ins_project_original_action",new String[]{"PARTY_ID","ACTION_CODE"},partyActionParam);//更新转换action数据
-                 */
                 signToDone(id, TimeTool.now(), "out_hirunplus_commends_mode", "out_his_hirunplus_commends_mode");//搬历史表
 
             }
