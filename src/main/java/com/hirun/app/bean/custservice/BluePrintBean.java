@@ -24,18 +24,18 @@ import java.util.*;
 
 public class BluePrintBean {
 
-    public static JSONObject getFuncTree(Record record){
-        if(record==null){
+    public static JSONObject getFuncTree(Record record) {
+        if (record == null) {
             return null;
         }
-        JSONObject jsonObject=new JSONObject();
+        JSONObject jsonObject = new JSONObject();
 
-        String func=record.get("FUNC");
-        if(StringUtils.isBlank(func) || StringUtils.equals("false",func)){
+        String func = record.get("FUNC");
+        if (StringUtils.isBlank(func) || StringUtils.equals("false", func)) {
             return null;
         }
-        JSONArray funcArray=JSONArray.parseArray(func);
-        int size=funcArray.size();
+        JSONArray funcArray = JSONArray.parseArray(func);
+        int size = funcArray.size();
 
         JSONObject root = new JSONObject();
         root.put("text", "功能蓝图");
@@ -50,122 +50,68 @@ public class BluePrintBean {
         root.put("value", "-1");
 
 
-        JSONObject children=buildFuncTree(funcArray,"-1");
+        JSONObject children = buildFuncTree(funcArray, "-1");
 
         if (children == null) {
             root.put("haschild", "false");
-        }
-        else {
+        } else {
             root.put("haschild", "true");
             root.put("childNodes", children);
         }
-        jsonObject.put("-1",root);
+        jsonObject.put("-1", root);
         return jsonObject;
     }
 
 
-
-    public static JSONObject buildFuncTree(JSONArray objJson, String prefix){
-        JSONObject childJsonObject=new JSONObject();
-        if(objJson == null){
+    public static JSONObject buildFuncTree(JSONArray objJson, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (objJson == null) {
             return null;
         }
-        for(int i=0;i<objJson.size();i++){
-            JSONObject childNode=new JSONObject();
-            JSONObject jsonObject=objJson.getJSONObject(i);
+        for (int i = 0; i < objJson.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = objJson.getJSONObject(i);
             childNode.put("text", jsonObject.getString("name"));
             childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
             childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
             childNode.put("value", jsonObject.getString("caid"));
-            JSONArray subsJsonArray=jsonObject.getJSONArray("subs");
-            if(subsJsonArray.size()<=0 || subsJsonArray==null){
+            JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+            if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
                 childNode.put("haschild", "false");
-            }else{
-                JSONObject child= buildChildTree(subsJsonArray,prefix + "●" + jsonObject.getString("caid"));
+            } else {
+                JSONObject child = buildChildTree(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
                 childNode.put("haschild", "true");
                 childNode.put("childNodes", child);
             }
-            childJsonObject.put(jsonObject.getString("caid"),childNode);
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
         }
         return childJsonObject;
     }
 
-    public static JSONObject buildChildTree(JSONArray subArray,String prefix){
-        JSONObject childJsonObject=new JSONObject();
-        if(subArray==null){
+    public static JSONObject buildChildTree(JSONArray subArray, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (subArray == null) {
             return null;
         }
-        for(int i=0;i<subArray.size();i++){
-            JSONObject childNode=new JSONObject();
-            JSONObject jsonObject=subArray.getJSONObject(i);
+        for (int i = 0; i < subArray.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = subArray.getJSONObject(i);
             childNode.put("text", jsonObject.getString("name"));
             childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
             childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
             childNode.put("value", jsonObject.getString("caid"));
-            JSONArray subsJsonArray=jsonObject.getJSONArray("subs");
-            if(subsJsonArray.size()<=0 || subsJsonArray==null){
-                childNode.put("haschild", "false");
-            }else{
-                JSONObject child= buildChildTree1(subsJsonArray,prefix + "●" + jsonObject.getString("caid"));
-                childNode.put("haschild", "true");
-                childNode.put("childNodes", child);
-            }
-            childJsonObject.put(jsonObject.getString("caid"),childNode);
-        }
-        return childJsonObject;
-    }
 
-    public static JSONObject buildChildTree1(JSONArray subArray,String prefix){
-        JSONObject childJsonObject=new JSONObject();
-        if(subArray==null){
-            return null;
-        }
-        for(int i=0;i<subArray.size();i++){
-            JSONObject childNode=new JSONObject();
-            JSONObject jsonObject=subArray.getJSONObject(i);
-            childNode.put("text", jsonObject.getString("name"));
-            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
-            childNode.put("id", jsonObject.getString("caid"));
-            childNode.put("disabled", "false");
-            childNode.put("value", jsonObject.getString("caid"));
-            JSONArray subsJsonArray=jsonObject.getJSONArray("subs");
-            if(subsJsonArray.size()<=0 || subsJsonArray==null){
-                childNode.put("haschild", "false");
-            }else{
-                JSONObject child= buildChildTree2(subsJsonArray,prefix + "●" + jsonObject.getString("caid"));
-                childNode.put("haschild", "true");
-                childNode.put("childNodes", child);
-            }
-            childJsonObject.put(jsonObject.getString("caid"),childNode);
-        }
-        return childJsonObject;
-    }
-
-    public static JSONObject buildChildTree2(JSONArray subArray,String prefix){
-        JSONObject childJsonObject=new JSONObject();
-        if(subArray==null){
-            return null;
-        }
-        for(int i=0;i<subArray.size();i++){
-            JSONObject childNode=new JSONObject();
-            JSONObject jsonObject=subArray.getJSONObject(i);
-            childNode.put("text", jsonObject.getString("name"));
-            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
-            childNode.put("id", jsonObject.getString("caid"));
-            childNode.put("disabled", "false");
-            childNode.put("value", jsonObject.getString("caid"));
-            //todo
-            String types=jsonObject.getString("types");
-            if(StringUtils.equals(types,"false")||StringUtils.isBlank(types)){
+            String subs = jsonObject.getString("subs");
+            if (StringUtils.equals(subs, "false") || StringUtils.isBlank(subs)) {
                 childNode.put("haschild", "false");
             }else {
-                JSONArray subsJsonArray = jsonObject.getJSONArray("types");
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
                 if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
                     childNode.put("haschild", "false");
                 } else {
-                    JSONObject child = buildChildTree3(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    JSONObject child = buildChildTree1(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
                     childNode.put("haschild", "true");
                     childNode.put("childNodes", child);
                 }
@@ -175,72 +121,172 @@ public class BluePrintBean {
         return childJsonObject;
     }
 
-    public static JSONObject buildChildTree3(JSONArray subArray,String prefix){
-        JSONObject childJsonObject=new JSONObject();
-        if(subArray==null){
+    public static JSONObject buildChildTree1(JSONArray subArray, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (subArray == null) {
             return null;
         }
-        for(int i=0;i<subArray.size();i++){
-            JSONObject childNode=new JSONObject();
-            JSONObject jsonObject=subArray.getJSONObject(i);
+        for (int i = 0; i < subArray.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = subArray.getJSONObject(i);
             childNode.put("text", jsonObject.getString("name"));
-            childNode.put("dataid", prefix + "●" + jsonObject.getString("typeid"));
-            childNode.put("id", jsonObject.getString("typeid"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
-            childNode.put("value", jsonObject.getString("typeid"));
-            JSONArray subsJsonArray=jsonObject.getJSONArray("subs");
+            childNode.put("value", jsonObject.getString("caid"));
 
-            if(subsJsonArray.size()<=0 || subsJsonArray==null){
+            String subs = jsonObject.getString("subs");
+            if (StringUtils.equals(subs, "false") || StringUtils.isBlank(subs)) {
                 childNode.put("haschild", "false");
-            }else{
-                JSONObject child= buildChildTree4(subsJsonArray,prefix + "●" + jsonObject.getString("typeid"));
-                childNode.put("haschild", "true");
-                childNode.put("childNodes", child);
+            } else {
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree2(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
             }
-
-            childJsonObject.put(jsonObject.getString("typeid"),childNode);
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
         }
         return childJsonObject;
     }
 
-    public static JSONObject buildChildTree4(JSONArray subArray,String prefix){
-        JSONObject childJsonObject=new JSONObject();
-        if(subArray==null){
+    public static JSONObject buildChildTree2(JSONArray subArray, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (subArray == null) {
             return null;
         }
-        for(int i=0;i<subArray.size();i++){
-            JSONObject childNode=new JSONObject();
-            JSONObject jsonObject=subArray.getJSONObject(i);
+        for (int i = 0; i < subArray.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = subArray.getJSONObject(i);
             childNode.put("text", jsonObject.getString("name"));
-            childNode.put("dataid", prefix + "●" + jsonObject.getString("typeid"));
-            childNode.put("id", jsonObject.getString("typeid"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
-            childNode.put("value", jsonObject.getString("typeid"));
+            childNode.put("value", jsonObject.getString("caid"));
 
-            childJsonObject.put(jsonObject.getString("typeid"),childNode);
+            String types = jsonObject.getString("subs");
+            if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
+                childNode.put("haschild", "false");
+            } else {
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree3(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
+            }
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
+        }
+        return childJsonObject;
+    }
+
+    public static JSONObject buildChildTree3(JSONArray subArray, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (subArray == null) {
+            return null;
+        }
+        for (int i = 0; i < subArray.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = subArray.getJSONObject(i);
+            childNode.put("text", jsonObject.getString("name"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
+            childNode.put("disabled", "false");
+            childNode.put("value", jsonObject.getString("caid"));
+
+            String types = jsonObject.getString("subs");
+            if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
+                childNode.put("haschild", "false");
+            }else {
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree4(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
+            }
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
+        }
+        return childJsonObject;
+    }
+
+    public static JSONObject buildChildTree4(JSONArray subArray, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (subArray == null) {
+            return null;
+        }
+        for (int i = 0; i < subArray.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = subArray.getJSONObject(i);
+            childNode.put("text", jsonObject.getString("name"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
+            childNode.put("disabled", "false");
+            childNode.put("value", jsonObject.getString("caid"));
+
+            String types = jsonObject.getString("subs");
+            if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
+                childNode.put("haschild", "false");
+            }else {
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree5(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
+            }
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
+        }
+        return childJsonObject;
+    }
+
+    public static JSONObject buildChildTree5(JSONArray subArray, String prefix) {
+        JSONObject childJsonObject = new JSONObject();
+        if (subArray == null) {
+            return null;
+        }
+        for (int i = 0; i < subArray.size(); i++) {
+            JSONObject childNode = new JSONObject();
+            JSONObject jsonObject = subArray.getJSONObject(i);
+            childNode.put("text", jsonObject.getString("name"));
+            childNode.put("dataid", prefix + "●" + jsonObject.getString("caid"));
+            childNode.put("id", jsonObject.getString("caid"));
+            childNode.put("disabled", "false");
+            childNode.put("value", jsonObject.getString("caid"));
+
+            childJsonObject.put(jsonObject.getString("caid"), childNode);
         }
         return childJsonObject;
     }
 
 
-    public static JSONArray getStyleContent(Record styleRecod){
-        JSONArray styleJsonArray=new JSONArray();
-        if(styleRecod==null){
+    public static JSONArray getStyleContent(Record styleRecod) {
+        JSONArray styleJsonArray = new JSONArray();
+        if (styleRecod == null) {
             return null;
         }
 
-        String style=styleRecod.get("STYLE");
-        if(StringUtils.isBlank(style) || StringUtils.equals("false",style)){
+        String style = styleRecod.get("STYLE");
+        if (StringUtils.isBlank(style) || StringUtils.equals("false", style)) {
             return null;
         }
-        JSONArray styleArray=JSONArray.parseArray(style);
-        int size=styleArray.size();
-        for(int i=0;i<size;i++){
-            JSONObject jsonObject=new JSONObject();
-            JSONObject styleJsonObject=styleArray.getJSONObject(i);
-            jsonObject.put("PROJECT_ID",styleJsonObject.getString("project_id "));
-            jsonObject.put("NAME",styleJsonObject.getString("name"));
-            jsonObject.put("CONTENT",styleJsonObject.getString("content"));
+        JSONArray styleArray = JSONArray.parseArray(style);
+        int size = styleArray.size();
+        for (int i = 0; i < size; i++) {
+            JSONObject jsonObject = new JSONObject();
+            JSONObject styleJsonObject = styleArray.getJSONObject(i);
+            jsonObject.put("PROJECT_ID", styleJsonObject.getString("project_id "));
+            jsonObject.put("NAME", styleJsonObject.getString("name"));
+            jsonObject.put("CONTENT", styleJsonObject.getString("content"));
             styleJsonArray.add(jsonObject);
         }
 

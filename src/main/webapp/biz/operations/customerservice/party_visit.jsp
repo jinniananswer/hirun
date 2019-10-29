@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户清理申请</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/party.visit.js?v=20190706"></script>
+    <script src="/scripts/biz/customerservice/party.visit.js?v=20190925"></script>
 </head>
 <body>
 <!-- 标题栏 开始 -->
@@ -87,6 +87,15 @@
                     <div class="value">
                         <input type="text" name="VISIT_WAY" id="VISIT_WAY" placeholder="请填写回访方式" nullable="no" desc="请填写回访方式"></textarea>
                     </div>
+                </li>
+                <li class="link required">
+                    <div class="label">回访时间：</div>
+         			<div class="value">
+         				<span class="e_mix">
+         					<input type="text" id="VISIT_TIME" name="VISIT_TIME" datatype="date" nullable="no" desc="回访时间" readonly="true"/>
+         					<span class="e_ico-date"></span>
+         				</span>
+         			</div>
                 </li>
                 <li class="link required">
                     <div class="label">回访内容：</div>
