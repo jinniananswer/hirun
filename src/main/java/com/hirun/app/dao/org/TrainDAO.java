@@ -313,13 +313,13 @@ public class TrainDAO extends GenericDAO {
         sql.append("and b.status = '0' " );
         sql.append("and now() < d.end_date ");
         sql.append("and e.ORG_ID = d.ORG_ID ");
-        sql.append("and b.regular_date > now() ");
         sql.append("and e.org_id in ("+orgId+") ");
         sql.append("and not exists(select 1 from ins_train_sign f where f.employee_id = b.employee_id and f.train_id = :TRAIN_ID and f.status = '0') ");
         sql.append("and (");
         sql.append(" (exists(SELECT 1 FROM ins_train_exam_score x, ins_train y WHERE x.EMPLOYEE_ID = b.EMPLOYEE_ID AND x.TRAIN_ID = y.TRAIN_ID AND y.TYPE = '1' GROUP BY x.employee_id, x.item HAVING max(score) < 80)) ");
         sql.append(" or ");
         sql.append("(date_add(now(), interval - 75 day) > b.in_date ");
+        sql.append(" and b.regular_date > now() ");
         sql.append("and not exists(select 1 from ins_train_sign x, ins_train y where x.train_id = y.train_id and y.status = '0' and x.status = '0' and x.employee_id = b.employee_id and y.type = '1')  ");
         sql.append("and exists(select 1 from ins_exam_score g where g.employee_id = b.employee_id and g.exam_id = 1 and g.score >= 80) ");
         sql.append("and exists(select 1 from ins_exam_score h where h.employee_id = b.employee_id and h.exam_id = 2 and h.score >= 80) ");
