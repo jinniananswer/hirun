@@ -49,9 +49,13 @@
         </div>
         <div class="c_space"></div>
         <div class="c_submit c_submit-full">
-            <button class="e_button-r e_button-l e_button-green" type="button" ontap="$.user.submit();">提交</button>
+             <button class="e_button-r e_button-l e_button-green" type="button" ontap="$.user.submit();">提交</button>
         </div>
-
+        <div class="c_space"></div>
+        <div class="c_space"></div>
+        <div class="c_space"></div>
+        <div class="c_space"></div>
+        <div class="c_space"></div>
     </div>
 </div>
 <!-- 滚动 结束 -->
