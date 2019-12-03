@@ -90,7 +90,9 @@ public class SessionVerifyFilter implements Filter {
                     }
                 } else {
                     log.error("认证失败！hirunToken: {}", hirunToken);
+
                 }
+                return;
             }
 
             //检查是否有自动登陆
