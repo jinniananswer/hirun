@@ -76,20 +76,20 @@ public class SessionVerifyFilter implements Filter {
 
         if (null == session) {
 
-            String hirunSid = request.getParameter("hirun-sid");
+            String hirunToken = request.getParameter("hirun-token");
 
-            if (StringUtils.isNotBlank(hirunSid)) {
-                String username = authentication(hirunSid);
+            if (StringUtils.isNotBlank(hirunToken)) {
+                String username = authentication(hirunToken);
                 if (StringUtils.isNotBlank(username)) {
                     if (autoLogin(request, username)) {
-                        log.info("新系统打开老系统页面成功！ username: {}, hirun-sid: {}", username, hirunSid);
+                        log.info("新系统打开老系统页面成功！ username: {}, hirun-sid: {}", username, hirunToken);
                         filterChain.doFilter(servletRequest, servletResponse);
                         return;
                     } else {
                         log.error("自动登录失败！username: {}", username);
                     }
                 } else {
-                    log.error("认证失败！hirunSid: {}", hirunSid);
+                    log.error("认证失败！hirunToken: {}", hirunToken);
                 }
             }
 
@@ -113,16 +113,16 @@ public class SessionVerifyFilter implements Filter {
     /**
      * 调用主营业务体统的 Rest 接口，对令牌进行认证
      *
-     * @param hirunSid
+     * @param hirunToken
      * @return 成功返回用户名，失败返回空
      */
-    private String authentication(String hirunSid) {
+    private String authentication(String hirunToken) {
 
         StringBuilder sb = new StringBuilder();
         HttpURLConnection conn = null;
         BufferedReader br = null;
         try {
-            URL restURL = new URL("http://47.105.64.145:80/hirun/api/system/session/authentication/" + hirunSid);
+            URL restURL = new URL("http://47.105.64.145:80/hirun/api/system/session/authentication/" + hirunToken);
             conn = (HttpURLConnection) restURL.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
