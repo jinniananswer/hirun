@@ -19,7 +19,7 @@ import java.util.Map;
 @DatabaseName("ins")
 public class UserDAO extends StrongObjectDAO {
 
-    public UserDAO(String databaseName){
+    public UserDAO(String databaseName) {
         super(databaseName);
     }
 
@@ -28,12 +28,12 @@ public class UserDAO extends StrongObjectDAO {
         parameter.put("USERNAME", username);
         parameter.put("STATUS", "0");
         List<UserEntity> users = this.query(UserEntity.class, "ins_user", parameter);
-        if(ArrayTool.isEmpty(users))
+        if (ArrayTool.isEmpty(users))
             return null;
         return users.get(0);
     }
 
-    public UserEntity queryUserByPk(String userId) throws Exception{
+    public UserEntity queryUserByPk(String userId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("USER_ID", userId);
         UserEntity user = this.queryByPk(UserEntity.class, "ins_user", parameter);
@@ -44,7 +44,7 @@ public class UserDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("MOBILE_NO", mobileNo);
         List<UserEntity> users = this.query(UserEntity.class, "ins_user", parameter);
-        if(ArrayTool.isEmpty(users))
+        if (ArrayTool.isEmpty(users))
             return null;
         return users.get(0);
     }
@@ -58,7 +58,7 @@ public class UserDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("EMPLOYEE_ID", employeeId);
         List<UserEntity> users = this.queryBySql(UserEntity.class, sb.toString(), parameter);
-        if(ArrayTool.isEmpty(users))
+        if (ArrayTool.isEmpty(users))
             return null;
         return users.get(0);
     }
@@ -66,7 +66,7 @@ public class UserDAO extends StrongObjectDAO {
     public RecordSet queryJobRoleMapping(Long orgId, String jobRoleId, String nature) throws Exception {
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_role_mapping ");
-        sb.append("where org_id= " + orgId + " and job_role=" + jobRoleId + " and nature=" + nature + " and is_enabled= 1 ");
+        sb.append("where (org_id= " + orgId + " or org_id=0 )" + " and job_role=" + jobRoleId + " and (nature=" + nature + " or nature=0 )" + " and is_enabled= 1 ");
 
         return this.queryBySql(sb.toString(), null);
     }

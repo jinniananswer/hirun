@@ -626,7 +626,7 @@ public class EmployeeService extends GenericService {
                             insUserRole.put("ROLE_ID", record.get("ROLE_ID"));
                             insUserRole.put("START_DATE", session.getCreateTime());
                             insUserRole.put("END_DATE", "3000-12-31 23:59:59");
-                            insUserRole.put("UPDATE_USER_ID", user.getUserId() + "");
+                            insUserRole.put("UPDATE_USER_ID", session.getSessionEntity().getUserId() + "");
                             insUserRole.put("UPDATE_TIME", session.getCreateTime());
                             userRoles.add(insUserRole);
                         }
