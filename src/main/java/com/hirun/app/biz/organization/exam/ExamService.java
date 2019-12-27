@@ -171,7 +171,7 @@ public class ExamService extends GenericService {
         parameter.put("SCORE", request.getString("ANSWER_SCORE"));
         parameter.put("EXAM_TIME", session.getCreateTime());
         parameter.put("CREATE_USER_ID", userId);
-        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("CREATE_TIME", session.getCreateTime());
         parameter.put("UPDATE_USER_ID", userId);
         parameter.put("UPDATE_TIME", session.getCreateTime());
 

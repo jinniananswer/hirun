@@ -59,12 +59,12 @@ public class UserEntity extends GenericEntity{
         this.set("STATUS", status);
     }
 
-    public String getCreateDate(){
-        return this.get("CREATE_DATE");
+    public String getCreateTime(){
+        return this.get("CREATE_TIME");
     }
 
-    public void setCreateDate(String createDate){
-        this.set("CREATE_DATE", createDate);
+    public void setCreateTime(String createDate){
+        this.set("CREATE_TIME", createDate);
     }
 
     public String getRemoveDate(){

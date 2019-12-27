@@ -10,7 +10,6 @@ import com.hirun.app.cache.PlanTargetLimitCache;
 import com.hirun.app.dao.cust.CustActionDAO;
 import com.hirun.app.dao.cust.CustDAO;
 import com.hirun.app.dao.cust.CustOriginalActionDAO;
-import com.hirun.app.dao.plan.PlanActionNumDAO;
 import com.hirun.app.dao.plan.PlanCycleFinishInfoDAO;
 import com.hirun.app.dao.plan.PlanDAO;
 import com.hirun.app.dao.user.UserDAO;
@@ -33,7 +32,6 @@ import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
-import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
@@ -103,7 +101,7 @@ public class PlanBean {
             customerEntity.setCustStatus(CustStatus.toBeFilled.getValue());
             customerEntity.setFirstPlanDate(planDate);
             customerEntity.setHouseCounselorId(executorId);
-            customerEntity.setCreateDate(now);
+            customerEntity.setCreateTime(now);
             customerEntity.setCreateUserId("0");
             customerEntity.setUpdateTime(now);
             customerEntity.setUpdateUserId("0");
@@ -131,7 +129,7 @@ public class PlanBean {
                 custActionEntity.setPlanDealDate(planEntity.getPlanDate());
                 custActionEntity.setFinishTime(finishTime);
                 custActionEntity.setExecutorId(executorId);
-                custActionEntity.setCreateDate(now);
+                custActionEntity.setCreateTime(now);
                 custActionEntity.setCreateUserId("0");
                 custActionEntity.setUpdateTime(now);
                 custActionEntity.setUpdateUserId("0");
@@ -160,7 +158,7 @@ public class PlanBean {
                 custActionEntity.setPlanDealDate(planEntity.getPlanDate());
                 custActionEntity.setFinishTime(finishTime);
                 custActionEntity.setExecutorId(executorId);
-                custActionEntity.setCreateDate(now);
+                custActionEntity.setCreateTime(now);
                 custActionEntity.setCreateUserId("0");
                 custActionEntity.setUpdateTime(now);
                 custActionEntity.setUpdateUserId("0");
@@ -235,7 +233,7 @@ public class PlanBean {
                 custOriginalActionEntity.setEmployeeId(houseCounselorId);
                 custOriginalActionEntity.setOutId(id);
                 custOriginalActionEntity.setCreateUserId("0");
-                custOriginalActionEntity.setCreateDate(now);
+                custOriginalActionEntity.setCreateTime(now);
                 custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custOriginalActionEntity.getContent());
 
                 //如果没有加微的原始动作，则也记一条加微的
@@ -246,7 +244,7 @@ public class PlanBean {
                     custJWOriginalActionEntity.setFinishTime(operTime);
                     custJWOriginalActionEntity.setEmployeeId(houseCounselorId);
                     custJWOriginalActionEntity.setCreateUserId("0");
-                    custJWOriginalActionEntity.setCreateDate(now);
+                    custJWOriginalActionEntity.setCreateTime(now);
                     custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custJWOriginalActionEntity.getContent());
                 }
 
@@ -342,7 +340,7 @@ public class PlanBean {
         planEntity.setPlanExecutorId(planExecutorId);
         planEntity.setPlanType(planType);
         planEntity.setCreateUserId(userId);
-        planEntity.setCreateDate(now);
+        planEntity.setCreateTime(now);
         planEntity.setUpdateUserId(userId);
         planEntity.setUpdateTime(now);
         planEntity.setIsAdditionalRecord(isAdditionalRecord);

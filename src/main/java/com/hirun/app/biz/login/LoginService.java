@@ -105,7 +105,7 @@ public class LoginService extends GenericService{
                 deviceParameter.put("UPDATE_USER_ID", user.getUserId());
                 deviceParameter.put("OPERATION_SYSTEM", osCode+"");
                 String now = SessionManager.getSession().getCreateTime();
-                deviceParameter.put("CREATE_DATE", now);
+                deviceParameter.put("CREATE_TIME", now);
                 deviceParameter.put("UPDATE_TIME", now);
                 deviceDAO.insert("ins_user_device", deviceParameter);
             }
@@ -177,7 +177,7 @@ public class LoginService extends GenericService{
                 deviceParameter.put("UPDATE_USER_ID", user.getUserId());
                 deviceParameter.put("OPERATION_SYSTEM", osCode+"");
                 String now = SessionManager.getSession().getCreateTime();
-                deviceParameter.put("CREATE_DATE", now);
+                deviceParameter.put("CREATE_TIME", now);
                 deviceParameter.put("UPDATE_TIME", now);
                 deviceDAO.insert("ins_user_device", deviceParameter);
             }

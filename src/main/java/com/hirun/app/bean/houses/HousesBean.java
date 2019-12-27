@@ -99,7 +99,7 @@ public class HousesBean {
         house.put("CREATE_USER_ID", userId);
         house.put("UPDATE_USER_ID", userId);
         house.put("UPDATE_TIME", session.getCreateTime());
-        house.put("CREATE_DATE", session.getCreateTime());
+        house.put("CREATE_TIME", session.getCreateTime());
 
         HouseDAO dao = new HouseDAO("ins");
         List<HousesEntity> houses = dao.queryHousesByName(name);

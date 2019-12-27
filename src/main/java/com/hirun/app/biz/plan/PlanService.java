@@ -21,7 +21,6 @@ import com.hirun.pub.domain.entity.cust.CustActionEntity;
 import com.hirun.pub.domain.entity.cust.CustOriginalActionEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.param.ActionEntity;
-import com.hirun.pub.domain.entity.param.PlanActionLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanTargetLimitEntity;
 import com.hirun.pub.domain.entity.param.PlanUnfinishCauseEntity;
 import com.hirun.pub.domain.entity.plan.*;
@@ -30,10 +29,6 @@ import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.plan.ActionStatus;
 import com.hirun.pub.domain.enums.plan.PlanStatus;
 import com.hirun.pub.domain.enums.plan.PlanType;
-import com.hirun.pub.tool.CustomerTool;
-import com.hirun.pub.tool.PlanTool;
-import com.hirun.pub.websocket.MsgWebSocketClient;
-import com.hirun.pub.websocket.WebSocketMsg;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.SessionManager;
@@ -112,7 +107,7 @@ public class PlanService extends GenericService {
         planEntityParameter.put("PLAN_EXECUTOR_ID", planExecutorId);
         planEntityParameter.put("PLAN_TYPE", planType);
         planEntityParameter.put("CREATE_USER_ID", userId);
-        planEntityParameter.put("CREATE_DATE", now);
+        planEntityParameter.put("CREATE_TIME", now);
         planEntityParameter.put("UPDATE_USER_ID", userId);
         planEntityParameter.put("UPDATE_TIME", now);
         planEntityParameter.put("IS_ADDITIONAL_RECORD", isAdditionalRecord);
@@ -165,7 +160,7 @@ public class PlanService extends GenericService {
                 custActionParameter.put("PLAN_DEAL_DATE", planDate);
                 custActionParameter.put("EXECUTOR_ID", planExecutorId);
                 custActionParameter.put("CREATE_USER_ID", userId);
-                custActionParameter.put("CREATE_DATE", now);
+                custActionParameter.put("CREATE_TIME", now);
                 custActionParameter.put("UPDATE_USER_ID", userId);
                 custActionParameter.put("UPDATE_TIME", now);
                 custActionList.add(custActionParameter);
@@ -524,7 +519,7 @@ public class PlanService extends GenericService {
                 }
                 addExtraCustActionDbParam.put("EXECUTOR_ID", planEntity.getPlanExecutorId());
                 addExtraCustActionDbParam.put("CREATE_USER_ID", userId);
-                addExtraCustActionDbParam.put("CREATE_DATE", sysdate);
+                addExtraCustActionDbParam.put("CREATE_TIME", sysdate);
                 addExtraCustActionDbParam.put("UPDATE_USER_ID", userId);
                 addExtraCustActionDbParam.put("UPDATE_TIME", sysdate);
                 addExtraCustActionDbParam.put("ACTION_STATUS", "1");
@@ -551,7 +546,7 @@ public class PlanService extends GenericService {
                 }
                 custOriginActionDbParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
                 custOriginActionDbParam.put("CREATE_USER_ID", userId);
-                custOriginActionDbParam.put("CREATE_DATE", sysdate);
+                custOriginActionDbParam.put("CREATE_TIME", sysdate);
                 custOriginActionDbParamList.add(custOriginActionDbParam);
             }
             custOriginalActionDAO.insertBatch("INS_CUST_ORIGINAL_ACTION", custOriginActionDbParamList);
@@ -574,7 +569,7 @@ public class PlanService extends GenericService {
                     custOriginActionDbParam.put("FINISH_TIME", custActionEntity.getFinishTime());
                     custOriginActionDbParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
                     custOriginActionDbParam.put("CREATE_USER_ID", userId);
-                    custOriginActionDbParam.put("CREATE_DATE", sysdate);
+                    custOriginActionDbParam.put("CREATE_TIME", sysdate);
                     custOriginActionDbParamList.add(custOriginActionDbParam);
                 }
 //                parameter.put("UPDATE_USER_ID", userId);
@@ -714,7 +709,7 @@ public class PlanService extends GenericService {
         performDueTaskEntity.setExecTime(sysdate);
         performDueTaskEntity.setDealTag("0");
         performDueTaskEntity.setCreateUserId(userId);
-        performDueTaskEntity.setCreateDate(sysdate);
+        performDueTaskEntity.setCreateTime(sysdate);
         JSONObject taskParam = new JSONObject();
         taskParam.put("EMPLOYEE_ID", planEntity.getPlanExecutorId());
         taskParam.put("STAT_DAY", planEntity.getPlanDate());
@@ -1243,7 +1238,7 @@ public class PlanService extends GenericService {
             custActionEntity.setFinishTime(now);
             custActionEntity.setExecutorId(executorId);
             custActionEntity.setCreateUserId(userId);
-            custActionEntity.setCreateDate(now);
+            custActionEntity.setCreateTime(now);
             custActionEntity.setUpdateUserId(userId);
             custActionEntity.setUpdateTime(now);
             custActionDAO.insert("INS_CUST_ACTION", custActionEntity.getContent());
@@ -1254,7 +1249,7 @@ public class PlanService extends GenericService {
             custOriginalActionEntity.setFinishTime(now);
             custOriginalActionEntity.setEmployeeId(executorId);
             custOriginalActionEntity.setCreateUserId(userId);
-            custOriginalActionEntity.setCreateDate(now);
+            custOriginalActionEntity.setCreateTime(now);
             custOriginalActionDAO.insert("INS_CUST_ORIGINAL_ACTION", custOriginalActionEntity.getContent());
         }
 

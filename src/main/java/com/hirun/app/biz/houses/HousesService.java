@@ -135,7 +135,7 @@ public class HousesService extends GenericService {
         house.put("UPDATE_USER_ID", userId);
         house.put("ORG_ID", request.getString("SHOP"));
         house.put("UPDATE_TIME", session.getCreateTime());
-        house.put("CREATE_DATE", session.getCreateTime());
+        house.put("CREATE_TIME", session.getCreateTime());
 
         HouseDAO dao = new HouseDAO("ins");
         List<HousesEntity> houses = dao.queryHousesByName(request.getString("NAME"));
@@ -160,7 +160,7 @@ public class HousesService extends GenericService {
             housesPlan.put("END_DATE", destroyDate);
             housesPlan.put("STATUS", "0");
             housesPlan.put("CREATE_USER_ID", userId);
-            housesPlan.put("CREATE_DATE", session.getCreateTime());
+            housesPlan.put("CREATE_TIME", session.getCreateTime());
             housesPlan.put("UPDATE_USER_ID", userId);
             housesPlan.put("UPDATE_TIME", session.getCreateTime());
             housesPlan.put("TOWER_NO", house.get(employee + "_TOWERNUM"));
@@ -362,7 +362,7 @@ public class HousesService extends GenericService {
         parameter.put("AUDIT_DATE", session.getCreateTime());
         parameter.put("AUDIT_OPINION", request.getString("AUDIT_OPINION"));
         parameter.put("CREATE_USER_ID", sessionEntity.getUserId());
-        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("CREATE_TIME", session.getCreateTime());
         parameter.put("UPDATE_USER_ID", sessionEntity.getUserId());
         parameter.put("UPDATE_TIME", session.getCreateTime());
         dao.insertAutoIncrement("ins_houses_audit", parameter);
@@ -540,7 +540,7 @@ public class HousesService extends GenericService {
                 housesPlan.put("END_DATE", destroyDate);
                 housesPlan.put("STATUS", "0");
                 housesPlan.put("CREATE_USER_ID", userId);
-                housesPlan.put("CREATE_DATE", session.getCreateTime());
+                housesPlan.put("CREATE_TIME", session.getCreateTime());
                 housesPlan.put("UPDATE_USER_ID", userId);
                 housesPlan.put("UPDATE_TIME", session.getCreateTime());
                 housesPlan.put("TOWER_NO", house.get(employee + "_TOWERNUM"));

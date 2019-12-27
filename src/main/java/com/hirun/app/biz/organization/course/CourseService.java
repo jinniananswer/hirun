@@ -68,7 +68,7 @@ public class CourseService extends GenericService {
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
         parameter.put("UPDATE_TIME", session.getCreateTime());
-        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("CREATE_TIME", session.getCreateTime());
 
         CourseDAO dao = DAOFactory.createDAO(CourseDAO.class);
         long courseId = dao.insertAutoIncrement("ins_course", parameter);
@@ -185,7 +185,7 @@ public class CourseService extends GenericService {
             parameter.put("CREATE_USER_ID", userId);
             parameter.put("UPDATE_USER_ID", userId);
             parameter.put("UPDATE_TIME", session.getCreateTime());
-            parameter.put("CREATE_DATE", session.getCreateTime());
+            parameter.put("CREATE_TIME", session.getCreateTime());
             parameters.add(parameter);
         }
 

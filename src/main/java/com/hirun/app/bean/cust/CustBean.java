@@ -1,6 +1,5 @@
 package com.hirun.app.bean.cust;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.common.MsgBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.cache.ActionCache;
@@ -15,8 +14,6 @@ import com.hirun.pub.domain.enums.common.MsgType;
 import com.hirun.pub.domain.enums.cust.CustStatus;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.ServiceRequest;
-import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.exception.GenericException;
 import com.most.core.pub.tools.datastruct.ArrayTool;
@@ -87,7 +84,7 @@ public class CustBean {
         //根据custId得到employeeId
         entity.setOldEmployeeId(oldEmployeeId);
         entity.setCreateUserId(userId);
-        entity.setCreateDate(now);
+        entity.setCreateTime(now);
 
         custChangeRelaEmployeeLogDAO.insert("INS_CUST_CHANGE_RELA_EMPLOYEE_LOG", entity.getContent());
     }

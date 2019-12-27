@@ -109,7 +109,7 @@ public class CityCabinService extends GenericService {
         cityCabinInfo.put("IS_HAVE_PPT",request.getString("IS_PPT"));
         cityCabinInfo.put("REMARK",request.getString("REMARK"));
         cityCabinInfo.put("CREATE_USER_ID",session.getSessionEntity().getUserId());
-        cityCabinInfo.put("CREATE_DATE",TimeTool.now());
+        cityCabinInfo.put("CREATE_TIME",TimeTool.now());
 
         dao.insertAutoIncrement("ins_citycabin",cityCabinInfo);
 

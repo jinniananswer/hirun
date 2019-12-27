@@ -27,7 +27,7 @@ public class MonPlanTargetBean {
                 monPlanTargetEntity.setTargetTimeType(targetTimeType);
                 monPlanTargetEntity.setTargetTimeValue(targetTimeValue);
                 monPlanTargetEntity.setCreateUserId(userId);
-                monPlanTargetEntity.setCreateDate(now);
+                monPlanTargetEntity.setCreateTime(now);
                 monPlanTargetEntity.setUpdateUserId(userId);
                 monPlanTargetEntity.setUpdateTime(now);
 

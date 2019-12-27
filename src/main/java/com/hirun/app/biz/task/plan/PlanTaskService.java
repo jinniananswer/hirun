@@ -254,7 +254,7 @@ public class PlanTaskService extends GenericService {
                 param.put("STYLE", style);
                 param.put("FUNC", func);
                 param.put("REL_EMPLOYEE_ID", employeeId);
-                param.put("CREATE_DATE", TimeTool.now());
+                param.put("CREATE_TIME", TimeTool.now());
 
                 customerServiceDAO.insertAutoIncrement("ins_blueprint_action", param);//将需求蓝图一的内容转换成ins数据
 

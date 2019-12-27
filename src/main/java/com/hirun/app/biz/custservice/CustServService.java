@@ -287,7 +287,7 @@ public class CustServService extends GenericService {
             parameter.put("PROJECT_ID", projectId);
             parameter.put("ROLE_TYPE", CustomerServiceConst.PROJECTDESIGNERROLETYPE);
             parameter.put("LINK_EMPLOYEE_ID", designer_employee_id);
-            parameter.put("CREATE_DATE", session.getCreateTime());
+            parameter.put("CREATE_TIME", session.getCreateTime());
             parameter.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
             parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
             parameter.put("UPDATE_TIME", session.getCreateTime());
@@ -426,7 +426,7 @@ public class CustServService extends GenericService {
         party_info.put("HOBBY", hobby);
         party_info.put("OTHER_HOBBY", other_hobby);
         party_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        party_info.put("CREATE_DATE", session.getCreateTime());
+        party_info.put("CREATE_TIME", session.getCreateTime());
         party_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         party_info.put("UPDATE_TIME", session.getCreateTime());
 
@@ -452,7 +452,7 @@ public class CustServService extends GenericService {
         project_info.put("INFORMATION_SOURCE", informationSource);
         project_info.put("OTHER_INFORMATION_SOURCE", otherSource);
         project_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        project_info.put("CREATE_DATE", session.getCreateTime());
+        project_info.put("CREATE_TIME", session.getCreateTime());
         project_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         project_info.put("UPDATE_TIME", session.getCreateTime());
         long project_id = dao.insertAutoIncrement("ins_project", project_info);
@@ -473,7 +473,7 @@ public class CustServService extends GenericService {
         project_intention_info.put("FURNITURE_PRICEPLAN", furniturepriceplan);
         project_intention_info.put("ELECTRICAL_PRICEPLAN", electricalpriceplan);
         project_intention_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        project_intention_info.put("CREATE_DATE", session.getCreateTime());
+        project_intention_info.put("CREATE_TIME", session.getCreateTime());
         project_intention_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         project_intention_info.put("UPDATE_TIME", session.getCreateTime());
         project_intention_info.put("PLAN_LIVE_TIME", planLiveTime);
@@ -484,7 +484,7 @@ public class CustServService extends GenericService {
         project_link_info.put("ROLE_TYPE", CustomerServiceConst.CUSTOMERSERVICEROLETYPE);
         project_link_info.put("LINK_EMPLOYEE_ID", session.getSessionEntity().get("EMPLOYEE_ID"));
         project_link_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        project_link_info.put("CREATE_DATE", session.getCreateTime());
+        project_link_info.put("CREATE_TIME", session.getCreateTime());
         project_link_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         project_link_info.put("UPDATE_TIME", session.getCreateTime());
         dao.insertAutoIncrement("ins_project_linkman", project_link_info);
@@ -506,7 +506,7 @@ public class CustServService extends GenericService {
                 partyProjectActionInfo.put("STATUS", "0");
             }
             partyProjectActionInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-            partyProjectActionInfo.put("CREATE_DATE", session.getCreateTime());
+            partyProjectActionInfo.put("CREATE_TIME", session.getCreateTime());
             partyProjectActionInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
             partyProjectActionInfo.put("UPDATE_TIME", session.getCreateTime());
             partyProjectActionList.add(partyProjectActionInfo);
@@ -1223,12 +1223,12 @@ public class CustServService extends GenericService {
         scaninfo.put("CITY_CABINS", city_cabin_ids);
         scaninfo.put("EXPERIENCE", experience);
         scaninfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        scaninfo.put("CREATE_DATE", TimeTool.now());
+        scaninfo.put("CREATE_TIME", TimeTool.now());
 
         RecordSet insScanCityInfo = dao.queryInsScanCityInfoByProIdAndPId(project_id, party_id);
         PartyEntity partyEntity = dao.queryPartyInfoByPartyId(party_id);
         String month = getMonth(experiencetime);
-        String createDate = partyEntity.getCreateDate();
+        String createDate = partyEntity.getCreateTime();
         String nowMonth = TimeTool.now("yyyy-MM");
         //城市木屋带看时间与咨询时间同月报表才加1
         if (insScanCityInfo.size() <= 0 && StringUtils.equals(month, getMonth(createDate)) && StringUtils.equals(nowMonth, getMonth(createDate))) {
@@ -1389,7 +1389,7 @@ public class CustServService extends GenericService {
             if (partyEntity != null) {
                 applyRecord.put("PARTY_NAME", partyEntity.getPartyName());
                 applyRecord.put("WX_NICK", partyEntity.getWxNick());
-                applyRecord.put("CREATE_DATE",partyEntity.getCreateDate());
+                applyRecord.put("CREATE_TIME",partyEntity.getCreateTime());
             }
             if (StringUtils.isNotBlank(auditEmpId)) {
                 applyRecord.put("AUDIT_EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
@@ -1469,7 +1469,7 @@ public class CustServService extends GenericService {
             if (partyEntity != null) {
                 applyRecord.put("PARTY_NAME", partyEntity.getPartyName());
                 applyRecord.put("WX_NICK", partyEntity.getWxNick());
-                applyRecord.put("CREATE_DATE",partyEntity.getCreateDate());
+                applyRecord.put("CREATE_TIME",partyEntity.getCreateTime());
             }
             if (StringUtils.isNotBlank(auditEmpId)) {
                 applyRecord.put("AUDIT_EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
@@ -1602,7 +1602,7 @@ public class CustServService extends GenericService {
         visitInfo.put("VISIT_TYPE", visitType);
         visitInfo.put("VISIT_WAY", visitWay);
         visitInfo.put("VISIT_CONTENT", visitContent);
-        visitInfo.put("CREATE_DATE", visitTime);
+        visitInfo.put("CREATE_TIME", visitTime);
         visitInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
 
         dao.insertAutoIncrement("ins_party_visit", visitInfo);
@@ -1653,7 +1653,7 @@ public class CustServService extends GenericService {
 
         if (partyTagInfoSet.size() <= 0) {
             partyTagInfoMap.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-            partyTagInfoMap.put("CREATE_DATE", session.getCreateTime());
+            partyTagInfoMap.put("CREATE_TIME", session.getCreateTime());
             dao.insertAutoIncrement("ins_party_tag", partyTagInfoMap);
         } else {
             dao.save("ins_party_tag", new String[]{"PARTY_ID", "STATUS"}, partyTagInfoMap);

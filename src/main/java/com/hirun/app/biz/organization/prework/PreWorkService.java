@@ -186,7 +186,7 @@ public class PreWorkService extends GenericService {
             parameter.put("STATUS", "0");
             parameter.put("CREATE_USER_ID", userId);
             parameter.put("UPDATE_USER_ID", userId);
-            parameter.put("CREATE_DATE", session.getCreateTime());
+            parameter.put("CREATE_TIME", session.getCreateTime());
             parameter.put("UPDATE_TIME", session.getCreateTime());
             long signId = dao.insertAutoIncrement("ins_train_sign", parameter);
 
@@ -199,7 +199,7 @@ public class PreWorkService extends GenericService {
             item.put("STATUS", "0");
             item.put("CREATE_USER_ID", userId);
             item.put("UPDATE_USER_ID", userId);
-            item.put("CREATE_DATE", session.getCreateTime());
+            item.put("CREATE_TIME", session.getCreateTime());
             item.put("UPDATE_TIME", session.getCreateTime());
 
             boolean isChangSha = EmployeeBean.isChangshaEmployee(employee.getString("EMPLOYEE_ID"));

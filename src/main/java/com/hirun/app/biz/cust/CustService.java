@@ -56,7 +56,7 @@ public class CustService extends GenericService{
         Map<String, String> cust = ConvertTool.toMap(custInfo);
         cust.put("CUST_STATUS", "1");
         cust.put("CREATE_USER_ID", userId);
-        cust.put("CREATE_DATE", now);
+        cust.put("CREATE_TIME", now);
         cust.put("UPDATE_USER_ID", userId);
         cust.put("UPDATE_TIME", now);
         long custId = dao.insertAutoIncrement("INS_CUSTOMER", cust);
@@ -141,7 +141,7 @@ public class CustService extends GenericService{
             cust.put("CUST_STATUS", "9");
             cust.put("CUST_NAME", "新客户" + (i+1));
             cust.put("CREATE_USER_ID", userId);
-            cust.put("CREATE_DATE", now);
+            cust.put("CREATE_TIME", now);
             cust.put("UPDATE_USER_ID", userId);
             cust.put("UPDATE_TIME", now);
             cust.put("FIRST_PLAN_DATE", firstPlanDate);

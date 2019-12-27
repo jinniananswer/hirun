@@ -163,7 +163,7 @@ public class EmployeeService extends GenericService {
         user.put("PASSWORD", "711be3iidqb6lrsln0avp0v21u");
         user.put("MOBILE_NO", request.getString("MOBILE_NO"));
         user.put("STATUS", "0");
-        user.put("CREATE_DATE", session.getCreateTime());
+        user.put("CREATE_TIME", session.getCreateTime());
         user.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
         user.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         user.put("UPDATE_TIME", session.getCreateTime());
@@ -197,7 +197,7 @@ public class EmployeeService extends GenericService {
         employee.put("MAJOR", request.getString("MAJOR"));
         employee.put("CERTIFICATE_NO", request.getString("CERTIFICATE_NO"));
         employee.put("STATUS", "0");
-        employee.put("CREATE_DATE", session.getCreateTime());
+        employee.put("CREATE_TIME", session.getCreateTime());
         employee.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
         employee.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         employee.put("UPDATE_TIME", session.getCreateTime());
@@ -211,7 +211,7 @@ public class EmployeeService extends GenericService {
         job.put("PARENT_EMPLOYEE_ID", request.getString("PARENT_EMPLOYEE_ID"));
         job.put("START_DATE", session.getCreateTime());
         job.put("END_DATE", "3000-12-31 23:59:59");
-        job.put("CREATE_DATE", session.getCreateTime());
+        job.put("CREATE_TIME", session.getCreateTime());
         job.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
         job.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         job.put("UPDATE_TIME", session.getCreateTime());
@@ -238,7 +238,7 @@ public class EmployeeService extends GenericService {
                 userFunc.put("START_DATE", session.getCreateTime());
                 userFunc.put("END_DATE", "3000-12-31 23:59:59");
                 userFunc.put("STATUS", "0");
-                userFunc.put("CREATE_DATE", session.getCreateTime());
+                userFunc.put("CREATE_TIME", session.getCreateTime());
                 userFunc.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
                 userFunc.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
                 userFunc.put("UPDATE_TIME", session.getCreateTime());
@@ -252,7 +252,7 @@ public class EmployeeService extends GenericService {
         userContact.put("USER_ID", userId+"");
         userContact.put("CONTACT_TYPE", "1");
         userContact.put("CONTACT_NO", request.getString("MOBILE_NO"));
-        userContact.put("CREATE_DATE", session.getCreateTime());
+        userContact.put("CREATE_TIME", session.getCreateTime());
         userContact.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
         userContact.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         userContact.put("UPDATE_TIME", session.getCreateTime());
@@ -543,7 +543,7 @@ public class EmployeeService extends GenericService {
                 parameter.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
                 parameter.put("START_DATE", session.getCreateTime());
                 parameter.put("END_DATE", "3000-12-31 23:59:59");
-                parameter.put("CREATE_DATE", session.getCreateTime());
+                parameter.put("CREATE_TIME", session.getCreateTime());
                 parameter.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
                 parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
                 parameter.put("UPDATE_TIME", session.getCreateTime());
@@ -579,7 +579,7 @@ public class EmployeeService extends GenericService {
                             userFunc.put("START_DATE", session.getCreateTime());
                             userFunc.put("END_DATE", "3000-12-31 23:59:59");
                             userFunc.put("STATUS", "0");
-                            userFunc.put("CREATE_DATE", session.getCreateTime());
+                            userFunc.put("CREATE_TIME", session.getCreateTime());
                             userFunc.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
                             userFunc.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
                             userFunc.put("UPDATE_TIME", session.getCreateTime());
@@ -660,7 +660,7 @@ public class EmployeeService extends GenericService {
                 parameter.put("START_DATE", session.getCreateTime());
                 parameter.put("END_DATE", "3000-12-31 23:59:59");
                 parameter.put("STATUS", "0");
-                parameter.put("CREATE_DATE", session.getCreateTime());
+                parameter.put("CREATE_TIME", session.getCreateTime());
                 parameter.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
                 parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
                 parameter.put("UPDATE_TIME", session.getCreateTime());

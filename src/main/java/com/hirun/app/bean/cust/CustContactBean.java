@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.common.PerformDueTaskBean;
 import com.hirun.app.dao.cust.CustContactDAO;
 import com.hirun.app.dao.cust.CustDAO;
-import com.hirun.app.task.PerformDueTask;
 import com.hirun.pub.domain.entity.common.PerformDueTaskEntity;
 import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.enums.cust.CustStatus;
@@ -30,7 +29,7 @@ public class CustContactBean {
         String now = TimeTool.now();
 
         //插入ins_cust_contact
-        custContactEntity.setCreateDate(now);
+        custContactEntity.setCreateTime(now);
         custContactEntity.setCreateUserId(userId);
         long custContactId = custContactDAO.insertAutoIncrement("INS_CUST_CONTACT", custContactEntity.getContent());
 
@@ -48,7 +47,7 @@ public class CustContactBean {
         PerformDueTaskEntity performDueTaskEntity = new PerformDueTaskEntity();
         performDueTaskEntity.setObjectId(custContactEntity.getCustId());
         performDueTaskEntity.setObjectType("CUST");
-        performDueTaskEntity.setCreateDate(now);
+        performDueTaskEntity.setCreateTime(now);
         performDueTaskEntity.setCreateUserId(userId);
         performDueTaskEntity.setDealTag("0");
         if(StringUtils.isNotBlank(custContactEntity.getRestoreDate())) {

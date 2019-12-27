@@ -531,7 +531,7 @@ public class ScoreService extends GenericService {
             param.put("TRAIN_ID",train_id);
             param.put("SCORE",value);
             param.put("CREATE_USER_ID",userId);
-            param.put("CREATE_DATE",session.getCreateTime());
+            param.put("CREATE_TIME",session.getCreateTime());
             param.put("UPDATE_USER_ID",userId);
             param.put("UPDATE_TIME",session.getCreateTime());
             parameters.add(param);
@@ -557,7 +557,7 @@ public class ScoreService extends GenericService {
                     ext.put("TRAIN_ID", train_id);
                     ext.put("EMPLOYEE_ID", arrys[0]);
                     ext.put("CREATE_USER_ID",userId);
-                    ext.put("CREATE_DATE",session.getCreateTime());
+                    ext.put("CREATE_TIME",session.getCreateTime());
                     ext.put("UPDATE_USER_ID",userId);
                     ext.put("UPDATE_TIME",session.getCreateTime());
                     employeeExt.put(arrys[0], ext);

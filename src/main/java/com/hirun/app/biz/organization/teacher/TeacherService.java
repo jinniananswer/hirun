@@ -83,7 +83,7 @@ public class TeacherService extends GenericService {
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
         parameter.put("UPDATE_TIME", session.getCreateTime());
-        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("CREATE_TIME", session.getCreateTime());
         long teacherId = dao.insertAutoIncrement("ins_teacher", parameter);
 
         String[] courseIds = request.getString("HOLD_COURSE_ID").split(",");
@@ -96,7 +96,7 @@ public class TeacherService extends GenericService {
             rel.put("CREATE_USER_ID", userId);
             rel.put("UPDATE_USER_ID", userId);
             rel.put("UPDATE_TIME", session.getCreateTime());
-            rel.put("CREATE_DATE", session.getCreateTime());
+            rel.put("CREATE_TIME", session.getCreateTime());
             rels.add(rel);
         }
         dao.insertBatch("ins_teacher_course_rel", rels);
@@ -246,7 +246,7 @@ public class TeacherService extends GenericService {
             rel.put("CREATE_USER_ID", userId);
             rel.put("UPDATE_USER_ID", userId);
             rel.put("UPDATE_TIME", session.getCreateTime());
-            rel.put("CREATE_DATE", session.getCreateTime());
+            rel.put("CREATE_TIME", session.getCreateTime());
             rels.add(rel);
         }
         dao.insertBatch("ins_teacher_course_rel", rels);

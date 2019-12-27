@@ -74,7 +74,7 @@ public class TrainService extends GenericService {
         parameter.put("HOTEL_ADDRESS", request.getString("HOTEL_ADDRESS"));
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
-        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("CREATE_TIME", session.getCreateTime());
         parameter.put("UPDATE_TIME", session.getCreateTime());
 
         long trainId = dao.insertAutoIncrement("ins_train", parameter);
@@ -90,7 +90,7 @@ public class TrainService extends GenericService {
             param.put("STATUS", "0");
             param.put("CREATE_USER_ID", userId);
             param.put("UPDATE_USER_ID", userId);
-            param.put("CREATE_DATE", session.getCreateTime());
+            param.put("CREATE_TIME", session.getCreateTime());
             param.put("UPDATE_TIME", session.getCreateTime());
             parameters.add(param);
         }
@@ -123,7 +123,7 @@ public class TrainService extends GenericService {
             param.put("END_DATE", request.getString("END_DATE_"+i));
             param.put("CREATE_USER_ID", userId);
             param.put("UPDATE_USER_ID", userId);
-            param.put("CREATE_DATE", session.getCreateTime());
+            param.put("CREATE_TIME", session.getCreateTime());
             param.put("UPDATE_TIME", session.getCreateTime());
             parameters.add(param);
         }
@@ -253,7 +253,7 @@ public class TrainService extends GenericService {
             param.put("STATUS", "0");
             param.put("CREATE_USER_ID", userId);
             param.put("UPDATE_USER_ID", userId);
-            param.put("CREATE_DATE", session.getCreateTime());
+            param.put("CREATE_TIME", session.getCreateTime());
             param.put("UPDATE_TIME", session.getCreateTime());
             parameters.add(param);
         }
@@ -287,7 +287,7 @@ public class TrainService extends GenericService {
             param.put("END_DATE", request.getString("END_DATE_"+i));
             param.put("CREATE_USER_ID", userId);
             param.put("UPDATE_USER_ID", userId);
-            param.put("CREATE_DATE", session.getCreateTime());
+            param.put("CREATE_TIME", session.getCreateTime());
             param.put("UPDATE_TIME", session.getCreateTime());
             parameters.add(param);
         }
@@ -307,7 +307,7 @@ public class TrainService extends GenericService {
         parameter.put("STATUS", "0");
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
-        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("CREATE_TIME", session.getCreateTime());
         parameter.put("UPDATE_TIME", session.getCreateTime());
 
         TrainDAO dao = DAOFactory.createDAO(TrainDAO.class);
@@ -548,7 +548,7 @@ public class TrainService extends GenericService {
             parameter.put("STATUS", "0");
             parameter.put("CREATE_USER_ID", userId);
             parameter.put("UPDATE_USER_ID", userId);
-            parameter.put("CREATE_DATE", session.getCreateTime());
+            parameter.put("CREATE_TIME", session.getCreateTime());
             parameter.put("UPDATE_TIME", session.getCreateTime());
             parameters.add(parameter);
         }
@@ -575,7 +575,7 @@ public class TrainService extends GenericService {
         parameter.put("TRAIN_ADDRESS", request.getString("TRAIN_ADDRESS"));
         parameter.put("CREATE_USER_ID", userId);
         parameter.put("UPDATE_USER_ID", userId);
-        parameter.put("CREATE_DATE", session.getCreateTime());
+        parameter.put("CREATE_TIME", session.getCreateTime());
         parameter.put("UPDATE_TIME", session.getCreateTime());
 
         dao.insertAutoIncrement("ins_train", parameter);
@@ -815,7 +815,7 @@ public class TrainService extends GenericService {
             parameter.put("TRAIN_ID", trainId);
             parameter.put("EMPLOYEE_ID", employeeId);
             parameter.put("CREATE_USER_ID", userId);
-            parameter.put("CREATE_DATE", session.getCreateTime());
+            parameter.put("CREATE_TIME", session.getCreateTime());
             parameter.put("UPDATE_USER_ID", userId);
             parameter.put("UPDATE_TIME", session.getCreateTime());
             dao.insert("ins_train_notice_view", parameter);
