@@ -132,7 +132,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         }
 
 
-        sb.append(" order by c.create_date desc ");
+        sb.append(" order by c.create_time  desc ");
 
 
         parameter.put("ROLE_TYPE", roleType);
@@ -179,7 +179,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             sb.append("and d.TAG_ID= :TAG_ID");
             parameter.put("TAG_ID",tagId);
         }
-        sb.append(" order by c.create_date desc ");
+        sb.append(" order by c.create_time  desc ");
 
 
         parameter.put("ROLE_TYPE", roleType);
@@ -216,7 +216,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         }
 
 
-        sb.append(" order by c.create_date desc ");
+        sb.append(" order by c.create_time  desc ");
 
 
         parameter.put("ROLE_TYPE", roleType);
@@ -399,12 +399,12 @@ public class CustomerServiceDAO extends StrongObjectDAO {
 
 
         if(StringUtils.isNotBlank(startDate)){
-            sb.append("and a.CREATE_DATE > :START_DATE ");
+            sb.append("and a.create_time  > :START_DATE ");
             parameter.put("START_DATE", startDate);
         }
 
         if(StringUtils.isNotBlank(endDate)){
-            sb.append("and a.CREATE_DATE < :END_DATE ");
+            sb.append("and a.create_time  < :END_DATE ");
             parameter.put("END_DATE", endDate);
         }
 
@@ -416,13 +416,13 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             sb.append("and f.org_id in ( "+orgIds+") ");
         }
 
-        sb.append(" order by c.LINK_EMPLOYEE_ID, a.CREATE_DATE desc ");
+        sb.append(" order by c.LINK_EMPLOYEE_ID, a.create_time  desc ");
 
         sb.append(" ) v");
         sb.append(" left join (select * from ins_scan_citycabin x where x.SCAN_ID in (select min(y.scan_id) from ins_scan_citycabin y group by y.PARTY_ID))  s on (s.PARTY_ID = v.PARTY_ID) ");
         sb.append(" left join (select * from ins_blueprint_action r where r.BLUEPRINT_ACTION_ID in (select max(t.BLUEPRINT_ACTION_ID) from ins_blueprint_action t where t.ACTION_CODE='XQLTE' group by t.OPEN_ID, t.REL_EMPLOYEE_ID)) u on (u.OPEN_ID = v.OPEN_ID and u.REL_EMPLOYEE_ID = v.LINK_EMPLOYEE_ID) ");
         sb.append(" left join (select k.PARTY_ID,count(1) visitcount from ins_party_visit k group by k.PARTY_ID ) j ON (v.PARTY_ID=j.PARTY_ID) ");
-        sb.append(" order by v.create_date desc ");
+        sb.append(" order by v.create_time  desc ");
 
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
