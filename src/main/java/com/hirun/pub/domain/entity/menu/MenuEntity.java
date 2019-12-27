@@ -98,4 +98,12 @@ public class MenuEntity extends GenericEntity {
     public void setIsCommonUse(String isCommonUse){
         this.set("IS_COMMON_USE", isCommonUse);
     }
+
+    public String getType() {
+        return this.get("TYPE");
+    }
+
+    public void setType(String type) {
+        this.set("TYPE", type);
+    }
 }

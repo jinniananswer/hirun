@@ -264,7 +264,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_blueprint_action ");
         sb.append("where OPEN_ID=:OPEN_ID AND ACTION_CODE=:ACTION_CODE ");
-        sb.append("order by create_date ");
+        sb.append("order by create_time ");
         parameter.put("OPEN_ID", openid);
         parameter.put("ACTION_CODE", action_code);
         RecordSet recordSet = queryBySql(sb.toString(), parameter);
@@ -370,7 +370,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("select * from ins_scan_citycabin  ");
         sb.append(" where PARTY_ID= :PARTY_ID ");
         sb.append(" and PROJECT_ID= :PROJECT_ID  ");
-        sb.append(" order by CREATE_DATE DESC ");
+        sb.append(" order by create_time DESC ");
         parameter.put("PARTY_ID",partyId);
         parameter.put("PROJECT_ID",projectId);
 
@@ -515,7 +515,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             sb.append("and a.VISIT_EMPLOYEE_ID IN ("+employeeId+") ");
         }
 
-        sb.append("order by create_date desc ");
+        sb.append("order by create_time desc ");
 
         return this.queryBySql(sb.toString(),parameter);
     }
