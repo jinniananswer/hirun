@@ -25,6 +25,7 @@ public class MenuDAO extends StrongObjectDAO{
         sb.append("select menu_id,title,menu_desc,menu_url,type,domain_id,menu_level,parent_menu_id,func_id,ico_url,is_common_use ");
         sb.append("from sys_menu ");
         sb.append("where type in ('M','H') ");
+        sb.append("order by menu_id asc ");
         List<MenuEntity> menus = this.queryBySql(MenuEntity.class, sb.toString(), new HashMap<>());
         return menus;
     }
