@@ -112,4 +112,12 @@ public class OrgEntity extends GenericEntity {
     public void setUpdateTime(String updateTime){
         this.set("UPDATE_TIME", updateTime);
     }
+
+    public String getNature(){
+        return this.get("NATURE");
+    }
+
+    public void setNature(String nature){
+        this.set("NATURE", nature);
+    }
 }

@@ -55,7 +55,7 @@ public class RightsCollection {
 
         GenericDAO dao = new GenericDAO("all");
         this.rights = new HashSet<String>();
-        RecordSet funcRoles = dao.queryBySql(sb.toString(), new HashMap<>());
+        RecordSet funcRoles = dao.queryBySql(funcRoleSql.toString(), new HashMap<>());
         if (funcRoles != null) {
             for (int i=0;i<funcRoles.size();i++) {
                 Record funcRole = funcRoles.get(i);

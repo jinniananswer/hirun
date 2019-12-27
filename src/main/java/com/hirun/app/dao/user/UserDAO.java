@@ -3,6 +3,7 @@ package com.hirun.app.dao.user;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
+import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 
 import java.sql.SQLException;
@@ -60,5 +61,13 @@ public class UserDAO extends StrongObjectDAO {
         if(ArrayTool.isEmpty(users))
             return null;
         return users.get(0);
+    }
+
+    public RecordSet queryJobRoleMapping(Long orgId, String jobRoleId, String nature) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_role_mapping ");
+        sb.append("where org_id= " + orgId + " and job_role=" + jobRoleId + " and nature=" + nature + " and is_enabled= 1 ");
+
+        return this.queryBySql(sb.toString(), null);
     }
 }
