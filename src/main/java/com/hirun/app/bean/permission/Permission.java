@@ -9,10 +9,8 @@ import com.most.core.pub.tools.datastruct.ArrayTool;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 
 public class Permission {
 
@@ -25,7 +23,7 @@ public class Permission {
 
         RightsCollection rights = RightsCollection.getInstance();
         List<MenuEntity> rst = new ArrayList<MenuEntity>();
-        Set<MenuEntity> tempMenus = new HashSet<>();
+        Set<MenuEntity> tempMenus = new LinkedHashSet<>();
         for(MenuEntity menu : menus){
             String menuId = menu.getMenuId();
             if(rights.hasMenu(menuId))
