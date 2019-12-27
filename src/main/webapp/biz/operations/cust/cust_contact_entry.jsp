@@ -235,20 +235,35 @@
     <div class="c_list c_list-line">
         <ul>
             {{each CUSTOMERLIST cust idx}}
-            <li id="CUST_ID_{{cust.CUST_ID}}">
-                <div class="main">
-                    <div class="title">{{cust.CUST_NAME}}</div>
-                </div>
-                <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
-                     ontap="custContactEntry.showCustDetail(this)">
-                    查看详情
-                </div>
+            <li class='link' cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}" ontap="custContactEntry.showCustDetail(this)">
+                <div class="group">
+                    <div class="content">
+                        <div class='l_padding'>
+                            <div class="pic pic-middle">
+            {{if cust.SEX == 1}}
+                <img src="/frame/img/male.png" class='e_pic-r' style='width:4em;height:4em'/>
+            {{if cust.SEX == 2}}
+                <img src="/frame/img/female.png" class='e_pic-r' style='width:4em;height:4em'/>
 
-                <div class="link side" cust_id="{{cust.CUST_ID}}" cust_name="{{cust.CUST_NAME}}"
-                     ontap="custContactEntry.custTraceClick(this)">
-                    跟踪记录填写
+                            </div>
+                        </div>
+                    <div class="main">
+                        <div class="title">
+                        {{cust.CUST_NAME}}
+                        </div>
+                    <div class="content">
+                        {{cust.WX_NICK}}
+                    </div>
+                    <div class='content'>
+                        {{cust.HOUSE_ID}}
+                    </div>
                 </div>
-            </li>
+                <div class="side e_size-m">
+                {{cust.MOBILE_NO}}
+                </div>
+            </div>
+        </div>
+    </li>
             {{/each}}
         </ul>
     </div>

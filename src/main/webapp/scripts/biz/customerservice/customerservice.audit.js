@@ -162,7 +162,7 @@
                     var auditname=data.get("AUDIT_EMPLOYEE_NAME");
                     var applyName=data.get("APPLY_EMPLOYEE_NAME");
                     var partyName=data.get("PARTY_NAME");
-                    var createDate=data.get("CREATE_DATE");
+                    var createDate=data.get("CREATE_TIME");
                     var wxNick=data.get("WX_NICK");
 
 

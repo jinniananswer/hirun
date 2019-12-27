@@ -136,7 +136,7 @@
                     var data = datas.get(i);
                     var wxnick=data.get("WX_NICK");
                     var mobile=data.get("MOBILE_NO");
-                    var create_date=data.get("CREATE_DATE");
+                    var create_date=data.get("CREATE_TIME");
                     var party_name=data.get("PARTY_NAME");
                     var custserviceName=data.get("CUSTSERVICENAME");
                     var headUrl=data.get("HEAD_URL");

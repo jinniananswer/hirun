@@ -34,6 +34,14 @@
                 <div class="side"></div>
                 <div class="more"></div>
             </li>
+            <li class="link">
+                <div class="main">
+                    <div class="title"><a href="/doc/order.pptx">培训文档</a></div>
+                    <div class="content"></div>
+                </div>
+                <div class="side"></div>
+                <div class="more"></div>
+            </li>
             <li class="link" ontap="window.location.href='/out'">
                 <div class="main">
                     <div class="title">退出登陆</div>

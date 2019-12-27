@@ -84,7 +84,7 @@
                     var visitobject = data.get("VISIT_OBJECT");
                     var visitway = data.get("VISIT_WAY");
                     var visitcontent = data.get("VISIT_CONTENT");
-                    var createdate = data.get("CREATE_DATE");
+                    var createdate = data.get("CREATE_TIME");
                     var visitname = data.get("VISIT_NAME");
 
 
@@ -144,7 +144,7 @@
                     var data = datas.get(i);
 
                     var partyname = data.get("PARTY_NAME");
-                    var creat_date = data.get("CREATE_DATE");
+                    var creat_date = data.get("CREATE_TIME");
                     var wxnick = data.get("WX_NICK");
                     var mobileno = data.get("MOBILE_NO");
                     var houseaddress = data.get("HOUSE_ADDRESS");

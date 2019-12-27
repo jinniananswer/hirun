@@ -33,7 +33,7 @@
                        <tr>
 						<th col="CUST_NAME" >客户姓名</th>
 						<th col="WX_NICK" >微信昵称</th>
-						<th col="CREATE_DATE" ontap="$.sortTable(this, 'date')">咨询时间</th>
+						<th col="CREATE_TIME" ontap="$.sortTable(this, 'date')">咨询时间</th>
 						<th col="ADDRESS" >楼盘地址</th>
 						<th col="CUST_SERVICE" >客户代表</th>
 						<th col="SCAN_DATE" ontap="$.sortTable(this, 'date')">进入全流程的时间</th>

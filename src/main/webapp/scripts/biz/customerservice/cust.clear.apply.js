@@ -110,7 +110,7 @@
                     var data = datas.get(i);
 
                     var partyname=data.get("PARTY_NAME");
-                    var creat_date=data.get("CREATE_DATE");
+                    var creat_date=data.get("CREATE_TIME");
                     var wxnick=data.get("WX_NICK");
                     var mobileno=data.get("MOBILE_NO");
                     var houseaddress=data.get("HOUSE_ADDRESS");

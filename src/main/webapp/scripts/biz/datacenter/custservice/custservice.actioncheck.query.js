@@ -122,7 +122,7 @@
                 for(var i=0;i<length;i++) {
                     var data = datas.get(i);
                     var partyName=data.get("PARTY_NAME");
-                    var create_date=data.get("CREATE_DATE");
+                    var create_date=data.get("CREATE_TIME");
                     var houseAddress=data.get("HOUSE_ADDRESS");
                     var custservName=data.get("CUSTSERVICENAME");
                     var scanCityTime=data.get("EXPERIENCE_TIME");
@@ -187,7 +187,7 @@
                         "_className":"no",
                         "CUST_NAME":partyName,
                         "WX_NICK":wxnick,
-                        "CREATE_DATE":create_date.substr(0,19),
+                        "CREATE_TIME":create_date.substr(0,19),
                         "ADDRESS":houseAddress,
                         "CUST_SERVICE":custservName,
                         "SCAN_DATE":smjrlcfinishTime,
