@@ -9,7 +9,9 @@ import com.most.core.app.service.GenericService;
 import com.most.core.pub.data.ServiceRequest;
 import com.most.core.pub.data.ServiceResponse;
 import com.most.core.pub.tools.datastruct.ArrayTool;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,8 +27,20 @@ public class MenuService extends GenericService{
         //先查询一级目录的菜单
         String menuLevel = "1";
         MenuDAO dao = new MenuDAO("sys");
-        List<MenuEntity> dir = dao.queryMenusByLevel(menuLevel);
-        dir = Permission.filterMenus(dir);
+
+        List<MenuEntity> allMenus = dao.queryAllMenus();
+        if (ArrayTool.isEmpty(allMenus)) {
+            return response;
+        }
+        allMenus = Permission.filterMenus(allMenus);
+
+        List<MenuEntity> dir = new ArrayList<MenuEntity>();
+
+        for (MenuEntity menu : allMenus) {
+            if (StringUtils.equals(menuLevel, menu.getMenuLevel())) {
+                dir.add(menu);
+            }
+        }
 
         if(ArrayTool.isEmpty(dir)){
             return response;
@@ -35,14 +49,13 @@ public class MenuService extends GenericService{
         JSONArray menus = new JSONArray();
         for(MenuEntity menu : dir){
             String menuId = menu.getMenuId();
-            List<MenuEntity> subMenus = dao.queryMenusByParent(menuId);
+            List<MenuEntity> subMenus = queryMenusByParent(menuId, allMenus);
 
             JSONObject menuJson = menu.toJson();
             menus.add(menuJson);
             if(ArrayTool.isEmpty(subMenus)){
                 continue;
             }
-            subMenus = Permission.filterMenus(subMenus);
             JSONArray subMenuJsons = new JSONArray();
             for(MenuEntity subMenu : subMenus){
                 JSONObject subMenuJson = subMenu.toJson();
@@ -53,5 +66,17 @@ public class MenuService extends GenericService{
         }
         response.set("MENUS", menus);
         return response;
+    }
+
+    private List<MenuEntity> queryMenusByParent(String menuId, List<MenuEntity> menus) {
+        List<MenuEntity> result = new ArrayList<MenuEntity>();
+
+        for (MenuEntity menu : menus) {
+            if (StringUtils.equals(menuId, menu.getParentMenuId())) {
+                result.add(menu);
+            }
+        }
+
+        return result;
     }
 }

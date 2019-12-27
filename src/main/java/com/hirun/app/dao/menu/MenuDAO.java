@@ -20,6 +20,15 @@ public class MenuDAO extends StrongObjectDAO{
         super(databaseName);
     }
 
+    public List<MenuEntity> queryAllMenus() throws Exception {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select menu_id,title,menu_desc,menu_url,type,domain_id,menu_level,parent_menu_id,func_id,ico_url,is_common_use ");
+        sb.append("from sys_menu ");
+        sb.append("where type in ('M','H') ");
+        List<MenuEntity> menus = this.queryBySql(MenuEntity.class, sb.toString(), new HashMap<>());
+        return menus;
+    }
+
     public List<MenuEntity> queryMenusByLevel(String menuLevel) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("MENU_LEVEL", menuLevel);

@@ -10,7 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Permission {
 
@@ -23,12 +25,28 @@ public class Permission {
 
         RightsCollection rights = RightsCollection.getInstance();
         List<MenuEntity> rst = new ArrayList<MenuEntity>();
+        Set<MenuEntity> tempMenus = new HashSet<>();
         for(MenuEntity menu : menus){
-            String funcId = menu.getFuncId();
-            if(rights.hasFuncId(funcId))
-                rst.add(menu);
+            String menuId = menu.getMenuId();
+            if(rights.hasMenu(menuId))
+                addMenu(menus, menu, tempMenus);
         }
+        rst.addAll(tempMenus);
         return rst;
+    }
+
+    public static void addMenu(List<MenuEntity> menus, MenuEntity current, Set<MenuEntity> result) {
+        result.add(current);
+        if (current.getParentMenuId() == null) {
+            //表示到了根节点
+            return;
+        }
+
+        for (MenuEntity menu : menus) {
+            if (StringUtils.equals(current.getParentMenuId(), menu.getMenuId())) {
+                addMenu(menus, menu, result);
+            }
+        }
     }
 
     public static boolean hasAllCity() throws Exception{
