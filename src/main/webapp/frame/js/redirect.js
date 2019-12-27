@@ -7,7 +7,16 @@
                     this.popupPageByUrl(title, url);
                 }
                 else{
-                    top.$.index.openNav(url, title);
+                    try {
+                        top.$.index.openNav(url, title);
+                    } catch(err) {
+                        try {
+                            top.layui.index.openTabsPage(url, title);
+                        } catch (error) {
+
+                        }
+                    }
+
                 }
             },
             topOpen : function(url, title){
