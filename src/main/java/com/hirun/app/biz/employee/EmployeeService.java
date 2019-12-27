@@ -48,7 +48,7 @@ public class EmployeeService extends GenericService {
         String columns = requestData.getString("COLUMNS");
 
         List<EmployeeEntity> list = EmployeeBean.getAllSubordinatesCounselors(employeeIds);
-        if(StringUtils.isBlank(columns)) {
+        if (StringUtils.isBlank(columns)) {
             response.set("EMPLOYEE_LIST", ConvertTool.toJSONArray(list));
         } else {
             response.set("EMPLOYEE_LIST", ConvertTool.toJSONArray(list, columns.split(",")));
@@ -58,25 +58,25 @@ public class EmployeeService extends GenericService {
     }
 
 
-    public ServiceResponse queryContacts(ServiceRequest request) throws Exception{
+    public ServiceResponse queryContacts(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
         RecordSet recordSet = dao.queryContacts(request.getString("SEARCH_TEXT"));
-        if(recordSet == null || recordSet.size() <= 0)
+        if (recordSet == null || recordSet.size() <= 0)
             return response;
 
         int size = recordSet.size();
-        for(int i=0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             Record record = recordSet.get(i);
-            if(StringUtils.equals("69", record.get("USER_ID")) || StringUtils.equals("72", record.get("USER_ID")))
-                record.put("CONTACT_NO","***********");
+            if (StringUtils.equals("69", record.get("USER_ID")) || StringUtils.equals("72", record.get("USER_ID")))
+                record.put("CONTACT_NO", "***********");
             record.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", record.get("JOB_ROLE")));
         }
         response.set("DATAS", ConvertTool.toJSONArray(recordSet));
         return response;
     }
 
-    public ServiceResponse entryHoliday(ServiceRequest request) throws Exception{
+    public ServiceResponse entryHoliday(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
         String holidayStartDate = requestData.getString("HOLIDAY_START_DATE");
@@ -88,7 +88,7 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse initCreateEmployee(ServiceRequest request) throws Exception{
+    public ServiceResponse initCreateEmployee(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         String today = TimeTool.today();
         response.set("TODAY", today);
@@ -96,10 +96,10 @@ public class EmployeeService extends GenericService {
         response.set("ORG_TREE", orgTree);
         RecordSet jobRoles = StaticDataTool.getCodeTypeDatas("JOB_ROLE");
         RecordSet jobs = new RecordSet();
-        if(jobRoles != null && jobRoles.size() > 0){
-            for(int i=0;i<jobRoles.size();i++){
+        if (jobRoles != null && jobRoles.size() > 0) {
+            for (int i = 0; i < jobRoles.size(); i++) {
                 Record jobRole = jobRoles.get(i);
-                if(!StringUtils.equals("0", jobRole.get("CODE_VALUE"))){
+                if (!StringUtils.equals("0", jobRole.get("CODE_VALUE"))) {
                     jobs.add(jobRole);
                 }
             }
@@ -135,25 +135,24 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse initParentEmployee(ServiceRequest request) throws Exception{
+    public ServiceResponse initParentEmployee(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
-        String shopId= request.getString("SHOP");
+        String shopId = request.getString("SHOP");
         EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
         String jobRole = request.getString("JOB_ROLE");
         List<EmployeeEntity> parentEmployees = null;
-        if("42".equals(jobRole)) {
+        if ("42".equals(jobRole)) {
             parentEmployees = dao.queryEmployeeByParentOrgJobRole(shopId, "58");
-            if(ArrayTool.isEmpty(parentEmployees))
+            if (ArrayTool.isEmpty(parentEmployees))
                 parentEmployees = dao.queryEmployeeByParentOrgJobRoleAndMarket(shopId, "103");
-        }
-        else
+        } else
             parentEmployees = dao.queryEmployeeByParentOrgJobRoleAndMarket(shopId, "103");
 
         response.set("PARENT_EMPLOYEES", ConvertTool.toJSONArray(parentEmployees));
         return response;
     }
 
-    public ServiceResponse createEmployee(ServiceRequest request) throws Exception{
+    public ServiceResponse createEmployee(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         AppSession session = SessionManager.getSession();
 
@@ -171,15 +170,15 @@ public class EmployeeService extends GenericService {
         UserDAO dao = DAOFactory.createDAO(UserDAO.class);
 
         UserEntity userEntity = dao.queryUserByUsername(request.getString("MOBILE_NO"));
-        if(userEntity != null){
-            response.setError("HIRUN_CREATEEMPLOYEE_000001","该手机号码的员工已经存在");
+        if (userEntity != null) {
+            response.setError("HIRUN_CREATEEMPLOYEE_000001", "该手机号码的员工已经存在");
             return response;
         }
 
         long userId = dao.insertAutoIncrement("ins_user", user);
 
         Map<String, String> employee = new HashMap<String, String>();
-        employee.put("USER_ID", userId+"");
+        employee.put("USER_ID", userId + "");
         employee.put("NAME", request.getString("NAME"));
         employee.put("SEX", request.getString("SEX"));
         employee.put("IDENTITY_NO", request.getString("IDENTITY_NO"));
@@ -204,7 +203,7 @@ public class EmployeeService extends GenericService {
         long employeeId = dao.insertAutoIncrement("ins_employee", employee);
 
         Map<String, String> job = new HashMap<String, String>();
-        job.put("EMPLOYEE_ID", employeeId+"");
+        job.put("EMPLOYEE_ID", employeeId + "");
         job.put("JOB_ROLE", request.getString("JOB_ROLE"));
         job.put("JOB_ROLE_NATURE", "1");
         job.put("ORG_ID", request.getString("ORG_ID"));
@@ -217,9 +216,42 @@ public class EmployeeService extends GenericService {
         job.put("UPDATE_TIME", session.getCreateTime());
         dao.insertAutoIncrement("ins_employee_job_role", job);
 
+        //查询入职部门的nature
+        String orgId = request.getString("ORG_ID");
+        OrgEntity orgEntity = OrgBean.getAssignTypeOrg(orgId, "1");
+
+/*
         FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
         RecordSet jobFuncs = funcDAO.queryJobFunc(request.getString("JOB_ROLE"));
         RecordSet commFuncs = funcDAO.queryJobFunc("-1");
+*/
+
+        RecordSet roles = dao.queryJobRoleMapping(Long.parseLong(orgId), request.getString("JOB_ROLE"), orgEntity.getNature());
+
+        //2019/12/27liuhui权限处理
+        //新增公共角色
+        List<Map<String, String>> userRoles = new ArrayList<Map<String, String>>();
+
+        Map<String, String> commonRole = this.commonRole(userId + "", session);
+        userRoles.add(commonRole);
+
+        if (roles.size() > 0) {
+            //新增根据岗位和部门性质匹配角色
+            for (int i = 0; i < roles.size(); i++) {
+                Record record = roles.get(i);
+                Map<String, String> insUserRole = new HashMap<>();
+                insUserRole.put("USER_ID", userId + "");
+                insUserRole.put("ROLE_ID", record.get("ROLE_ID"));
+                insUserRole.put("START_DATE", session.getCreateTime());
+                insUserRole.put("END_DATE", "3000-12-31 23:59:59");
+                insUserRole.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+                insUserRole.put("UPDATE_TIME", session.getCreateTime());
+                userRoles.add(insUserRole);
+            }
+        }
+        dao.insertBatch("ins_user_role", userRoles);
+
+/*
         if(jobFuncs == null) {
             jobFuncs = new RecordSet();
         }
@@ -245,11 +277,11 @@ public class EmployeeService extends GenericService {
                 userFuncs.add(userFunc);
             }
             dao.insertBatch("ins_user_func", userFuncs);
-        }
+        }*/
 
         /** 新增user_contact信息 **/
         Map<String, String> userContact = new HashMap<String, String>();
-        userContact.put("USER_ID", userId+"");
+        userContact.put("USER_ID", userId + "");
         userContact.put("CONTACT_TYPE", "1");
         userContact.put("CONTACT_NO", request.getString("MOBILE_NO"));
         userContact.put("CREATE_TIME", session.getCreateTime());
@@ -261,23 +293,33 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse hasSubordinates(ServiceRequest request) throws Exception{
+    private Map<String, String> commonRole(String userId, AppSession session) {
+        Map<String, String> insUserRole = new HashMap<>();
+        insUserRole.put("USER_ID", userId + "");
+        insUserRole.put("ROLE_ID", "2");
+        insUserRole.put("START_DATE", session.getCreateTime());
+        insUserRole.put("END_DATE", "3000-12-31 23:59:59");
+        insUserRole.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        insUserRole.put("UPDATE_TIME", session.getCreateTime());
+        return insUserRole;
+    }
+
+    public ServiceResponse hasSubordinates(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         String userId = request.getString("USER_ID");
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
         EmployeeEntity employee = employeeDAO.queryEmployeeByUserId(userId);
         String employeeId = employee.getEmployeeId();
         List<EmployeeEntity> subordinates = EmployeeBean.getDirectSubordinates(employeeId);
-        if(ArrayTool.isEmpty(subordinates)){
+        if (ArrayTool.isEmpty(subordinates)) {
             response.set("HAS_SUB", "false");
-        }
-        else{
+        } else {
             response.set("HAS_SUB", "true");
         }
         return response;
     }
 
-    public ServiceResponse destroyEmployee(ServiceRequest request) throws Exception{
+    public ServiceResponse destroyEmployee(ServiceRequest request) throws Exception {
         String userId = request.getString("USER_ID");
         Map<String, String> parameter = new HashMap<String, String>();
 
@@ -310,26 +352,28 @@ public class EmployeeService extends GenericService {
         dao.save("ins_employee_job_role", new String[]{"EMPLOYEE_ID"}, parameter);
         try {
             dao.save("ins_houses_plan", new String[]{"EMPLOYEE_ID"}, parameter);
-        }catch (SQLException e){
+        } catch (SQLException e) {
 
         }
 
         String parentEmployeeId = request.getString("PARENT_EMPLOYEE_ID");
-        if(StringUtils.isNotBlank(parentEmployeeId)){
+        if (StringUtils.isNotBlank(parentEmployeeId)) {
             employeeDAO.changeEmployeeParent(employeeEntity.getEmployeeId(), parentEmployeeId);
         }
 
         parameter.clear();
         parameter.put("USER_ID", userId);
-        dao.delete("ins_user_func", new String[]{"USER_ID"}, parameter);
+        //2019/12/27liuhui权限处理
+        dao.delete("ins_user_role", new String[]{"USER_ID"}, parameter);
+        //dao.delete("ins_user_func", new String[]{"USER_ID"}, parameter);
         return new ServiceResponse();
     }
 
-    public ServiceResponse initQueryEmployees(ServiceRequest request) throws Exception{
+    public ServiceResponse initQueryEmployees(ServiceRequest request) throws Exception {
         ServiceResponse response = this.initCreateEmployee(request);
         response.remove("TODAY");
         JSONArray citys = response.getJSONArray("CITYS");
-        if(Permission.hasAllCity()){
+        if (Permission.hasAllCity()) {
             JSONArray allCitys = new JSONArray();
             JSONObject allCity = new JSONObject();
             allCity.put("CODE_VALUE", "");
@@ -341,22 +385,20 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse queryEmployees(ServiceRequest request) throws Exception{
+    public ServiceResponse queryEmployees(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
         String orgId = request.getString("ORG_ID");
-        if(StringUtils.isNotBlank(orgId)) {
+        if (StringUtils.isNotBlank(orgId)) {
             orgId = OrgBean.getOrgLine(orgId);
-        }
-        else {
+        } else {
             AppSession session = SessionManager.getSession();
             List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
             orgId = OrgBean.getOrgId(session.getSessionEntity());
             OrgEntity rootOrg = OrgBean.findEmployeeRoot(orgId, allOrgs);
-            if(StringUtils.equals("122", rootOrg.getParentOrgId())) {
+            if (StringUtils.equals("122", rootOrg.getParentOrgId())) {
                 orgId = "122";
-            }
-            else {
+            } else {
                 orgId = rootOrg.getOrgId();
             }
 
@@ -364,13 +406,13 @@ public class EmployeeService extends GenericService {
         }
 
         RecordSet employees = dao.queryEmployees(request.getString("NAME"), request.getString("SEX"), request.getString("CITY"), request.getString("MOBILE_NO"), request.getString("IDENTITY_NO"), orgId, request.getString("JOB_ROLE"), request.getString("PARENT_EMPLOYEE_ID"));
-        if(employees == null || employees.size() <= 0)
+        if (employees == null || employees.size() <= 0)
             return response;
 
         int size = employees.size();
-        for(int i=0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             Record employee = employees.get(i);
-            if(StringUtils.equals("69", employee.get("USER_ID")) || StringUtils.equals("72", employee.get("USER_ID"))) {
+            if (StringUtils.equals("69", employee.get("USER_ID")) || StringUtils.equals("72", employee.get("USER_ID"))) {
                 employee.put("CONTACT_NO", "***********");
             }
             employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
@@ -379,7 +421,7 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse initChangeEmployee(ServiceRequest request) throws Exception{
+    public ServiceResponse initChangeEmployee(ServiceRequest request) throws Exception {
         ServiceResponse response = this.initCreateEmployee(request);
         String employeeId = request.getString("EMPLOYEE_ID");
 
@@ -389,20 +431,20 @@ public class EmployeeService extends GenericService {
         EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
         EmployeeEntity employee = dao.queryEmployeeByEmployeeId(employeeId);
 
-        if(employee == null)
+        if (employee == null)
             return response;
 
         employeeInfo.put("NAME", employee.getName());
         employeeInfo.put("SEX", employee.getSex());
         employeeInfo.put("IDENTITY_NO", employee.getIdentityNo());
         String inDate = employee.getInDate();
-        if(StringUtils.isNotBlank(inDate)){
-            inDate = TimeTool.formatLocalDateTimeToString(TimeTool.stringToLocalDateTime(inDate,TimeTool.TIME_PATTERN),TimeTool.DATE_FMT_3);
+        if (StringUtils.isNotBlank(inDate)) {
+            inDate = TimeTool.formatLocalDateTimeToString(TimeTool.stringToLocalDateTime(inDate, TimeTool.TIME_PATTERN), TimeTool.DATE_FMT_3);
         }
 
         String regularDate = employee.getRegularDate();
-        if(StringUtils.isNotBlank(regularDate)) {
-            regularDate = TimeTool.formatLocalDateTimeToString(TimeTool.stringToLocalDateTime(regularDate,TimeTool.TIME_PATTERN),TimeTool.DATE_FMT_3);
+        if (StringUtils.isNotBlank(regularDate)) {
+            regularDate = TimeTool.formatLocalDateTimeToString(TimeTool.stringToLocalDateTime(regularDate, TimeTool.TIME_PATTERN), TimeTool.DATE_FMT_3);
         }
         employeeInfo.put("IN_DATE", inDate);
         employeeInfo.put("REGULAR_DATE", regularDate);
@@ -423,7 +465,7 @@ public class EmployeeService extends GenericService {
         EmployeeJobRoleDAO jobDAO = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
         List<EmployeeJobRoleEntity> jobRoles = jobDAO.queryJobRoleByEmployeeId(employeeId);
 
-        if(ArrayTool.isNotEmpty(jobRoles)) {
+        if (ArrayTool.isNotEmpty(jobRoles)) {
             EmployeeJobRoleEntity jobRole = jobRoles.get(0);
             employeeInfo.put("JOB_ROLE", jobRole.getJobRole());
             employeeInfo.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", jobRole.getJobRole()));
@@ -433,7 +475,7 @@ public class EmployeeService extends GenericService {
             employeeInfo.put("ORG_NAME", org.getName());
 
             String parentEmployeeId = jobRole.getParentEmployeeId();
-            if(StringUtils.isNotBlank(parentEmployeeId)){
+            if (StringUtils.isNotBlank(parentEmployeeId)) {
                 employeeInfo.put("PARENT_EMPLOYEE_ID", parentEmployeeId);
                 EmployeeEntity parentEmployee = dao.queryEmployeeByEmployeeId(parentEmployeeId);
                 employeeInfo.put("PARENT_EMPLOYEE_NAME", parentEmployee.getName());
@@ -443,7 +485,7 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse changeEmployee(ServiceRequest request) throws Exception{
+    public ServiceResponse changeEmployee(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         AppSession session = SessionManager.getSession();
 
@@ -453,7 +495,7 @@ public class EmployeeService extends GenericService {
         UserEntity user = userDAO.queryUserByEmployeeId(employeeId);
 
         String mobileNo = request.getString("MOBILE_NO");
-        if(!StringUtils.equals(mobileNo, user.getMobileNo())){
+        if (!StringUtils.equals(mobileNo, user.getMobileNo())) {
 
             //更新用户信息
             Map<String, String> parameter = new HashMap<String, String>();
@@ -488,18 +530,18 @@ public class EmployeeService extends GenericService {
         String jobDate = request.getString("JOB_DATE");
         String regularDate = request.getString("REGULAR_DATE");
 
-        if(!StringUtils.equals(name, employee.getName())
+        if (!StringUtils.equals(name, employee.getName())
                 || !StringUtils.equals(sex, employee.getSex())
                 || !StringUtils.equals(city, employee.getWorkPlace())
                 || !StringUtils.equals(identityNo, employee.getIdentityNo())
                 || !StringUtils.equals(homeAddress, employee.getHomeAddress())
-                || !StringUtils.equals(inDate+" 00:00:00", employee.getInDate())
+                || !StringUtils.equals(inDate + " 00:00:00", employee.getInDate())
                 || !StringUtils.equals(major, employee.getMajor())
                 || !StringUtils.equals(educationLevel, employee.getEducationLevel())
                 || !StringUtils.equals(school, employee.getSchool())
                 || !StringUtils.equals(certificateNo, employee.getCertificateNo())
                 || !StringUtils.equals(jobDate, employee.getJobDate())
-                || !StringUtils.equals(regularDate, employee.getRegularDate())){
+                || !StringUtils.equals(regularDate, employee.getRegularDate())) {
             //修改了员工信息，更新员工表
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("EMPLOYEE_ID", employeeId);
@@ -522,12 +564,12 @@ public class EmployeeService extends GenericService {
 
         EmployeeJobRoleDAO jobRoleDAO = DAOFactory.createDAO(EmployeeJobRoleDAO.class);
         List<EmployeeJobRoleEntity> jobRoles = jobRoleDAO.queryJobRoleByEmployeeId(employeeId);
-        if(ArrayTool.isNotEmpty(jobRoles)){
+        if (ArrayTool.isNotEmpty(jobRoles)) {
             EmployeeJobRoleEntity jobRoleEntity = jobRoles.get(0);
             String jobRole = request.getString("JOB_ROLE");
             String orgId = request.getString("ORG_ID");
             String parentEmployeeId = request.getString("PARENT_EMPLOYEE_ID");
-            if(!StringUtils.equals(jobRole, jobRoleEntity.getJobRole()) || !StringUtils.equals(orgId, jobRoleEntity.getOrgId()) || !StringUtils.equals(parentEmployeeId, jobRoleEntity.getParentEmployeeId())){
+            if (!StringUtils.equals(jobRole, jobRoleEntity.getJobRole()) || !StringUtils.equals(orgId, jobRoleEntity.getOrgId()) || !StringUtils.equals(parentEmployeeId, jobRoleEntity.getParentEmployeeId())) {
                 Map<String, String> parameter = new HashMap<String, String>();
                 parameter.put("EMPLOYEE_ID", employeeId);
                 parameter.put("END_DATE", session.getCreateTime());
@@ -550,31 +592,62 @@ public class EmployeeService extends GenericService {
 
                 jobRoleDAO.insertAutoIncrement("ins_employee_job_role", parameter);
 
-                if(!StringUtils.equals(jobRole, jobRoleEntity.getJobRole())){
+
+                if (!StringUtils.equals(jobRole, jobRoleEntity.getJobRole()) || !StringUtils.equals(orgId, jobRoleEntity.getOrgId())) {
                     //重新导入权限
                     parameter.clear();
                     parameter.put("USER_ID", user.getUserId());
-                    userDAO.delete("ins_user_func", new String[]{"USER_ID"}, parameter);
 
-                    FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
-                    RecordSet jobFuncs = funcDAO.queryJobFunc(jobRole);
-                    RecordSet commFuncs = funcDAO.queryJobFunc("-1");
+                    //2019/12/27liuhui权限处理
+                    userDAO.delete("ins_user_role", new String[]{"USER_ID"}, parameter);
+                    //userDAO.delete("ins_user_func", new String[]{"USER_ID"}, parameter);
 
-                    if(ArrayTool.isEmpty(jobFuncs)) {
+                    //RecordSet jobFuncs = funcDAO.queryJobFunc(jobRole);
+                    //RecordSet commFuncs = funcDAO.queryJobFunc("-1");
+
+                    //查询入职部门的nature
+                    OrgEntity orgEntity = OrgBean.getAssignTypeOrg(orgId, "1");
+
+                    RecordSet roles = userDAO.queryJobRoleMapping(Long.parseLong(orgId), request.getString("JOB_ROLE"), orgEntity.getNature());
+
+                    //2019/12/27liuhui权限处理
+                    //新增公共角色
+                    List<Map<String, String>> userRoles = new ArrayList<Map<String, String>>();
+
+                    Map<String, String> commonRole = this.commonRole(user.getUserId() + "", session);
+                    userRoles.add(commonRole);
+
+                    if (roles.size() > 0) {
+                        //新增根据岗位和部门性质匹配角色
+                        for (int i = 0; i < roles.size(); i++) {
+                            Record record = roles.get(i);
+                            Map<String, String> insUserRole = new HashMap<>();
+                            insUserRole.put("USER_ID", user.getUserId() + "");
+                            insUserRole.put("ROLE_ID", record.get("ROLE_ID"));
+                            insUserRole.put("START_DATE", session.getCreateTime());
+                            insUserRole.put("END_DATE", "3000-12-31 23:59:59");
+                            insUserRole.put("UPDATE_USER_ID", user.getUserId() + "");
+                            insUserRole.put("UPDATE_TIME", session.getCreateTime());
+                            userRoles.add(insUserRole);
+                        }
+                    }
+                    userDAO.insertBatch("ins_user_role", userRoles);
+/*
+                    if (ArrayTool.isEmpty(jobFuncs)) {
                         jobFuncs = new RecordSet();
                     }
 
-                    if(ArrayTool.isNotEmpty(commFuncs)) {
+                    if (ArrayTool.isNotEmpty(commFuncs)) {
                         jobFuncs.addAll(commFuncs);
                     }
 
                     List<Map<String, String>> userFuncs = new ArrayList<Map<String, String>>();
-                    if(jobFuncs != null && jobFuncs.size() > 0){
+                    if (jobFuncs != null && jobFuncs.size() > 0) {
                         int jobFuncSize = jobFuncs.size();
-                        for(int i=0;i<jobFuncSize;i++){
+                        for (int i = 0; i < jobFuncSize; i++) {
                             Record jobFunc = jobFuncs.get(i);
                             Map<String, String> userFunc = new HashMap<String, String>();
-                            userFunc.put("USER_ID", user.getUserId()+"");
+                            userFunc.put("USER_ID", user.getUserId() + "");
                             userFunc.put("FUNC_ID", jobFunc.get("FUNC_ID"));
                             userFunc.put("START_DATE", session.getCreateTime());
                             userFunc.put("END_DATE", "3000-12-31 23:59:59");
@@ -586,53 +659,53 @@ public class EmployeeService extends GenericService {
                             userFuncs.add(userFunc);
                         }
                         userDAO.insertBatch("ins_user_func", userFuncs);
-                    }
+                    }*/
                 }
             }
         }
         return response;
     }
 
-    public ServiceResponse queryEmployeeFuncs(ServiceRequest request) throws Exception{
+    public ServiceResponse queryEmployeeFuncs(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
         Record employee = dao.queryEmployee(request.getString("EMPLOYEE_ID"));
-        if(employee == null || employee.size() <= 0)
+        if (employee == null || employee.size() <= 0)
             return response;
 
-        if(StringUtils.equals("69", employee.get("USER_ID")) || StringUtils.equals("72", employee.get("USER_ID"))) {
+        if (StringUtils.equals("69", employee.get("USER_ID")) || StringUtils.equals("72", employee.get("USER_ID"))) {
             employee.put("CONTACT_NO", "***********");
         }
         employee.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", employee.get("JOB_ROLE")));
         response.set("EMPLOYEE", JSONObject.parseObject(JSON.toJSONString(employee.getData())));
 
-        if(StringUtils.equals("0", employee.get("JOB_ROLE")))
+        if (StringUtils.equals("0", employee.get("JOB_ROLE")))
             return response;
 
         String userId = employee.get("USER_ID");
         UserFuncDAO userFuncDAO = DAOFactory.createDAO(UserFuncDAO.class);
         RecordSet userFuncs = userFuncDAO.queryUserFuncs(userId);
-        if(userFuncs == null || userFuncs.size() <= 0)
+        if (userFuncs == null || userFuncs.size() <= 0)
             userFuncs = new RecordSet();
 
         int size = userFuncs.size();
         String funcIds = "";
-        for(int i=0;i<size;i++){
+        for (int i = 0; i < size; i++) {
             Record record = userFuncs.get(i);
-            if(i != size -1)
-                funcIds += record.get("FUNC_ID")+",";
+            if (i != size - 1)
+                funcIds += record.get("FUNC_ID") + ",";
             else
                 funcIds += record.get("FUNC_ID");
             record.put("TYPE_NAME", StaticDataTool.getCodeName("FUNC_TYPE", record.get("TYPE")));
         }
 
         FuncDAO funcDAO = DAOFactory.createDAO(FuncDAO.class);
-        if(StringUtils.isBlank(funcIds))
+        if (StringUtils.isBlank(funcIds))
             funcIds = "-1";
         RecordSet restFuncs = funcDAO.queryRestFunc(funcIds);
-        if(restFuncs != null && restFuncs.size() > 0){
+        if (restFuncs != null && restFuncs.size() > 0) {
             int restSize = restFuncs.size();
-            for(int i=0;i<restSize;i++){
+            for (int i = 0; i < restSize; i++) {
                 Record record = restFuncs.get(i);
                 record.put("TYPE_NAME", StaticDataTool.getCodeName("FUNC_TYPE", record.get("TYPE")));
             }
@@ -643,17 +716,17 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse assignPermission(ServiceRequest request) throws Exception{
+    public ServiceResponse assignPermission(ServiceRequest request) throws Exception {
         String userId = request.getString("USER_ID");
         String addFuncs = request.getString("ADD_FUNCS");
         String delFuncs = request.getString("DEL_FUNCS");
         AppSession session = SessionManager.getSession();
 
         UserFuncDAO dao = DAOFactory.createDAO(UserFuncDAO.class);
-        if(StringUtils.isNotBlank(addFuncs)){
+        if (StringUtils.isNotBlank(addFuncs)) {
             String[] addFuncsArray = addFuncs.split(",");
             List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
-            for(String funcId : addFuncsArray){
+            for (String funcId : addFuncsArray) {
                 Map<String, String> parameter = new HashMap<String, String>();
                 parameter.put("USER_ID", userId);
                 parameter.put("FUNC_ID", funcId);
@@ -669,13 +742,13 @@ public class EmployeeService extends GenericService {
             dao.insertBatch("ins_user_func", parameters);
         }
 
-        if(StringUtils.isNotBlank(delFuncs)){
+        if (StringUtils.isNotBlank(delFuncs)) {
             dao.deleteUserFuncs(userId, delFuncs);
         }
         return new ServiceResponse();
     }
 
-    public ServiceResponse queryEnterpriseEmployees(ServiceRequest request) throws Exception{
+    public ServiceResponse queryEnterpriseEmployees(ServiceRequest request) throws Exception {
         AppSession session = SessionManager.getSession();
         SessionEntity sessionEntity = session.getSessionEntity();
         String orgId = OrgBean.getOrgId(sessionEntity);
@@ -686,8 +759,8 @@ public class EmployeeService extends GenericService {
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
         RecordSet employees = employeeDAO.queryEmployeeByEnterpriseIdAndName(enterpriseId, request.getString("SEARCH_TEXT"));
 
-        if(employees != null && employees.size() > 0){
-            for(int i=0;i<employees.size();i++){
+        if (employees != null && employees.size() > 0) {
+            for (int i = 0; i < employees.size(); i++) {
                 Record record = employees.get(i);
                 record.put("JOB_ROLE_NAME", StaticDataTool.getCodeName("JOB_ROLE", record.get("JOB_ROLE")));
             }
@@ -697,7 +770,7 @@ public class EmployeeService extends GenericService {
         return response;
     }
 
-    public ServiceResponse resetPassword(ServiceRequest request) throws Exception{
+    public ServiceResponse resetPassword(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
 
         String userId = request.getString("USER_ID");
@@ -730,8 +803,7 @@ public class EmployeeService extends GenericService {
             JSONArray temps = ConvertTool.toJSONArray(enterprises);
             arrays.addAll(temps);
             response.set("ENTERPRISES", arrays);
-        }
-        else{
+        } else {
             JSONArray array = new JSONArray();
             array.add(JSONObject.parseObject(JSON.toJSONString(enterpriseOrg.getContent())));
             response.set("ENTERPRISES", array);
@@ -744,7 +816,7 @@ public class EmployeeService extends GenericService {
         ServiceResponse response = new ServiceResponse();
         String enterpriseOrgId = request.getString("ENTERPRISE");
 
-        if(StringUtils.isBlank(enterpriseOrgId)) {
+        if (StringUtils.isBlank(enterpriseOrgId)) {
             return response;
         }
         List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
@@ -757,7 +829,7 @@ public class EmployeeService extends GenericService {
             shops.add(temp);
             List<OrgEntity> temps = OrgBean.findSubordinateOrg(enterpriseOrgId, allOrgs, "4");
             shops.addAll(temps);
-        } else{
+        } else {
             AppSession session = SessionManager.getSession();
             String orgId = OrgBean.getOrgId(session.getSessionEntity());
             OrgEntity org = OrgBean.getAssignTypeOrg(orgId, "4", allOrgs);
