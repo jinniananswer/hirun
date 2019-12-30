@@ -124,7 +124,7 @@ public class SessionVerifyFilter implements Filter {
         HttpURLConnection conn = null;
         BufferedReader br = null;
         try {
-            URL restURL = new URL("http://47.105.64.145:80/hirun/api/system/session/authentication/" + hirunToken);
+            URL restURL = new URL("http://47.105.64.145/api/system/session/authentication/" + hirunToken);
             conn = (HttpURLConnection) restURL.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
