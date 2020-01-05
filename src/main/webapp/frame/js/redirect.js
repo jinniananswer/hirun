@@ -11,7 +11,7 @@
                         top.$.index.openNav(url, title);
                     } catch(err) {
                         try {
-                            top.layui.index.openTabsPage(url, title);
+                            document.location.href = url;
                         } catch (error) {
 
                         }
