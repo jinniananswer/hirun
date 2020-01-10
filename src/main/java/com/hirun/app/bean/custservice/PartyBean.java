@@ -345,7 +345,11 @@ public class PartyBean {
             param.put("MODE_TIME", jsonObject.getString("mode_time"));
             param.put("NAME", jsonObject.getString("name"));
             param.put("STAFF_ID", jsonObject.getString("sjs_staff_id"));
-            param.put("FUNC", jsonObject.getString("funs"));
+
+            param.put("FUNC", jsonObject.getString("funs_A"));
+            param.put("FUNC_B", jsonObject.getString("funs_B"));
+            param.put("FUNC_C", jsonObject.getString("funs_C"));
+
             param.put("REL_EMPLOYEE_ID", employeeId);
             param.put("CREATE_TIME", TimeTool.now());
             param.put("XQLTE_CREATE_TIME", transUnixTimeToNormal(jsonObject.getString("update_time")));
