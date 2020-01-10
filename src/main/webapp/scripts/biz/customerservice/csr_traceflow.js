@@ -8,6 +8,9 @@
                 });
 
                 window["funcTree"] = new Wade.Tree("funcTree");
+                window["funcTreeB"] = new Wade.Tree("funcTreeB");
+                window["funcTreeC"] = new Wade.Tree("funcTreeC");
+
 
                 $("#funcTree").textAction(function(e, nodeData){
                     var id = nodeData.id;
@@ -15,7 +18,17 @@
                     return false;
                 });
 
+                $("#funcTreeB").textAction(function(e, nodeData){
+                    var id = nodeData.id;
+                    var text = nodeData.text;
+                    return false;
+                });
 
+                $("#funcTreeC").textAction(function(e, nodeData){
+                    var id = nodeData.id;
+                    var text = nodeData.text;
+                    return false;
+                });
 
                 window["MW_EXPERIENCE_TIME"] = new Wade.DateField(
                     "MW_EXPERIENCE_TIME",
@@ -43,10 +56,23 @@
                 $.ajaxPost('initCsrTraceFlow','&PARTY_ID='+$("#PARTY_ID").val()+'&PROJECT_ID='+$("#PROJECT_ID").val(),function(data){
                     $.endPageLoading();
                     var trees = data.FUNC_TREE;
+                    var treesB = data.FUNC_TREE_B;
+                    var treesC = data.FUNC_TREE_C;
+
 
                     if(trees != null){
                         window["funcTree"].data = trees;
                         window["funcTree"].init();
+                    };
+
+                    if(treesB != null){
+                        window["funcTreeB"].data = treesB;
+                        window["funcTreeB"].init();
+                    };
+
+                    if(treesC != null){
+                        window["funcTreeC"].data = treesC;
+                        window["funcTreeC"].init();
                     };
 
                     var rst = new Wade.DataMap(data);

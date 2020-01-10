@@ -24,21 +24,19 @@ import java.util.*;
 
 public class BluePrintBean {
 
-    public static JSONObject getFuncTree(Record record) {
-        if (record == null) {
-            return null;
-        }
-        JSONObject jsonObject = new JSONObject();
+    public static JSONObject getFuncTree(String func, String kind) {
 
-        String func = record.get("FUNC");
+
         if (StringUtils.isBlank(func) || StringUtils.equals("false", func)) {
             return null;
         }
+
+        JSONObject jsonObject = new JSONObject();
         JSONArray funcArray = JSONArray.parseArray(func);
         int size = funcArray.size();
 
         JSONObject root = new JSONObject();
-        root.put("text", "功能蓝图");
+        root.put("text", "功能蓝图_" + kind);
         root.put("id", "-1");
         root.put("dataid", "-1");
         root.put("expand", "true");
@@ -76,13 +74,19 @@ public class BluePrintBean {
             childNode.put("id", jsonObject.getString("caid"));
             childNode.put("disabled", "false");
             childNode.put("value", jsonObject.getString("caid"));
-            JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
-            if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+
+            String subs = jsonObject.getString("subs");
+            if (StringUtils.equals(subs, "false")) {
                 childNode.put("haschild", "false");
             } else {
-                JSONObject child = buildChildTree(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
-                childNode.put("haschild", "true");
-                childNode.put("childNodes", child);
+                JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
+                if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
+                    childNode.put("haschild", "false");
+                } else {
+                    JSONObject child = buildChildTree(subsJsonArray, prefix + "●" + jsonObject.getString("caid"));
+                    childNode.put("haschild", "true");
+                    childNode.put("childNodes", child);
+                }
             }
             childJsonObject.put(jsonObject.getString("caid"), childNode);
         }
@@ -106,7 +110,7 @@ public class BluePrintBean {
             String subs = jsonObject.getString("subs");
             if (StringUtils.equals(subs, "false") || StringUtils.isBlank(subs)) {
                 childNode.put("haschild", "false");
-            }else {
+            } else {
                 JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
                 if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
                     childNode.put("haschild", "false");
@@ -202,7 +206,7 @@ public class BluePrintBean {
             String types = jsonObject.getString("subs");
             if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
                 childNode.put("haschild", "false");
-            }else {
+            } else {
                 JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
                 if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
                     childNode.put("haschild", "false");
@@ -234,7 +238,7 @@ public class BluePrintBean {
             String types = jsonObject.getString("subs");
             if (StringUtils.equals(types, "false") || StringUtils.isBlank(types)) {
                 childNode.put("haschild", "false");
-            }else {
+            } else {
                 JSONArray subsJsonArray = jsonObject.getJSONArray("subs");
                 if (subsJsonArray.size() <= 0 || subsJsonArray == null) {
                     childNode.put("haschild", "false");
