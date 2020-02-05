@@ -6,6 +6,7 @@ import com.hirun.app.bean.common.MsgBean;
 import com.hirun.app.bean.custservice.BluePrintBean;
 import com.hirun.app.bean.custservice.CustServiceStatBean;
 import com.hirun.app.bean.employee.EmployeeBean;
+import com.hirun.app.bean.order.OrderBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.cache.ActionCache;
@@ -358,6 +359,17 @@ public class CustServService extends GenericService {
         return response;
     }
 
+    public ServiceResponse queryCustPreparation(ServiceRequest request) throws Exception{
+        ServiceResponse response=new ServiceResponse();
+        CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
+        String mobileNo=request.getString("MOBILE_NO");
+        RecordSet recordSet=dao.queryCustPreparation(mobileNo);
+        if(recordSet.size()<=0){
+            return response;
+        }
+        response.set("CUSTPREPARATION", ConvertTool.toJSONArray(recordSet));
+        return response;
+    }
 
     /**
      * @param request
@@ -424,13 +436,13 @@ public class CustServService extends GenericService {
 
 
         //1、保存party信息
-        party_info.put("PARTY_NAME", party_name);
+        party_info.put("CUST_NAME", party_name);
         party_info.put("AGE", age);
         party_info.put("MOBILE_NO", moblie_no);
         party_info.put("QQ_NO", qq_no);
         party_info.put("WX_NO", wx_no);
-        party_info.put("PARTY_STATUS", CustomerServiceConst.PARTY_STATUS_0);//客户状态正常
-        party_info.put("COMPANY", company);
+        party_info.put("CUST_STATUS", CustomerServiceConst.PARTY_STATUS_0);//客户状态正常
+        party_info.put("WORK_COMPANY", company);
         party_info.put("EDUCATIONAL", educate);
         party_info.put("FAMILY_MEMBERS_COUNT", family_members_count);
         //party_info.put("OLDMAN_COUNT",oldman_count);
@@ -446,7 +458,9 @@ public class CustServService extends GenericService {
         party_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         party_info.put("UPDATE_TIME", session.getCreateTime());
 
-        long party_id = dao.insertAutoIncrement("INS_PARTY", party_info);
+        party_info.put("CONSULT_TIME",session.getCreateTime());
+
+        long party_id = dao.insertAutoIncrement("cust_base", party_info);
 
 
         //2、保存project信息
@@ -531,6 +545,8 @@ public class CustServService extends GenericService {
             dao.insertBatch("ins_project_original_action", partyProjectActionList);
         }
 
+        OrderBean.createConsultOrder(party_id+"","4444","测试装修地址","1","88.88","99.99"
+                ,"1476",session.getSessionEntity().get("EMPLOYEE_ID"),"1476","1476");
         //更新报表数据，新增咨询数
         CustServiceStatBean.updateCustServiceStat(session.getSessionEntity().get("EMPLOYEE_ID"), "GOODSEEGOODLIVE");
 

@@ -142,17 +142,17 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     public RecordSet queryPartyInfoByLinkEmployeeIdAndTag( String roleType, String name, String wxnick, String mobile, String houseaddress,String employeeIds,String tagId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("select c.*, a.*, b.*, d.* from  ins_project_linkman a ,ins_project b, ins_party c  ");
+        sb.append("select c.*, a.*, b.*, d.* from  ins_project_linkman a ,ins_project b, cust_base c  ");
         sb.append("left join ins_party_tag d on ");
-        sb.append("(c.PARTY_ID=d.PARTY_ID AND d.Status='0') ");
+        sb.append("(c.CUST_ID=d.PARTY_ID AND d.Status='0') ");
         sb.append(" where a.PROJECT_ID=b.PROJECT_ID ");
-        sb.append(" and b.PARTY_ID=c.PARTY_ID  ");
+        sb.append(" and b.PARTY_ID=c.CUST_ID  ");
         sb.append(" and a.ROLE_TYPE= :ROLE_TYPE  ");
-        sb.append(" and c.PARTY_STATUS= '0'  ");
+        sb.append(" and c.CUST_STATUS= '0'  ");
 
 
         if (StringUtils.isNotBlank(name)) {
-            sb.append("and c.party_name like concat('%',:PARTY_NAME,'%') ");
+            sb.append("and c.CUST_NAME like concat('%',:PARTY_NAME,'%') ");
             parameter.put("PARTY_NAME", name);
         }
 
@@ -189,11 +189,11 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     public RecordSet queryPartyInfoByLinkEmployeeIds(String employeeIds, String roleType, String name,  String mobile, String custservieEmpId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from ins_project_linkman a ,ins_project b, ins_party c ");
+        sb.append("select * from ins_project_linkman a ,ins_project b, cust_base c ");
         sb.append(" where a.PROJECT_ID=b.PROJECT_ID ");
-        sb.append(" and b.PARTY_ID=c.PARTY_ID  ");
+        sb.append(" and b.PARTY_ID=c.CUST_ID  ");
         sb.append(" and a.ROLE_TYPE= :ROLE_TYPE  ");
-        sb.append(" and c.PARTY_STATUS='0'  ");
+        sb.append(" and c.CUST_STATUS='0'  ");
 
 
         if (StringUtils.isNotBlank(name)) {
@@ -624,5 +624,24 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             return null;
         }
         return list;
+    }
+
+    /**
+     * 查询客户号码是否有报备记录
+     * @param mobileNo
+     * @return
+     * @throws Exception
+     */
+    public RecordSet queryCustPreparation(String mobileNo) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from cust_preparation a,cust_base b ");
+        sb.append("where a.cust_id= b.cust_id ");
+        sb.append("and a.STATUS= '1' ");
+        sb.append("and b.mobile_no= :MOBILE_NO ");
+
+        parameter.put("MOBILE_NO",mobileNo);
+        RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
+        return recordSet;
     }
 }

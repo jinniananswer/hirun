@@ -90,7 +90,7 @@ public class CustServiceController extends RootController {
         ServiceRequest request = new ServiceRequest(jsonObject);
         try {
             //初始化的时候调家网接口进行扫码数据查询，保证数据实时性
-            ServiceResponse hirunresponse = ServiceInvoker.invoke("OperationCenter.custservice.ScanDataImportTaskService.hirunplusDataImport", request);
+            //ServiceResponse hirunresponse = ServiceInvoker.invoke("OperationCenter.custservice.ScanDataImportTaskService.hirunplusDataImport", request);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -226,6 +226,12 @@ public class CustServiceController extends RootController {
     @RequestMapping(value = "submitPartyTagInfo")
     public @ResponseBody String submitPartyTagInfo(@RequestParam Map paramter) throws Exception {
         ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.submitPartyTagInfo", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "queryCustPreparation")
+    public @ResponseBody String queryCustPreparation(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.queryCustPreparation", paramter);
         return response.toJsonString();
     }
 }
