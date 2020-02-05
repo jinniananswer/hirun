@@ -24,7 +24,7 @@ import java.util.Map;
 public class XQLTEdataImport {
 
     private static String host = "www.hi-run.net";
-    private static String path = "/api/projectlttest";
+    private static String path = "/api/projectltv2";
     private static String pageSize = "100";
 
     public static void dataImport(String start, String end) throws Exception {
@@ -100,7 +100,11 @@ public class XQLTEdataImport {
                 dbParam.put("OPEN_ID", jsonData.getString("openid"));
                 dbParam.put("SJS_STAFF_ID", jsonData.getString("sjs_staff_id"));
                 dbParam.put("SJS_ROLE_ID", jsonData.getString("sjs_role_id"));
-                dbParam.put("FUNC", jsonData.getString("funs"));
+                dbParam.put("FUNC", jsonData.getString("funs_A"));
+                //2020-01-08家网需求蓝图变化新增A\B\C三类调整
+                dbParam.put("FUNC_B", jsonData.getString("funs_B"));
+                dbParam.put("FUNC_C", jsonData.getString("funs_C"));
+
                 dbParam.put("STYLE", jsonData.getString("style"));
 
                 dbParam.put("INDB_TIME", TimeTool.now());
@@ -155,7 +159,12 @@ public class XQLTEdataImport {
                 dbParam.put("OPEN_ID", jsonData.getString("openid"));
                 dbParam.put("SJS_STAFF_ID", jsonData.getString("sjs_staff_id"));
                 dbParam.put("SJS_ROLE_ID", jsonData.getString("sjs_role_id"));
-                dbParam.put("FUNC", jsonData.getString("funs"));
+                dbParam.put("FUNC", jsonData.getString("funs_A"));
+
+                //2020-01-08家网需求蓝图变化新增A\B\C三类调整
+                dbParam.put("FUNC_B", jsonData.getString("funs_B"));
+                dbParam.put("FUNC_C", jsonData.getString("funs_C"));
+
                 dbParam.put("STYLE", jsonData.getString("style"));
 
                 dbParam.put("INDB_TIME", TimeTool.now());
@@ -205,7 +214,12 @@ public class XQLTEdataImport {
                 dbParam.put("OPEN_ID", jsonData.getString("openid"));
                 dbParam.put("SJS_STAFF_ID", jsonData.getString("sjs_staff_id"));
                 dbParam.put("SJS_ROLE_ID", jsonData.getString("sjs_role_id"));
-                dbParam.put("FUNC", jsonData.getString("funs"));
+                dbParam.put("FUNC", jsonData.getString("funs_A"));
+
+                //2020-01-08家网需求蓝图变化新增A\B\C三类调整
+                dbParam.put("FUNC_B", jsonData.getString("funs_B"));
+                dbParam.put("FUNC_C", jsonData.getString("funs_C"));
+
                 dbParam.put("STYLE", jsonData.getString("style"));
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "0");

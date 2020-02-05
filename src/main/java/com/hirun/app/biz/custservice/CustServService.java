@@ -143,9 +143,25 @@ public class CustServService extends GenericService {
 
                                 Record xqlteRecord = xqlteRecordSet.get(0);
                                 //功能蓝图内容
-                                JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord);
-                                if (jsonObject != null) {
-                                    response.set("FUNC_TREE", jsonObject);
+                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC"))&&!StringUtils.equals(xqlteRecord.get("FUNC"),"false")){
+                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC"), "A");
+                                    if (jsonObject != null) {
+                                        response.set("FUNC_TREE", jsonObject);
+                                    }
+                                }
+
+                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC_B"))&&!StringUtils.equals(xqlteRecord.get("FUNC_B"),"false")){
+                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_B"),"B");
+                                    if (jsonObject != null) {
+                                        response.set("FUNC_TREE_B", jsonObject);
+                                    }
+                                }
+
+                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC_C"))&&!StringUtils.equals(xqlteRecord.get("FUNC_C"),"false")){
+                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_C"),"C");
+                                    if (jsonObject != null) {
+                                        response.set("FUNC_TREE_C", jsonObject);
+                                    }
                                 }
                                 //风格蓝图内容
                                 JSONArray styleJsonObjectArray = BluePrintBean.getStyleContent(xqlteRecord);

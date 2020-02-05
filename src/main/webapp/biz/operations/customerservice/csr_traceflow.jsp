@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表流程</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/csr_traceflow.js?v=20190821"></script>
+    <script src="/scripts/biz/customerservice/csr_traceflow.js?v=20200110"></script>
 </head>
 <body>
         <div class="c_header">
@@ -108,6 +108,16 @@
                                             </div>
                                         </div>
                                         <div id="funcTree" class="c_tree">
+
+                                        </div>
+                                        <div class="c_space-3"></div>
+
+                                        <div id="funcTreeB" class="c_tree">
+
+                                        </div>
+                                        <div class="c_space-3"></div>
+
+                                        <div id="funcTreeC" class="c_tree">
 
                                         </div>
                                     </div>
