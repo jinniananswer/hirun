@@ -138,7 +138,7 @@ public class HousesService extends GenericService {
         house.put("CREATE_TIME", session.getCreateTime());
 
         HouseDAO dao = new HouseDAO("ins");
-        List<HousesEntity> houses = dao.queryHousesByName(request.getString("NAME"));
+        List<HousesEntity> houses = dao.queryHousesByName(request.getString("NAME"), true);
         if(ArrayTool.isNotEmpty(houses)){
             ServiceResponse response = new ServiceResponse();
             response.setError("HIRUN_CREATE_HOUSE_000001","该楼盘名称已经存在，请重新检查楼盘名称！");
