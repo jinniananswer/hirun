@@ -30,7 +30,7 @@
             if(errFunc == null || typeof(errFunc) == "undefined" || typeof(errFunc) != "function"){
                 errFunc = function(resultCode, resultInfo){
                     $.endPageLoading();
-                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "错误编码："+resultCode+"，错误信息："+resultInfo+"亲，赶紧联系管理员报告功能问题吧");
+                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "错误信息："+resultInfo+"亲，赶紧联系管理员报告功能问题吧");
                 };
             }
 
@@ -62,7 +62,7 @@
             if(errFunc == null || typeof(errFunc) == "undefined" || typeof(errFunc) != "function"){
                 errFunc = function(resultCode, resultInfo){
                     $.endPageLoading();
-                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "错误编码："+resultCode+"，错误信息："+resultInfo+"亲，赶紧联系管理员报告功能问题吧");
+                    MessageBox.error("错误信息","对不起，偶们的系统出错了，55555555555555", null,"", "错误信息："+resultInfo+"亲，赶紧联系管理员报告功能问题吧");
                 };
             }
 
