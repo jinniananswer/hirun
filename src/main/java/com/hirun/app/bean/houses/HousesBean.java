@@ -102,7 +102,7 @@ public class HousesBean {
         house.put("CREATE_TIME", session.getCreateTime());
 
         HouseDAO dao = new HouseDAO("ins");
-        List<HousesEntity> houses = dao.queryHousesByName(name);
+        List<HousesEntity> houses = dao.queryHousesByName(name, false);
         if(ArrayTool.isNotEmpty(houses)){
             throw new GenericException("HIRUN_CREATE_HOUSE_000001","该楼盘名称已经存在，请重新检查楼盘名称！");
         }
