@@ -89,7 +89,7 @@ public class HousesBean {
             city = org.getCity();
         }
 
-        house.put("NAME", name);
+        house.put("NAME", name+"(散)");
         house.put("CITY", city);
         house.put("NATURE", "3");//责任楼盘
         house.put("PLAN_IN_DATE", now);
