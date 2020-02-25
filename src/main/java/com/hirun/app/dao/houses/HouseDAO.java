@@ -41,13 +41,16 @@ public class HouseDAO extends StrongObjectDAO {
         return this.queryBySql(HousesEntity.class, sql.toString(), param);
     }
 
-    public List<HousesEntity> queryHousesByName(String housesName) throws Exception{
+    public List<HousesEntity> queryHousesByName(String housesName, boolean noScatter) throws Exception{
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT HOUSES_ID, NAME ");
         sql.append(" FROM INS_HOUSES ");
         sql.append(" WHERE 1=1 ");
         sql.append(" AND now() < DESTROY_DATE ");
         sql.append(" AND NAME = :NAME ");
+        if (noScatter) {
+            sql.append(" AND NATURE <> '3' ");
+        }
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("NAME", housesName);
