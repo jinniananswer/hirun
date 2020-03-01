@@ -39,7 +39,7 @@ public class PlanTaskService extends GenericService {
         GenericDAO dao = new GenericDAO("out");
         CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
 
-        //蓝图指导书推送
+        //客户产品需求库使用指导书推送
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT ID,NICKNAME,DATE_FORMAT(FROM_UNIXTIME(COMM_TIME), '%Y-%m-%d %H:%i:%s') OPER_TIME,STAFF_ID,OPENID ");
         sql.append(" FROM OUT_HIRUNPLUS_PROJECTS ");
