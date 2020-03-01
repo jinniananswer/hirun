@@ -44,7 +44,7 @@
 					<tr>
 						<th col="EMPLOYEE_NAME">家装顾问</th>
 						<th col="PLAN_JW">加微计划数</th>
-						<th col="PLAN_LTZDSTS">蓝图指导书计划数</th>
+						<th col="PLAN_LTZDSTS">客户产品需求库使用指导书计划数</th>
 						<th col="PLAN_GZHGZ">关注公众号计划数</th>
 						<th col="PLAN_HXJC">核心接触计划数</th>
 						<th col="PLAN_SMJRQLC">扫码计划数</th>
@@ -53,7 +53,7 @@
 						<th col="PLAN_YJALTS">一键案例计划数</th>
 						<th col="PLAN_DKCSMU">城市木屋计划数</th>
 						<th ontap="$.sortTable(this, 'int')" class="e_red" col="FINISH_JW">加微完成数</th>
-						<th ontap="$.sortTable(this, 'int')" class="e_red" col="FINISH_LTZDSTS">蓝图指导书完成数</th>
+						<th ontap="$.sortTable(this, 'int')" class="e_red" col="FINISH_LTZDSTS">客户产品需求库使用指导书完成数</th>
 						<th ontap="$.sortTable(this, 'int')" class="e_red" col="FINISH_GZHGZ">关注公众号完成数</th>
 						<th ontap="$.sortTable(this, 'int')" class="e_red" col="FINISH_HXJC">核心接触完成数</th>
 						<th ontap="$.sortTable(this, 'int')" class="e_red" col="FINISH_SMJRQLC">扫码完成数</th>

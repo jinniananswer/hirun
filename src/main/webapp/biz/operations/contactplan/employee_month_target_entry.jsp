@@ -92,7 +92,7 @@
 									</div>
 								</li>
 								<li>
-									<div class="label">蓝图指导书推送</div>
+									<div class="label">客户产品需求库使用指导书推送</div>
 									<div class="value">
 										<div class="e_mix">
 											<span class="e_ico-reduce"></span>
@@ -203,7 +203,7 @@
                                     <span class="value">1</span>
                                 </li>
                                 <li>
-                                    <span class="label">蓝图指导书推送：</span>
+                                    <span class="label">客户产品需求库使用指导书推送：</span>
                                     <span class="value">2</span>
                                 </li>
                                 <li>

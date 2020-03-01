@@ -98,7 +98,7 @@
                     <td class="e_orange">-</td>
                 </tr>
                 <tr>
-                    <td>推送蓝图指导书数</td>
+                    <td>推送客户产品需求库使用指导书数</td>
                     <td class="e_orange">-</td>
                 </tr>
                 <tr>

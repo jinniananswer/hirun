@@ -77,7 +77,7 @@ var custContactPopup = {
 
         var options = [
             {"VALUE":"JW","TEXT":"加微"},
-            {"VALUE":"LTZDSTS","TEXT":"蓝图指导书推送"},
+            {"VALUE":"LTZDSTS","TEXT":"客户产品需求库使用指导书推送"},
             {"VALUE":"GZHGZ","TEXT":"公众号关注"},
             {"VALUE":"HXJC","TEXT":"核心接触"},
             {"VALUE":"SMJRQLC","TEXT":"扫码进入全流程"},

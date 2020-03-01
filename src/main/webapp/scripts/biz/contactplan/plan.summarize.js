@@ -1,6 +1,6 @@
 var actionList = [
 	{"ACTION_CODE":"JW","ACTION_NAME":"加微"},
-    {"ACTION_CODE":"LTZDSTS","ACTION_NAME":"蓝图指导书推送"},
+    {"ACTION_CODE":"LTZDSTS","ACTION_NAME":"客户产品需求库使用指导书推送"},
 	{"ACTION_CODE":"GZHGZ","ACTION_NAME":"公众号关注"},
     {"ACTION_CODE":"HXJC","ACTION_NAME":"核心接触","SELECT_CUST_FUNC":"planSummarize.selectCust(this)","IS_SELECT_CUST":true},
 	{"ACTION_CODE":"SMJRQLC","ACTION_NAME":"扫码进入全流程"},

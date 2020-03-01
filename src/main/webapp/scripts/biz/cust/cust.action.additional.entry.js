@@ -87,7 +87,7 @@ var custActionSelectPopup = {
         custActionSelectPopup.custId = custId;
         var actionMap = {
             "JW" : "加微",
-            "LTZDSTS" : "蓝图指导书推送",
+            "LTZDSTS" : "客户产品需求库使用指导书推送",
             "GZHGZ" : "公众号关注",
             "HXJC" : "核心接触",
             "SMJRQLC" : "扫码进入全流程",

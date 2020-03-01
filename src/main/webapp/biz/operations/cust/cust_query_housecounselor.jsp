@@ -42,8 +42,8 @@
 						<th col="CUST_NAME">客户姓名</th>
 						<th col="JW_NUM" ontap="$.sortTable(this, 'int')">加微完成次数</th>
 						<th col="JW_LAST_TIME" ontap="$.sortTable(this, 'date')">加微最后完成时间</th>
-						<th col="LTZDSTS_NUM" ontap="$.sortTable(this, 'int')">蓝图指导书完成次数</th>
-						<th col="LTZDSTS_LAST_TIME" ontap="$.sortTable(this, 'date')">蓝图指导书最后完成时间</th>
+						<th col="LTZDSTS_NUM" ontap="$.sortTable(this, 'int')">客户产品需求库使用指导书完成次数</th>
+						<th col="LTZDSTS_LAST_TIME" ontap="$.sortTable(this, 'date')">客户产品需求库使用指导书最后完成时间</th>
 						<th col="GZHGZ_LAST_TIME" ontap="$.sortTable(this, 'date')">关注公众号完成时间</th>
 						<th col="HXJC_LAST_TIME" ontap="$.sortTable(this, 'date')">核心接触完成时间</th>
 						<th col="SMJRQLC_NUM" ontap="$.sortTable(this, 'int')">扫码完成次数</th>
