@@ -234,4 +234,10 @@ public class CustServiceController extends RootController {
         ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.queryCustPreparation", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/customer/checkCustomerByMobile")
+    public @ResponseBody String checkCustomerByMobile(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.checkCustomerByMobile", paramter);
+        return response.toJsonString();
+    }
 }

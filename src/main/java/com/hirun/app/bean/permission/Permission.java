@@ -15,19 +15,20 @@ import java.util.List;
 public class Permission {
 
     public static List<MenuEntity> filterMenus(List<MenuEntity> menus) throws Exception{
-        if(isSuperUser())
+        if(isSuperUser()) {
             return menus;
-
-        if(ArrayTool.isEmpty(menus))
+        }
+        if(ArrayTool.isEmpty(menus)) {
             return menus;
-
+        }
         RightsCollection rights = RightsCollection.getInstance();
         List<MenuEntity> rst = new ArrayList<MenuEntity>();
         Set<MenuEntity> tempMenus = new LinkedHashSet<>();
         for(MenuEntity menu : menus){
             String menuId = menu.getMenuId();
-            if(rights.hasMenu(menuId))
+            if(rights.hasMenu(menuId)) {
                 addMenu(menus, menu, tempMenus);
+            }
         }
         rst.addAll(tempMenus);
         return rst;
@@ -48,62 +49,69 @@ public class Permission {
     }
 
     public static boolean hasAllCity() throws Exception{
-        if(isSuperUser())
+        if(isSuperUser()) {
             return true;
+        }
         RightsCollection rights = RightsCollection.getInstance();
-        if(rights.hasFuncCode("ALL_CITY"))
+        if(rights.hasFuncCode("ALL_CITY")) {
             return true;
-
+        }
         return false;
     }
 
     public static boolean hasAllShop() throws Exception{
-        if(isSuperUser())
+        if(isSuperUser()) {
             return true;
+        }
         RightsCollection rights = RightsCollection.getInstance();
-        if(rights.hasFuncCode("ALL_SHOP"))
+        if(rights.hasFuncCode("ALL_SHOP")) {
             return true;
-
+        }
         return false;
     }
 
     public static boolean hasChangeHouse() throws Exception{
-        if(isSuperUser())
+        if(isSuperUser()) {
             return true;
+        }
         RightsCollection rights = RightsCollection.getInstance();
-        if(rights.hasFuncCode("CHANGE_HOUSE"))
+        if(rights.hasFuncCode("CHANGE_HOUSE")) {
             return true;
-
+        }
         return false;
     }
 
     public static boolean hasAuditHouse() throws Exception{
-        if(isSuperUser())
+        if(isSuperUser()) {
             return true;
+        }
         RightsCollection rights = RightsCollection.getInstance();
-        if(rights.hasFuncCode("AUDIT_HOUSE"))
+        if(rights.hasFuncCode("AUDIT_HOUSE")){
             return true;
+        }
 
         return false;
     }
 
     public static boolean hasAllOrg() throws Exception{
-        if(isSuperUser())
+        if(isSuperUser()) {
             return true;
+        }
         RightsCollection rights = RightsCollection.getInstance();
-        if(rights.hasFuncCode("ALL_ORG"))
+        if(rights.hasFuncCode("ALL_ORG")) {
             return true;
-
+        }
         return false;
     }
 
     public static boolean hasEndSignOper() throws Exception{
-        if(isSuperUser())
+        if(isSuperUser()) {
             return true;
+        }
         RightsCollection rights = RightsCollection.getInstance();
-        if(rights.hasFuncCode("END_SIGN_OPER"))
+        if(rights.hasFuncCode("END_SIGN_OPER")) {
             return true;
-
+        }
         return false;
     }
 
@@ -111,10 +119,12 @@ public class Permission {
         SessionEntity session = SessionManager.getSession().getSessionEntity();
         BizSessionEntity bizSession = new BizSessionEntity(session);
         String jobRole = bizSession.getJobRole();
-        if (StringUtils.equals("0", jobRole))
+        if (StringUtils.equals("0", jobRole)) {
             return true;
-        else
+        }
+        else {
             return false;
+        }
     }
 
 

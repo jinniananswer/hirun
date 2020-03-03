@@ -49,13 +49,162 @@
                     }
                 );
 
+
+                $.Select.append(
+                    "houseKindContainer",
+                    {
+                        id:"HOUSEKIND",
+                        name:"HOUSEKIND",
+                        addDefault:true
+                    },
+                    [
+                        {TEXT:"一房", VALUE:"1"},
+                        {TEXT:"两房", VALUE:"2"},
+                        {TEXT:"三房", VALUE:"3"},
+                        {TEXT:"四房", VALUE:"4"},
+                        {TEXT:"五房", VALUE:"5"},
+                        {TEXT:"六房", VALUE:"6"},
+                        {TEXT:"复式", VALUE:"7"},
+                        {TEXT:"别墅", VALUE:"8"},
+                        {TEXT:"平层与错层", VALUE:"9"}
+                    ]
+                );
+
+                $.Select.append(
+                    "sampleHouseContainer",
+                    {
+                        id:"sample_house",
+                        name:"sample_house",
+                        addDefault:true
+                    },
+                    [
+                        {TEXT:"阶段性样品房", VALUE:"1"},
+                        {TEXT:"木制品样板房", VALUE:"2"},
+                    ]
+                );
+
+                $.Select.append(
+                    "customerTypeContainer",
+                    {
+                        id:"customer_type",
+                        name:"customer_type",
+                        addDefault:true,
+                        nullable:"no",
+                        disabled:true,
+                    },
+                    [
+                        {TEXT:"上门咨询", VALUE:"1"},
+                        {TEXT:"活动客户", VALUE:"2"},
+                        {TEXT:"电话咨询", VALUE:"3"},
+                        {TEXT:"报备客户", VALUE:"4"},
+                        {TEXT:"其他", VALUE:"5"},
+                    ]
+                );
+
+                $.Select.append(
+                    "marketingTypeContainer",
+                    {
+                        id:"marketing_type",
+                        name:"marketing_type",
+                        addDefault:true,
+                        disabled:true
+                    },
+                    [
+                        {TEXT:"房交会", VALUE:"1"},
+                        {TEXT:"家博会", VALUE:"2"},
+                        {TEXT:"业主见面会", VALUE:"3"},
+                        {TEXT:"其他", VALUE:"4"},
+                    ]
+                );
+
+                window["marketing_time"] = new Wade.DateField(
+                    "marketing_time",
+                    {
+                        dropDown: true,
+                        format: "yyyy-MM-dd",
+                        useTime: false,
+                    }
+                );
+
+                window["phone_consult_time"] = new Wade.DateField(
+                    "phone_consult_time",
+                    {
+                        dropDown: true,
+                        format: "yyyy-MM-dd",
+                        useTime: false,
+                    }
+                );
+
+                window["consult_time"] = new Wade.DateField(
+                    "consult_time",
+                    {
+                        dropDown: true,
+                        format: "yyyy-MM-dd HH:mm:ss",
+                        useTime: false,
+                    }
+                );
+
+
+                $.Select.append(
+                    "informationSourceContainer",
+                    {
+                        id:"information_source",
+                        name:"information_source",
+                        addDefault:true,
+                        disabled:true
+                    },
+                    [
+                        {TEXT:"报纸", VALUE:"1"},
+                        {TEXT:"电视媒体", VALUE:"2"},
+                        {TEXT:"户外广告牌", VALUE:"3"},
+                        {TEXT:"家装顾问-电话", VALUE:"4"},
+                        {TEXT:"家装顾问-守点", VALUE:"5"},
+                        {TEXT:"其他", VALUE:"6"},
+                        {TEXT:"熟人介绍", VALUE:"7"},
+                        {TEXT:"网络开发平台", VALUE:"8"},
+                        {TEXT:"小区宣传", VALUE:"9"},
+                        {TEXT:"展会", VALUE:"10"},
+                    ]
+                );
+
+                $.Select.append(
+                    "bankContainer",
+                    {
+                        id:"bank_id",
+                        name:"bank_id",
+                        addDefault:true,
+                    },
+                    [
+                        {TEXT:"建设银行", VALUE:"1"},
+                        {TEXT:"其他银行", VALUE:"2"},
+                    ]
+                );
+
+                $.Select.append(
+                    "monthNumContainer",
+                    {
+                        id:"month_num",
+                        name:"month_num",
+                        addDefault:true,
+                    },
+                    [
+                        {TEXT:"6期", VALUE:"1"},
+                        {TEXT:"12期", VALUE:"2"},
+                        {TEXT:"18期", VALUE:"3"},
+                        {TEXT:"24期", VALUE:"4"},
+                        {TEXT:"36期", VALUE:"5"},
+                        {TEXT:"48期", VALUE:"6"},
+                        {TEXT:"60期", VALUE:"7"},
+                    ]
+                );
+
                 var project_id=$("#PROJECT_ID").val();
                 var party_id=$("#PARTY_ID").val();
                 var _this=this;
 
                 $.beginPageLoading();
 
-                $.ajaxPost('initChangeGoodSeeLiveInfo','&PARTY_ID='+party_id+'&PROJECT_ID='+project_id,function(data) {
+                $.ajaxPost('initChangeGoodSeeLiveInfo','&CUST_ID='+party_id+'&PROJECT_ID='+project_id,function(data) {
                     $.endPageLoading();
 
                     var partyInfo=data.PARTYINFO;
@@ -97,7 +246,7 @@
             previous :function(){
                 if(this.index==1){
                     $("#baseinfo").css("display", "");
-                    $("#custpention").css("display", "none");
+                    $("#custintention").css("display", "none");
                     $("#receiveinfo").css("display", "none");
                     $("#PREVIOUS_BUTTON").css("display", "none");
                     $("#NEXT_BUTTON").css("display", "");
@@ -111,7 +260,7 @@
                 if(this.index==2){
                     $("#baseinfo").css("display", "none");
                     $("#custintention").css("display", "");
-                    $("#custintention").css("display", "none");
+                    $("#receiveinfo").css("display", "none");
                     $("#PREVIOUS_BUTTON").css("display", "");
                     $("#NEXT_BUTTON").css("display", "");
                     $("#CONFIRM_BUTTON").css("display", "none");
@@ -124,7 +273,6 @@
             },
 
             next : function(){
-                console.info(this.index);
                 if(this.index==0&&$.validate.verifyAll("baseinfo")){
 
                     $("#baseinfo").css("display", "none");
@@ -488,7 +636,7 @@
                         $.endPageLoading();
                         MessageBox.success("修改成功","点击确定返回修改页面，点击取消关闭当前页面", function(btn){
                             if("ok" == btn) {
-                                $.changegoodseeliveinfo.backToFlow();
+                                document.location.reload();
                             }
                             else {
                                 $.redirect.closeCurrentPage();
@@ -504,10 +652,8 @@
                 }
                 $("#HOUSEKIND").val(projectInfo.HOUSEKIND);
                 $("#AREA").val(projectInfo.AREA);
-                var fix_place=projectInfo.FIX_PLACE;
-                if(fix_place !='null'){
-                    $("#FIX_PLACE").val(projectInfo.FIX_PLACE);
-                }
+                $("#house_id").val(projectInfo.HOUSE_ID);
+                $("#houseName").val(projectInfo.HOUSE_NAME);
                 $("#ADVANTAGE").val(projectInfo.ADVANTAGE);
                 $("#ADVANTAGE_TEXT").val(projectInfo.ADVANTAG_TEXT);
                 $("#CRITICALPROCESS").val(projectInfo.CRITICALPROCESS);
@@ -523,31 +669,36 @@
                 $("#CONTACT_TIME").val(projectInfo.CONTACT_TIME);
                 $("#COUNSELOR_NAME").val(projectInfo.COUNSELOR_NAME);
                 $("#OTHER_SOURCE").val(projectInfo.OTHER_SOURCE);
-
-
+                $("#house_building").val(projectInfo.HOUSE_BUILDING);
+                $("#house_room_no").val(projectInfo.HOUSE_ROOM_NO);
+                $("#project_id").val(projectInfo.PROJECT_ID);
             },
 
             drawPartyInfo : function (partyInfo) {
                 if(partyInfo==''){
                     return;
                 }
-                $("#NAME").val(partyInfo.NAME);
-                $("#CONTACT").val(partyInfo.CONTACT);
-                $("#QQCONTACT").val(partyInfo.QQCONTACT);
-                $("#WXCONTACT").val(partyInfo.WXCONTACT);
+                $("#NAME").val(partyInfo.CUST_NAME);
+                $("#customerNo").val(partyInfo.CUST_NO);
+                $("#cust_id").val(partyInfo.CUST_ID);
+                $("#prepare_id").val(partyInfo.PREPARE_ID);
                 $("#AGE").val(partyInfo.AGE);
                 $("#EDUCATE").val(partyInfo.EDUCATE);
                 $("#PEOPLE_COUNT").val(partyInfo.PEOPLE_COUNT);
                 $("#COMPANY").val(partyInfo.COMPANY);
-                //$("#ELDER_MAN").val(partyInfo.ELDER_MAN);
-                //$("#ELDER_WOMAN").val(partyInfo.ELDER_WOMAN);
-                //$("#CHILD_BOY").val(partyInfo.CHILD_BOY);
-                //$("#CHILD_GIRL").val(partyInfo.CHILD_GIRL);
                 $("#OTHER_HOBBY").val(partyInfo.OTHER_HOBBY);
                 $("#HOBBY").val(partyInfo.HOBBY);
                 $("#HOBBY_TEXT").val(partyInfo.HOBBY_TEXT);
                 $("#OLDER_DETAIL").val(partyInfo.OLDER_DETAIL);
                 $("#CHILD_DETAIL").val(partyInfo.CHILD_DETAIL);
+                $("#CONTACT").val(partyInfo.MOBILE_NO);
+                $("#customer_type").val(partyInfo.CUST_TYPE);
+                $("#marketing_type").val(partyInfo.PLOY_TYPE);
+                $("#marketing_name").val(partyInfo.PLOY_NAME);
+                $("#marketing_time").val(partyInfo.PLOY_TIME);
+                $("#other_remark").val(partyInfo.OTHER_REMARK);
+                $("#consult_time").val(partyInfo.CONSULT_TIME);
+                $("#phone_consult_time").val(partyInfo.TEL_CONSULT_TIME);
 
             },
 
@@ -574,6 +725,17 @@
                 $("#FURNITUREPRICEPLAN").val(projectIntentionInfo.FURNITUREPRICEPLAN);
                 $("#ELECTRICALPRICEPLAN").val(projectIntentionInfo.ELECTRICALPRICEPLAN);
                 $("#PLAN_LIVE_TIME").val(projectIntentionInfo.PLAN_LIVE_TIME);
+                $("#sample_house").val(projectIntentionInfo.SAMPLE_HOUSE);
+                $("#bank_id").val(projectIntentionInfo.COOPERATIVE_BANK);
+                $("#month_num").val(projectIntentionInfo.MONTH_NUM);
+                $("#DESIGNER_WORKS").val(projectIntentionInfo.DESIGNER_OPUS);
+                $("#WOOD_WISH").val(projectIntentionInfo.WOOD_INTENTION);
+                $("#quota").val(projectIntentionInfo.QUOTA);
+                if(projectIntentionInfo.ONLY_WOOD=='1'){
+                    $("#onlyWood").attr('checked',true);
+                }else{
+                    $("#onlyWood").attr('checked',false);
+                }
 
             },
 

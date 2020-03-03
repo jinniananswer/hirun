@@ -156,6 +156,9 @@
     <entity name="OperationCenter.custservice.CustServService.initCreateGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="initCreateGoodSeeLiveInfo"/>
     <entity name="OperationCenter.custservice.CustServService.queryCustPreparation"  class="com.hirun.app.biz.custservice.CustServService" method="queryCustPreparation"/>
     <entity name="OperationCenter.custservice.CustServService.createGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="createGoodSeeLiveInfo"/>
+    <entity name="OperationCenter.custservice.CustServService.checkCustomerByMobile"  class="com.hirun.app.biz.custservice.CustServService" method="checkCustomerByMobile"/>
+
+
     <!--客户管理界面-->
     <entity name="OperationCenter.custservice.CustServService.initPartyManager"  class="com.hirun.app.biz.custservice.CustServService" method="initPartyManager"/>
     <entity name="OperationCenter.custservice.CustServService.queryPartyByCustServicerEmployeeId"  class="com.hirun.app.biz.custservice.CustServService" method="queryPartyByCustServicerEmployeeId"/>

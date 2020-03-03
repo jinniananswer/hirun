@@ -3,9 +3,11 @@ package com.hirun.app.biz.custservice;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.common.MsgBean;
+import com.hirun.app.bean.cust.CustPreparationBean;
 import com.hirun.app.bean.custservice.BluePrintBean;
 import com.hirun.app.bean.custservice.CustServiceStatBean;
 import com.hirun.app.bean.employee.EmployeeBean;
+import com.hirun.app.bean.houses.HousesBean;
 import com.hirun.app.bean.order.OrderBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
@@ -21,17 +23,21 @@ import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.param.ActionEntity;
 import com.hirun.pub.domain.enums.common.MsgType;
+import com.hirun.pub.tool.CustomerNoTool;
 import com.hirun.pub.tool.HouseParamTool;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
+import com.most.core.app.session.RightsCollection;
 import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.*;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.kafka.common.protocol.types.Field;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -144,22 +150,22 @@ public class CustServService extends GenericService {
 
                                 Record xqlteRecord = xqlteRecordSet.get(0);
                                 //功能蓝图内容
-                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC"))&&!StringUtils.equals(xqlteRecord.get("FUNC"),"false")){
+                                if (StringUtils.isNotEmpty(xqlteRecord.get("FUNC")) && !StringUtils.equals(xqlteRecord.get("FUNC"), "false")) {
                                     JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC"), "A");
                                     if (jsonObject != null) {
                                         response.set("FUNC_TREE", jsonObject);
                                     }
                                 }
 
-                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC_B"))&&!StringUtils.equals(xqlteRecord.get("FUNC_B"),"false")){
-                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_B"),"B");
+                                if (StringUtils.isNotEmpty(xqlteRecord.get("FUNC_B")) && !StringUtils.equals(xqlteRecord.get("FUNC_B"), "false")) {
+                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_B"), "B");
                                     if (jsonObject != null) {
                                         response.set("FUNC_TREE_B", jsonObject);
                                     }
                                 }
 
-                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC_C"))&&!StringUtils.equals(xqlteRecord.get("FUNC_C"),"false")){
-                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_C"),"C");
+                                if (StringUtils.isNotEmpty(xqlteRecord.get("FUNC_C")) && !StringUtils.equals(xqlteRecord.get("FUNC_C"), "false")) {
+                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_C"), "C");
                                     if (jsonObject != null) {
                                         response.set("FUNC_TREE_C", jsonObject);
                                     }
@@ -326,6 +332,10 @@ public class CustServService extends GenericService {
         parameter.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         parameter.put("UPDATE_TIME", session.getCreateTime());
         dao.save("ins_project_original_action", new String[]{"PROJECT_ID", "ACTION_CODE"}, parameter);
+        //更新worker表的数据
+        OrderBean.updateOrderWork(partyId,"30",designer_employee_id);
+        //更新order_consult数据
+        OrderBean.updateOrderConsult(partyId,designer_employee_id);
         return response;
     }
 
@@ -337,6 +347,9 @@ public class CustServService extends GenericService {
     public ServiceResponse initCreateGoodSeeLiveInfo(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         CustomerServiceDAO dao = new CustomerServiceDAO("ins");
+
+        String customerNoSeq = CustomerNoTool.getCustomerNoSeq();
+
         RecordSet hobbyList = StaticDataTool.getCodeTypeDatas("HOBBY");//兴趣爱好
         RecordSet chineseStyleList = HouseParamTool.getHouseTopicByType("CHINESESTYLE");
         RecordSet europeanClassicsList = HouseParamTool.getHouseTopicByType("EUROPEANCLASSICS");
@@ -356,15 +369,77 @@ public class CustServService extends GenericService {
         response.set("ADVANTAGELIST", ConvertTool.toJSONArray(advantagelist));
         response.set("CRITICALPROCESSLIST", ConvertTool.toJSONArray(criticalprocesslist));
         response.set("INFORMATIONSOURCELIST", ConvertTool.toJSONArray(informationSourcelist));
+        response.set("CUSTNO", customerNoSeq);
+        //需加上判断客户代表是否有继续保存的权限
+        //RightsCollection rights = RightsCollection.getInstance();
+        if(true){
+            response.set("CONTINUE","true");
+        }
         return response;
     }
 
-    public ServiceResponse queryCustPreparation(ServiceRequest request) throws Exception{
-        ServiceResponse response=new ServiceResponse();
+    /**
+     * 根据前台传入的手机号码匹配客户是否在系统中已存在过客户数据
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public ServiceResponse checkCustomerByMobile(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        CustomerServiceDAO dao = new CustomerServiceDAO("ins");
+        RecordSet recordSet = dao.queryCustomerByMobile(request.getString("mobileNo"));
+        if (recordSet.size() <= 0) {
+            return response;
+        }
+        for (int i = 0; i < recordSet.size(); i++) {
+            Record record = recordSet.get(i);
+            record.put("HOUSE_NAME", "");
+            record.put("ORDER_STATUS_NAME", StaticDataTool.getCodeName("ORDER_STATUS", record.get("ORDER_STATUS")));
+            record.put("PREPARE_STATUS_NAME", StaticDataTool.getCodeName("PREPARATION_STATUS", record.get("PREPARE_STATUS")));
+            record.put("CUST_TYPE_NAME", StaticDataTool.getCodeName("CUSTOMER_TYPE", record.get("CUST_TYPE")));
+            //翻译客户代表
+            if (StringUtils.isEmpty(record.get("CUSTSERVICE_EMPLOYEE_ID"))) {
+                record.put("CUST_SERVICE_NAME", "");
+            } else {
+                record.put("CUST_SERVICE_NAME", EmployeeBean.getEmployeeByEmployeeId(record.get("CUSTSERVICE_EMPLOYEE_ID")).getName());
+            }
+            //翻译申报人
+            if (StringUtils.isEmpty(record.get("PREPARE_EMPLOYEE_ID"))) {
+                record.put("PREPARE_NAME", "");
+            } else {
+                record.put("PREPARE_NAME", EmployeeBean.getEmployeeByEmployeeId(record.get("PREPARE_EMPLOYEE_ID")).getName());
+            }
+
+            if (StringUtils.isEmpty(record.get("HOUSE_ID"))) {
+                record.put("HOUSE_NAME", "");
+            } else {
+                record.put("HOUSE_NAME", HousesBean.getHousesEntityById(record.get("HOUSE_ID")).getName());
+            }
+
+
+            //如果订单状态不为初始化，则不允许选择
+            if (!StringUtils.equals("0", record.get("ORDER_STATUS"))) {
+                record.put("isSelect", false);
+            } else {
+                if (StringUtils.isEmpty(record.get("CUSTSERVICE_EMPLOYEE_ID"))) {
+                    record.put("isSelect", true);
+                } else {
+                    record.put("isSelect", false);
+                }
+            }
+        }
+
+        response.set("CUSTOMERINFO", ConvertTool.toJSONArray(recordSet));
+        return response;
+    }
+
+    public ServiceResponse queryCustPreparation(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
-        String mobileNo=request.getString("MOBILE_NO");
-        RecordSet recordSet=dao.queryCustPreparation(mobileNo);
-        if(recordSet.size()<=0){
+        String mobileNo = request.getString("MOBILE_NO");
+        RecordSet recordSet = dao.queryCustPreparation(mobileNo);
+        if (recordSet.size() <= 0) {
             return response;
         }
         response.set("CUSTPREPARATION", ConvertTool.toJSONArray(recordSet));
@@ -380,137 +455,70 @@ public class CustServService extends GenericService {
     public ServiceResponse createGoodSeeLiveInfo(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
-        Map<String, String> party_info = new HashMap<String, String>();
         AppSession session = SessionManager.getSession();
-
-
-        String party_name = request.getString("NAME");
-        String moblie_no = request.getString("CONTACT");
-        String qq_no = request.getString("QQCONTACT");
-        String wx_no = request.getString("WXCONTACT");
+        String customerId = request.getString("cust_id");
+        String project_id = request.getString("project_id");
+        String customerType = request.getString("customer_type");
+        String onlyWood = request.getString("onlyWood");
+        String houseId = request.getString("house_id");
+        String houseBuilding = request.getString("house_building");
+        String houseRoomNo = request.getString("house_room_no");
+        String consultTime = request.getString("consult_time");
         String house_mode = request.getString("HOUSEKIND");//户型
         String house_area = request.getString("AREA");//面积
-        String house_address = request.getString("FIX_PLACE");//装修地点
-        String age = request.getString("AGE");
-        String educate = request.getString("EDUCATE");//学历
-        String company = request.getString("COMPANY");
-        String family_members_count = request.getString("PEOPLE_COUNT");//常驻人口
-        //String oldman_count=request.getString("ELDER_MAN");//老男人个数
-        //String oldwoman_count=request.getString("ELDER_WOMAN");//老女人个数
-        //String boy_count=request.getString("CHILD_BOY");//小男孩个数
-        //String girl_count=request.getString("CHILD_GIRL");//小女孩个数
-        String oldDetail = request.getString("OLDER_DETAIL");
-        String childDetail = request.getString("CHILD_DETAIL");
-        String hobby = request.getString("HOBBY");//个人爱好
-        String other_hobby = request.getString("OTHER_HOBBY");//其他个人爱好
-        String chineseStlye = request.getString("CHINESESTYLE");//中国骨风
-        String europenanClassics = request.getString("EUROPEANCLASSICS");//欧洲经典
-        String modernSource = request.getString("MODERNSOURCE");//现代之源
-        String other_topic_req = request.getString("OTHER_TOPIC_REQ");//其他主题选择
-        String func = request.getString("FUNC");//功能选择
-        String hasBluePrint = request.getString("BULEPRINT");//生成蓝图
-        String funcSpecReq = request.getString("FUNC_SPEC_REQ");//功能特殊要求
+        String prepareId = request.getString("prepare_id");
 
-        String advantage = request.getString("ADVANTAGE");//优势介绍
-        String totalPricePlan = request.getString("TOTALPRICEPLAN");//总计划投资
-        String basicandwoodpriceplan = request.getString("BASICANDWOODPRICEPLAN");//基础木材
-        String hvacpriceplan = request.getString("HVACPRICEPLAN");//暖通投资
-        String materialpriceplan = request.getString("MATERIALPRICEPLAN");//主材投资
-        String furniturepriceplan = request.getString("FURNITUREPRICEPLAN");//家具投资
-        String electricalpriceplan = request.getString("ELECTRICALPRICEPLAN");//电器投资
-
-        String criticalprocess = request.getString("CRITICALPROCESS");//关键流程介绍
-        String otherinfo = request.getString("OTHER_INFO");//过的家装公司和家具卖场
-        String planLiveTime = request.getString("PLAN_LIVE_TIME");//计划入住时间
-        String mwExperienceTime = request.getString("MW_EXPERIENCE_TIME");//木屋体验时间
-        String isscanvideo = request.getString("ISSCANVIDEO");//是否观看了宣传片
-        String isScanShowRoom = request.getString("ISSCANSHOWROOM");//是否参管城市展厅
-        String counselorName = request.getString("COUNSELOR_NAME");//家装顾问
-        String informationSource = request.getString("INFORMATIONSOURCE");//信息来源
-        String otherSource = request.getString("OTHER_SOURCE");//其他信息来源
-
-
-        String gaugeHouseTime = request.getString("GAUGE_HOUSE_TIME");//量房时间
-        String offerPlaneTime = request.getString("OFFER_PLANE_TIME");//平面图时间
-        String cantactTime = request.getString("CONTACT_TIME");//再联系时间
-
-
-        //1、保存party信息
-        party_info.put("CUST_NAME", party_name);
-        party_info.put("AGE", age);
-        party_info.put("MOBILE_NO", moblie_no);
-        party_info.put("QQ_NO", qq_no);
-        party_info.put("WX_NO", wx_no);
-        party_info.put("CUST_STATUS", CustomerServiceConst.PARTY_STATUS_0);//客户状态正常
-        party_info.put("WORK_COMPANY", company);
-        party_info.put("EDUCATIONAL", educate);
-        party_info.put("FAMILY_MEMBERS_COUNT", family_members_count);
-        //party_info.put("OLDMAN_COUNT",oldman_count);
-        //party_info.put("OLDWOMAN_COUNT",oldwoman_count);
-        //party_info.put("BOY_COUNT",boy_count);
-        //party_info.put("GIRL_COUNT",girl_count);
-        party_info.put("OLDER_DETAIL", oldDetail);
-        party_info.put("CHILD_DETAIL", childDetail);
-        party_info.put("HOBBY", hobby);
-        party_info.put("OTHER_HOBBY", other_hobby);
-        party_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        party_info.put("CREATE_TIME", session.getCreateTime());
-        party_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-        party_info.put("UPDATE_TIME", session.getCreateTime());
-
-        party_info.put("CONSULT_TIME",session.getCreateTime());
-
-        long party_id = dao.insertAutoIncrement("cust_base", party_info);
+        Map<String, Map<String, String>> result = this.buildCommonInfo(request);
+        Map<String, String> partyInfo = result.get("CUSTOMER_INFO");
+        //保存客户信息
+        Long partyId = null;
+        if (StringUtils.isNotEmpty(customerId)) {
+            //如果为报备客户，在客户信息录入界面无论选哪个类型，客户类型都为报备客户
+            if(StringUtils.isNotEmpty(prepareId)){
+                partyInfo.put("CUST_TYPE","4");
+            }
+            partyInfo.put("CUST_ID", customerId);
+            dao.save("cust_base", new String[]{"CUST_ID"}, partyInfo);
+        } else {
+            partyInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+            partyInfo.put("CREATE_TIME", session.getCreateTime());
+            partyId = dao.insertAutoIncrement("cust_base", partyInfo);
+        }
 
 
         //2、保存project信息
-        Map<String, String> project_info = new HashMap<String, String>();
-        project_info.put("PARTY_ID", party_id + "");
-        project_info.put("HOUSE_MODE", house_mode);
-        project_info.put("HOUSE_AREA", house_area);
-        project_info.put("HOUSE_ADDRESS", house_address);
-        project_info.put("GAUGE_HOUSE_TIME", gaugeHouseTime);
-        project_info.put("OFFER_PLANE_TIME", offerPlaneTime);
-        project_info.put("CONTACT_TIME", cantactTime);
-        project_info.put("CRITICAL_PROCESS", criticalprocess);
-        project_info.put("OTHER_INFO", otherinfo);
-        project_info.put("ADVANTAGE", advantage);
-        project_info.put("MW_EXPERIENCE_TIME", mwExperienceTime);
-        project_info.put("IS_SCAN_VIDEO", isscanvideo);
-        project_info.put("IS_SCAN_SHOWROOM", isScanShowRoom);
-        project_info.put("COUNSELOR_NAME", counselorName);
-        project_info.put("INFORMATION_SOURCE", informationSource);
-        project_info.put("OTHER_INFORMATION_SOURCE", otherSource);
-        project_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        project_info.put("CREATE_TIME", session.getCreateTime());
-        project_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-        project_info.put("UPDATE_TIME", session.getCreateTime());
-        long project_id = dao.insertAutoIncrement("ins_project", project_info);
+        Map<String, String> projectInfo = result.get("PROJECT_INFO");
+
+        Long projectId = null;
+        if (StringUtils.isNotEmpty(customerId)) {
+            projectInfo.put("PROJECT_ID", project_id);
+            dao.save("ins_project", new String[]{"PROJECT_ID"}, projectInfo);
+        } else {
+            projectInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+            projectInfo.put("CREATE_TIME", session.getCreateTime());
+            projectInfo.put("PARTY_ID", partyId + "");
+            projectId = dao.insertAutoIncrement("ins_project", projectInfo);
+        }
         //保存项目意向信息
-        Map<String, String> project_intention_info = new HashMap<String, String>();
-        project_intention_info.put("PROJECT_ID", project_id + "");
-        project_intention_info.put("CHINESESTYLE_TOPIC", chineseStlye);
-        project_intention_info.put("EUROPEANCLASSICS_TOPIC", europenanClassics);
-        project_intention_info.put("MODERNSOURCE_TOPIC", modernSource);
-        project_intention_info.put("OTHER_TOPIC_REQ", other_topic_req);
-        project_intention_info.put("FUNC", func);
-        project_intention_info.put("HASBLUEPRINT", hasBluePrint);
-        project_intention_info.put("FUNC_SPEC_REQ", funcSpecReq);
-        project_intention_info.put("TOTAL_PRICEPLAN", totalPricePlan);
-        project_intention_info.put("BASICANDWOOD_PRICEPLAN", basicandwoodpriceplan);
-        project_intention_info.put("HVAC_PRICEPLAN", hvacpriceplan);
-        project_intention_info.put("MATERIAL_PRICEPLAN", materialpriceplan);
-        project_intention_info.put("FURNITURE_PRICEPLAN", furniturepriceplan);
-        project_intention_info.put("ELECTRICAL_PRICEPLAN", electricalpriceplan);
-        project_intention_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-        project_intention_info.put("CREATE_TIME", session.getCreateTime());
-        project_intention_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-        project_intention_info.put("UPDATE_TIME", session.getCreateTime());
-        project_intention_info.put("PLAN_LIVE_TIME", planLiveTime);
-        dao.insertAutoIncrement("ins_project_intention", project_intention_info);
+        Map<String, String> projectIntentionInfo = result.get("PROJECT_INTENTION_INFO");
+
+        if (StringUtils.isNotEmpty(project_id)) {
+            projectIntentionInfo.put("PROJECT_ID", project_id);
+            dao.save("ins_project_intention", new String[]{"PROJECT_ID"}, projectIntentionInfo);
+        } else {
+            projectIntentionInfo.put("PROJECT_ID", projectId + "");
+            projectIntentionInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+            projectIntentionInfo.put("CREATE_TIME", session.getCreateTime());
+            dao.insertAutoIncrement("ins_project_intention", projectIntentionInfo);
+        }
+
         //生成项目联系人信息
         Map<String, String> project_link_info = new HashMap<String, String>();
-        project_link_info.put("PROJECT_ID", project_id + "");
+        if (StringUtils.isNotEmpty(project_id)) {
+            project_link_info.put("PROJECT_ID", project_id);
+        } else {
+            project_link_info.put("PROJECT_ID", projectId + "");
+        }
         project_link_info.put("ROLE_TYPE", CustomerServiceConst.CUSTOMERSERVICEROLETYPE);
         project_link_info.put("LINK_EMPLOYEE_ID", session.getSessionEntity().get("EMPLOYEE_ID"));
         project_link_info.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
@@ -526,8 +534,14 @@ public class CustServService extends GenericService {
             ActionEntity actionEntity = actionEntityList.get(i);
             String actionCode = actionEntity.getActionCode();
             Map<String, String> partyProjectActionInfo = new HashMap<String, String>();
-            partyProjectActionInfo.put("PROJECT_ID", project_id + "");
-            partyProjectActionInfo.put("PARTY_ID", party_id + "");
+            if (StringUtils.isNotEmpty(project_id)) {
+                partyProjectActionInfo.put("PROJECT_ID", project_id);
+                partyProjectActionInfo.put("PARTY_ID", customerId + "");
+            } else {
+                partyProjectActionInfo.put("PROJECT_ID", projectId + "");
+                partyProjectActionInfo.put("PARTY_ID", partyId + "");
+            }
+
             partyProjectActionInfo.put("ACTION_CODE", actionCode);
             if (StringUtils.equals(actionCode, "HZHK")) {
                 partyProjectActionInfo.put("STATUS", "1");
@@ -544,13 +558,235 @@ public class CustServService extends GenericService {
         if (ArrayTool.isNotEmpty(partyProjectActionList)) {
             dao.insertBatch("ins_project_original_action", partyProjectActionList);
         }
-
-        OrderBean.createConsultOrder(party_id+"","4444","测试装修地址","1","88.88","99.99"
-                ,"1476",session.getSessionEntity().get("EMPLOYEE_ID"),"1476","1476");
+        //如果为上门咨询客户，客户订单状态直接改成咨询，否则为初始化
+        String orderStatus = "";
+        String stage = "";
+        if (StringUtils.equals(customerType, "1")) {
+            stage = "10";
+            orderStatus = "2";
+        } else {
+            stage = "0";
+            orderStatus = "1";
+        }
+        //如果为单独木制品流程则订单类型为W
+        String orderType = "H";
+        if (StringUtils.isNotEmpty(onlyWood)) {
+            orderType = "W";
+        }
+        String houseName = HousesBean.getHousesEntityById(houseId).getName();
+        if (StringUtils.isNotEmpty(customerId)) {
+            OrderBean.updateConsultOrder(customerId + "", houseId, houseName + "|" + houseBuilding + "|" + houseRoomNo, house_mode, house_area, ""
+                    , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
+                    "", orderStatus, orderType, consultTime, stage);
+        } else {
+            if(StringUtils.isEmpty(customerId)){
+                customerId=partyId+"";
+            }
+            OrderBean.createConsultOrder(customerId + "", houseId, houseName + "|" + houseBuilding + "|" + houseRoomNo, house_mode, house_area, ""
+                    , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
+                    "", orderStatus, orderType, consultTime, stage);
+        }
+        //更新报备状态
+        if (StringUtils.isNotEmpty(prepareId)) {
+            Record record = CustPreparationBean.getCustomerPrepare(prepareId);
+            String status = record.get("STATUS");
+            String prepareExpireTime = record.get("PREPARATION_EXPIRE_TIME");
+            String prepareHouseId = record.get("HOUSE_ID");
+            System.out.println(TimeTool.compareTwoTime(prepareExpireTime, TimeTool.now()));
+            if (TimeTool.compareTwoTime(prepareExpireTime, TimeTool.now()) != 0) {
+                //有效期内
+                if (StringUtils.equals(houseId, prepareHouseId)) {
+                    //楼盘一致
+                    CustPreparationBean.updateCustomerPrepare(prepareId, "2", session.getSessionEntity().getUserId());
+                } else {
+                    CustPreparationBean.updateCustomerPrepare(prepareId, "1", session.getSessionEntity().getUserId());
+                }
+            }else{
+                CustPreparationBean.updateCustomerPrepare(prepareId, "1", session.getSessionEntity().getUserId());
+            }
+        }
         //更新报表数据，新增咨询数
         CustServiceStatBean.updateCustServiceStat(session.getSessionEntity().get("EMPLOYEE_ID"), "GOODSEEGOODLIVE");
 
         return response;
+    }
+
+
+    private Map<String, Map<String, String>> buildCommonInfo(ServiceRequest request) {
+        Map<String, Map<String, String>> map = new HashMap<>();
+        AppSession session = SessionManager.getSession();
+
+        String customerNo = request.getString("customerNo");
+        String houseId = request.getString("house_id");
+        String houseBuilding = request.getString("house_building");
+        String houseRoomNo = request.getString("house_room_no");
+        String sampleHouse = request.getString("sample_house");
+        String customerType = request.getString("customer_type");
+        String marketingType = request.getString("marketing_type");
+        String marketingName = request.getString("marketing_name");
+        String marketingTime = request.getString("marketing_time");
+        String consultTime = request.getString("consult_time");
+        String phoneConsultTime = request.getString("phone_consult_time");
+        String otherRemark = request.getString("other_remark");
+        String designerWorks = request.getString("DESIGNER_WORKS");
+        String woodWish = request.getString("WOOD_WISH");
+        String bankId = request.getString("bank_id");
+        String quota = request.getString("quota");
+        String monthNum = request.getString("month_num");
+        String onlyWood = request.getString("onlyWood");
+
+
+        String party_name = request.getString("NAME");
+        String moblie_no = request.getString("CONTACT");
+        String qq_no = request.getString("QQCONTACT");
+        String wx_no = request.getString("WXCONTACT");
+        //户型
+        String house_mode = request.getString("HOUSEKIND");
+        //面积
+        String house_area = request.getString("AREA");
+        //装修地点
+        String house_address = request.getString("FIX_PLACE");
+        String age = request.getString("AGE");
+        //学历
+        String educate = request.getString("EDUCATE");
+        String company = request.getString("COMPANY");
+        //常驻人口
+        String family_members_count = request.getString("PEOPLE_COUNT");
+        String oldDetail = request.getString("OLDER_DETAIL");
+        String childDetail = request.getString("CHILD_DETAIL");
+        //个人爱好
+        String hobby = request.getString("HOBBY");
+        String other_hobby = request.getString("OTHER_HOBBY");//其他个人爱好
+        String chineseStlye = request.getString("CHINESESTYLE");//中国骨风
+        String europenanClassics = request.getString("EUROPEANCLASSICS");//欧洲经典
+        String modernSource = request.getString("MODERNSOURCE");//现代之源
+        String other_topic_req = request.getString("OTHER_TOPIC_REQ");//其他主题选择
+        String func = request.getString("FUNC");//功能选择
+        String hasBluePrint = request.getString("BULEPRINT");//生成蓝图
+        String funcSpecReq = request.getString("FUNC_SPEC_REQ");//功能特殊要求
+
+        String advantage = request.getString("ADVANTAGE");//优势介绍
+        String totalPricePlan = request.getString("TOTALPRICEPLAN");//总计划投资
+        //基础木材
+        String basicandwoodpriceplan = request.getString("BASICANDWOODPRICEPLAN");
+        //暖通投资
+        String hvacpriceplan = request.getString("HVACPRICEPLAN");
+        //主材投资
+        String materialpriceplan = request.getString("MATERIALPRICEPLAN");
+        //家具投资
+        String furniturepriceplan = request.getString("FURNITUREPRICEPLAN");
+        //电器投资
+        String electricalpriceplan = request.getString("ELECTRICALPRICEPLAN");
+        //关键流程介绍
+        String criticalprocess = request.getString("CRITICALPROCESS");
+        String otherinfo = request.getString("OTHER_INFO");//过的家装公司和家具卖场
+        String planLiveTime = request.getString("PLAN_LIVE_TIME");//计划入住时间
+        String mwExperienceTime = request.getString("MW_EXPERIENCE_TIME");//木屋体验时间
+        String isscanvideo = request.getString("ISSCANVIDEO");//是否观看了宣传片
+        String isScanShowRoom = request.getString("ISSCANSHOWROOM");//是否参管城市展厅
+        String counselorName = request.getString("COUNSELOR_NAME");//家装顾问
+        String informationSource = request.getString("INFORMATIONSOURCE");//信息来源
+        String otherSource = request.getString("OTHER_SOURCE");//其他信息来源
+
+        //量房时间
+        String gaugeHouseTime = request.getString("GAUGE_HOUSE_TIME");
+        //平面图时间
+        String offerPlaneTime = request.getString("OFFER_PLANE_TIME");
+        //再联系时间
+        String cantactTime = request.getString("CONTACT_TIME");
+
+        //1、保存party信息
+        Map<String, String> partyInfo = new HashMap<String, String>();
+
+        partyInfo.put("CUST_NAME", party_name);
+        partyInfo.put("AGE", age);
+        partyInfo.put("MOBILE_NO", moblie_no);
+        partyInfo.put("QQ_NO", qq_no);
+        partyInfo.put("WX_NO", wx_no);
+        //客户状态正常
+        partyInfo.put("CUST_STATUS", CustomerServiceConst.PARTY_STATUS_0);
+        partyInfo.put("WORK_COMPANY", company);
+        partyInfo.put("EDUCATIONAL", educate);
+        partyInfo.put("FAMILY_MEMBERS_COUNT", family_members_count);
+        partyInfo.put("OLDER_DETAIL", oldDetail);
+        partyInfo.put("CHILD_DETAIL", childDetail);
+        partyInfo.put("HOBBY", hobby);
+        partyInfo.put("OTHER_HOBBY", other_hobby);
+
+        partyInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        partyInfo.put("UPDATE_TIME", session.getCreateTime());
+        //新增
+        partyInfo.put("CONSULT_TIME", consultTime);
+        partyInfo.put("CUST_NO", customerNo);
+        partyInfo.put("REMARK", otherRemark);
+        partyInfo.put("CUST_TYPE", customerType);
+        partyInfo.put("PLOY_TYPE", marketingType);
+        partyInfo.put("PLOY_NAME", marketingName);
+        partyInfo.put("PLOY_TIME", marketingTime);
+        partyInfo.put("TEL_CONSULT_TIME", phoneConsultTime);
+
+
+        map.put("CUSTOMER_INFO", partyInfo);
+
+        Map<String, String> projectInfo = new HashMap<String, String>();
+        projectInfo.put("HOUSE_MODE", house_mode);
+        projectInfo.put("HOUSE_AREA", house_area);
+        projectInfo.put("HOUSE_ADDRESS", house_address);
+        projectInfo.put("GAUGE_HOUSE_TIME", gaugeHouseTime);
+        projectInfo.put("OFFER_PLANE_TIME", offerPlaneTime);
+        projectInfo.put("CONTACT_TIME", cantactTime);
+        projectInfo.put("CRITICAL_PROCESS", criticalprocess);
+        projectInfo.put("OTHER_INFO", otherinfo);
+        projectInfo.put("ADVANTAGE", advantage);
+        projectInfo.put("MW_EXPERIENCE_TIME", mwExperienceTime);
+        projectInfo.put("IS_SCAN_VIDEO", isscanvideo);
+        projectInfo.put("IS_SCAN_SHOWROOM", isScanShowRoom);
+        projectInfo.put("COUNSELOR_NAME", counselorName);
+        projectInfo.put("INFORMATION_SOURCE", informationSource);
+        projectInfo.put("OTHER_INFORMATION_SOURCE", otherSource);
+
+        projectInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        projectInfo.put("UPDATE_TIME", session.getCreateTime());
+
+        //新增
+        projectInfo.put("HOUSE_ID", houseId);
+        projectInfo.put("HOUSE_BUILDING", houseBuilding);
+        projectInfo.put("HOUSE_ROOM_NO", houseRoomNo);
+
+        map.put("PROJECT_INFO", projectInfo);
+
+        Map<String, String> projectIntentionInfo = new HashMap<String, String>();
+        projectIntentionInfo.put("CHINESESTYLE_TOPIC", chineseStlye);
+        projectIntentionInfo.put("EUROPEANCLASSICS_TOPIC", europenanClassics);
+        projectIntentionInfo.put("MODERNSOURCE_TOPIC", modernSource);
+        projectIntentionInfo.put("OTHER_TOPIC_REQ", other_topic_req);
+        projectIntentionInfo.put("FUNC", func);
+        projectIntentionInfo.put("HASBLUEPRINT", hasBluePrint);
+        projectIntentionInfo.put("FUNC_SPEC_REQ", funcSpecReq);
+        projectIntentionInfo.put("TOTAL_PRICEPLAN", totalPricePlan);
+        projectIntentionInfo.put("BASICANDWOOD_PRICEPLAN", basicandwoodpriceplan);
+        projectIntentionInfo.put("HVAC_PRICEPLAN", hvacpriceplan);
+        projectIntentionInfo.put("MATERIAL_PRICEPLAN", materialpriceplan);
+        projectIntentionInfo.put("FURNITURE_PRICEPLAN", furniturepriceplan);
+        projectIntentionInfo.put("ELECTRICAL_PRICEPLAN", electricalpriceplan);
+
+        projectIntentionInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        projectIntentionInfo.put("UPDATE_TIME", session.getCreateTime());
+        projectIntentionInfo.put("PLAN_LIVE_TIME", planLiveTime);
+        //2020/03/01主营业务系统新增
+        projectIntentionInfo.put("DESIGNER_OPUS", designerWorks);
+        projectIntentionInfo.put("WOOD_INTENTION", woodWish);
+        projectIntentionInfo.put("COOPERATIVE_BANK", bankId);
+        projectIntentionInfo.put("QUOTA", quota);
+        projectIntentionInfo.put("MONTH_NUM", monthNum);
+        projectIntentionInfo.put("SAMPLE_HOUSE", sampleHouse);
+        if(StringUtils.equals(onlyWood,"on")){
+            projectIntentionInfo.put("ONLY_WOOD","1");
+        }
+
+
+        map.put("PROJECT_INTENTION_INFO", projectIntentionInfo);
+        return map;
     }
 
     public ServiceResponse initPartyManager(ServiceRequest request) throws Exception {
@@ -736,63 +972,27 @@ public class CustServService extends GenericService {
         String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
         response = this.initCreateGoodSeeLiveInfo(request);
 
-        String partyId = request.getString("PARTY_ID");
-        String projectId = request.getString("PROJECT_ID");
+        String partyId = request.getString("CUST_ID");
 
 
         JSONObject partyInfo = new JSONObject();
-        String elderText = "";
-        String childText = "";
-
-        RecordSet partyLinkInfo = dao.queryLinkmanByProjectIdAndRoleType(projectId, CustomerServiceConst.CUSTOMERSERVICEROLETYPE);
-
         //拼装party信息
-        PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
-        if (partyLinkInfo.size() <= 0) {
+        //PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
+        Record customerRecord = dao.queryCustomerInfoByCustId(partyId);
 
-        } else {
-            String linkEmpId = partyLinkInfo.get(0).get("LINK_EMPLOYEE_ID");
-            if (StringUtils.equals(employeeId, linkEmpId)) {
-                partyInfo.put("NAME", partyEntity.getPartyName());
-                partyInfo.put("CONTACT", partyEntity.getMobileNo());
-            } else {
-                String name = nameDesensitization(partyEntity.getPartyName());
-                partyInfo.put("NAME", name);
-                partyInfo.put("CONTACT", "***********");
-            }
-        }
-        partyInfo.put("QQCONTACT", partyEntity.getQQNO());
-        partyInfo.put("WXCONTACT", partyEntity.getWXNO());
-        partyInfo.put("COMPANY", partyEntity.getCompany());
-        partyInfo.put("AGE", partyEntity.getAge());
-        partyInfo.put("EDUCATE", partyEntity.getEducational());
-        partyInfo.put("PEOPLE_COUNT", partyEntity.getfamilyMembersCount());
-        //partyInfo.put("ELDER_MAN",partyEntity.getOldmanCount());
-        //partyInfo.put("ELDER_WOMAN",partyEntity.getOldwomanCount());
-        /*
-        if(StringUtils.isNotBlank(partyEntity.getOldmanCount())){
-            elderText="男："+partyEntity.getOldmanCount()+"人 ";
-        }
-        if(StringUtils.isNotBlank(partyEntity.getOldwomanCount())){
-            elderText +="女："+partyEntity.getOldwomanCount()+"人";
-        }
-        */
-        partyInfo.put("OLDER_DETAIL", partyEntity.getOlderDetail());
-        //partyInfo.put("CHILD_BOY",partyEntity.getBoyCount());
-        //partyInfo.put("CHILD_GIRL",partyEntity.getGirlCount());
-        /*
-        if(StringUtils.isNotBlank(partyEntity.getBoyCount())){
-            childText="男："+partyEntity.getBoyCount()+"人 ";
-        }
-        if(StringUtils.isNotBlank(partyEntity.getGirlCount())){
-            childText +="女："+partyEntity.getGirlCount()+"人";
-        }
-        */
-        partyInfo.put("CHILD_DETAIL", partyEntity.getChildDetail());
-        partyInfo.put("OTHER_HOBBY", partyEntity.getOtherHobby());
-        partyInfo.put("HOBBY", partyEntity.getHobby());
+        //partyInfo.put("QQCONTACT", customerRecord.getQQNO());
+        //partyInfo.put("WXCONTACT", partyEntity.getWXNO());
+        partyInfo.put("COMPANY", customerRecord.get("PROFESSION"));
+        partyInfo.put("AGE", customerRecord.get("AGE"));
+        partyInfo.put("EDUCATE", customerRecord.get("EDUCATIONAL"));
+        partyInfo.put("PEOPLE_COUNT", customerRecord.get("FAMILY_MEMBERS_COUNT"));
+        partyInfo.put("OLDER_DETAIL", customerRecord.get("OLDER_DETAIL"));
 
-        String hobby = partyEntity.getHobby();
+        partyInfo.put("CHILD_DETAIL", customerRecord.get("CHILD_DETAIL"));
+        partyInfo.put("OTHER_HOBBY", customerRecord.get("OTHER_HOBBY"));
+        partyInfo.put("HOBBY", customerRecord.get("HOBBY"));
+
+        String hobby = customerRecord.get("HOBBY");
         if (StringUtils.isNotBlank(hobby)) {
             String[] hobbys = hobby.split(",");
             String hobbyName = "";
@@ -801,16 +1001,31 @@ public class CustServService extends GenericService {
             }
             partyInfo.put("HOBBY_TEXT", hobbyName.substring(0, hobbyName.length() - 1));
         }
+        //2020/03/01新增
+        partyInfo.put("CUST_NO", customerRecord.get("CUST_NO"));
+        partyInfo.put("CUST_NAME", customerRecord.get("CUST_NAME"));
+        partyInfo.put("CUST_ID", customerRecord.get("CUST_ID"));
+        partyInfo.put("CUST_TYPE", customerRecord.get("CUST_TYPE"));
+        partyInfo.put("MOBILE_NO", customerRecord.get("MOBILE_NO"));
+        partyInfo.put("PLOY_TYPE", customerRecord.get("PLOY_TYPE"));
+        partyInfo.put("PLOY_NAME", customerRecord.get("PLOY_NAME"));
+        partyInfo.put("PLOY_TIME", customerRecord.get("PLOY_TIME"));
+        partyInfo.put("OTHER_REMARK", customerRecord.get("REMARK"));
+        partyInfo.put("CONSULT_TIME", customerRecord.get("CONSULT_TIME"));
+        partyInfo.put("TEL_CONSULT_TIME", customerRecord.get("TEL_CONSULT_TIME"));
+        partyInfo.put("PREPARE_ID", customerRecord.get("PREPARE_ID"));
+        partyInfo.put("COMPANY", customerRecord.get("WORK_COMPANY"));
+
+
         response.set("PARTYINFO", partyInfo);
         //拼装project信息
         JSONObject projectInfo = new JSONObject();
-        ProjectEntity projectEntity = dao.queryProjectInfoByProjectId(projectId);
-        projectInfo.put("PROJECT_ID", projectId);
-        projectInfo.put("HOUSEKIND", projectEntity.getHouseMode());
-        projectInfo.put("AREA", projectEntity.getHouseArea());
-        projectInfo.put("FIX_PLACE", projectEntity.getHouseAddress());
-        projectInfo.put("ADVANTAGE", projectEntity.getAdvantage());
-        String advantage = projectEntity.getAdvantage();
+        Record projectRecord = dao.queryProjectInfoByCustId(partyId);
+        projectInfo.put("PROJECT_ID", projectRecord.get("PROJECT_ID"));
+        projectInfo.put("HOUSEKIND", projectRecord.get("HOUSE_MODE"));
+        projectInfo.put("AREA", projectRecord.get("HOUSE_AREA"));
+        projectInfo.put("ADVANTAGE", projectRecord.get("ADVANTAGE"));
+        String advantage = projectRecord.get("ADVANTAGE");
 
         if (StringUtils.isNotBlank(advantage)) {
             String[] advantages = advantage.split(",");
@@ -821,8 +1036,8 @@ public class CustServService extends GenericService {
             projectInfo.put("ADVANTAG_TEXT", advantageText.substring(0, advantageText.length() - 1));
         }
 
-        projectInfo.put("CRITICALPROCESS", projectEntity.getCriticalProcess());
-        String criticalProcess = projectEntity.getCriticalProcess();
+        projectInfo.put("CRITICALPROCESS", projectRecord.get("CRITICAL_PROCESS"));
+        String criticalProcess = projectRecord.get("CRITICAL_PROCESS");
 
         if (StringUtils.isNotBlank(criticalProcess)) {
             String[] criticalProcesss = criticalProcess.split(",");
@@ -833,13 +1048,13 @@ public class CustServService extends GenericService {
             projectInfo.put("CRITICALPROCESS_TEXT", criticalProcessText.substring(0, criticalProcessText.length() - 1));
         }
 
-        projectInfo.put("OTHER_INFO", projectEntity.getOtherInfo());
-        projectInfo.put("MW_EXPERIENCE_TIME", projectEntity.getMWExperienceTime());
-        projectInfo.put("ISSCANVIDEO", projectEntity.getIsScanVideo());
-        projectInfo.put("ISSCANSHOWROOM", projectEntity.getIsScanShowRoom());
-        projectInfo.put("COUNSELOR_NAME", projectEntity.getCounselorName());//家装顾问名字
-        projectInfo.put("INFORMATIONSOURCE", projectEntity.getInformationSource());//信息来源
-        String infomationSource = projectEntity.getInformationSource();
+        projectInfo.put("OTHER_INFO", projectRecord.get("OTHER_INFO"));
+        projectInfo.put("MW_EXPERIENCE_TIME", projectRecord.get("MW_EXPERIENCE_TIME"));
+        projectInfo.put("ISSCANVIDEO", projectRecord.get("IS_SCAN_VIDEO"));
+        projectInfo.put("ISSCANSHOWROOM", projectRecord.get("IS_SCAN_SHOWROOM"));
+        //projectInfo.put("COUNSELOR_NAME", projectEntity.getCounselorName());//家装顾问名字
+        projectInfo.put("INFORMATIONSOURCE", projectRecord.get("INFORMATION_SOURCE"));//信息来源
+        String infomationSource = projectRecord.get("INFORMATION_SOURCE");
 
         if (StringUtils.isNotBlank(infomationSource)) {
             String[] infomationSources = infomationSource.split(",");
@@ -850,19 +1065,24 @@ public class CustServService extends GenericService {
             projectInfo.put("INFORMATIONSOURCE_TEXT", informationText.substring(0, informationText.length() - 1));
         }
 
-        projectInfo.put("GAUGE_HOUSE_TIME", projectEntity.getGaugeHouseTime());
-        projectInfo.put("OFFER_PLANE_TIME", projectEntity.getOfferPlaneTime());
-        projectInfo.put("CONTACT_TIME", projectEntity.getContactTime());
-        projectInfo.put("OTHER_SOURCE", projectEntity.getOtherInformationSource());
+        projectInfo.put("GAUGE_HOUSE_TIME", projectRecord.get("GAUGE_HOUSE_TIME"));
+        projectInfo.put("OFFER_PLANE_TIME", projectRecord.get("OFFER_PLANE_TIME"));
+        projectInfo.put("CONTACT_TIME", projectRecord.get("CONTACT_TIME"));
+        projectInfo.put("OTHER_SOURCE", projectRecord.get("OTHER_INFORMATION_SOURCE"));
+        //2020/03/02新增
+        projectInfo.put("HOUSE_BUILDING", projectRecord.get("HOUSE_BUILDING"));
+        projectInfo.put("HOUSE_ROOM_NO", projectRecord.get("HOUSE_ROOM_NO"));
+        projectInfo.put("HOUSE_ID", projectRecord.get("HOUSE_ID"));
+
+        projectInfo.put("HOUSE_NAME", HousesBean.getHousesEntityById(projectRecord.get("HOUSE_ID")).getName());
 
         response.set("PROJECTINFO", projectInfo);
         //拼装项目意向信息
         JSONObject projectIntentionInfo = new JSONObject();
-        ProjectIntentionEntity projectIntentionEntity = dao.queryProjectIntentionInfoByProjectId(projectId);
-        projectIntentionInfo.put("INTENTION_ID", projectIntentionEntity.getIntetionId());
-        projectIntentionInfo.put("CHINESESTYLE", projectIntentionEntity.getChineseStyleTopic());
+        Record intentionRecord = dao.queryProjectIntentionInfoByProjectId(projectRecord.get("PROJECT_ID"));
+        projectIntentionInfo.put("CHINESESTYLE", intentionRecord.get("CHINESESTYLE_TOPIC"));
 
-        String chineseStyleTopic = projectIntentionEntity.getChineseStyleTopic();
+        String chineseStyleTopic = intentionRecord.get("CHINESESTYLE_TOPIC");
         if (StringUtils.isNotBlank(chineseStyleTopic)) {
             String[] chineseStyleTopics = chineseStyleTopic.split(",");
             String chineseStyleTopicText = "";
@@ -873,9 +1093,9 @@ public class CustServService extends GenericService {
         }
 
 
-        projectIntentionInfo.put("EUROPEANCLASSICS", projectIntentionEntity.getEuropeanClassicsTopic());
+        projectIntentionInfo.put("EUROPEANCLASSICS", intentionRecord.get("EUROPEANCLASSICS_TOPIC"));
 
-        String europeanClassicsTopic = projectIntentionEntity.getEuropeanClassicsTopic();
+        String europeanClassicsTopic = intentionRecord.get("EUROPEANCLASSICS_TOPIC");
         if (StringUtils.isNotBlank(europeanClassicsTopic)) {
             String[] europeanClassicsTopics = europeanClassicsTopic.split(",");
             String europeanClassicsTopicText = "";
@@ -886,8 +1106,8 @@ public class CustServService extends GenericService {
         }
 
 
-        projectIntentionInfo.put("MODERNSOURCE", projectIntentionEntity.getModernSource());
-        String modernSource = projectIntentionEntity.getModernSource();
+        projectIntentionInfo.put("MODERNSOURCE", intentionRecord.get("MODERNSOURCE_TOPIC"));
+        String modernSource = intentionRecord.get("MODERNSOURCE_TOPIC");
         if (StringUtils.isNotBlank(modernSource)) {
             String[] modernSources = modernSource.split(",");
             String modernSourcesText = "";
@@ -897,10 +1117,10 @@ public class CustServService extends GenericService {
             projectIntentionInfo.put("MODERNSOURCE_TEXT", modernSourcesText.substring(0, modernSourcesText.length() - 1));
         }
 
-        projectIntentionInfo.put("OTHER_TOPIC_REQ", projectIntentionEntity.getOtherTopicReq());
-        projectIntentionInfo.put("FUNC", projectIntentionEntity.getFunc());
+        projectIntentionInfo.put("OTHER_TOPIC_REQ", intentionRecord.get("OTHER_TOPIC_REQ"));
+        projectIntentionInfo.put("FUNC", intentionRecord.get("FUNC"));
 
-        String func = projectIntentionEntity.getFunc();
+        String func = intentionRecord.get("FUNC");
         if (StringUtils.isNotBlank(func)) {
             String[] funcs = func.split(",");
             String funcsText = "";
@@ -910,167 +1130,80 @@ public class CustServService extends GenericService {
             projectIntentionInfo.put("FUNCS_TEXT", funcsText.substring(0, funcsText.length() - 1));
         }
 
-        projectIntentionInfo.put("BULEPRINT", projectIntentionEntity.getHasBluePrint());
-        projectIntentionInfo.put("FUNC_SPEC_REQ", projectIntentionEntity.getFuncSpecReq());
-        projectIntentionInfo.put("TOTALPRICEPLAN", projectIntentionEntity.getTotalPricePlan());
-        projectIntentionInfo.put("BASICANDWOODPRICEPLAN", projectIntentionEntity.getBasicAndWoodPricePlan());
-        projectIntentionInfo.put("HVACPRICEPLAN", projectIntentionEntity.getHvacPricePlan());
-        projectIntentionInfo.put("MATERIALPRICEPLAN", projectIntentionEntity.getMaterialPricePlan());
-        projectIntentionInfo.put("FURNITUREPRICEPLAN", projectIntentionEntity.getFurniturePricePlan());
-        projectIntentionInfo.put("ELECTRICALPRICEPLAN", projectIntentionEntity.getElectricalPricePlan());
-        projectIntentionInfo.put("PLAN_LIVE_TIME", projectIntentionEntity.getPlanLiveTime());
+        projectIntentionInfo.put("BULEPRINT", intentionRecord.get("HASBULEPRINT"));
+        projectIntentionInfo.put("FUNC_SPEC_REQ", intentionRecord.get("FUNC_SPEC_REQ"));
+        projectIntentionInfo.put("TOTALPRICEPLAN", intentionRecord.get("TOTAL_PRICEPLAN"));
+        projectIntentionInfo.put("BASICANDWOODPRICEPLAN", intentionRecord.get("BASICANDWOOD_PRICEPLAN"));
+        projectIntentionInfo.put("HVACPRICEPLAN", intentionRecord.get("HVAC_PRICEPLAN"));
+        projectIntentionInfo.put("MATERIALPRICEPLAN", intentionRecord.get("MATERIAL_PRICEPLAN"));
+        projectIntentionInfo.put("FURNITUREPRICEPLAN", intentionRecord.get("FURNITURE_PRICEPLAN"));
+        projectIntentionInfo.put("ELECTRICALPRICEPLAN", intentionRecord.get("ELECTRICAL_PRICEPLAN"));
+        projectIntentionInfo.put("PLAN_LIVE_TIME", intentionRecord.get("PLAN_LIVE_TIME"));
+        //2020/03/02新增
+        projectIntentionInfo.put("DESIGNER_OPUS", intentionRecord.get("DESIGNER_OPUS"));
+        projectIntentionInfo.put("WOOD_INTENTION", intentionRecord.get("WOOD_INTENTION"));
+        projectIntentionInfo.put("COOPERATIVE_BANK", intentionRecord.get("COOPERATIVE_BANK"));
+        projectIntentionInfo.put("QUOTA", intentionRecord.get("QUOTA"));
+        projectIntentionInfo.put("MONTH_NUM", intentionRecord.get("MONTH_NUM"));
+        projectIntentionInfo.put("SAMPLE_HOUSE", intentionRecord.get("SAMPLE_HOUSE"));
+        projectIntentionInfo.put("ONLY_WOOD", intentionRecord.get("ONLY_WOOD"));
 
         response.set("PROJECTINTENTIONINFO", projectIntentionInfo);
-
 
         return response;
     }
 
     public ServiceResponse changeGoodSeeLiveInfo(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
-        String projectId = request.getString("PROJECT_ID");
-        String partyId = request.getString("PARTY_ID");
+        String projectId = request.getString("project_id");
+        String custId = request.getString("cust_id");
+        String houseId = request.getString("house_id");
+        String houseBuilding = request.getString("house_building");
+        String houseRoomNo = request.getString("house_room_no");
+        String house_mode = request.getString("HOUSEKIND");//户型
+        String house_area = request.getString("AREA");//面积
         AppSession session = SessionManager.getSession();
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
 
-        String party_name = request.getString("NAME");
-        String moblie_no = request.getString("CONTACT");
-        String qq_no = request.getString("QQCONTACT");
-        String wx_no = request.getString("WXCONTACT");
-        String house_mode = request.getString("HOUSEKIND");//户型
-        String house_area = request.getString("AREA");//面积
-        String house_address = request.getString("FIX_PLACE");//装修地点
-        String age = request.getString("AGE");
-        String educate = request.getString("EDUCATE");//学历
-        String company = request.getString("COMPANY");
-        String family_members_count = request.getString("PEOPLE_COUNT");//常驻人口
-        //String oldman_count=request.getString("ELDER_MAN");//老男人个数
-        //String oldwoman_count=request.getString("ELDER_WOMAN");//老女人个数
-        //String boy_count=request.getString("CHILD_BOY");//小男孩个数
-        //String girl_count=request.getString("CHILD_GIRL");//小女孩个数
-        String oldDetail = request.getString("OLDER_DETAIL");
-        String childDetail = request.getString("CHILD_DETAIL");
+        Map<String,Map<String,String>> resultMap=this.buildCommonInfo(request);
 
-        String hobby = request.getString("HOBBY");//个人爱好
-        String other_hobby = request.getString("OTHER_HOBBY");//其他个人爱好
-        String chineseStlye = request.getString("CHINESESTYLE");//中国骨风
-        String europenanClassics = request.getString("EUROPEANCLASSICS");//欧洲经典
-        String modernSource = request.getString("MODERNSOURCE");//现代之源
-        String other_topic_req = request.getString("OTHER_TOPIC_REQ");//其他主题选择
-        String func = request.getString("FUNC");//功能选择
-        String hasBluePrint = request.getString("BULEPRINT");//生成蓝图
-        String funcSpecReq = request.getString("FUNC_SPEC_REQ");//功能特殊要求
-
-        String advantage = request.getString("ADVANTAGE");//优势介绍
-        String totalPricePlan = request.getString("TOTALPRICEPLAN");//总计划投资
-        String basicandwoodpriceplan = request.getString("BASICANDWOODPRICEPLAN");//基础木材
-        String hvacpriceplan = request.getString("HVACPRICEPLAN");//暖通投资
-        String materialpriceplan = request.getString("MATERIALPRICEPLAN");//主材投资
-        String furniturepriceplan = request.getString("FURNITUREPRICEPLAN");//家具投资
-        String electricalpriceplan = request.getString("ELECTRICALPRICEPLAN");//电器投资
-
-        String criticalprocess = request.getString("CRITICALPROCESS");//关键流程介绍
-        String otherinfo = request.getString("OTHER_INFO");//过的家装公司和家具卖场
-        String planLiveTime = request.getString("PLAN_LIVE_TIME");//计划入住时间
-        String mwExperienceTime = request.getString("MW_EXPERIENCE_TIME");//木屋体验时间
-        String isScanShowRoom = request.getString("ISSCANSHOWROOM");//是否参管城市展厅
-        String isScanVideo = request.getString("ISSCANVIDEO");//是否观看了宣传片
-        String counselorName = request.getString("COUNSELOR_NAME");//家装顾问
-        String informationSource = request.getString("INFORMATIONSOURCE");//信息来源
-        String otherSource = request.getString("OTHER_SOURCE");//其他信息来源
-
-
-        String gaugeHouseTime = request.getString("GAUGE_HOUSE_TIME");//量房时间
-        String offerPlaneTime = request.getString("OFFER_PLANE_TIME");//平面图时间
-        String cantactTime = request.getString("CONTACT_TIME");//再联系时间
 
         //1、保存party信息
-        Map<String, String> party_info = new HashMap<String, String>();
-        party_info.put("PARTY_ID", partyId);
-        if (party_name.toLowerCase().indexOf("*") == -1) {
-            party_info.put("PARTY_NAME", party_name);
-        }
-        party_info.put("AGE", age);
+        Map<String, String> customerInfo = resultMap.get("CUSTOMER_INFO");
+        customerInfo.put("CUST_ID", custId);
 
-        if (moblie_no.toLowerCase().indexOf("*") == -1) {
-            party_info.put("MOBILE_NO", moblie_no);
-        }
-        party_info.put("QQ_NO", qq_no);
-        party_info.put("WX_NO", wx_no);
-        party_info.put("COMPANY", company);
-        party_info.put("EDUCATIONAL", educate);
-        party_info.put("FAMILY_MEMBERS_COUNT", family_members_count);
-        //party_info.put("OLDMAN_COUNT",oldman_count);
-        //party_info.put("OLDWOMAN_COUNT",oldwoman_count);
-        //party_info.put("BOY_COUNT",boy_count);
-        //party_info.put("GIRL_COUNT",girl_count);
+        customerInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        customerInfo.put("UPDATE_TIME", session.getCreateTime());
 
-        party_info.put("OLDER_DETAIL", oldDetail);
-        party_info.put("CHILD_DETAIL", childDetail);
-
-        party_info.put("HOBBY", hobby);
-        party_info.put("OTHER_HOBBY", other_hobby);
-        party_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-        party_info.put("UPDATE_TIME", session.getCreateTime());
-
-
-        dao.save("ins_party", new String[]{"PARTY_ID"}, party_info);
+        dao.save("cust_base", new String[]{"CUST_ID"}, customerInfo);
 
         //保存项目信息
-        Map<String, String> project_info = new HashMap<String, String>();
-        project_info.put("PROJECT_ID", projectId);
-        project_info.put("HOUSE_MODE", house_mode);
-        project_info.put("HOUSE_AREA", house_area);
-        project_info.put("HOUSE_ADDRESS", house_address);
-        project_info.put("GAUGE_HOUSE_TIME", gaugeHouseTime);
-        project_info.put("OFFER_PLANE_TIME", offerPlaneTime);
-        project_info.put("CONTACT_TIME", cantactTime);
-        project_info.put("CRITICAL_PROCESS", criticalprocess);
-        project_info.put("OTHER_INFO", otherinfo);
-        project_info.put("ADVANTAGE", advantage);
-        project_info.put("MW_EXPERIENCE_TIME", mwExperienceTime);
-        project_info.put("IS_SCAN_VIDEO", isScanVideo);
-        project_info.put("IS_SCAN_SHOWROOM", isScanShowRoom);
-        project_info.put("COUNSELOR_NAME", counselorName);
-        project_info.put("INFORMATION_SOURCE", informationSource);
-        project_info.put("OTHER_INFORMATION_SOURCE", otherSource);
-        project_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-        project_info.put("UPDATE_TIME", session.getCreateTime());
+        Map<String, String> projectInfo = resultMap.get("PROJECT_INFO");
 
-        dao.save("ins_project", new String[]{"PROJECT_ID"}, project_info);
+        projectInfo.put("PROJECT_ID",projectId);
+        projectInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        projectInfo.put("UPDATE_TIME", session.getCreateTime());
+
+        dao.save("ins_project", new String[]{"PROJECT_ID"}, projectInfo);
 
         //保存项目意向信息表
-        Map<String, String> project_intention_info = new HashMap<String, String>();
-        project_intention_info.put("PROJECT_ID", projectId);
-        project_intention_info.put("CHINESESTYLE_TOPIC", chineseStlye);
-        project_intention_info.put("EUROPEANCLASSICS_TOPIC", europenanClassics);
-        project_intention_info.put("MODERNSOURCE_TOPIC", modernSource);
-        project_intention_info.put("OTHER_TOPIC_REQ", other_topic_req);
-        project_intention_info.put("FUNC", func);
-        project_intention_info.put("HASBLUEPRINT", hasBluePrint);
-        project_intention_info.put("FUNC_SPEC_REQ", funcSpecReq);
-        project_intention_info.put("TOTAL_PRICEPLAN", totalPricePlan);
-        project_intention_info.put("BASICANDWOOD_PRICEPLAN", basicandwoodpriceplan);
-        project_intention_info.put("HVAC_PRICEPLAN", hvacpriceplan);
-        project_intention_info.put("MATERIAL_PRICEPLAN", materialpriceplan);
-        project_intention_info.put("FURNITURE_PRICEPLAN", furniturepriceplan);
-        project_intention_info.put("ELECTRICAL_PRICEPLAN", electricalpriceplan);
-        project_intention_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-        project_intention_info.put("UPDATE_TIME", session.getCreateTime());
-        project_intention_info.put("PLAN_LIVE_TIME", planLiveTime);
+        Map<String, String> projectIntentionInfo = resultMap.get("PROJECT_INTENTION_INFO");
+        projectIntentionInfo.put("PROJECT_ID", projectId);
 
-        dao.save("ins_project_intention", new String[]{"PROJECT_ID"}, project_intention_info);
+        dao.save("ins_project_intention", new String[]{"PROJECT_ID"}, projectIntentionInfo);
 
         //修改工程更新时间
-        Map<String, String> project_action_info = new HashMap<String, String>();
-        project_action_info.put("PROJECT_ID", projectId);
-        project_action_info.put("ACTION_CODE", "HZHK");
-        project_action_info.put("STATUS", "1");
-        project_action_info.put("FINISH_TIME", session.getCreateTime());
-        project_action_info.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
-        project_action_info.put("UPDATE_TIME", session.getCreateTime());
-        dao.save("ins_project_original_action", new String[]{"PROJECT_ID", "ACTION_CODE"}, project_action_info);
+        Map<String, String> projectActionInfo = new HashMap<String, String>();
+        projectActionInfo.put("PROJECT_ID", projectId);
+        projectActionInfo.put("ACTION_CODE", "HZHK");
+        projectActionInfo.put("STATUS", "1");
+        projectActionInfo.put("FINISH_TIME", session.getCreateTime());
+        projectActionInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+        projectActionInfo.put("UPDATE_TIME", session.getCreateTime());
+        dao.save("ins_project_original_action", new String[]{"PROJECT_ID", "ACTION_CODE"}, projectActionInfo);
 
+        String houseName = HousesBean.getHousesEntityById(houseId).getName();
+        OrderBean.updateOrder(custId,houseName+":"+houseBuilding+":"+houseRoomNo,house_mode,house_area);
         return response;
     }
 
@@ -1421,7 +1554,7 @@ public class CustServService extends GenericService {
             if (partyEntity != null) {
                 applyRecord.put("PARTY_NAME", partyEntity.getPartyName());
                 applyRecord.put("WX_NICK", partyEntity.getWxNick());
-                applyRecord.put("CREATE_TIME",partyEntity.getCreateTime());
+                applyRecord.put("CREATE_TIME", partyEntity.getCreateTime());
             }
             if (StringUtils.isNotBlank(auditEmpId)) {
                 applyRecord.put("AUDIT_EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
@@ -1501,7 +1634,7 @@ public class CustServService extends GenericService {
             if (partyEntity != null) {
                 applyRecord.put("PARTY_NAME", partyEntity.getPartyName());
                 applyRecord.put("WX_NICK", partyEntity.getWxNick());
-                applyRecord.put("CREATE_TIME",partyEntity.getCreateTime());
+                applyRecord.put("CREATE_TIME", partyEntity.getCreateTime());
             }
             if (StringUtils.isNotBlank(auditEmpId)) {
                 applyRecord.put("AUDIT_EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
@@ -1622,8 +1755,8 @@ public class CustServService extends GenericService {
         String visitWay = request.getString("VISIT_WAY");//回访方式
         String visitContent = request.getString("VISIT_CONTENT");//回访内容
         String visitTime = request.getString("VISIT_TIME");//回访时间
-        if(StringUtils.isBlank(visitTime)){
-            visitTime=session.getCreateTime();
+        if (StringUtils.isBlank(visitTime)) {
+            visitTime = session.getCreateTime();
         }
         String partyId = request.getString("PARTY_ID");
 

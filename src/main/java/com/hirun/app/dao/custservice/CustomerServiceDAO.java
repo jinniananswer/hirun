@@ -27,8 +27,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     public RecordSet queryPartyFlowByProjectId(String project_id) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("select * from ins_party a,ins_project_original_action b ");
-        sb.append(" where a.PARTY_ID=b.PARTY_ID ");
+        sb.append("select * from cust_base a,ins_project_original_action b ");
+        sb.append(" where a.CUST_ID=b.PARTY_ID ");
         sb.append(" and b.PROJECT_ID= :PROJECT_ID ");
         parameter.put("PROJECT_ID", project_id);
         return this.queryBySql(sb.toString(), parameter);
@@ -50,8 +50,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     public PartyEntity queryPartyInfoByPartyId(String party_id) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        parameter.put("PARTY_ID", party_id);
-        List<PartyEntity> partyEntityList = this.query(PartyEntity.class, "ins_party", parameter);
+        parameter.put("CUST_ID", party_id);
+        List<PartyEntity> partyEntityList = this.query(PartyEntity.class, "cust_base", parameter);
 
         if (ArrayTool.isEmpty(partyEntityList)) {
             return null;
@@ -247,16 +247,10 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return projectEntityList.get(0);
     }
 
-    public ProjectIntentionEntity queryProjectIntentionInfoByProjectId(String project_id) throws Exception {
+    public Record queryProjectIntentionInfoByProjectId(String project_id) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
-        StringBuilder sb = new StringBuilder();
         parameter.put("PROJECT_ID", project_id);
-        List<ProjectIntentionEntity> projectIntentionEntities = this.query(ProjectIntentionEntity.class, "ins_project_intention", parameter);
-
-        if (ArrayTool.isEmpty(projectIntentionEntities)) {
-            return null;
-        }
-        return projectIntentionEntities.get(0);
+        return this.query("ins_project_intention",parameter).get(0);
     }
 
     public RecordSet queryBluePrintByOpenIdAndActionCode(String openid, String action_code) throws Exception {
@@ -643,5 +637,42 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         parameter.put("MOBILE_NO",mobileNo);
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
         return recordSet;
+    }
+
+    /**
+     * 查询客户号码是否有报备记录
+     * @param mobileNo
+     * @return
+     * @throws Exception
+     */
+    public RecordSet queryCustomerByMobile(String mobileNo) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.cust_id,a.cust_no,a.cust_name,b.prepare_employee_id,b.prepare_time,a.mobile_no," +
+                " b.status as prepare_status,c.house_id,c.house_building,c.house_mode,c.house_room_no," +
+                " e.employee_id as custservice_employee_id,a.cust_type,a.cust_status,d.status as order_status");
+        sb.append(" from cust_base a LEFT JOIN cust_preparation b on (a.prepare_id=b.id)," +
+                "   ins_project c," +
+                "   order_base d LEFT JOIN order_worker e on (d.order_id=e.order_id and e.role_id='15' and now() BETWEEN e.start_date and e.end_date)" +
+                "   where a.cust_id=c.party_id");
+        sb.append(" and a.cust_id=d.cust_id");
+        sb.append(" and a.mobile_no= :MOBILE_NO ");
+
+        parameter.put("MOBILE_NO",mobileNo);
+        RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
+        return recordSet;
+    }
+    //2020/03/01新增
+    public Record queryCustomerInfoByCustId(String custId) throws Exception{
+            Map<String, String> parameter = new HashMap<String, String>();
+            parameter.put("CUST_ID",custId);
+            return this.queryByPk("cust_base",parameter);
+    }
+
+    //2020/03/02新增
+    public Record queryProjectInfoByCustId(String custId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARTY_ID", custId);
+        return this.query("ins_project",parameter).get(0);
     }
 }

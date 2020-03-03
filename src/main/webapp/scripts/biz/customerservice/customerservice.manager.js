@@ -136,8 +136,8 @@
                     var data = datas.get(i);
                     var wxnick=data.get("WX_NICK");
                     var mobile=data.get("MOBILE_NO");
-                    var create_date=data.get("CREATE_TIME");
-                    var party_name=data.get("PARTY_NAME");
+                    var create_date=data.get("CONSULT_TIME");
+                    var party_name=data.get("CUST_NAME");
                     var custserviceName=data.get("CUSTSERVICENAME");
                     var headUrl=data.get("HEAD_URL");
                     var partyTagName=data.get("PARTYTAGNAME");
@@ -177,9 +177,19 @@
                     }else{
 
                     }
-                    html.push("<div class=\"content content-auto\">");
-                    html.push("咨询时间: " + create_date.substr(0,19));
-                    html.push("</div>")
+
+                    if(create_date!='undefined'&& create_date != null){
+                        html.push("<div class=\"content content-auto\">");
+                        html.push("咨询时间: " + create_date.substr(0,10));
+                        html.push("</div>")
+                    }else {
+                        html.push("<div class=\"content content-auto \">");
+                        html.push("咨询时间: " );
+                        html.push("</div>")
+                    }
+
+
+
 
                     html.push("<div class=\"content content-auto\">");
                     html.push("客户代表: " +custserviceName);
@@ -212,7 +222,7 @@
                     html.push("</div>")
 
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-flow e_ico-pic-green e_ico-pic-r\" ontap='$.custservicemanager.redirectFlow(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'></span>");
+                    html.push("<span class=\"e_ico-flow e_ico-pic-green e_ico-pic-r\" ontap='$.custservicemanager.redirectFlow(\""+data.get("CUST_ID")+"\",\""+data.get("PROJECT_ID")+"\");'></span>");
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
