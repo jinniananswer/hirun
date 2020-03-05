@@ -107,9 +107,10 @@ public class Permission {
         return false;
     }
 
-    public static boolean isSuperUser() {
+    public static boolean isSuperUser() throws Exception {
         SessionEntity session = SessionManager.getSession().getSessionEntity();
         BizSessionEntity bizSession = new BizSessionEntity(session);
+        RightsCollection.getInstance();
         String roleIds = session.get("ROLE_IDS");
         if (StringUtils.isNotBlank(roleIds)) {
             List<String> roles = Arrays.asList(roleIds.split(","));
