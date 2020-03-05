@@ -110,11 +110,16 @@ public class Permission {
     public static boolean isSuperUser() {
         SessionEntity session = SessionManager.getSession().getSessionEntity();
         BizSessionEntity bizSession = new BizSessionEntity(session);
-        String jobRole = bizSession.getJobRole();
-        if (StringUtils.equals("0", jobRole))
-            return true;
-        else
-            return false;
+        String roleIds = session.get("ROLE_IDS");
+        if (StringUtils.isNotBlank(roleIds)) {
+            List<String> roles = Arrays.asList(roleIds.split(","));
+            if (roles.contains("1")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
 
 
