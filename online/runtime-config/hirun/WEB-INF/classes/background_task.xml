@@ -4,7 +4,7 @@
         <task taskName="hirunPlusDataImportTask" cronExpr="0 0/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusDataImportTask"/>
         <task taskName="transOriginalDataToAction" cronExpr="0 5/30 0-23 * * ?" className="com.hirun.app.task.TransOriginalDataToActionTask"/>
         <task taskName="hirunPlusStaffDataImportTask" cronExpr="0 20 3 * * ?" className="com.hirun.app.task.HirunPlusStaffDataImportTask"/>
-        <task taskName="performDueTask" cronExpr="0 0/10 * * * ?" className="com.hirun.app.task.PerformDueTask"/>
+        <task taskName="performDueTask" cronExpr="0 */10 * * * ?" className="com.hirun.app.task.PerformDueTask"/>
         <task taskName="autoUpdateHouseNatureTask" cronExpr="0 0 11 * * ?" className="com.hirun.app.task.AutoUpdateHouseNatureTask"/>
         <task taskName="hirunCustServiceScanDataImportTask" cronExpr="0 0/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusScanImportTask"/>
         <task taskName="hirunSignInDataImportTask" cronExpr="0 5/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusSignInDataImportTask"/>

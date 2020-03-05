@@ -20,7 +20,7 @@ public class PerformDueTaskDAO extends StrongObjectDAO{
 
     public List<PerformDueTaskEntity> queryPerformDueTaskList() throws Exception {
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT TASK_ID,TASK_TYPE,OBJECT_ID,OBJECT_TYPE,EXEC_TIME,PARAMS,DEAL_TAG,CREATE_USER_ID,CREATE_DATE ");
+        sql.append(" SELECT TASK_ID,TASK_TYPE,OBJECT_ID,OBJECT_TYPE,EXEC_TIME,PARAMS,DEAL_TAG,CREATE_USER_ID,CREATE_TIME ");
         sql.append(" FROM INS_PERFORM_DUE_TASK ");
         sql.append(" WHERE DEAL_TAG = :DEAL_TAG ");
         sql.append(" AND EXEC_TIME < now() ");
