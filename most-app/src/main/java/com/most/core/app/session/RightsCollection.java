@@ -4,6 +4,7 @@ import com.most.core.app.database.dao.GenericDAO;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.data.SessionEntity;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +45,7 @@ public class RightsCollection {
             roles += userRoles.get(i).get("ROLE_ID") + ",";
         }
         roles = roles.substring(0, roles.length() - 1);
+        sessionEntity.put("ROLE_IDS", roles);
 
         StringBuilder funcRoleSql = new StringBuilder();
         funcRoleSql.append("select b.func_id, b.func_code ");
