@@ -187,7 +187,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and a.status = '0' ");
         sb.append("and now() < b.end_date ");
-        sb.append("and b.org_id=c._org_id ");
+        sb.append("and b.org_id=c.org_id ");
 
 
         RecordSet employees = this.queryBySql(sb.toString(), new HashMap<String, String>());
