@@ -573,16 +573,24 @@ public class CustServService extends GenericService {
         if (StringUtils.isNotEmpty(onlyWood)) {
             orderType = "W";
         }
-        String houseName = HousesBean.getHousesEntityById(houseId).getName();
+
+        String decorateAddress = HousesBean.getHousesEntityById(houseId).getName();
+        if(StringUtils.isNotEmpty(houseBuilding)){
+            decorateAddress=decorateAddress+houseBuilding+"::";
+        }
+        if(StringUtils.isNotEmpty(houseRoomNo)){
+            decorateAddress=decorateAddress+houseRoomNo;
+        }
+
         if (StringUtils.isNotEmpty(customerId)) {
-            OrderBean.updateConsultOrder(customerId + "", houseId, houseName + "|" + houseBuilding + "|" + houseRoomNo, house_mode, house_area, ""
+            OrderBean.updateConsultOrder(customerId + "", houseId, decorateAddress, house_mode, house_area, ""
                     , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
                     "", orderStatus, orderType, consultTime, stage);
         } else {
             if(StringUtils.isEmpty(customerId)){
                 customerId=partyId+"";
             }
-            OrderBean.createConsultOrder(customerId + "", houseId, houseName + "|" + houseBuilding + "|" + houseRoomNo, house_mode, house_area, ""
+            OrderBean.createConsultOrder(customerId + "", houseId, decorateAddress, house_mode, house_area, ""
                     , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
                     "", orderStatus, orderType, consultTime, stage);
         }

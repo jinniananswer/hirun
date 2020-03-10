@@ -184,7 +184,7 @@
                                     <span id="customerTypeContainer"></span>
                                 </div>
                         </li>
-                        <li class="link required">
+                        <li class="link">
                                 <div class="label">活动类型</div>
                                 <div class="value">
                                     <span id="marketingTypeContainer"></span>
@@ -456,7 +456,7 @@
                     <div class="c_box">
                         <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
                             <ul id="">
-                                <li class="link required">
+                                <li class="link">
                                     <div class="label">合作银行</div>
                                         <div class="value">
                                          <span id="bankContainer"></span>

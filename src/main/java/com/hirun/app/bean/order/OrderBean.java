@@ -203,7 +203,7 @@ public class OrderBean {
         order.put("ORDER_ID", orderId);
 
         OrderDAO orderDAO = DAOFactory.createDAO(OrderDAO.class);
-        orderDAO.update("order_base", new String[]{"ORDER_ID"}, order);
+        orderDAO.save("order_base", new String[]{"ORDER_ID"}, order);
         String now = session.getCreateTime();
 
         List<Map<String, String>> orderWorkers = new ArrayList<Map<String, String>>();

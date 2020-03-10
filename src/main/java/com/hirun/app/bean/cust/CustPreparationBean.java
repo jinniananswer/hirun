@@ -21,6 +21,6 @@ public class CustPreparationBean {
             param.put("STATUS",status);
             param.put("UPDATE_USER_ID",updateUserId);
             param.put("UPDATE_TIME", TimeTool.now());
-            dao.update("cust_preparation",new String[]{"ID"},param);
+            dao.save("cust_preparation",new String[]{"ID"},param);
        }
 }
