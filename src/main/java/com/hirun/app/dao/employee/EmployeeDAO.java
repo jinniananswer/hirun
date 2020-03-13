@@ -67,6 +67,24 @@ public class EmployeeDAO extends StrongObjectDAO{
         return employees;
     }
 
+    public List<EmployeeEntity> queryCounselorsParentOrgJobRole(String parentOrgId, String jobRole) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARENT_ORG_ID", parentOrgId);
+        parameter.put("JOB_ROLE", jobRole);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.* from ins_employee a, ins_org b, ins_employee_job_role c ");
+        sb.append("where b.parent_org_id = :PARENT_ORG_ID ");
+        sb.append("and c.employee_id = a.employee_id ");
+        sb.append("and c.org_id = b.org_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < c.end_date ");
+        sb.append("and c.job_role in ("+jobRole+") ");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
+    }
+
     public List<EmployeeEntity> queryEmployeeByParentOrgJobRoleAndMarket(String parentOrgId, String jobRole) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("PARENT_ORG_ID", parentOrgId);
@@ -252,6 +270,28 @@ public class EmployeeDAO extends StrongObjectDAO{
         return null;
     }
 
+    public String queryParentEmployeeIdByEmployeeIdAndUserRoles(String employeeId, String userRoleIds) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT b.PARENT_EMPLOYEE_ID FROM ins_employee a, ins_employee_job_role b ");
+        sb.append("WHERE a.employee_id = b.employee_id ");
+        sb.append("AND a.employee_id = :EMPLOYEE_ID ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
+        sb.append("and exists (select 1 from ins_user_role d where d.user_id = a.user_id and d.end_date > now() and d.role_id in ("+userRoleIds+") )");
+
+//        sb.append("and c.job_role in ('"+jobRole+"') ");
+
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("EMPLOYEE_ID", employeeId);
+
+        RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
+        if(recordSet != null && recordSet.size() > 0) {
+            return recordSet.get(0, "PARENT_EMPLOYEE_ID");
+        }
+
+        return null;
+    }
+
     public int changeEmployeeParent(String originalParent, String newParent) throws Exception{
         StringBuilder sb = new StringBuilder();
         sb.append(" update ins_employee_job_role set parent_employee_id = "+newParent);
@@ -265,7 +305,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("select a.*, b.org_id ");
         sb.append("from ins_employee a, ins_employee_job_role b ");
         sb.append("where b.employee_id = a.employee_id ");
-        sb.append("and b.job_role in ('42','58') ");
+        sb.append("and exists (select 1 from ins_user_role c where c.user_id = a.user_id and c.end_date > now() and c.role_id in (3,4)) ");
         sb.append("and b.org_id in ("+orgIds+") ");
         sb.append("and a.status = '0' ");
         sb.append("and now() < b.end_date ");
@@ -277,7 +317,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("select a.*, b.org_id ");
         sb.append("from ins_employee a, ins_employee_job_role b ");
         sb.append("where b.employee_id = a.employee_id ");
-        sb.append("and b.job_role in ('42','58') ");
+        sb.append("and exists (select 1 from ins_user_role c where c.user_id = a.user_id and c.end_date > now() and c.role_id in (3,4)) ");
         sb.append("and b.org_id in ("+orgIds+") ");
         sb.append("and a.name like concat('%',:NAME,'%') ");
         sb.append("and a.status = '0' ");
@@ -364,7 +404,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT a.name,a.employee_id FROM ins_employee a, ins_employee_job_role b ");
         sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
-        sb.append("AND b.`JOB_ROLE` IN ('42','58') ");
+        sb.append("and exists (select 1 from ins_user_role c where c.user_id = a.user_id and c.end_date > now() and c.role_id in (3,4)) ");
         sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
         sb.append("AND a.status = '0' ");
         sb.append("AND a.`EMPLOYEE_ID` NOT IN (SELECT c.`PLAN_EXECUTOR_ID` FROM ins_plan c WHERE c.`PLAN_DATE` = :PLAN_DATE) ");
@@ -380,7 +420,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT a.name,a.employee_id FROM ins_employee a, ins_employee_job_role b ");
         sb.append("WHERE a.`EMPLOYEE_ID` = b.`EMPLOYEE_ID` ");
-        sb.append("AND b.`JOB_ROLE` IN ('42','58') ");
+        sb.append("and exists (select 1 from ins_user_role c where c.user_id = a.user_id and c.end_date > now() and c.role_id in (3,4)) ");
         sb.append("AND NOW() BETWEEN b.`START_DATE` AND b.`END_DATE` ");
         sb.append("AND a.status = '0' ");
         sb.append("AND EXISTS (SELECT 1 FROM ins_plan c WHERE c.`PLAN_DATE` = :PLAN_DATE AND c.plan_type = :PLAN_TYPE " +
@@ -554,5 +594,81 @@ public class EmployeeDAO extends StrongObjectDAO{
         }
 
         return employeeJobRoleEntities.get(0);
+    }
+
+    public RecordSet querySubordinatesCounselorEmployeeInParentEmployee(String parentEmployeeIds) throws Exception{
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.*,b.job_role from ins_employee a, ins_employee_job_role b ");
+        sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
+        sb.append("and b.employee_id = a.employee_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < b.end_date ");
+        sb.append("and exists (select 1 from ins_user_role c where c.user_id = a.user_id and c.end_date > now() and c.role_id in (3,4) )");
+
+        RecordSet employees = this.queryBySql(sb.toString(), new HashMap<String, String>());
+        return employees;
+    }
+
+    public List<EmployeeEntity> queryCounselorByParentOrgJobRole(String parentOrgId) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARENT_ORG_ID", parentOrgId);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.* from ins_employee a, ins_org b, ins_employee_job_role c ");
+        sb.append("where b.parent_org_id = :PARENT_ORG_ID ");
+        sb.append("and c.employee_id = a.employee_id ");
+        sb.append("and c.org_id = b.org_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < c.end_date ");
+        sb.append("and exists (select 1 from ins_user_role d where d.user_id = a.user_id and d.end_date > now() and d.role_id in (3,4) )");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
+    }
+
+    public List<EmployeeEntity> queryEmployeeByParentOrgUserRole(String parentOrgId, String userRoleIds) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARENT_ORG_ID", parentOrgId);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.* from ins_employee a, ins_org b, ins_employee_job_role c ");
+        sb.append("where b.parent_org_id = :PARENT_ORG_ID ");
+        sb.append("and c.employee_id = a.employee_id ");
+        sb.append("and c.org_id = b.org_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < c.end_date ");
+        sb.append("and exists (select 1 from ins_user_role d where d.user_id = a.user_id and d.end_date > now() and d.role_id in ("+userRoleIds+") )");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
+    }
+
+    public List<EmployeeEntity> queryAllCounselor() throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.* from ins_employee a ");
+        sb.append("where a.status = '0' ");
+        sb.append("and exists (select 1 from ins_user_role d where d.user_id = a.user_id and d.end_date > now() and d.role_id in (3,4) )");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
+    }
+
+    public List<EmployeeEntity> queryCounselorsByOrgLine(String orgLine) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("select a.* from ins_employee a, ins_org b, ins_employee_job_role c ");
+        sb.append("where c.org_id in ("+orgLine+") ");
+        sb.append("and c.employee_id = a.employee_id ");
+        sb.append("and c.org_id = b.org_id ");
+        sb.append("and a.status = '0' ");
+        sb.append("and now() < c.end_date ");
+        sb.append("and exists (select 1 from ins_user_role d where d.user_id = a.user_id and d.end_date > now() and d.role_id in (3,4 )");
+
+        List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
+        return employees;
     }
 }

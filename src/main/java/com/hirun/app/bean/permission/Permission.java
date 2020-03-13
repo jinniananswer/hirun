@@ -67,6 +67,16 @@ public class Permission {
         return false;
     }
 
+    public static boolean hasSelfShop() throws Exception{
+        if(isSuperUser())
+            return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("SELF_SHOP"))
+            return true;
+
+        return false;
+    }
+
     public static boolean hasChangeHouse() throws Exception{
         if(isSuperUser())
             return true;

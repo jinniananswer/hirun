@@ -370,11 +370,12 @@ public class CustService extends GenericService{
             }
         }
 
-        List<CustomerEntity> custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"), requestData.getString("CUST_NAME"));
+        RecordSet custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"), requestData.getString("CUST_NAME"));
         JSONArray result = new JSONArray();
         GenericDAO insDao = new GenericDAO("ins");
-        for(CustomerEntity customerEntity : custList) {
-            JSONObject object = customerEntity.toJSON(new String[] {"CUST_ID", "CUST_NAME"});
+        for(int k=0;k<custList.size();k++) {
+            Record customerEntity = custList.get(k);
+            JSONObject object = ConvertTool.toJSONObject(customerEntity);
 
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT cust_id, action_code, COUNT(action_code) action_num, DATE_FORMAT(MAX(finish_time), '%Y-%m-%d %H:%i:%s') last_finish_time ");
@@ -382,7 +383,7 @@ public class CustService extends GenericService{
             sql.append("WHERE cust_id = :CUST_ID ");
             sql.append("GROUP BY action_code ");
             Map<String, String> parameter = new HashMap<String, String>();
-            parameter.put("CUST_ID", customerEntity.getCustId());
+            parameter.put("CUST_ID", customerEntity.get("CUST_ID"));
 
             RecordSet recordSet = insDao.queryBySql(sql.toString(), parameter);
 

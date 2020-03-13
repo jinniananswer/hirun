@@ -47,7 +47,7 @@ public class EmployeeService extends GenericService {
         String employeeIds = requestData.getString("EMPLOYEE_IDS");
         String columns = requestData.getString("COLUMNS");
 
-        List<EmployeeEntity> list = EmployeeBean.getAllSubordinatesCounselors(employeeIds);
+        List<EmployeeEntity> list = EmployeeBean.getCounselorsByPermission(employeeIds);
         if (StringUtils.isBlank(columns)) {
             response.set("EMPLOYEE_LIST", ConvertTool.toJSONArray(list));
         } else {

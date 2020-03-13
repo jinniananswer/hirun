@@ -650,7 +650,7 @@ public class PlanService extends GenericService {
                     msgContent.append("截止到本周期结束【").append(planEntity.getPlanDate()).append("】，员工").append(employeeName).append("累计还有");
                     msgContent.append(String.valueOf(unFinishNum)).append("个【").append(targetName);
                     msgContent.append("】目标未完成");
-                    String parentEmployeeId = EmployeeBean.queryParentEmployeeIdByEmployeeIdAndJobRoles(planEntity.getPlanExecutorId(), "42,58");
+                    String parentEmployeeId = EmployeeBean.queryParentEmployeeIdByEmployeeIdAndJobRoles(planEntity.getPlanExecutorId(), "3,4");
                     if(StringUtils.isNotBlank(parentEmployeeId)) {
                         UserDAO userDAO = DAOFactory.createDAO(UserDAO.class);
                         UserEntity userEntity = userDAO.queryUserByEmployeeId(parentEmployeeId);

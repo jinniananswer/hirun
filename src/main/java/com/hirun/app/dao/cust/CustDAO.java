@@ -5,6 +5,7 @@ import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.app.database.annotation.DatabaseName;
 import com.most.core.app.database.dao.StrongObjectDAO;
 import com.most.core.app.session.SessionManager;
+import com.most.core.pub.data.RecordSet;
 import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import org.apache.commons.lang3.StringUtils;
@@ -161,7 +162,7 @@ public class CustDAO extends StrongObjectDAO {
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
     }
 
-    public List<CustomerEntity> queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction, String custName) throws Exception{
+    public RecordSet queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction, String custName) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("START_DATE", startDate);
         parameter.put("END_DATE", endDate);
@@ -169,12 +170,14 @@ public class CustDAO extends StrongObjectDAO {
         parameter.put("CUST_NAME", custName);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT customer.CUST_ID,CUST_NAME FROM ins_customer customer, ");
+        sb.append("SELECT customer.CUST_ID,CUST_NAME, HOUSE_COUNSELOR_ID, employee.NAME FROM ins_customer customer ");
+        sb.append("LEFT JOIN ins_employee employee ON (employee.EMPLOYEE_ID = customer.HOUSE_COUNSELOR_ID and employee.STATUS = '0' ), ");
         sb.append("(SELECT cust_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action " +
                 "GROUP BY cust_id) tmp_actions, ");
         sb.append("(SELECT cust_id, MIN(finish_time) finish_time FROM ins_cust_original_action " +
                 "WHERE action_code = 'JW' " +
                 "GROUP BY cust_id) tmp_time ");
+
         sb.append("WHERE customer.CUST_ID = tmp_actions.CUST_ID ");
         sb.append("AND tmp_actions.CUST_ID = tmp_time.CUST_ID ");
         sb.append("AND customer.`CUST_STATUS` != '9' ");
@@ -193,7 +196,9 @@ public class CustDAO extends StrongObjectDAO {
         if(StringUtils.isNotBlank(custName)) {
             sb.append("AND customer.cust_name like CONCAT('%', :CUST_NAME, '%') ");
         }
+        sb.append(" ORDER BY NAME ");
         sb.append(" LIMIT 300");
-        return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
+
+        return this.queryBySql(sb.toString(), parameter);
     }
 }

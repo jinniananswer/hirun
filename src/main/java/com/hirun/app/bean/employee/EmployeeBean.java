@@ -1,6 +1,7 @@
 package com.hirun.app.bean.employee;
 
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.dao.employee.EmployeeDAO;
 import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
 import com.hirun.app.dao.org.OrgDAO;
@@ -10,8 +11,11 @@ import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.user.UserEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
+import com.most.core.app.session.AppSession;
+import com.most.core.app.session.SessionManager;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
+import com.most.core.pub.data.SessionEntity;
 import com.most.core.pub.tools.datastruct.ArrayTool;
 import org.apache.commons.lang3.StringUtils;
 
@@ -134,20 +138,16 @@ public class EmployeeBean {
 
 
     public static RecordSet getAllSubordinatesCounselorRecordSet(String parentEmployeeIds) throws Exception{
-        RecordSet subordinates = recursiveAllSubordinatesReordSet(parentEmployeeIds);
+
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+
+        RecordSet subordinates = recursiveAllSubordinatesCounselorReordSet(parentEmployeeIds);
 
         if(subordinates == null || subordinates.size() <= 0)
             return null;
 
-        RecordSet rst = new RecordSet();
-        int size = subordinates.size();
-        for(int i=0;i<size;i++){
-            Record subordinate = subordinates.get(i);
-            if(StringUtils.equals("42", subordinate.get("JOB_ROLE")) || StringUtils.equals("58", subordinate.get("JOB_ROLE"))){
-                rst.add(subordinate);
-            }
-        }
-        return rst;
+
+        return subordinates;
     }
 
     public static List<EmployeeEntity> getAllSubordinatesCounselors(String parentEmployeeIds) throws Exception{
@@ -165,9 +165,9 @@ public class EmployeeBean {
         return rst;
     }
 
-    public static String queryParentEmployeeIdByEmployeeIdAndJobRoles(String employeeId, String jobRoles) throws Exception {
+    public static String queryParentEmployeeIdByEmployeeIdAndJobRoles(String employeeId, String userRoleIds) throws Exception {
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
-        return employeeDAO.queryParentEmployeeIdByEmployeeIdAndJobRoles(employeeId, jobRoles);
+        return employeeDAO.queryParentEmployeeIdByEmployeeIdAndUserRoles(employeeId, userRoleIds);
     }
 
     public static RecordSet queryCounselorByOrgId(String orgId) throws Exception{
@@ -317,5 +317,69 @@ public class EmployeeBean {
     public static RecordSet queryEmployeeByEmpIdsAndName(String employeeIds,String name) throws Exception {
         EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
         return employeeDAO.queryEmployeeByEmpIdsAndName(employeeIds,name);
+    }
+
+    public static RecordSet recursiveAllSubordinatesCounselorReordSet(String parentEmployeeIds) throws Exception{
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        RecordSet subordinates = dao.querySubordinatesCounselorEmployeeInParentEmployee(parentEmployeeIds);
+        if(subordinates == null || subordinates.size() <= 0)
+            return subordinates;
+
+        RecordSet rst = new RecordSet();
+        rst.addAll(subordinates);
+
+        String recursiveParentEmployeeIds = "";
+        int size = subordinates.size();
+        for(int i=0;i<size;i++){
+            Record employee = subordinates.get(i);
+            recursiveParentEmployeeIds += employee.get("EMPLOYEE_ID") + ",";
+        }
+
+        recursiveParentEmployeeIds = recursiveParentEmployeeIds.substring(0, recursiveParentEmployeeIds.length() - 1);
+        if(StringUtils.isNotEmpty(recursiveParentEmployeeIds)){
+            RecordSet tmpSubordinates = recursiveAllSubordinatesCounselorReordSet(recursiveParentEmployeeIds);
+            if(tmpSubordinates != null && tmpSubordinates.size() > 0)
+                rst.addAll(tmpSubordinates);
+        }
+
+        return rst;
+    }
+
+    public static List<EmployeeEntity> getCounselorsByPermission(String parentEmployeeIds) throws Exception {
+        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String selfOrgId = OrgBean.getOrgId(sessionEntity);
+
+        if (Permission.hasAllCity()) {
+            return dao.queryAllCounselor();
+        } else if (Permission.hasAllShop()) {
+            if (StringUtils.isBlank(selfOrgId)) {
+                return null;
+            }
+
+            OrgEntity company = OrgBean.getAssignTypeOrg(selfOrgId, "3");
+            if (company == null) {
+                return null;
+            }
+
+            String orgLine = OrgBean.getOrgLine(company.getOrgId());
+            return dao.queryCounselorsByOrgLine(orgLine);
+
+        } else if (Permission.hasSelfShop()) {
+            if (StringUtils.isBlank(selfOrgId)) {
+                return null;
+            }
+            OrgEntity shop = OrgBean.getAssignTypeOrg(selfOrgId, "2");
+            if (shop == null) {
+                return null;
+            }
+
+            String orgLine = OrgBean.getOrgLine(shop.getOrgId());
+            return dao.queryCounselorsByOrgLine(orgLine);
+
+        } else {
+            return getAllSubordinatesCounselors(parentEmployeeIds);
+        }
     }
 }
