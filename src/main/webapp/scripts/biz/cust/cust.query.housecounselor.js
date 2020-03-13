@@ -35,7 +35,7 @@ var custQuery4HouseCounselor = {
 
         window["custTable"] = new Wade.Table("custTable", {
             fixedMode:true,
-            fixedLeftCols:1,
+            fixedLeftCols:2,
             editMode:false
         });
 
@@ -135,6 +135,7 @@ var QueryCondPopup = {
 var counselorPopup = {
     callback : '',
     init : true,
+    counselors: null,
     initCounselorPopup : function(obj, callback) {
         if(counselorPopup.init) {
             $.ajaxReq({
@@ -148,6 +149,7 @@ var counselorPopup = {
                     // myEmployeeInfo.EMPLOYEE_ID = Employee.employeeId;
                     // myEmployeeInfo.NAME = Employee.employeeName;
                     // data.EMPLOYEE_LIST.push(myEmployeeInfo);
+                    counselorPopup.counselors = data;
                     $('#BIZ_COUNSELORS').html(template("employee_template", data));
                 },
                 errorFunc : function(resultCode, resultInfo) {
@@ -183,6 +185,29 @@ var counselorPopup = {
             $.insertHtml('beforeend', label, html.join(""));
         }
     },
+
+    queryEmployee : function() {
+        if (!counselorPopup.counselors.EMPLOYEE_LIST) {
+            return;
+        }
+        if (counselorPopup.counselors.EMPLOYEE_LIST.length <= 0) {
+            return;
+        }
+
+        let name = $("#SEARCH_TEXT").val();
+
+        let result = [];
+        for (let i=0;i<counselorPopup.counselors.EMPLOYEE_LIST.length;i++) {
+            let counselor = counselorPopup.counselors.EMPLOYEE_LIST[i];
+            if (counselor.NAME.indexOf(name) >= 0) {
+                result.push(counselor);
+            }
+        }
+        let data = {};
+        data.EMPLOYEE_LIST = result;
+        $('#BIZ_COUNSELORS').html(template("employee_template", data));
+    },
+
     confirm : function(obj) {
         var selectedEmployeeList = [];
         $('#BIZ_COUNSELORS li[tag=li_employee]').each(function(idx, item) {
