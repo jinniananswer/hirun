@@ -138,10 +138,7 @@ public class EmployeeBean {
 
 
     public static RecordSet getAllSubordinatesCounselorRecordSet(String parentEmployeeIds) throws Exception{
-
-        EmployeeDAO dao = DAOFactory.createDAO(EmployeeDAO.class);
-
-        RecordSet subordinates = recursiveAllSubordinatesCounselorReordSet(parentEmployeeIds);
+        RecordSet subordinates = recursiveAllSubordinatesReordSet(parentEmployeeIds);
 
         if(subordinates == null || subordinates.size() <= 0)
             return null;

@@ -200,11 +200,13 @@ public class EmployeeDAO extends StrongObjectDAO{
     public RecordSet querySubordinatesEmployeeInParentEmployee(String parentEmployeeIds) throws Exception{
 
         StringBuilder sb = new StringBuilder();
-        sb.append("select a.*,b.job_role from ins_employee a, ins_employee_job_role b ");
+        sb.append("select a.*,b.job_role,c.nature from ins_employee a, ins_employee_job_role b,ins_org c ");
         sb.append("where b.parent_employee_id in ("+parentEmployeeIds+") ");
         sb.append("and b.employee_id = a.employee_id ");
         sb.append("and a.status = '0' ");
         sb.append("and now() < b.end_date ");
+        sb.append("and b.org_id=c.org_id ");
+
 
         RecordSet employees = this.queryBySql(sb.toString(), new HashMap<String, String>());
         return employees;
