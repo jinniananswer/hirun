@@ -40,6 +40,7 @@
 					<thead>
 					<tr>
 						<th col="CUST_NAME">客户姓名</th>
+						<th col="NAME">家装顾问</th>
 						<th col="JW_NUM" ontap="$.sortTable(this, 'int')">加微完成次数</th>
 						<th col="JW_LAST_TIME" ontap="$.sortTable(this, 'date')">加微最后完成时间</th>
 						<th col="LTZDSTS_NUM" ontap="$.sortTable(this, 'int')">客户产品需求库使用指导书完成次数</th>
@@ -156,6 +157,18 @@
 						<div class="back" ontap="backPopup(this)">请选择家装顾问</div>
 					</div>
 					<div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+						<div class="c_list c_list-form">
+							<ul id="searchArea">
+								<li>
+									<div class="value">
+                                                <span class="e_mix">
+                                                    <input id="SEARCH_TEXT" name="SEARCH_TEXT" type="text" placeholder="请输入员工姓名（模糊搜索）" nullable="no" desc="查询条件"/>
+                                                    <button type="button" class="e_button-blue" ontap="counselorPopup.queryEmployee();"><span class="e_ico-search"></span><span>查询</span></button>
+                                                </span>
+									</div>
+								</li>
+							</ul>
+						</div>
 						<div class="c_list c_list-col-1 c_list-line c_list-border c_list-fixWrapSpace">
 							<ul id="BIZ_COUNSELORS">
 
