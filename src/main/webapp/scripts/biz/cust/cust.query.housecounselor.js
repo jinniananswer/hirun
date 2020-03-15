@@ -56,7 +56,8 @@ var custQuery4HouseCounselor = {
                 END_DATE : $('#COND_END_DATE').val() ? $('#COND_END_DATE').val() + " 23:59:59" : "",
                 FINISH_ACTION : $('#ACTION_NAME').attr('action_code'),
                 HOUSE_COUNSELOR_IDS : $('#EMPLOYEE_NAMES').attr('employee_ids'),
-                CUST_NAME : $('#COND_CUST_NAME').val()
+                CUST_NAME : encodeURI($('#COND_CUST_NAME').val()),
+                WX_NICK:encodeURI($('#COND_WX_NICK').val()),
             },
             type : 'GET',
             successFunc : function(data) {

@@ -31,6 +31,7 @@ import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -358,7 +359,7 @@ public class CustService extends GenericService{
 //            custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"));
         } else if(StringUtils.isNotBlank(topEmployeeId)) {
             StringBuilder tmpHouseCounselorIds = new StringBuilder();
-            List<EmployeeEntity> employeeEntityList = EmployeeBean.getAllSubordinatesCounselors(topEmployeeId);
+            List<EmployeeEntity> employeeEntityList = EmployeeBean.getCounselorsByPermission(topEmployeeId);
             if(ArrayTool.isNotEmpty(employeeEntityList)) {
                 for(EmployeeEntity employeeEntity : employeeEntityList) {
                     tmpHouseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
@@ -370,7 +371,13 @@ public class CustService extends GenericService{
             }
         }
 
-        RecordSet custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"), requestData.getString("CUST_NAME"));
+        String customerName= URLDecoder.decode(request.getString("CUST_NAME"),"UTF-8");
+        String wxNick= URLDecoder.decode(request.getString("WX_NICK"),"UTF-8");
+
+
+        RecordSet custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"),
+                requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"),
+                customerName,wxNick);
         JSONArray result = new JSONArray();
         GenericDAO insDao = new GenericDAO("ins");
         for(int k=0;k<custList.size();k++) {
@@ -381,9 +388,13 @@ public class CustService extends GenericService{
             sql.append("SELECT cust_id, action_code, COUNT(action_code) action_num, DATE_FORMAT(MAX(finish_time), '%Y-%m-%d %H:%i:%s') last_finish_time ");
             sql.append("FROM ins_cust_original_action ");
             sql.append("WHERE cust_id = :CUST_ID ");
+            //2020/03/15新增
+            sql.append("and  employee_id = :EMPLOYEE_ID ");
             sql.append("GROUP BY action_code ");
             Map<String, String> parameter = new HashMap<String, String>();
             parameter.put("CUST_ID", customerEntity.get("CUST_ID"));
+            //2020/03/15新增
+            parameter.put("EMPLOYEE_ID", customerEntity.get("HOUSE_COUNSELOR_ID"));
 
             RecordSet recordSet = insDao.queryBySql(sql.toString(), parameter);
 

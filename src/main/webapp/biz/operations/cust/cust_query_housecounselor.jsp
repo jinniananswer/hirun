@@ -102,6 +102,12 @@
 									</div>
 								</li>
 								<li>
+									<div class="label">微信昵称</div>
+									<div class="value">
+										<input type="text" id="COND_WX_NICK" name="COND_WX_NICK" desc="微信昵称"/>
+									</div>
+								</li>
+								<li>
 									<div class="label">家装顾问</div>
 									<div class="value">
                                         <span class="e_mix" ontap="custQuery4HouseCounselor.selectCounselor(this)">
