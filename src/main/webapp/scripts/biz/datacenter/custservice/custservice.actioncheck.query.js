@@ -52,8 +52,9 @@
 
                 $.ajaxPost('initQueryActionFinishInfo',null,function(data){
                     var trees = data.ORG_TREE;
-                   // var rst = new Wade.DataMap(data);
-                   // var datas = rst.get("CUSTSERVICEINFO");
+                    var rst = new Wade.DataMap(data);
+                    //var datas = rst.get("FLAG");
+
 
                     if(trees != null){
                         window["orgTree"].data = trees;
@@ -61,7 +62,9 @@
 
                     }
 
-                   // $.custServiceActionQuery.drawCustServiceInfo4Query(datas);
+                    var tagset=rst.get("TAGINFO");
+                    $.custServiceActionQuery.drawTagInfo(tagset);
+
                     hidePopup('UI-popup','QueryCondPopupItem');
                     hidePopup('UI-popup','UI-QUERYCUSTSERVICE');
                     hidePopup('UI-popup','UI-ORG');
@@ -76,12 +79,15 @@
             query :function(){
                 $.beginPageLoading("查询中。。。");
 
-                var custServiceEmpId=$("#CUSTSERVICEEMPLOYEEID").val();
-                var orgId=$("#ORG_ID").val();
-                var startDate=$('#COND_START_DATE').val();
-                var endDate=$('#COND_END_DATE').val();
-
-                var param='&CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate;
+                let custServiceEmpId=$("#CUSTSERVICEEMPLOYEEID").val();
+                let orgId=$("#ORG_ID").val();
+                let startDate=$('#COND_START_DATE').val();
+                let endDate=$('#COND_END_DATE').val();
+                let name= $("#NAME").val();
+                let tagId=$("#QUERY_TAG_ID").val();
+                let wxNick=$("#WX_NICK").val();
+                var param='&CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate
+                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick;
                 $.ajaxPost('queryCustServFinishActionInfo',param,function(data) {
                     var rst = new Wade.DataMap(data);
                     var datas=rst.get("CUSTSERVICEFINISHACTIONINFO");
@@ -118,23 +124,24 @@
 
 
 
-                var length = datas.length;
-                for(var i=0;i<length;i++) {
-                    var data = datas.get(i);
-                    var partyName=data.get("PARTY_NAME");
-                    var create_date=data.get("CREATE_TIME");
-                    var houseAddress=data.get("HOUSE_ADDRESS");
-                    var custservName=data.get("CUSTSERVICENAME");
-                    var scanCityTime=data.get("EXPERIENCE_TIME");
-                    var scanCityCabins=data.get("CITYCABINNAMES");
-                    var experience=data.get("EXPERIENCE");
-                    var smjrlcfinishTime=data.get("SMJRLC_FINISHTIME");
-                    var hzhkfinishTime=data.get("HZHK_FINISHTIME");
-                    var apsjsfinishTime=data.get("APSJS_FINISHTIME");
-                    var funcPrintTime=data.get("FUNCPRINT_CREATE_TIME");
-                    var stylePrintTime=data.get("STYLEPRINT_CREATE_TIME");
-                    var wxnick=data.get("WX_NICK");
-                    var visitcount=data.get("VISITCOUNT");
+                let length = datas.length;
+                for(let i=0;i<length;i++) {
+                    let data = datas.get(i);
+                    let partyName=data.get("PARTY_NAME");
+                    let create_date=data.get("CREATE_TIME");
+                    let houseAddress=data.get("HOUSE_ADDRESS");
+                    let custservName=data.get("CUSTSERVICENAME");
+                    let scanCityTime=data.get("EXPERIENCE_TIME");
+                    let scanCityCabins=data.get("CITYCABINNAMES");
+                    let experience=data.get("EXPERIENCE");
+                    let smjrlcfinishTime=data.get("SMJRLC_FINISHTIME");
+                    let hzhkfinishTime=data.get("HZHK_FINISHTIME");
+                    let apsjsfinishTime=data.get("APSJS_FINISHTIME");
+                    let funcPrintTime=data.get("FUNCPRINT_CREATE_TIME");
+                    let stylePrintTime=data.get("STYLEPRINT_CREATE_TIME");
+                    let wxnick=data.get("WX_NICK");
+                    let visitcount=data.get("VISITCOUNT");
+                    let tagName=data.get("TAG_NAME");
 
                     if(wxnick=="undefined" || wxnick ==null || wxnick =="null"){
                         wxnick='';
@@ -198,19 +205,11 @@
                         "FINISH_DKCSMW":scanCityTime,
                         "CITYCABIN":scanCityCabins,
                         "EXCEPERICE":experience,
-                        "VISITCOUNT":"<span ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>"+visitcount+"</span>"
+                        "VISITCOUNT":"<span class='e_red'  ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>"+visitcount+"</span>",
+                        "TAG_NAME":tagName,
                     });
 
 
-
-
-                   // html.push("<th class='fn'>");
-                   // html.push("<span ontap='$.custServiceActionQuery.redirectHKHZ(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
-                   // html.push("<a ontap='$.custServiceActionQuery.redirectHKHZ(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
-                  //  html.push("详情");
-                   // html.push("</a>");
-                   // html.push("</span>");
-                   // html.push("</th>")
                 }
             },
 
@@ -262,6 +261,9 @@
                 $('#CUSTSERVICEEMPLOYEEID').val('');
                 $('#ORG_TEXT').val('');
                 $('#ORG_ID').val('');
+                $('#TAG_TEXT').val('');
+                $('#QUERY_TAG_ID').val('');
+                $('#NAME').val('');
             },
 
             redirectPartyVisit : function(parytId,projectId) {
@@ -270,6 +272,52 @@
 
             redirectHKHZ : function(parytId,projectId) {
                 $.redirect.open('redirectToChangeGoodSeeLiveInfo?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '咨询信息');
+            },
+
+            drawTagInfo : function(datas){
+                $.endPageLoading();
+
+                $("#TagInfo").empty();
+                var html = [];
+                if(datas == null || datas.length <= 0){
+                    return;
+                }
+
+                var length = datas.length;
+                for(var i=0;i<length;i++) {
+                    var data = datas.get(i);
+                    html.push("<li class='link'  tagId4Query='" + data.get("CODE_VALUE") + "' tagName4Query='" + data.get("CODE_NAME") + "' ontap='$.custServiceActionQuery.selectTag(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    html.push("</div></div>");
+                    html.push("<div class=\"main\"><div class=\"title\">");
+                    html.push(data.get("CODE_NAME"));
+                    html.push("</div>");
+                    html.push("</div></div></div></li>");
+                }
+                $.insertHtml('beforeend', $("#TagInfo"), html.join(""));
+
+            },
+
+            selectTag : function (e) {
+                var obj = $(e);
+                var tagId = obj.attr("tagId4Query");
+                var tagName=obj.attr("tagName4Query");
+                $("#TAG_TEXT").val(tagName);
+                $("#QUERY_TAG_ID").val(tagId);
+                backPopup(document.getElementById("UI-TAG4QUERY"));
+            },
+
+            export : function() {
+                let custServiceEmpId=$("#CUSTSERVICEEMPLOYEEID").val();
+                let orgId=$("#ORG_ID").val();
+                let startDate=$('#COND_START_DATE').val();
+                let endDate=$('#COND_END_DATE').val();
+                let name= $("#NAME").val();
+                let tagId=$("#QUERY_TAG_ID").val();
+                let wxNick=$("#WX_NICK").val();
+
+                var param='CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate
+                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick;
+                window.location.href = "/exportCustActionInfo?"+param;
             },
 
         }});

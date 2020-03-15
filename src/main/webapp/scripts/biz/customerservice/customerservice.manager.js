@@ -309,7 +309,6 @@
 
             selectPartyTag : function (e) {
                 var obj = $(e);
-
                 var className = obj.attr("class");
                 if(className == "link checked") {
                     obj.attr("class", "link");

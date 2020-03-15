@@ -637,14 +637,14 @@ public class CustServService extends GenericService {
                 Record childRecord = allCustServiceEmpEntity.get(i);
                 employeeIds += childRecord.get("EMPLOYEE_ID") + ",";
             }
-            employeeIds = employeeIds.substring(0, employeeIds.length() - 1);
+            employeeIds = employeeIds+custServicerEmployeeId;
         } else if (Permission.hasAllShop()) {
             RecordSet allCustServiceEmpEntity = EmployeeBean.queryEmployeeByEmpIdsAndOrgId("", orgId);
             for (int i = 0; i < allCustServiceEmpEntity.size(); i++) {
                 Record childRecord = allCustServiceEmpEntity.get(i);
                 employeeIds += childRecord.get("EMPLOYEE_ID") + ",";
             }
-            employeeIds = employeeIds.substring(0, employeeIds.length() - 1);
+            employeeIds = employeeIds+custServicerEmployeeId;
         } else {
             RecordSet childEmployeeRecordSet = EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(custServicerEmployeeId, "0");
             if (childEmployeeRecordSet.size() <= 0 || childEmployeeRecordSet == null) {

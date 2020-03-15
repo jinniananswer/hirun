@@ -35,6 +35,9 @@ public class CustServiceReportService extends GenericService{
         ServiceResponse response=new ServiceResponse();
         JSONObject orgTree = OrgBean.getOrgTree();
         response.set("ORG_TREE", orgTree);
+        //2020/03/13新增
+        RecordSet tagSet = StaticDataTool.getCodeTypeDatas("PARTY_TAG");
+        response.set("TAGINFO", ConvertTool.toJSONArray(tagSet));
 
         return response;
     }
@@ -105,7 +108,10 @@ public class CustServiceReportService extends GenericService{
         String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
 
         String employeeIds="";
-
+        //2020/03/13新增
+        String name=request.getString("NAME");
+        String tagId=request.getString("TAG_ID");
+        String wxNick=request.getString("WX_NICK");
 
 
         if(StringUtils.isNotBlank(startDate)){
@@ -155,7 +161,7 @@ public class CustServiceReportService extends GenericService{
         }
 
 
-        RecordSet custServFinishActionInfo=dao.queryCustServFinishActionInfo(startDate,endDate,employeeIds,orgId);
+        RecordSet custServFinishActionInfo=dao.queryCustServFinishActionInfo(startDate,endDate,employeeIds,orgId,name,tagId,wxNick);
         if(custServFinishActionInfo.size()<=0 || custServFinishActionInfo==null){
             return response;
         }
@@ -182,6 +188,12 @@ public class CustServiceReportService extends GenericService{
             }
             //翻译客户代表名字
             record.put("CUSTSERVICENAME",EmployeeCache.getEmployeeNameEmployeeId(linkemployeeid));
+            //2020/03/15新增
+            String tagName="无标签";
+            if(StringUtils.isNotBlank(record.get("TAG_ID"))){
+                tagName=StaticDataTool.getCodeName("PARTY_TAG",(record.get("TAG_ID")));
+            }
+            record.put("TAG_NAME",tagName);
         }
         response.set("CUSTSERVICEFINISHACTIONINFO", ConvertTool.toJSONArray(custServFinishActionInfo));
         return response;
