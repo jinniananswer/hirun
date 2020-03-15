@@ -169,7 +169,11 @@ public class PlanReportService extends GenericService{
                         buSheet.put("FINISH_YJALTS",buSheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
                         buSheet.put("FINISH_DKCSMU",buSheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
                     }
-                    shopSheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(shopId).getName() + "合计");
+                    if(StringUtils.isBlank(shopId)){
+                        shopSheet.put("EMPLOYEE_NAME", "");
+                    }else{
+                        shopSheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(shopId).getName() + "合计");
+                    }
                     sheetList.add(shopSheet);
                 }
                 if(Permission.hasAllShop()) {
@@ -355,7 +359,11 @@ public class PlanReportService extends GenericService{
                         buSheet.put("FINISH_YJALTS",buSheet.getIntValue("FINISH_YJALTS") + employeeSheet.getIntValue("FINISH_YJALTS"));
                         buSheet.put("FINISH_DKCSMU",buSheet.getIntValue("FINISH_DKCSMU") + employeeSheet.getIntValue("FINISH_DKCSMU"));
                     }
-                    shopSheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(shopId).getName() + "合计");
+                    if(StringUtils.isBlank(shopId)){
+                        shopSheet.put("EMPLOYEE_NAME", "");
+                    }else{
+                        shopSheet.put("EMPLOYEE_NAME", orgDAO.queryOrgById(shopId).getName() + "合计");
+                    }
                     sheetList.add(shopSheet);
                 }
                 if(Permission.hasAllShop()) {
