@@ -19,7 +19,7 @@
 <!-- 标题栏 结束 -->
 <!-- 滚动（替换为 java 组件） 开始 -->
 <div class="c_scroll c_scroll-float c_scroll-header">
-
+	<div class="c_tip c_tip-red">客户清理审核只针对无效客户、测试客户。其他类型客户请通过标签方式标记。</div>
     <div class="l_padding">
         <div class="c_title">
             <div class="text">申请列表</div>

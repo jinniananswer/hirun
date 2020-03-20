@@ -22,6 +22,7 @@
 <!-- 标题栏 结束 -->
 <!-- 滚动（替换为 java 组件） 开始 -->
 <div class="c_scroll c_scroll-float c_scroll-header">
+	<div class="c_tip c_tip-red">客户清理申请只针对无效客户、测试客户。其他类型客户请通过标签方式标记。</div>
     <div class="l_padding">
         <div class="c_title">
             <div class="text">基本信息</div>
@@ -69,9 +70,10 @@
         <div class="c_list c_list-line c_list-border c_list-space l_padding">
             <ul id="reason">
                 <li class="link required">
+
                     <div class="label">客户清理原因：</div>
                     <div class="value">
-                        <textarea id="CLEAR_REASON" name="CLEAR_REASON" placeholder="请填写客户清理原因" nullable="no" desc="客户清理原因" class="e_textarea-row-2"></textarea>
+                        <span id="mySelectContainer"></span>
                     </div>
                 </li>
             </ul>

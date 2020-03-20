@@ -32,6 +32,7 @@ import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -1502,6 +1503,8 @@ public class CustServService extends GenericService {
         String partyId = request.getString("PARTY_ID");
         String id = request.getString("ID");
         String auditStatus = request.getString("AUDIT_STATUS");
+        String applyEmployeeId = request.getString("APPLY_EMPLOYEE_ID");
+
         AppSession session = SessionManager.getSession();
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
         String auditEmpId = session.getSessionEntity().get("EMPLOYEE_ID");
@@ -1523,8 +1526,22 @@ public class CustServService extends GenericService {
             partyInfo.put("UPDATE_TIME", TimeTool.now());
             dao.save("ins_party", new String[]{"PARTY_ID"}, partyInfo);
         }
-        return response;
+
+        //更新报表数据
+/*        if(StringUtils.equals("1", auditStatus)) {
+            PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
+            String createTime=partyEntity.getCreateTime();
+            String statTime=createTime.substring(0,7);
+            String[] split = statTime.split("-");
+            String time=split[0]+split[1];
+            RecordSet recordSet=dao.queryCustServMonStatInfo(applyEmployeeId,time);
+            //更新报表
+            CustServiceStatBean.clearCustomerUpdateStat(recordSet,partyEntity);
+        }*/
+
+     return response;
     }
+
 
 
     public ServiceResponse initQuery4PartyVisit(ServiceRequest request) throws Exception {

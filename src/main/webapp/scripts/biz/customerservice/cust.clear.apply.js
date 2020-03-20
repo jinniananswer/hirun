@@ -2,6 +2,20 @@
     $.extend({custclear:{
 
             init : function() {
+
+                $.Select.append(
+                    "mySelectContainer",
+                    {
+                        id:"CLEAR_REASON",
+                        name:"CLEAR_REASON"
+                    },
+                    // 数据源，可以为 JSON 数组，或 JS 的 DatasetLsit 对象
+                    [
+                        {TEXT:"无效客户", VALUE:"1"},
+                        {TEXT:"测试客户", VALUE:"2"},
+                    ]
+                );
+
                 $.beginPageLoading();
                 $.ajaxPost('initQueryForCustClear','&PARTY_ID='+$("#PARTY_ID").val()+'&PROJECT_ID='+$("#PROJECT_ID").val(),function(data) {
                     $.endPageLoading();
@@ -193,7 +207,10 @@
             submit : function () {
                 if ($.validate.verifyAll("reason")) {
                      $.beginPageLoading();
-                    var parameter = '&PROJECT_ID=' + $("#PROJECT_ID").val() + "&PARTY_ID=" + $("#PARTY_ID").val() + "&REASON=" + $("#CLEAR_REASON").val();
+
+                  let reason=$("#CLEAR_REASON").text();
+
+                    let parameter = '&PROJECT_ID=' + $("#PROJECT_ID").val() + "&PARTY_ID=" + $("#PARTY_ID").val() + "&REASON=" +reason;
 
                     $.ajaxPost('submitCustClearApply', parameter, function (data) {
                         $.endPageLoading();
@@ -206,8 +223,6 @@
                         }, {"cancel": "取消"})
                     });
                 }
-
-
             }
 
 
