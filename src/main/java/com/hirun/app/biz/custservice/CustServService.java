@@ -1213,8 +1213,17 @@ public class CustServService extends GenericService {
             changecustlog.put("A_CUSTSERVICE_EMPID", custServiceEmpId);
             changecustlog.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
             changecustlog.put("UPDATE_DATE", session.getCreateTime());
-
             dao.insertAutoIncrement("custservice_change_log", changecustlog);
+            //将蓝图信息也要变更过来
+            PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyIdArr[i]);
+            if(StringUtils.isBlank(partyEntity.getOpenId())){
+                return response;
+            }
+            String openId=partyEntity.getOpenId();
+            Map<String, String> blueActionInfo = new HashMap<String, String>();
+            blueActionInfo.put("OPEN_ID",openId);
+            blueActionInfo.put("REL_EMPLOYEE_ID",custServiceEmpId);
+            dao.save("ins_blueprint_action", new String[]{"OPEN_ID"}, blueActionInfo);
 
         }
         return response;
