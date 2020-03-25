@@ -165,6 +165,7 @@ public class CustServiceReportController extends RootController {
         parameter.put("NAME", request.getParameter("NAME"));
         parameter.put("TAG_ID", request.getParameter("TAG_ID"));
         parameter.put("WX_NICK", request.getParameter("WX_NICK"));
+        parameter.put("ORG_ID", request.getParameter("ORG_ID"));
 
         ServiceResponse response = ServiceClient.call("DataCenter.custservice.CustServiceReportService.queryCustServFinishActionInfo", parameter);
 
