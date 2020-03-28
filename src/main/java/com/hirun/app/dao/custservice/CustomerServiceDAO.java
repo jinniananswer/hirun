@@ -658,7 +658,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" SUM(city_Count) as scancityhouse_count,SUM(v.func_count) as func_count,SUM(style_count) as style_count,SUM(xqlte_count) as xqlte_count");
         sb.append(" from (");
         sb.append(" select link_employee_id as employee_id,");
-        sb.append(" case WHEN d.`status`='1' then '1' else 0 " +
+        sb.append(" case WHEN (d.`status`='1' and d.finish_time BETWEEN :START_DATE and :END_DATE ) then '1' else 0 " +
                 "   end as sm_count,");
         sb.append(" case WHEN EXISTS (select 1 from ins_scan_citycabin x where b.project_id=x.project_id and x.employee_id=c.link_employee_id " +
                 "        and x.experience_Time BETWEEN :START_DATE and :END_DATE) then '1' else 0 " +
