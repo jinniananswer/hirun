@@ -663,20 +663,14 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" case WHEN EXISTS (select 1 from ins_scan_citycabin x where b.project_id=x.project_id and x.employee_id=c.link_employee_id " +
                 "        and x.experience_Time BETWEEN :START_DATE and :END_DATE) then '1' else 0 " +
                 "   end as city_count,");
-        sb.append(" case WHEN EXISTS (SELECT 1 from ins_blueprint_action p" +
-                "      where p.blueprint_action_id in" +
-                "      (SELECT MAX(blueprint_action_id) FROM ins_blueprint_action m where m.open_id=a.open_id and c.link_employee_id=m.rel_employee_id and m.xqlte_create_time BETWEEN :START_DATE and :END_DATE )" +
-                "      and p.funcprint_create_time BETWEEN :START_DATE and :END_DATE ) then '1' else 0 " +
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action m where m.open_id=a.open_id and c.link_employee_id=m.rel_employee_id " +
+                "       and m.funcprint_create_time BETWEEN :START_DATE and :END_DATE ) then '1' else 0 " +
                 "  end as func_count,");
-        sb.append(" case WHEN EXISTS (SELECT 1 from ins_blueprint_action o " +
-                "       where o.blueprint_action_id in " +
-                "       (SELECT MAX(blueprint_action_id) FROM ins_blueprint_action n where n.open_id=a.open_id and c.link_employee_id=n.rel_employee_id and n.xqlte_create_time BETWEEN :START_DATE and :END_DATE ) " +
-                "       and o.styleprint_create_time BETWEEN :START_DATE and :END_DATE )then '1' else 0 " +
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action n where n.open_id=a.open_id and c.link_employee_id=n.rel_employee_id " +
+                "       and n.styleprint_create_time BETWEEN :START_DATE and :END_DATE) then '1' else 0 " +
                 "   end as style_count,");
-        sb.append(" case WHEN EXISTS (SELECT 1 from ins_blueprint_action k" +
-                "       where k.blueprint_action_id in" +
-                "     (SELECT MAX(blueprint_action_id) FROM ins_blueprint_action y where y.open_id=a.open_id and c.link_employee_id=y.rel_employee_id and k.xqlte_create_time BETWEEN :START_DATE and :END_DATE)" +
-                "       and (k.styleprint_create_time BETWEEN :START_DATE and :END_DATE) and (k.funcprint_create_time BETWEEN :START_DATE and :END_DATE)   ) then '1' else 0 " +
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action y where y.open_id=a.open_id and c.link_employee_id=y.rel_employee_id " +
+                "       and (y.styleprint_create_time BETWEEN :START_DATE and :END_DATE) and (y.funcprint_create_time BETWEEN :START_DATE and :END_DATE))  then '1' else 0 " +
                 "   end as xqlte_count");
         sb.append(" from ins_party a,ins_project b,ins_project_linkman c ,ins_project_original_action d");
         sb.append(" where a.party_id=b.party_id");
