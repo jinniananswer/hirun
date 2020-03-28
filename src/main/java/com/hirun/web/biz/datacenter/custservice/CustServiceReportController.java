@@ -57,6 +57,12 @@ public class CustServiceReportController extends RootController {
         return response.toJsonString();
     }
 
+    @RequestMapping(value = "queryNewCustServMonStatInfo")
+    public @ResponseBody String queryNewCustServMonStatInfo(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("DataCenter.custservice.CustServiceReportService.queryNewCustServMonStatInfo", paramter);
+        return response.toJsonString();
+    }
+
     @RequestMapping("/exportCustServiceMonStat")
     public @ResponseBody void exportCustServiceMonStat(HttpServletRequest request, HttpServletResponse httpResponse) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
@@ -66,7 +72,7 @@ public class CustServiceReportController extends RootController {
 
 
 
-        ServiceResponse response = ServiceClient.call("DataCenter.custservice.CustServiceReportService.queryCustServMonStatInfo", parameter);
+        ServiceResponse response = ServiceClient.call("DataCenter.custservice.CustServiceReportService.queryNewCustServMonStatInfo", parameter);
 
         JSONArray statInfoArray = response.getJSONArray("CUSTSERVICESTATINFO");
 

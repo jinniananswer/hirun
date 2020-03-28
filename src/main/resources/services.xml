@@ -221,6 +221,7 @@
     <entity name="DataCenter.custservice.CustServiceReportService.initQueryActionFinishInfo"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="initQueryActionFinishInfo"/>
     <entity name="DataCenter.custservice.CustServiceReportService.queryCustServiceByName"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="queryCustServiceByName"/>
     <entity name="DataCenter.custservice.CustServiceReportService.queryCustServMonStatInfo"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="queryCustServMonStatInfo"/>
+    <entity name="DataCenter.custservice.CustServiceReportService.queryNewCustServMonStatInfo"  class="com.hirun.app.biz.datacenter.custservice.CustServiceReportService" method="queryNewCustServMonStatInfo"/>
 
     <!--公共-->
     <entity name="Common.static.StaticDataService.getCodeTypeDatas"  class="com.hirun.app.biz.common.StaticDataService" method="getCodeTypeDatas"/>

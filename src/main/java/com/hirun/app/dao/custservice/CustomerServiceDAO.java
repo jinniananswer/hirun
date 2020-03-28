@@ -643,4 +643,51 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         }
         return list;
     }
+
+    /**
+     * 2020/03/27新增实时统计客户代表月报表
+     * @param employeeId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public RecordSet queryNewCustServMonStatInfo(String employeeId,String startDate,String endDate) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select v.employee_id ,count(1) as consult_count,sum(v.sm_count) as scan_count,");
+        sb.append(" SUM(city_Count) as scancityhouse_count,SUM(v.func_count) as func_count,SUM(style_count) as style_count,SUM(xqlte_count) as xqlte_count");
+        sb.append(" from (");
+        sb.append(" select link_employee_id as employee_id,");
+        sb.append(" case WHEN d.`status`='1' then '1' else 0 " +
+                "   end as sm_count,");
+        sb.append(" case WHEN EXISTS (select 1 from ins_scan_citycabin x where b.project_id=x.project_id and x.employee_id=c.link_employee_id " +
+                "        and x.experience_Time BETWEEN :START_DATE and :END_DATE) then '1' else 0 " +
+                "   end as city_count,");
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action m where m.open_id=a.open_id and c.link_employee_id=m.rel_employee_id " +
+                "       and m.funcprint_create_time BETWEEN :START_DATE and :END_DATE ) then '1' else 0 " +
+                "  end as func_count,");
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action n where n.open_id=a.open_id and c.link_employee_id=n.rel_employee_id " +
+                "       and n.styleprint_create_time BETWEEN :START_DATE and :END_DATE) then '1' else 0 " +
+                "   end as style_count,");
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action y where y.open_id=a.open_id and c.link_employee_id=y.rel_employee_id " +
+                "       and (y.styleprint_create_time BETWEEN :START_DATE and :END_DATE) and (y.funcprint_create_time BETWEEN :START_DATE and :END_DATE))  then '1' else 0 " +
+                "   end as xqlte_count");
+        sb.append(" from ins_party a,ins_project b,ins_project_linkman c ,ins_project_original_action d");
+        sb.append(" where a.party_id=b.party_id");
+        sb.append(" and b.project_id=c.project_id");
+        sb.append(" and a.party_status='0' ");
+        sb.append(" and b.project_id=d.project_id");
+        sb.append(" and d.action_code='SMJRLC' ");
+        sb.append(" and c.ROLE_TYPE = 'CUSTOMERSERVICE' ");
+        sb.append(" and a.create_time BETWEEN :START_DATE and :END_DATE ");
+        sb.append(" and c.link_employee_id= :EMPLOYEE_ID ");
+        sb.append(" ) v ");
+        sb.append(" group by v.employee_id ");
+
+        parameter.put("START_DATE",startDate);
+        parameter.put("END_DATE",endDate);
+        parameter.put("EMPLOYEE_ID",employeeId);
+
+        return this.queryBySql(sb.toString(),parameter);
+    }
 }
