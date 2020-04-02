@@ -27,7 +27,7 @@ import java.util.Map;
 public class XQLTYTSDataImport {
 
     private static String host = "www.hi-run.net";
-    private static String path = "/api/commends";
+    private static String path = "/api/commendsV2";
 //    private static String pageSize = "100";
 
     public static void dataImport(String start, String end) throws Exception {
@@ -212,6 +212,10 @@ public class XQLTYTSDataImport {
             modeParam.put("STAFF_ID", jsonData.getString("staff_id"));
             modeParam.put("INDB_TIME", TimeTool.now());
             modeParam.put("DEAL_TAG", "0");
+
+            //2020/04/02新增
+            modeParam.put("LT_TYPE", jsonData.getString("caid"));
+
 
             dao.insertAutoIncrement("out_hirunplus_commends_mode",modeParam);
 
