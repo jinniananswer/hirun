@@ -263,10 +263,15 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_blueprint_action ");
-        sb.append("where OPEN_ID=:OPEN_ID AND ACTION_CODE=:ACTION_CODE ");
+        sb.append("where OPEN_ID=:OPEN_ID  ");
+        if(StringUtils.equals(action_code,"XQLTY")){
+            sb.append(" and action_code in ('XQLTY','XQLTY_A','XQLTY_B','XQLTY_C')");
+        }else{
+            sb.append(" and action_code=:ACTION_CODE");
+            parameter.put("ACTION_CODE", action_code);
+        }
         sb.append("order by create_time ");
         parameter.put("OPEN_ID", openid);
-        parameter.put("ACTION_CODE", action_code);
         RecordSet recordSet = queryBySql(sb.toString(), parameter);
 
         if (recordSet.size() < 0) {
