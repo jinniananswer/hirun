@@ -11,6 +11,7 @@ import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.EmployeeCache;
 import com.hirun.app.dao.cust.CustContactDAO;
 import com.hirun.app.dao.cust.CustDAO;
+import com.hirun.app.dao.custservice.CustomerServiceDAO;
 import com.hirun.pub.domain.entity.cust.CustChangeRelaEmployeeLogEntity;
 import com.hirun.pub.domain.entity.cust.CustContactEntity;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
@@ -42,9 +43,9 @@ import java.util.Map;
  * @Date 2018/4/17 21:11
  * @Description:
  */
-public class CustService extends GenericService{
+public class CustService extends GenericService {
 
-    public ServiceResponse addCust(ServiceRequest request) throws Exception{
+    public ServiceResponse addCust(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject custInfo = request.getBody().getData();
 
@@ -66,7 +67,7 @@ public class CustService extends GenericService{
         return response;
     }
 
-    public ServiceResponse editCust(ServiceRequest request) throws Exception{
+    public ServiceResponse editCust(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject custInfo = request.getBody().getData();
 
@@ -76,10 +77,10 @@ public class CustService extends GenericService{
 
         CustDAO dao = new CustDAO("ins");
         Map<String, String> parameter = ConvertTool.toMap(custInfo);
-        parameter.put("UPDATE_USER_ID",userId);
-        parameter.put("UPDATE_TIME",sysdate);
+        parameter.put("UPDATE_USER_ID", userId);
+        parameter.put("UPDATE_TIME", sysdate);
         parameter.put("CUST_STATUS", "1");
-        int i = dao.save("INS_CUSTOMER", new String[] {"CUST_ID"}, parameter);
+        int i = dao.save("INS_CUSTOMER", new String[]{"CUST_ID"}, parameter);
 
         return response;
     }
@@ -90,11 +91,11 @@ public class CustService extends GenericService{
 
         Map<String, String> parameter = ConvertTool.toMap(requestData);
         String topEmployeeId = requestData.getString("TOP_EMPLOYEE_ID");
-        if(StringUtils.isNotBlank(topEmployeeId)) {
+        if (StringUtils.isNotBlank(topEmployeeId)) {
             StringBuilder houseCounselorIds = new StringBuilder();
             List<EmployeeEntity> employeeEntityList = EmployeeBean.getAllSubordinatesCounselors(topEmployeeId);
-            if(ArrayTool.isNotEmpty(employeeEntityList)) {
-                for(EmployeeEntity employeeEntity : employeeEntityList) {
+            if (ArrayTool.isNotEmpty(employeeEntityList)) {
+                for (EmployeeEntity employeeEntity : employeeEntityList) {
                     houseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
                 }
             }
@@ -105,7 +106,7 @@ public class CustService extends GenericService{
         CustDAO dao = new CustDAO("ins");
         List<CustomerEntity> customerList = dao.queryCustList(parameter);
         JSONArray arrayCustList = ConvertTool.toJSONArray(customerList);
-        for(int i = 0, size = arrayCustList.size(); i < size; i++) {
+        for (int i = 0, size = arrayCustList.size(); i < size; i++) {
             JSONObject jsonCust = arrayCustList.getJSONObject(i);
             jsonCust.put("HOUSE_COUNSELOR_NAME", EmployeeCache.getEmployeeNameEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")));
         }
@@ -115,7 +116,7 @@ public class CustService extends GenericService{
         return response;
     }
 
-    public ServiceResponse addCustByNum(ServiceRequest request) throws Exception{
+    public ServiceResponse addCustByNum(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
@@ -136,11 +137,11 @@ public class CustService extends GenericService{
         dao.deleteByIdentifyIsNullAndFirstPlanDate(houseCounselorId, firstPlanDate);
 
         List<Map<String, String>> listCust = new ArrayList<Map<String, String>>();
-        for(int i = 0; i < newCustNew; i++) {
+        for (int i = 0; i < newCustNew; i++) {
             Map<String, String> cust = new HashMap<String, String>();
             cust.put("HOUSE_COUNSELOR_ID", houseCounselorId);
             cust.put("CUST_STATUS", "9");
-            cust.put("CUST_NAME", "新客户" + (i+1));
+            cust.put("CUST_NAME", "新客户" + (i + 1));
             cust.put("CREATE_USER_ID", userId);
             cust.put("CREATE_TIME", now);
             cust.put("UPDATE_USER_ID", userId);
@@ -167,7 +168,7 @@ public class CustService extends GenericService{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("CUST_ID", custId);
         CustomerEntity customerEntity = custDAO.queryByPk(CustomerEntity.class, "INS_CUSTOMER", parameter);
-        if(customerEntity == null) {
+        if (customerEntity == null) {
             throw new GenericException("-1", "客户资料不存在");
 //            response.setError("-1", "客户资料不存在");
 //            return response;
@@ -176,21 +177,21 @@ public class CustService extends GenericService{
         JSONObject jsonCust = customerEntity.toJson();
         //根据编码查中文描述
         jsonCust.put("SEX_DESC", Sex.getNameByValue(jsonCust.getString("SEX")));
-        if(StringUtils.isNotBlank(jsonCust.getString("HOUSE_ID"))) {
+        if (StringUtils.isNotBlank(jsonCust.getString("HOUSE_ID"))) {
             jsonCust.put("HOUSE_DESC", HousesBean.getHousesEntityById(jsonCust.getString("HOUSE_ID")).getName());
         }
-        if(StringUtils.isNotBlank(jsonCust.getString("HOUSE_MODE"))) {
+        if (StringUtils.isNotBlank(jsonCust.getString("HOUSE_MODE"))) {
             jsonCust.put("HOUSE_MODE_DESC", StaticDataTool.getCodeName("HOUSE_MODE", jsonCust.getString("HOUSE_MODE")));
         }
         jsonCust.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")));
 
         //mobile_no模糊化
         String custRelaUserId = EmployeeBean.getEmployeeByEmployeeId(jsonCust.getString("HOUSE_COUNSELOR_ID")).getUserId();
-        if(!userId.equals(custRelaUserId) && !"true".equals(realInfoFlag)) {
+        if (!userId.equals(custRelaUserId) && !"true".equals(realInfoFlag)) {
             String mobileNo = jsonCust.getString("MOBILE_NO");
-            if(StringUtils.isNotBlank(mobileNo) && mobileNo.length() > 3)
+            if (StringUtils.isNotBlank(mobileNo) && mobileNo.length() > 3)
 //            String mobileNo = jsonCust.getString("MOBILE_NO");
-            jsonCust.put("MOBILE_NO", mobileNo.substring(0,3) + "***");
+                jsonCust.put("MOBILE_NO", mobileNo.substring(0, 3) + "***");
         }
 
         response.setBody(new Body(jsonCust));
@@ -198,7 +199,7 @@ public class CustService extends GenericService{
         return response;
     }
 
-    public ServiceResponse deleteCustById(ServiceRequest request) throws Exception{
+    public ServiceResponse deleteCustById(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
         String custId = requestData.getString("CUST_ID");
@@ -212,7 +213,7 @@ public class CustService extends GenericService{
         return response;
     }
 
-    public ServiceResponse addCustContact(ServiceRequest request) throws Exception{
+    public ServiceResponse addCustContact(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
@@ -229,7 +230,7 @@ public class CustService extends GenericService{
         return response;
     }
 
-    public ServiceResponse changeCounselor(ServiceRequest request) throws Exception{
+    public ServiceResponse changeCounselor(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
 
@@ -250,7 +251,7 @@ public class CustService extends GenericService{
         List<CustContactEntity> list = custContactDAO.queryCustContactEntityListByCustId(custId);
         JSONArray array = ConvertTool.toJSONArray(list);
 
-        for(int i = 0; i <array.size(); i++) {
+        for (int i = 0; i < array.size(); i++) {
             JSONObject custContact = array.getJSONObject(i);
             custContact.put("EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(custContact.getString("EMPLOYEE_ID")));
         }
@@ -261,6 +262,7 @@ public class CustService extends GenericService{
 
     /**
      * 暂停的客户恢复
+     *
      * @param request
      * @return
      * @throws Exception
@@ -272,7 +274,7 @@ public class CustService extends GenericService{
         CustomerEntity customerEntity = custDAO.getCustById(custId);
         String today = TimeTool.today();
         String now = TimeTool.now();
-        if(customerEntity == null || !customerEntity.getCustStatus().equals(CustStatus.pause.getValue())){
+        if (customerEntity == null || !customerEntity.getCustStatus().equals(CustStatus.pause.getValue())) {
             return response;
         }
 
@@ -298,18 +300,18 @@ public class CustService extends GenericService{
         CustContactEntity custContactEntity = custContactDAO.getCustContactEntityByCustContactId(custContactId);
         String today = TimeTool.today();
         String now = TimeTool.now();
-        if(custContactEntity == null) {
+        if (custContactEntity == null) {
             return response;
         }
         String custId = custContactEntity.getCustId();
 
         CustomerEntity customerEntity = custDAO.getCustById(custId);
-        if(customerEntity == null){
+        if (customerEntity == null) {
             return response;
         }
 
         String custStatus = customerEntity.getCustStatus();
-        if(CustStatus.normal.getValue().equals(custStatus)) {
+        if (CustStatus.normal.getValue().equals(custStatus)) {
             //提醒家装顾问
             String actionName = ActionCache.getAction(custContactEntity.getRemindActionCode()).getActionName();
             StringBuilder msgContent = new StringBuilder();
@@ -325,11 +327,12 @@ public class CustService extends GenericService{
 
     /**
      * 删除的客户恢复
+     *
      * @param request
      * @return
      * @throws Exception
      */
-    public ServiceResponse restoreCustById(ServiceRequest request) throws Exception{
+    public ServiceResponse restoreCustById(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
         String custId = requestData.getString("CUST_ID");
@@ -348,39 +351,39 @@ public class CustService extends GenericService{
         return response;
     }
 
-    public ServiceResponse queryCustAction4HouseCounselor(ServiceRequest request) throws Exception{
+    public ServiceResponse queryCustAction4HouseCounselor(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         JSONObject requestData = request.getBody().getData();
         String houseCounselorIds = requestData.getString("HOUSE_COUNSELOR_IDS");
         String topEmployeeId = requestData.getString("TOP_EMPLOYEE_ID");
 
         CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
-        if(StringUtils.isNotBlank(houseCounselorIds)) {
+        if (StringUtils.isNotBlank(houseCounselorIds)) {
 //            custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"), requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"));
-        } else if(StringUtils.isNotBlank(topEmployeeId)) {
+        } else if (StringUtils.isNotBlank(topEmployeeId)) {
             StringBuilder tmpHouseCounselorIds = new StringBuilder();
             List<EmployeeEntity> employeeEntityList = EmployeeBean.getCounselorsByPermission(topEmployeeId);
-            if(ArrayTool.isNotEmpty(employeeEntityList)) {
-                for(EmployeeEntity employeeEntity : employeeEntityList) {
+            if (ArrayTool.isNotEmpty(employeeEntityList)) {
+                for (EmployeeEntity employeeEntity : employeeEntityList) {
                     tmpHouseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
                 }
             }
 //            tmpHouseCounselorIds.append(topEmployeeId);
-            if(tmpHouseCounselorIds.length() > 0) {
+            if (tmpHouseCounselorIds.length() > 0) {
                 houseCounselorIds = tmpHouseCounselorIds.substring(0, tmpHouseCounselorIds.length() - 1);
             }
         }
 
-        String customerName= URLDecoder.decode(request.getString("CUST_NAME"),"UTF-8");
-        String wxNick= URLDecoder.decode(request.getString("WX_NICK"),"UTF-8");
+        String customerName = URLDecoder.decode(request.getString("CUST_NAME"), "UTF-8");
+        String wxNick = URLDecoder.decode(request.getString("WX_NICK"), "UTF-8");
 
 
         RecordSet custList = custDAO.queryCustIds4Action4HouseCounselor(houseCounselorIds, requestData.getString("START_DATE"),
                 requestData.getString("END_DATE"), requestData.getString("FINISH_ACTION"),
-                customerName,wxNick);
+                customerName, wxNick);
         JSONArray result = new JSONArray();
         GenericDAO insDao = new GenericDAO("ins");
-        for(int k=0;k<custList.size();k++) {
+        for (int k = 0; k < custList.size(); k++) {
             Record customerEntity = custList.get(k);
             JSONObject object = ConvertTool.toJSONObject(customerEntity);
 
@@ -398,18 +401,18 @@ public class CustService extends GenericService{
 
             RecordSet recordSet = insDao.queryBySql(sql.toString(), parameter);
 
-            for(int i = 0, size = recordSet.size(); i <size; i++) {
+            for (int i = 0, size = recordSet.size(); i < size; i++) {
                 Record record = recordSet.get(i);
                 String actionCode = record.get("ACTION_CODE");
                 String actionNum = record.get("ACTION_NUM");
                 String lastFinishTime = record.get("LAST_FINISH_TIME");
-                object.put(actionCode + "_NUM",actionNum);
-                object.put(actionCode + "_LAST_TIME",lastFinishTime);
+                object.put(actionCode + "_NUM", actionNum);
+                object.put(actionCode + "_LAST_TIME", lastFinishTime);
             }
 
             List<ActionEntity> actionEntityList = ActionCache.getActionListByType("1");
-            for(ActionEntity actionEntity : actionEntityList) {
-                if(!object.containsKey(actionEntity.getActionCode() + "_LAST_TIME")) {
+            for (ActionEntity actionEntity : actionEntityList) {
+                if (!object.containsKey(actionEntity.getActionCode() + "_LAST_TIME")) {
                     object.put(actionEntity.getActionCode() + "_NUM", 0);
                 }
             }
@@ -418,6 +421,35 @@ public class CustService extends GenericService{
         }
 
         response.set("RESULT", result);
+        return response;
+    }
+
+    /**
+     * 家装顾问查下需求蓝图一具体内容
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public ServiceResponse showCustomerBluePrintDetail(ServiceRequest request) throws Exception {
+        ServiceResponse response=new ServiceResponse();
+        String customerId=request.getString("CUSTOMER_ID");
+        String houseCounselorId=request.getString("HOUSE_COUNSELOR_ID");
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+
+        CustomerEntity customerEntity=custDAO.getCustById(customerId);
+        if(customerEntity==null){
+            return response;
+        }
+        String openId=customerEntity.getIdentifyCode();
+        if(StringUtils.isBlank(openId)){
+            return response;
+        }
+
+        RecordSet recordSet=custDAO.queryBluePrintByOpenId(openId,houseCounselorId);
+        if(recordSet.size()<=0){
+            return response;
+        }
+        response.set("PROJECTXQLTYINFO",ConvertTool.toJSONArray(recordSet));
         return response;
     }
 }
