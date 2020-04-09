@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>hi-run</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="scripts/index.js"></script>
+    <script src="scripts/index.js?v=20200409"></script>
 </head>
 <body>
 <div class="p_index">

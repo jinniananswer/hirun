@@ -14,7 +14,7 @@
                     $("#HEAD_IMAGE").attr("src", headImage);
 
                 },function(){
-                    alert('error');
+                    window.location.href = '/out';
                 });
             },
 

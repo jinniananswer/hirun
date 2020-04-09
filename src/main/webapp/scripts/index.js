@@ -13,7 +13,9 @@
                 $.insertHtml('beforeend',$("#JOB_ROLE_NAME"),jobRoleName);
 				$("#HEAD_IMAGE").attr("src", headImage);
 
-            });
+            }, function(resultCode, resultInfo) {
+				window.location.href = '/out';
+			});
 
             $.ajaxReq({
 				url : 'common/msg/getUnReadMsgCount',
