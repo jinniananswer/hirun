@@ -668,7 +668,7 @@ public class EmployeeDAO extends StrongObjectDAO{
         sb.append("and c.org_id = b.org_id ");
         sb.append("and a.status = '0' ");
         sb.append("and now() < c.end_date ");
-        sb.append("and exists (select 1 from ins_user_role d where d.user_id = a.user_id and d.end_date > now() and d.role_id in (3,4 )");
+        sb.append("and exists (select 1 from ins_user_role d where d.user_id = a.user_id and d.end_date > now() and d.role_id in (3,4))");
 
         List<EmployeeEntity> employees = this.queryBySql(EmployeeEntity.class, sb.toString(), parameter);
         return employees;

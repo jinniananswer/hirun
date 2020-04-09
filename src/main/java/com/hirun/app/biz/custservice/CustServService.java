@@ -32,6 +32,7 @@ import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -637,14 +638,14 @@ public class CustServService extends GenericService {
                 Record childRecord = allCustServiceEmpEntity.get(i);
                 employeeIds += childRecord.get("EMPLOYEE_ID") + ",";
             }
-            employeeIds = employeeIds.substring(0, employeeIds.length() - 1);
+            employeeIds = employeeIds+custServicerEmployeeId;
         } else if (Permission.hasAllShop()) {
             RecordSet allCustServiceEmpEntity = EmployeeBean.queryEmployeeByEmpIdsAndOrgId("", orgId);
             for (int i = 0; i < allCustServiceEmpEntity.size(); i++) {
                 Record childRecord = allCustServiceEmpEntity.get(i);
                 employeeIds += childRecord.get("EMPLOYEE_ID") + ",";
             }
-            employeeIds = employeeIds.substring(0, employeeIds.length() - 1);
+            employeeIds = employeeIds+custServicerEmployeeId;
         } else {
             RecordSet childEmployeeRecordSet = EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(custServicerEmployeeId, "0");
             if (childEmployeeRecordSet.size() <= 0 || childEmployeeRecordSet == null) {
@@ -1212,8 +1213,17 @@ public class CustServService extends GenericService {
             changecustlog.put("A_CUSTSERVICE_EMPID", custServiceEmpId);
             changecustlog.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
             changecustlog.put("UPDATE_DATE", session.getCreateTime());
-
             dao.insertAutoIncrement("custservice_change_log", changecustlog);
+            //将蓝图信息也要变更过来
+            PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyIdArr[i]);
+            if(StringUtils.isBlank(partyEntity.getOpenId())){
+                return response;
+            }
+            String openId=partyEntity.getOpenId();
+            Map<String, String> blueActionInfo = new HashMap<String, String>();
+            blueActionInfo.put("OPEN_ID",openId);
+            blueActionInfo.put("REL_EMPLOYEE_ID",custServiceEmpId);
+            dao.save("ins_blueprint_action", new String[]{"OPEN_ID"}, blueActionInfo);
 
         }
         return response;
@@ -1502,6 +1512,8 @@ public class CustServService extends GenericService {
         String partyId = request.getString("PARTY_ID");
         String id = request.getString("ID");
         String auditStatus = request.getString("AUDIT_STATUS");
+        String applyEmployeeId = request.getString("APPLY_EMPLOYEE_ID");
+
         AppSession session = SessionManager.getSession();
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
         String auditEmpId = session.getSessionEntity().get("EMPLOYEE_ID");
@@ -1523,8 +1535,22 @@ public class CustServService extends GenericService {
             partyInfo.put("UPDATE_TIME", TimeTool.now());
             dao.save("ins_party", new String[]{"PARTY_ID"}, partyInfo);
         }
-        return response;
+
+        //更新报表数据
+/*        if(StringUtils.equals("1", auditStatus)) {
+            PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
+            String createTime=partyEntity.getCreateTime();
+            String statTime=createTime.substring(0,7);
+            String[] split = statTime.split("-");
+            String time=split[0]+split[1];
+            RecordSet recordSet=dao.queryCustServMonStatInfo(applyEmployeeId,time);
+            //更新报表
+            CustServiceStatBean.clearCustomerUpdateStat(recordSet,partyEntity);
+        }*/
+
+     return response;
     }
+
 
 
     public ServiceResponse initQuery4PartyVisit(ServiceRequest request) throws Exception {

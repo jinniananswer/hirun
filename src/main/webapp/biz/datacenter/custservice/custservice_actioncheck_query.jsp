@@ -22,9 +22,14 @@
 </div>
 
 <div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
-	<div class="c_space"></div>
-	<div class="c_space"></div>
-
+        <div class="c_title">
+            <div class="text"></div>
+            <div class="fn">
+                <ul>
+                    <li ontap="$.custServiceActionQuery.export();" class=""><span class="e_ico-export"></span>数据导出</li>
+                </ul>
+            </div>
+        </div>
 	<div id="myTable" class="c_table c_table-hasGrid c_table-border c_table-lite c_table-row-10"  style="height: 34em;">
 		<div class="body">
 			<div class="wrapper">
@@ -45,6 +50,7 @@
 						<th col="CITYCABIN">带看城市木屋楼盘地址</th>
 						<th col="EXCEPERICE">带看后反馈情况</th>
 						<th col="VISITCOUNT" ontap="$.sortTable(this, 'int')">回访次数</th>
+						<th col="TAG_NAME" >客户标签</th>
 						<!--<th class="e_red" col="detail">详情</th>-->
 					   </tr>
 					</thead>
@@ -98,6 +104,14 @@
         					<div class="c_scroll c_scroll-float c_scroll-header l_padding">
         						<div class="c_list c_list_form c_list-line" id="QueryCondForm">
         							<ul id="queryArea">
+                                         <li class="link">
+                                           <div class="label">客户姓名</div>
+                                           <div class="value"><input id="NAME" name="NAME" type="text" nullable="yes"  desc="姓名"/></div>
+                                         </li>
+                                         <li class="link">
+                                           <div class="label">微信昵称</div>
+                                           <div class="value"><input id="WX_NICK" name="WX_NICK" type="text" nullable="yes"  desc="微信昵称"/></div>
+                                         </li>
                                          <li>
                                             <div class="label">客户代表</div>
                                             <div class="value">
@@ -135,6 +149,14 @@
          										</span>
          									</div>
          								</li>
+                                        <li class="link" ontap="$('#TAG_TEXT').focus();$('#TAG_TEXT').blur();forwardPopup('UI-popup','UI-TAG4QUERY')">
+                                          <div class="label">客户标签</div>
+                                          <div class="value">
+                                              <input type="text" id="TAG_TEXT" name="TAG_TEXT" nullable="yes" readonly="true" desc="标签ID" />
+                                              <input type="hidden" id="QUERY_TAG_ID" name="QUERY_TAG_ID" nullable="yes" desc="标签ID" />
+                                          </div>
+                                          <div class="more"></div>
+                                        </li>
                                     </ul>
                                 </div>
             						<div class="c_space"></div>
@@ -159,6 +181,25 @@
                                  </div>
                              </div>
                          </div>
+
+                         <div class="c_popupItem" id="UI-TAG4QUERY">
+                              <div class="c_header">
+                                    <div class="back" ontap="backPopup(this)">客户标签</div>
+                              </div>
+                              <div class="c_scroll c_scroll-float c_scroll-header ">
+                                    <!-- 列表 开始 -->
+                                   <div class="l_padding">
+                                        <div class="c_list c_list-v c_list-col-3 c_list-phone-col-3 c_list-space c_list-line c_list-s">
+                                              <ul id="TagInfo">
+
+                                               </ul>
+                                         </div>
+                                         <!-- 列表 结束 -->
+                          				<div class="c_space"></div>
+                                   </div>
+                              </div>
+                               <!-- 滚动 结束 -->
+                          </div>
 
                          <div class="c_popupItem" id="UI-QUERYCUSTSERVICE">
                             <div class="c_header">
@@ -200,6 +241,8 @@
 
                             </div>
                          </div>
+
+
                     </div>
 
 

@@ -74,7 +74,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("and b.status = '0' " );
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
-        sb.append("and d.job_role in (29,70,100,105,106) ");
+        sb.append("and e.nature='5' ");
 
         if(StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
@@ -263,10 +263,15 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_blueprint_action ");
-        sb.append("where OPEN_ID=:OPEN_ID AND ACTION_CODE=:ACTION_CODE ");
+        sb.append("where OPEN_ID=:OPEN_ID  ");
+        if(StringUtils.equals(action_code,"XQLTY")){
+            sb.append(" and action_code in ('XQLTY','XQLTY_A','XQLTY_B','XQLTY_C')");
+        }else{
+            sb.append(" and action_code=:ACTION_CODE");
+            parameter.put("ACTION_CODE", action_code);
+        }
         sb.append("order by create_time ");
         parameter.put("OPEN_ID", openid);
-        parameter.put("ACTION_CODE", action_code);
         RecordSet recordSet = queryBySql(sb.toString(), parameter);
 
         if (recordSet.size() < 0) {
@@ -379,10 +384,10 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     }
 
 
-    public RecordSet queryCustServFinishActionInfo(String startDate,String endDate,String employeeIds,String orgIds) throws Exception {
+    public RecordSet queryCustServFinishActionInfo(String startDate,String endDate,String employeeIds,String orgIds,String name,String tagId,String wxNick) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME , j.visitcount from ");
+        sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME , j.visitcount ,o.tag_id from ");
         sb.append(" ( ");
         sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.create_time,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS,d.ACTION_CODE from ");
         sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ,ins_employee e , ins_employee_job_role f ");
@@ -416,12 +421,30 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             sb.append("and f.org_id in ( "+orgIds+") ");
         }
 
+        if (StringUtils.isNotBlank(name)) {
+            sb.append("and a.party_name like concat('%',:PARTY_NAME,'%') ");
+            parameter.put("PARTY_NAME", name);
+        }
+
+        if (StringUtils.isNotBlank(wxNick)) {
+            sb.append("and a.wx_nick like concat('%',:WX_NICK,'%') ");
+            parameter.put("WX_NICK", wxNick);
+        }
+
         sb.append(" order by c.LINK_EMPLOYEE_ID, a.create_time  desc ");
 
         sb.append(" ) v");
         sb.append(" left join (select * from ins_scan_citycabin x where x.SCAN_ID in (select min(y.scan_id) from ins_scan_citycabin y group by y.PARTY_ID))  s on (s.PARTY_ID = v.PARTY_ID) ");
         sb.append(" left join (select * from ins_blueprint_action r where r.BLUEPRINT_ACTION_ID in (select max(t.BLUEPRINT_ACTION_ID) from ins_blueprint_action t where t.ACTION_CODE='XQLTE' group by t.OPEN_ID, t.REL_EMPLOYEE_ID)) u on (u.OPEN_ID = v.OPEN_ID and u.REL_EMPLOYEE_ID = v.LINK_EMPLOYEE_ID) ");
         sb.append(" left join (select k.PARTY_ID,count(1) visitcount from ins_party_visit k group by k.PARTY_ID ) j ON (v.PARTY_ID=j.PARTY_ID) ");
+        //2020/03/15新增
+        sb.append(" left join ins_party_tag o  ON (v.PARTY_ID=o.PARTY_ID) ");
+
+        if (StringUtils.isNotBlank(tagId)) {
+            sb.append(" where o.tag_id =:TAG_ID ");
+            parameter.put("TAG_ID", tagId);
+        }
+
         sb.append(" order by v.create_time  desc ");
 
 
@@ -624,5 +647,52 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             return null;
         }
         return list;
+    }
+
+    /**
+     * 2020/03/27新增实时统计客户代表月报表
+     * @param employeeId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public RecordSet queryNewCustServMonStatInfo(String employeeId,String startDate,String endDate) throws Exception{
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append(" select v.employee_id ,count(1) as consult_count,sum(v.sm_count) as scan_count,");
+        sb.append(" SUM(city_Count) as scancityhouse_count,SUM(v.func_count) as func_count,SUM(style_count) as style_count,SUM(xqlte_count) as xqlte_count");
+        sb.append(" from (");
+        sb.append(" select link_employee_id as employee_id,");
+        sb.append(" case WHEN (d.`status`='1' and d.finish_time BETWEEN :START_DATE and :END_DATE ) then '1' else 0 " +
+                "   end as sm_count,");
+        sb.append(" case WHEN EXISTS (select 1 from ins_scan_citycabin x where b.project_id=x.project_id and x.employee_id=c.link_employee_id " +
+                "        and x.experience_Time BETWEEN :START_DATE and :END_DATE) then '1' else 0 " +
+                "   end as city_count,");
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action m where m.open_id=a.open_id and c.link_employee_id=m.rel_employee_id " +
+                "       and m.funcprint_create_time BETWEEN :START_DATE and :END_DATE ) then '1' else 0 " +
+                "  end as func_count,");
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action n where n.open_id=a.open_id and c.link_employee_id=n.rel_employee_id " +
+                "       and n.styleprint_create_time BETWEEN :START_DATE and :END_DATE) then '1' else 0 " +
+                "   end as style_count,");
+        sb.append(" case WHEN EXISTS (SELECT 1 FROM ins_blueprint_action y where y.open_id=a.open_id and c.link_employee_id=y.rel_employee_id " +
+                "       and (y.styleprint_create_time BETWEEN :START_DATE and :END_DATE) and (y.funcprint_create_time BETWEEN :START_DATE and :END_DATE))  then '1' else 0 " +
+                "   end as xqlte_count");
+        sb.append(" from ins_party a,ins_project b,ins_project_linkman c ,ins_project_original_action d");
+        sb.append(" where a.party_id=b.party_id");
+        sb.append(" and b.project_id=c.project_id");
+        sb.append(" and a.party_status='0' ");
+        sb.append(" and b.project_id=d.project_id");
+        sb.append(" and d.action_code='SMJRLC' ");
+        sb.append(" and c.ROLE_TYPE = 'CUSTOMERSERVICE' ");
+        sb.append(" and a.create_time BETWEEN :START_DATE and :END_DATE ");
+        sb.append(" and c.link_employee_id= :EMPLOYEE_ID ");
+        sb.append(" ) v ");
+        sb.append(" group by v.employee_id ");
+
+        parameter.put("START_DATE",startDate);
+        parameter.put("END_DATE",endDate);
+        parameter.put("EMPLOYEE_ID",employeeId);
+
+        return this.queryBySql(sb.toString(),parameter);
     }
 }

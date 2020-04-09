@@ -400,10 +400,9 @@ public class PartyBean {
                 String insFuncC = bulePrintRecord.get("FUNC_C");
 
                 String insStyle = bulePrintRecord.get("STYLE");
-                if (((StringUtils.isBlank(insFunc) || StringUtils.equals("false", insFunc))
-                        && (StringUtils.isBlank(insFunc) || StringUtils.equals("false", insFunc))
-                        && (StringUtils.isBlank(insFuncB) || StringUtils.equals("false", insFuncB)))
-                        && (StringUtils.isNotBlank(insFuncC) && !StringUtils.equals("false", insFuncC))) {
+                if ((StringUtils.isBlank(insFunc) || StringUtils.equals("false", insFunc))
+                        && (StringUtils.isBlank(insFuncB) || StringUtils.equals("false", insFuncB))
+                        && (StringUtils.isBlank(insFuncC) || StringUtils.equals("false", insFuncC))) {
                     CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTEFUNC");
                     if (StringUtils.isNotBlank(insStyle) && !StringUtils.equals("false", insStyle)) {
                         CustServiceStatBean.updateCustServiceStat(employeeId, "XQLTE");

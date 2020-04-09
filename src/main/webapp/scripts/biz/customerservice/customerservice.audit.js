@@ -239,11 +239,11 @@
 
                     if(status=='0'){
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-close e_ico-pic-red e_ico-pic-r\" ontap='$.custserviceaudit.auditConfirm(\""+data.get("PARTY_ID")+"\",\""+data.get("ID")+"\",\"2\");'></span>");
+                    html.push("<span class=\"e_ico-close e_ico-pic-red e_ico-pic-r\" ontap='$.custserviceaudit.auditConfirm(\""+data.get("PARTY_ID")+"\",\""+data.get("ID")+"\",\""+data.get("APPLY_EMPLOYEE_ID")+"\",\"2\");'></span>");
                     html.push("</div>");
 
                     html.push("<div class=\"side e_size-s\">");
-                    html.push("<span class=\"e_ico-ok e_ico-pic-green e_ico-pic-r \" ontap='$.custserviceaudit.auditConfirm(\""+data.get("PARTY_ID")+"\",\""+data.get("ID")+"\",\"1\");'></span>");
+                    html.push("<span class=\"e_ico-ok e_ico-pic-green e_ico-pic-r \" ontap='$.custserviceaudit.auditConfirm(\""+data.get("PARTY_ID")+"\",\""+data.get("ID")+"\",\""+data.get("APPLY_EMPLOYEE_ID")+"\",\"1\");'></span>");
                     html.push("</div>");
                     }
 
@@ -252,7 +252,7 @@
                 $.insertHtml('beforeend', $("#applyinfos"), html.join(""));
             },
 
-            auditConfirm : function(partyId,id,auditStatus) {
+            auditConfirm : function(partyId,id,applyEmployeeId,auditStatus) {
                 var message='';
                 if(auditStatus==1){
                      message = "确认审批通过吗？";
@@ -267,8 +267,8 @@
                             data : {
                                 PARTY_ID : partyId,
                                 AUDIT_STATUS : auditStatus,
-                                ID : id
-
+                                ID : id,
+                                APPLY_EMPLOYEE_ID:applyEmployeeId
                             },
                             type : 'POST',
                             successFunc : function(data) {

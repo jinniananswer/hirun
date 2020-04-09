@@ -132,4 +132,11 @@ public class CustController extends RootController{
         ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.queryCustAction4HouseCounselor", pageData);
         return response.toJsonString();
     }
+
+
+    @RequestMapping(value = "showCustomerBluePrintDetail")
+    public @ResponseBody String showCustomerBluePrintDetail(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.showCustomerBluePrintDetail", paramter);
+        return response.toJsonString();
+    }
 }

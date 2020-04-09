@@ -216,7 +216,7 @@ public class PlanTaskService extends GenericService {
             CustomerServiceDAO customerServiceDAO = DAOFactory.createDAO(CustomerServiceDAO.class);
 
             StringBuilder sql = new StringBuilder();
-            sql.append(" SELECT ID,MODE_ID,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') MODE_TIME,STAFF_ID,OPENID,STYLE,FUNC,NAME,AGE,MIANJI,HUXING,YONGTU ");
+            sql.append(" SELECT ID,MODE_ID,DATE_FORMAT(FROM_UNIXTIME(MODE_TIME), '%Y-%m-%d %H:%i:%s') MODE_TIME,STAFF_ID,OPENID,STYLE,FUNC,NAME,AGE,MIANJI,HUXING,YONGTU,LT_TYPE ");
             sql.append(" FROM out_hirunplus_commends_mode ");
             sql.append(" WHERE DEAL_TAG = '0' ");
             sql.append(" ORDER BY INDB_TIME ");
@@ -239,10 +239,14 @@ public class PlanTaskService extends GenericService {
                 String staff_id = jsonProject.getString("STAFF_ID");
                 String openid = jsonProject.getString("OPENID");
                 String employeeId = PlanBean.getEmployeeIdByHirunPlusStaffId(staff_id);
-
-
+                String ltType=jsonProject.getString("LT_TYPE");
+                //2020/04/02修改
                 param.put("OPEN_ID", openid);
-                param.put("ACTION_CODE", "XQLTY");
+                if(StringUtils.isBlank(ltType)){
+                    param.put("ACTION_CODE", "XQLTY");
+                }else{
+                    param.put("ACTION_CODE", "XQLTY"+"_"+ltType);
+                }
                 param.put("MODE_ID", mode_id);
                 param.put("MODE_TIME", mode_time);
                 param.put("NAME", jsonProject.getString("NAME"));

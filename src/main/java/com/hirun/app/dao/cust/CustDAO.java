@@ -162,18 +162,19 @@ public class CustDAO extends StrongObjectDAO {
         return this.queryBySql(CustomerEntity.class, sb.toString(), parameter);
     }
 
-    public RecordSet queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction, String custName) throws Exception{
+    public RecordSet queryCustIds4Action4HouseCounselor(String houseCounselorIds, String startDate, String endDate, String finishAction, String custName,String wxNick) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();
         parameter.put("START_DATE", startDate);
         parameter.put("END_DATE", endDate);
         parameter.put("FINISH_ACTION", finishAction);
         parameter.put("CUST_NAME", custName);
+        parameter.put("WX_NICK", wxNick);
 
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT customer.CUST_ID,CUST_NAME, HOUSE_COUNSELOR_ID, employee.NAME FROM ins_customer customer ");
         sb.append("LEFT JOIN ins_employee employee ON (employee.EMPLOYEE_ID = customer.HOUSE_COUNSELOR_ID and employee.STATUS = '0' ), ");
-        sb.append("(SELECT cust_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action " +
-                "GROUP BY cust_id) tmp_actions, ");
+        sb.append("(SELECT cust_id,employee_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action " +
+                "GROUP BY cust_id,employee_id) tmp_actions, ");
         sb.append("(SELECT cust_id, MIN(finish_time) finish_time FROM ins_cust_original_action " +
                 "WHERE action_code = 'JW' " +
                 "GROUP BY cust_id) tmp_time ");
@@ -181,6 +182,9 @@ public class CustDAO extends StrongObjectDAO {
         sb.append("WHERE customer.CUST_ID = tmp_actions.CUST_ID ");
         sb.append("AND tmp_actions.CUST_ID = tmp_time.CUST_ID ");
         sb.append("AND customer.`CUST_STATUS` != '9' ");
+        //2020/03/15新增
+        sb.append("AND tmp_actions.EMPLOYEE_ID=customer.HOUSE_COUNSELOR_ID ");
+
         if(StringUtils.isNotBlank(houseCounselorIds)) {
             sb.append("AND customer.HOUSE_COUNSELOR_ID IN (").append(houseCounselorIds).append(") ");
         }
@@ -196,9 +200,34 @@ public class CustDAO extends StrongObjectDAO {
         if(StringUtils.isNotBlank(custName)) {
             sb.append("AND customer.cust_name like CONCAT('%', :CUST_NAME, '%') ");
         }
+        //2020/03/15新增
+        if(StringUtils.isNotBlank(wxNick)) {
+            sb.append("AND customer.wx_nick like CONCAT('%', :WX_NICK, '%') ");
+        }
+
         sb.append(" ORDER BY NAME ");
         sb.append(" LIMIT 300");
 
         return this.queryBySql(sb.toString(), parameter);
     }
+
+
+    public RecordSet queryBluePrintByOpenId(String openid, String relEmployeeId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_blueprint_action ");
+        sb.append("where OPEN_ID=:OPEN_ID  ");
+        sb.append(" and action_code in ('XQLTY','XQLTY_A','XQLTY_B','XQLTY_C')");
+        sb.append(" and rel_employee_id=:REL_EMPLOYEE_ID");
+        sb.append(" order by create_time ");
+        parameter.put("OPEN_ID", openid);
+        parameter.put("REL_EMPLOYEE_ID", relEmployeeId);
+        RecordSet recordSet = queryBySql(sb.toString(), parameter);
+
+        if (recordSet.size() < 0) {
+            return null;
+        }
+        return recordSet;
+    }
+
 }
