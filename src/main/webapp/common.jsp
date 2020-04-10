@@ -60,7 +60,7 @@
     <script src="frame/TouchUI/content/js/ui/component/tree/tree.js?v=20181127"></script>
     <script src="frame/TouchUI/content/js/local.js"></script>
     <script src="frame/js/ajax.js?v=20200225"></script>
-    <script src="frame/js/redirect.js?v=20201105"></script>
+    <script src="frame/js/redirect.js?v=20200411"></script>
     <script src="frame/js/date.js"></script>
     <script src="frame/TouchUI/content/js/plugins/template/template.js"></script>
     <script type="text/javascript">
