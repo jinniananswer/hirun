@@ -49,7 +49,7 @@ public class HouseDAO extends StrongObjectDAO {
         sql.append(" AND now() < DESTROY_DATE ");
         sql.append(" AND NAME = :NAME ");
         if (noScatter) {
-            //sql.append(" AND NATURE <> '3' ");
+            sql.append(" AND NATURE <> '3' ");
         }
 
         Map<String, String> param = new HashMap<String, String>();
