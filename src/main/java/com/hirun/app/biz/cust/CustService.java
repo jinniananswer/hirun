@@ -371,6 +371,8 @@ public class CustService extends GenericService {
 //            tmpHouseCounselorIds.append(topEmployeeId);
             if (tmpHouseCounselorIds.length() > 0) {
                 houseCounselorIds = tmpHouseCounselorIds.substring(0, tmpHouseCounselorIds.length() - 1);
+            }else{
+                houseCounselorIds=topEmployeeId;
             }
         }
 
