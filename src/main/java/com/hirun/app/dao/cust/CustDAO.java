@@ -176,7 +176,7 @@ public class CustDAO extends StrongObjectDAO {
         sb.append("(SELECT cust_id,employee_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action " +
                 "GROUP BY cust_id,employee_id) tmp_actions, ");
         sb.append("(SELECT cust_id, MIN(finish_time) finish_time FROM ins_cust_original_action " +
-                "WHERE action_code = 'JW' " +
+                //"WHERE action_code = 'JW' " +
                 "GROUP BY cust_id) tmp_time ");
 
         sb.append("WHERE customer.CUST_ID = tmp_actions.CUST_ID ");
