@@ -368,9 +368,9 @@ public class CustService extends GenericService {
                     tmpHouseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
                 }
             }
-//            tmpHouseCounselorIds.append(topEmployeeId);
+            tmpHouseCounselorIds.append(topEmployeeId);
             if (tmpHouseCounselorIds.length() > 0) {
-                houseCounselorIds = tmpHouseCounselorIds.substring(0, tmpHouseCounselorIds.length() - 1);
+                houseCounselorIds = tmpHouseCounselorIds.toString();
             }else{
                 houseCounselorIds=topEmployeeId;
             }
