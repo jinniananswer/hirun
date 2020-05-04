@@ -173,8 +173,16 @@ public class CustDAO extends StrongObjectDAO {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT customer.CUST_ID,CUST_NAME, HOUSE_COUNSELOR_ID, employee.NAME FROM ins_customer customer ");
         sb.append("LEFT JOIN ins_employee employee ON (employee.EMPLOYEE_ID = customer.HOUSE_COUNSELOR_ID and employee.STATUS = '0' ), ");
-        sb.append("(SELECT cust_id,employee_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action " +
-                "GROUP BY cust_id,employee_id) tmp_actions, ");
+        sb.append("(SELECT cust_id,employee_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action where 1=1 ");
+
+        if(StringUtils.isNotBlank(startDate)) {
+            sb.append("AND finish_time >= :START_DATE ");
+        }
+        if(StringUtils.isNotBlank(endDate)) {
+            sb.append("AND finish_time <= :END_DATE ");
+        }
+
+        sb.append("GROUP BY cust_id,employee_id) tmp_actions ,");
         sb.append("(SELECT cust_id, MIN(finish_time) finish_time FROM ins_cust_original_action " +
                 //"WHERE action_code = 'JW' " +
                 "GROUP BY cust_id) tmp_time ");
@@ -188,12 +196,12 @@ public class CustDAO extends StrongObjectDAO {
         if(StringUtils.isNotBlank(houseCounselorIds)) {
             sb.append("AND customer.HOUSE_COUNSELOR_ID IN (").append(houseCounselorIds).append(") ");
         }
-        if(StringUtils.isNotBlank(startDate)) {
+/*        if(StringUtils.isNotBlank(startDate)) {
             sb.append("AND tmp_time.finish_time >= :START_DATE ");
         }
         if(StringUtils.isNotBlank(endDate)) {
             sb.append("AND tmp_time.finish_time <= :END_DATE ");
-        }
+        }*/
         if(StringUtils.isNotBlank(finishAction)) {
             sb.append("AND finish_actions like CONCAT('%', :FINISH_ACTION, '%') ");
         }
