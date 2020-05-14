@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户查询（家装顾问）</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20200405"></script>
+	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20200514"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
