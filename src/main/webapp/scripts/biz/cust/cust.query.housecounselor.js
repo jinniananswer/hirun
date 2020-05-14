@@ -35,7 +35,7 @@ var custQuery4HouseCounselor = {
 
         window["custTable"] = new Wade.Table("custTable", {
             fixedMode: true,
-            fixedLeftCols: 0,
+            fixedLeftCols: 1,
             editMode: false
         });
 
@@ -110,7 +110,7 @@ var custQuery4HouseCounselor = {
 
             custTable.addRow({
                 "_className": "no",
-                "CUST_NAME": "<span class=\"wrap\">"+data.get("CUST_NAME")+"</span>",
+                "CUST_NAME": data.get("CUST_NAME"),
                 "NAME": data.get("NAME"),
                 "JW_NUM": data.get("JW_NUM"),
                 "JW_LAST_TIME": data.get("JW_LAST_TIME"),
