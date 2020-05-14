@@ -11,13 +11,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户查询（家装顾问）</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20200514"></script>
+	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20200515"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
 	<jsp:param value="客户查询（家装顾问）" name="headerName"/>
 </jsp:include>
-<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;">
+<div class="c_scroll c_scroll-float c_scroll-header" style="bottom:4em;" >
 	<div class="c_tip c_tip-red">一次查询最多展示300条客户信息，过多界面会变慢.点击需求蓝图一完成数，可以查看蓝图一的详情数据。</div>
 	<div class="c_form">
 		<ul>
