@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户查询（家装顾问）</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20200515"></script>
+	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20200529"></script>
 </head>
 <body>
 <jsp:include page="/header.jsp">
@@ -55,6 +55,7 @@
 						<th col="YJALTS_NUM" ontap="$.sortTable(this, 'int')">一键案例完成次数</th>
 						<th col="YJALTS_LAST_TIME" ontap="$.sortTable(this, 'date')">一键案例最后完成时间</th>
 						<th col="DKCSMU_LAST_TIME" ontap="$.sortTable(this, 'date')">城市木屋完成时间</th>
+						<th col="WX_NICK">微信昵称</th>
 					</tr>
 					</thead>
 					<tbody>
