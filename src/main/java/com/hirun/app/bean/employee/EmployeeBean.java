@@ -159,6 +159,11 @@ public class EmployeeBean {
             EmployeeEntity employee = new EmployeeEntity(counselors.get(i).getData());
             rst.add(employee);
         }
+        EmployeeDAO employeeDAO = DAOFactory.createDAO(EmployeeDAO.class);
+        EmployeeEntity parentEmployeeEntity=employeeDAO.queryEmployeeByEmployeeId(parentEmployeeIds);
+
+        rst.add(parentEmployeeEntity);
+
         return rst;
     }
 

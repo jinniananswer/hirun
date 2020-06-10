@@ -368,9 +368,11 @@ public class CustService extends GenericService {
                     tmpHouseCounselorIds.append(employeeEntity.getEmployeeId()).append(",");
                 }
             }
-//            tmpHouseCounselorIds.append(topEmployeeId);
+            tmpHouseCounselorIds.append(topEmployeeId);
             if (tmpHouseCounselorIds.length() > 0) {
-                houseCounselorIds = tmpHouseCounselorIds.substring(0, tmpHouseCounselorIds.length() - 1);
+                houseCounselorIds = tmpHouseCounselorIds.toString();
+            }else{
+                houseCounselorIds=topEmployeeId;
             }
         }
 
@@ -385,6 +387,12 @@ public class CustService extends GenericService {
         GenericDAO insDao = new GenericDAO("ins");
         for (int k = 0; k < custList.size(); k++) {
             Record customerEntity = custList.get(k);
+            StringBuilder custName=new StringBuilder(customerEntity.get("CUST_NAME"));
+
+            if(customerEntity.get("CUST_NAME").length()>7){
+                customerEntity.put("CUST_NAME",custName.insert(7,"<br/>").toString());
+            }
+
             JSONObject object = ConvertTool.toJSONObject(customerEntity);
 
             StringBuilder sql = new StringBuilder();

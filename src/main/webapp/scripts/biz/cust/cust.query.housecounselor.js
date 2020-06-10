@@ -35,7 +35,7 @@ var custQuery4HouseCounselor = {
 
         window["custTable"] = new Wade.Table("custTable", {
             fixedMode: true,
-            fixedLeftCols: 2,
+            fixedLeftCols: 1,
             editMode: false
         });
 
@@ -125,7 +125,8 @@ var custQuery4HouseCounselor = {
                 "ZX_LAST_TIME": data.get("ZX_LAST_TIME"),
                 "YJALTS_NUM": data.get("YJALTS_NUM"),
                 "YJALTS_LAST_TIME": data.get("YJALTS_LAST_TIME"),
-                "DKCSMU_LAST_TIME": data.get("DKCSMU_LAST_TIME")
+                "DKCSMU_LAST_TIME": data.get("DKCSMU_LAST_TIME"),
+                "WX_NICK": data.get("WX_NICK")
             });
         }
     },

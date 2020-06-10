@@ -3,7 +3,10 @@ package com.hirun.app.biz.organization.score;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.org.OrgBean;
+import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
 import com.hirun.app.dao.org.ScoreDAO;
+import com.hirun.app.dao.org.TrainDAO;
+import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.app.service.GenericService;
@@ -18,6 +21,7 @@ import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 
@@ -504,15 +508,42 @@ public class ScoreService extends GenericService {
     public ServiceResponse inputScore(ServiceRequest request) throws Exception {
         ServiceResponse response=new ServiceResponse();
         ScoreDAO dao=DAOFactory.createDAO(ScoreDAO.class);
+        EmployeeJobRoleDAO employeeJobRoleDAO=DAOFactory.createDAO(EmployeeJobRoleDAO.class);
+        TrainDAO trainDAO=DAOFactory.createDAO(TrainDAO.class);
+
         AppSession session = SessionManager.getSession();
         String userId = session.getSessionEntity().getUserId();
         String train_id = request.getString("TRAIN_ID");
+
+        RecordSet trainSet=trainDAO.queryPreWorks(train_id,false);
+
 
         List<Map<String, String>> parameters = new ArrayList<Map<String, String>>();
 
         JSONObject obj=request.getBody().getData();
         Map<String, String> mobjec = ConvertTool.toMap(obj);
         String cols[]={"EMPLOYEE_ID","TRAIN_ID"};
+        //取已经生成过转正时间待办的信息
+        List<Map<String, String>> pendingList = new ArrayList<Map<String, String>>();
+        Map<String, String> existRegularPending = new HashMap<>();
+        //只有岗前培训才需要生成记录
+        if(trainSet.size()>0) {
+            RecordSet signEmployeeRecord = dao.queryPostJobScore(null, null, train_id);
+            String signEmployeeIds = "";
+            if (signEmployeeRecord.size() > 0) {
+                for (int i = 0; i < signEmployeeRecord.size(); i++) {
+                    Record signRecord = signEmployeeRecord.get(i);
+                    signEmployeeIds = signEmployeeIds + signRecord.get("EMPLOYEE_ID") + ",";
+                }
+                RecordSet employeePendingRecordSet = dao.queryUpdateRegularPendingByEmployeeIds(signEmployeeIds.substring(0, signEmployeeIds.length() - 1));
+                if (employeePendingRecordSet.size() > 0) {
+                    for (int i = 0; i < employeePendingRecordSet.size(); i++) {
+                        Record employeePendingRecord = employeePendingRecordSet.get(i);
+                        existRegularPending.put(employeePendingRecord.get("EMPLOYEE_ID"), employeePendingRecord.get("ID"));
+                    }
+                }
+            }
+        }
 
         for (String key : mobjec.keySet()) {
             String value = mobjec.get(key);
@@ -520,13 +551,49 @@ public class ScoreService extends GenericService {
                 continue;
             }
             Map<String, String> param = new HashMap<String, String>();
+            Map<String, String> pending = new HashMap<String, String>();
+
             String[] arrys=key.split("\\_");
 
             param.put("EMPLOYEE_ID",arrys[0]);
             if(arrys.length>1) {
                 param.put("ITEM", arrys[1]);
             }
+            //只要员工录了成绩则给对应的人资发送一条需要修改转正时间的待办
+/*            boolean isPass=false;
+            if(StringUtils.isNotBlank(value)){
+                BigDecimal data1 = new BigDecimal(value);
+                BigDecimal data2 = new BigDecimal(80f);
+                isPass=data1.compareTo(data2) < 0;
+            }
+            if(StringUtils.isBlank(value)|| isPass){*/
+            if(trainSet.size()>0) {
+                if (!existRegularPending.keySet().contains(arrys[0])) {
+                    existRegularPending.put(arrys[0], "");
+                    pending.put("EMPLOYEE_ID", arrys[0]);
+                    pending.put("PENDING_TYPE", "6");
+                    pending.put("START_TIME", session.getCreateTime());
+                    pending.put("END_TIME", "3000-12-31 23:59:59");
+                    pending.put("PENDING_STATUS", "1");
+                    pending.put("PENDING_CREATE_ID", session.getSessionEntity().get("EMPLOYEE_ID"));
+                    pending.put("REMARK", "员工考试成绩已出，请确认是否需要修改转正时间，如不需要则点击忽略按钮。");
+                    List<EmployeeJobRoleEntity> list = employeeJobRoleDAO.queryJobRoleByEmployeeId(arrys[0]);
+                    Record orgHrRel = dao.queryOrgHrRel(list.get(0).getOrgId());
+                    if (orgHrRel == null) {
+                        //找不到关系发给洪慧
+                        pending.put("PENDING_EXECUTE_ID", "107");
+                    } else {
+                        pending.put("PENDING_EXECUTE_ID", orgHrRel.get("ARCHIVE_MANAGER_EMPLOYEE_ID"));
+                    }
+                    pending.put("CREATE_USER_ID", userId);
+                    pending.put("CREATE_TIME", session.getCreateTime());
+                    pending.put("UPDATE_USER_ID", userId);
+                    pending.put("UPDATE_TIME", session.getCreateTime());
 
+                    pendingList.add(pending);
+                    //}
+                }
+            }
 
             param.put("TRAIN_ID",train_id);
             param.put("SCORE",value);
@@ -538,6 +605,7 @@ public class ScoreService extends GenericService {
         }
         dao.deleteBatch("ins_train_exam_score",cols,parameters);
         dao.insertBatch("ins_train_exam_score",parameters);
+        dao.insertBatch("ins_hr_pending",pendingList);
 
         Map<String, Map<String, String>> employeeExt = new HashMap<String, Map<String, String>>();
 
