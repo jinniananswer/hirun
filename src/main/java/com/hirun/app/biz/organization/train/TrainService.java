@@ -19,11 +19,9 @@ import com.most.core.app.database.tools.StaticDataTool;
 import com.most.core.app.service.GenericService;
 import com.most.core.app.session.AppSession;
 import com.most.core.app.session.SessionManager;
-import com.most.core.pub.data.Record;
-import com.most.core.pub.data.RecordSet;
-import com.most.core.pub.data.ServiceRequest;
-import com.most.core.pub.data.ServiceResponse;
+import com.most.core.pub.data.*;
 import com.most.core.pub.tools.datastruct.ArrayTool;
+import com.most.core.pub.tools.time.TimeTool;
 import com.most.core.pub.tools.transform.ConvertTool;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.kafka.common.record.Records;
@@ -595,6 +593,11 @@ public class TrainService extends GenericService {
 
         ServiceResponse response = new ServiceResponse();
         response.set("TRAIN", ConvertTool.toJSONObject(train));
+
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        response.set("SELF_EMPLOYEE_NAME", sessionEntity.get("EMPLOYEE_NAME"));
+        response.set("NOW", TimeTool.now(TimeTool.DATE_FMT_4));
 
         if (ArrayTool.isNotEmpty(schedules)) {
             response.set("SCHEDULE", ConvertTool.toJSONObject(schedules.get(0)));
