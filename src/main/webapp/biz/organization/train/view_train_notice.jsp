@@ -18,7 +18,7 @@
 <body>
 <!-- 标题栏 开始 -->
 <div class="c_header e_show">
-    <div class="back" ontap="$.redirect.closeCurrentPage();">查看岗前考评通知</div>
+    <div class="back" ontap="$.redirect.closeCurrentPage();">查看职前培训通知</div>
     <div class="fn">
         <input type="hidden" name="TRAIN_ID" id="TRAIN_ID" nullable="no" value="${pageContext.request.getParameter("TRAIN_ID") }" desc="培训ID" />
     </div>
