@@ -2,21 +2,15 @@ package com.hirun.app.bean.custservice;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.employee.EmployeeBean;
-import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.cache.ActionCache;
 import com.hirun.app.cache.HirunPlusStaffDataCache;
 import com.hirun.app.dao.custservice.CustomerServiceDAO;
-import com.hirun.app.dao.employee.EmployeeDAO;
-import com.hirun.app.dao.employee.EmployeeJobRoleDAO;
-import com.hirun.app.dao.org.OrgDAO;
-import com.hirun.app.dao.user.UserDAO;
 import com.hirun.pub.consts.CustomerServiceConst;
 import com.hirun.pub.domain.entity.custservice.PartyEntity;
 import com.hirun.pub.domain.entity.custservice.PartyOriginalActionEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
-import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
-import com.hirun.pub.domain.entity.org.OrgEntity;
 import com.hirun.pub.domain.entity.param.ActionEntity;
+import com.hirun.pub.tool.CustomerNoTool;
 import com.most.core.app.database.dao.factory.DAOFactory;
 import com.most.core.pub.data.Record;
 import com.most.core.pub.data.RecordSet;
@@ -117,6 +111,9 @@ public class PartyBean {
         party_info.put("UPDATE_TIME", TimeTool.now());
         party_info.put("PARTY_STATUS", CustomerServiceConst.PARTY_STATUS_0);//正常客户状态
 
+        //新增处理2020-06-01
+        String customerNoSeq = CustomerNoTool.getCustomerNoSeq();
+        party_info.put("CUST_NO",customerNoSeq);
 
         long party_id = dao.insertAutoIncrement("INS_PARTY", party_info);
 
@@ -222,6 +219,10 @@ public class PartyBean {
         party_info.put("UPDATE_USER_ID", EmployeeBean.getEmployeeByEmployeeId(employeeId).getUserId());
         party_info.put("UPDATE_TIME", TimeTool.now());
         party_info.put("PARTY_STATUS", CustomerServiceConst.PARTY_STATUS_0);//正常客户状态
+
+        //新增处理2020-06-01
+        String customerNoSeq = CustomerNoTool.getCustomerNoSeq();
+        party_info.put("CUST_NO",customerNoSeq);
 
 
         long party_id = dao.insertAutoIncrement("INS_PARTY", party_info);
@@ -430,6 +431,9 @@ public class PartyBean {
         party_info.put("UPDATE_TIME", TimeTool.now());
         party_info.put("PARTY_STATUS", CustomerServiceConst.PARTY_STATUS_0);//代表虚拟party信息
 
+        //新增处理2020-06-01
+        String customerNoSeq = CustomerNoTool.getCustomerNoSeq();
+        party_info.put("CUST_NO",customerNoSeq);
 
         long party_id = dao.insertAutoIncrement("INS_PARTY", party_info);
 
