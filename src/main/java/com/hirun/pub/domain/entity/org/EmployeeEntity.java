@@ -219,4 +219,12 @@ public class EmployeeEntity extends GenericEntity{
         this.set("UPDATE_TIME", updateTime);
     }
 
+    public String getMobileNo(){
+        return this.get("MOBILE_NO");
+    }
+
+    public void setMobileNo(String mobileNo){
+        this.set("MOBILE_NO", mobileNo);
+    }
+
 }
