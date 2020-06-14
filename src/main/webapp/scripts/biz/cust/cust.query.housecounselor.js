@@ -131,7 +131,19 @@ var custQuery4HouseCounselor = {
         }
     },
 
+    export :function(){
+       let startDate= $('#COND_START_DATE').val() ? $('#COND_START_DATE').val() + " 00:00:00" : "";
+       let   endDate= $('#COND_END_DATE').val() ? $('#COND_END_DATE').val() + " 23:59:59" : "";
+       let finishAction= $('#ACTION_NAME').attr('action_code');
+       let houseCounelorIds= $('#EMPLOYEE_NAMES').attr('employee_ids');
+       let custName=$('#COND_CUST_NAME').val();
+       let wxNick= $('#COND_WX_NICK').val();
 
+        var param='START_DATE='+startDate+"&END_DATE="+endDate+"&FINISH_ACTION="+finishAction+"&HOUSE_COUNSELOR_IDS="+houseCounelorIds
+            +"&CUST_NAME="+encodeURI(encodeURI(custName))+"&WX_NICK="+encodeURI(encodeURI(wxNick));
+
+        window.location.href = "cust/exportCustomerInfo4Counselor?"+param;
+    },
 
     showCustomerBluePrintDetail:function(customerId,employeeId){
         console.log(customerId,employeeId);
