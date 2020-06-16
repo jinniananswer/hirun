@@ -19,4 +19,14 @@ public class CustomerNoTool {
         String timestamp = TimeTool.now("yyyyMMdd");
         return "KH"+timestamp+strNextval;
     }
+
+    public static String getFamilyGroupId() throws Exception {
+        GenericDAO dao = new GenericDAO("sys");
+        String sql = "select nextval('SEQ_ID_DAY_CYCLE') as id";
+        RecordSet recordSet = dao.queryBySql(sql, new HashMap<>());
+        String id = recordSet.get(0).get("ID");
+        String strNextval = StringUtils.leftPad(String.valueOf(id), 4, '0');
+        String timestamp = TimeTool.now("yyyyMMdd");
+        return "GROUP"+timestamp+strNextval;
+    }
 }
