@@ -164,6 +164,8 @@
     <!--初始化修改好看好住信息界面-->
     <entity name="OperationCenter.custservice.CustServService.initChangeGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="initChangeGoodSeeLiveInfo"/>
     <entity name="OperationCenter.custservice.CustServService.changeGoodSeeLiveInfo"  class="com.hirun.app.biz.custservice.CustServService" method="changeGoodSeeLiveInfo"/>
+    <entity name="OperationCenter.custservice.CustServService.checkCustomerByMobile"  class="com.hirun.app.biz.custservice.CustServService" method="checkCustomerByMobile"/>
+    <entity name="OperationCenter.custservice.CustServService.checkInfoByOpenIdFromCounselor"  class="com.hirun.app.biz.custservice.CustServService" method="checkInfoByOpenIdFromCounselor"/>
 
     <!--查询party信息用作变更客户代表-->
     <entity name="OperationCenter.custservice.CustServService.queryPartyInfo4ChangeCustService"  class="com.hirun.app.biz.custservice.CustServService" method="queryPartyInfo4ChangeCustService"/>
@@ -191,6 +193,11 @@
     <entity name="OperationCenter.custservice.citycabin.CityCabinService.changeCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="changeCityCabin"/>
     <entity name="OperationCenter.custservice.citycabin.CityCabinService.deleteCityCabin"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="deleteCityCabin"/>
     <entity name="OperationCenter.custservice.citycabin.CityCabinService.queryCityCabinInfo"  class="com.hirun.app.biz.custservice.citycabin.CityCabinService" method="queryCityCabinInfo"/>
+
+    <!--家庭网-->
+    <entity name="OperationCenter.family.FamilyService.createFamily"  class="com.hirun.app.biz.family.FamilyService" method="createFamily"/>
+    <entity name="OperationCenter.family.FamilyService.queryParty4CreateFamily"  class="com.hirun.app.biz.family.FamilyService" method="queryParty4CreateFamily"/>
+    <entity name="OperationCenter.family.FamilyService.initShowFamilyMember"  class="com.hirun.app.biz.family.FamilyService" method="initShowFamilyMember"/>
 
 
     <!--客户中心服务-->
