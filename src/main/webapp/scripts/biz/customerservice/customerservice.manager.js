@@ -200,14 +200,27 @@
                         html.push("<span class=\"e_tag e_tag-orange\" ontap='$.custservicemanager.redirectPartyTagManager(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
                         html.push(partyTagName);
                         html.push("</span>");
+                        html.push("  ");
+                        html.push("<span>");
+                        html.push("</span>");
+                        html.push("<span class=\"e_tag e_tag-green\" ontap='$.custservicemanager.redirectPartyFamily(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                        html.push("家");
+                        html.push("</span>");
                         html.push("</div>")
                     }else {
                         html.push("<div class=\"content content-auto\">");
                         html.push("<span class=\"e_tag e_tag-orange\" ontap='$.custservicemanager.redirectPartyTagManager(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
                         html.push("无标签");
                         html.push("</span>");
+                        html.push("  ");
+                        html.push("<span>");
+                        html.push("</span>");
+                        html.push("<span class=\"e_tag e_tag-green\" ontap='$.custservicemanager.redirectPartyFamily(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                        html.push("家");
+                        html.push("</span>");
                         html.push("</div>")
                     }
+
 
                     html.push("</div>")
 
@@ -244,6 +257,11 @@
             redirectPartyVisit : function(parytId,projectId) {
                 $.redirect.open('redirectPartyVisit?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '客户回访');
             },
+
+            redirectPartyFamily : function(parytId,projectId) {
+                $.redirect.open('redirectPartyFamily?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '家庭客户');
+            },
+
 
             redirectPartyTagManager : function(parytId,projectId) {
                     $.beginPageLoading();
