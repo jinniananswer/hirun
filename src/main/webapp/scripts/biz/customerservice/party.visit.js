@@ -139,18 +139,19 @@
                 $("#messagebox").css("display", "none");
 
 
-                var length = datas.length;
-                for (var i = 0; i < length; i++) {
-                    var data = datas.get(i);
+                let length = datas.length;
+                for (let i = 0; i < length; i++) {
+                    let data = datas.get(i);
 
-                    var partyname = data.get("PARTY_NAME");
-                    var creat_date = data.get("CREATE_TIME");
-                    var wxnick = data.get("WX_NICK");
-                    var mobileno = data.get("MOBILE_NO");
-                    var houseaddress = data.get("HOUSE_ADDRESS");
-                    var housemode = data.get("HOUSE_MODE");
-                    var housearea = data.get("HOUSE_AREA");
-                    var designername = data.get("DESIGNERNAME");
+                    let partyname = data.get("PARTY_NAME");
+                    let creat_date = data.get("CREATE_TIME");
+                    let wxnick = data.get("WX_NICK");
+                    let mobileno = data.get("MOBILE_NO");
+                    let houseaddress = data.get("HOUSE_ADDRESS");
+                    let housemode = data.get("HOUSE_MODE");
+                    let housearea = data.get("HOUSE_AREA");
+                    let designername = data.get("DESIGNERNAME");
+                    let consultTime = data.get("CONSULT_TIME");
 
                     if (partyname == 'undefined' || partyname == null) {
                         partyname = '';
@@ -190,7 +191,11 @@
                     html.push("</div>");
 
                     html.push("<div class=\"content content-auto\">");
-                    html.push("<span class='e_strong'>客户咨询时间：</span>" + creat_date.substr(0, 19));
+                    if(consultTime===''||consultTime==null){
+                        html.push("<span class='e_strong'>客户咨询时间：</span>" );
+                    }else{
+                        html.push("<span class='e_strong'>客户咨询时间：</span>" + consultTime.substr(0, 19));
+                    }
                     html.push("</div>");
 
                     html.push("<div class=\"content content-auto\">");
