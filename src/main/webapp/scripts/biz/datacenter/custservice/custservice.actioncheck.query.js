@@ -339,7 +339,7 @@
                 let name= $("#NAME").val();
                 let tagId=$("#QUERY_TAG_ID").val();
                 let wxNick=$("#WX_NICK").val();
-                let busiTypeTime=$("#busiTypeTime").val();
+                let busiTypeTime=$("#busiTimeType").val();
 
 
                 var param='CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate
