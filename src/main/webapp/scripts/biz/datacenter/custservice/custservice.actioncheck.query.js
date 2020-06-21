@@ -31,6 +31,21 @@
                     }
                 );
 
+                $.Select.append(
+                    "busiTypeTimeContainer",
+                    {
+                        id:"busiTimeType",
+                        name:"busiTimeType",
+                    },
+                    [
+                        {TEXT:"录入时间", VALUE:"1"},
+                        {TEXT:"咨询时间", VALUE:"2"},
+                    ]
+                );
+
+                $("#busiTimeType").val("1");
+
+
                 window["orgTree"] = new Wade.Tree("orgTree");
 
                 $("#orgTree").textAction(function(e, nodeData){
@@ -86,8 +101,11 @@
                 let name= $("#NAME").val();
                 let tagId=$("#QUERY_TAG_ID").val();
                 let wxNick=$("#WX_NICK").val();
+                let busiTypeTime=$("#busiTimeType").val();
+
+
                 var param='&CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate
-                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick;
+                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick+"&BUSI_TYPE_TIME="+busiTypeTime;
                 $.ajaxPost('queryCustServFinishActionInfo',param,function(data) {
                     var rst = new Wade.DataMap(data);
                     var datas=rst.get("CUSTSERVICEFINISHACTIONINFO");
@@ -314,9 +332,11 @@
                 let name= $("#NAME").val();
                 let tagId=$("#QUERY_TAG_ID").val();
                 let wxNick=$("#WX_NICK").val();
+                let busiTypeTime=$("#busiTypeTime").val();
+
 
                 var param='CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate
-                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick;
+                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick+"&BUSI_TYPE_TIME="+busiTypeTime;
                 window.location.href = "/exportCustActionInfo?"+param;
             },
 
