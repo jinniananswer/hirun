@@ -160,6 +160,7 @@
                     let wxnick=data.get("WX_NICK");
                     let visitcount=data.get("VISITCOUNT");
                     let tagName=data.get("TAG_NAME");
+                    let consultTime=data.get("CONSULT_TIME");
 
                     if(wxnick=="undefined" || wxnick ==null || wxnick =="null"){
                         wxnick='';
@@ -208,11 +209,17 @@
                         visitcount='0';
                     }
 
+                    if(consultTime===""||consultTime==null||consultTime==="undefined"){
+                        consultTime="";
+                    }else{
+                        consultTime=consultTime.substr(0,19)
+                    }
+
                     myTable.addRow({
                         "_className":"no",
                         "CUST_NAME":partyName,
                         "WX_NICK":wxnick,
-                        "CREATE_TIME":create_date.substr(0,19),
+                        "CREATE_TIME":consultTime,
                         "ADDRESS":houseAddress,
                         "CUST_SERVICE":custservName,
                         "SCAN_DATE":smjrlcfinishTime,
