@@ -34,14 +34,18 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return this.queryBySql(sb.toString(), parameter);
     }
 
-    public RecordSet queryLinkmanByProjectIdAndRoleType(String project_id, String roleType) throws Exception {
+    public RecordSet queryLinkmanByProjectIdAndRoleType(String project_id, String roleType, String validTag) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append(" select * from ins_project_linkman t  , ins_employee a ");
         sb.append(" where t.LINK_EMPLOYEE_ID =a.EMPLOYEE_ID ");
-        sb.append(" and a.status ='0' ");
         sb.append(" and t.PROJECT_ID=:PROJECT_ID ");
         sb.append(" and t.ROLE_TYPE =:ROLE_TYPE ");
+
+        if (StringUtils.equals(validTag, "valid")) {
+            sb.append(" and a.status ='0' ");
+        }
+
         parameter.put("PROJECT_ID", project_id);
         parameter.put("ROLE_TYPE", roleType);
         return this.queryBySql(sb.toString(), parameter);
@@ -71,18 +75,18 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("where b.USER_ID = a.USER_ID ");
         sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
         sb.append("and a.status = '0' ");
-        sb.append("and b.status = '0' " );
+        sb.append("and b.status = '0' ");
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
         sb.append("and e.nature='5' ");
 
-        if(StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
             parameter.put("NAME", name);
         }
 
-        if(StringUtils.isNotBlank(orgId)){
-            sb.append("and d.org_id in ( "+orgId+") ");
+        if (StringUtils.isNotBlank(orgId)) {
+            sb.append("and d.org_id in ( " + orgId + ") ");
         }
 
         return this.queryBySql(sb.toString(), parameter);
@@ -97,7 +101,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return this.queryBySql(sb.toString(), parameter);
     }
 
-    public RecordSet queryPartyInfoByLinkEmployeeId( String roleType, String name, String wxnick, String mobile, String houseaddress,String employeeIds) throws Exception {
+    public RecordSet queryPartyInfoByLinkEmployeeId(String roleType, String name, String wxnick, String mobile, String houseaddress, String employeeIds) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_project_linkman a ,ins_project b, ins_party c ");
@@ -112,8 +116,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             parameter.put("PARTY_NAME", name);
         }
 
-        if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and a.LINK_EMPLOYEE_ID in ( "+employeeIds+") ");
+        if (StringUtils.isNotBlank(employeeIds)) {
+            sb.append("and a.LINK_EMPLOYEE_ID in ( " + employeeIds + ") ");
         }
 
         if (StringUtils.isNotBlank(wxnick)) {
@@ -139,7 +143,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return this.queryBySql(sb.toString(), parameter);
     }
 
-    public RecordSet queryPartyInfoByLinkEmployeeIdAndTag( String roleType, String name, String wxnick, String mobile, String houseaddress,String employeeIds,String tagId) throws Exception {
+    public RecordSet queryPartyInfoByLinkEmployeeIdAndTag(String roleType, String name, String wxnick, String mobile, String houseaddress, String employeeIds, String tagId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select c.*, a.*, b.*, d.* from  ins_project_linkman a ,ins_project b, ins_party c  ");
@@ -156,8 +160,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             parameter.put("PARTY_NAME", name);
         }
 
-        if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and a.LINK_EMPLOYEE_ID in ( "+employeeIds+") ");
+        if (StringUtils.isNotBlank(employeeIds)) {
+            sb.append("and a.LINK_EMPLOYEE_ID in ( " + employeeIds + ") ");
         }
 
         if (StringUtils.isNotBlank(wxnick)) {
@@ -175,9 +179,9 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             parameter.put("HOUSE_ADDRESS", houseaddress);
         }
 
-        if(StringUtils.isNotBlank(tagId)){
+        if (StringUtils.isNotBlank(tagId)) {
             sb.append("and d.TAG_ID= :TAG_ID");
-            parameter.put("TAG_ID",tagId);
+            parameter.put("TAG_ID", tagId);
         }
         sb.append(" order by c.create_time  desc ");
 
@@ -186,7 +190,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return this.queryBySql(sb.toString(), parameter);
     }
 
-    public RecordSet queryPartyInfoByLinkEmployeeIds(String employeeIds, String roleType, String name,  String mobile, String custservieEmpId) throws Exception {
+    public RecordSet queryPartyInfoByLinkEmployeeIds(String employeeIds, String roleType, String name, String mobile, String custservieEmpId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_project_linkman a ,ins_project b, ins_party c ");
@@ -201,8 +205,8 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             parameter.put("PARTY_NAME", name);
         }
 
-        if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and a.LINK_EMPLOYEE_ID in ( "+employeeIds+") ");
+        if (StringUtils.isNotBlank(employeeIds)) {
+            sb.append("and a.LINK_EMPLOYEE_ID in ( " + employeeIds + ") ");
         }
 
         if (StringUtils.isNotBlank(mobile)) {
@@ -247,26 +251,21 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return projectEntityList.get(0);
     }
 
-    public ProjectIntentionEntity queryProjectIntentionInfoByProjectId(String project_id) throws Exception {
+    public Record queryProjectIntentionInfoByProjectId(String project_id) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
-        StringBuilder sb = new StringBuilder();
         parameter.put("PROJECT_ID", project_id);
-        List<ProjectIntentionEntity> projectIntentionEntities = this.query(ProjectIntentionEntity.class, "ins_project_intention", parameter);
-
-        if (ArrayTool.isEmpty(projectIntentionEntities)) {
-            return null;
-        }
-        return projectIntentionEntities.get(0);
+        return this.query("ins_project_intention", parameter).get(0);
     }
+
 
     public RecordSet queryBluePrintByOpenIdAndActionCode(String openid, String action_code) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_blueprint_action ");
         sb.append("where OPEN_ID=:OPEN_ID  ");
-        if(StringUtils.equals(action_code,"XQLTY")){
+        if (StringUtils.equals(action_code, "XQLTY")) {
             sb.append(" and action_code in ('XQLTY','XQLTY_A','XQLTY_B','XQLTY_C')");
-        }else{
+        } else {
             sb.append(" and action_code=:ACTION_CODE");
             parameter.put("ACTION_CODE", action_code);
         }
@@ -280,7 +279,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return recordSet;
     }
 
-    public RecordSet queryXQLTEByOpenIdAndActionCode(String openid, String action_code,String empId) throws Exception {
+    public RecordSet queryXQLTEByOpenIdAndActionCode(String openid, String action_code, String empId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_blueprint_action ");
@@ -351,7 +350,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return recordSet;
     }
 
-    public RecordSet getCityCabinByCityId(String city_id,String name) throws Exception {
+    public RecordSet getCityCabinByCityId(String city_id, String name) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_citycabin  ");
@@ -359,37 +358,37 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" and SCAN_END_TIME > now()  ");
         sb.append(" and SCAN_END_TIME > SCAN_START_TIME  ");
 
-        if(StringUtils.isNotBlank(name)){
+        if (StringUtils.isNotBlank(name)) {
             sb.append("and CITYCABIN_ADDRESS like concat('%',:CITYCABIN_ADDRESS,'%') ");
             parameter.put("CITYCABIN_ADDRESS", name);
         }
 
-        parameter.put("BIZ_CITY",city_id);
+        parameter.put("BIZ_CITY", city_id);
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
         return recordSet;
     }
 
-    public RecordSet queryInsScanCityInfoByProIdAndPId(String projectId,String partyId) throws Exception {
+    public RecordSet queryInsScanCityInfoByProIdAndPId(String projectId, String partyId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_scan_citycabin  ");
         sb.append(" where PARTY_ID= :PARTY_ID ");
         sb.append(" and PROJECT_ID= :PROJECT_ID  ");
         sb.append(" order by create_time DESC ");
-        parameter.put("PARTY_ID",partyId);
-        parameter.put("PROJECT_ID",projectId);
+        parameter.put("PARTY_ID", partyId);
+        parameter.put("PROJECT_ID", projectId);
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
         return recordSet;
     }
 
 
-    public RecordSet queryCustServFinishActionInfo(String startDate,String endDate,String employeeIds,String orgIds,String name,String tagId,String wxNick) throws Exception {
+    public RecordSet queryCustServFinishActionInfo(String startDate, String endDate, String employeeIds, String orgIds, String name, String tagId, String wxNick, String busiTypeTime) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME , j.visitcount ,o.tag_id from ");
         sb.append(" ( ");
-        sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.create_time,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS,d.ACTION_CODE from ");
+        sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.create_time,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS,d.ACTION_CODE,a.consult_time,b.house_id from ");
         sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ,ins_employee e , ins_employee_job_role f ");
         sb.append("WHERE a.PARTY_ID = b.PARTY_ID ");
         sb.append("AND b.PROJECT_ID = c.PROJECT_ID ");
@@ -402,23 +401,36 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("AND NOW() BETWEEN f.START_DATE AND f.END_DATE ");
         sb.append("AND c.LINK_EMPLOYEE_ID=e.EMPLOYEE_ID ");
 
+        if (StringUtils.equals(busiTypeTime, "1")) {
+            if (StringUtils.isNotBlank(startDate)) {
+                sb.append("and a.create_time  > :START_DATE ");
+                parameter.put("START_DATE", startDate);
+            }
 
-        if(StringUtils.isNotBlank(startDate)){
-            sb.append("and a.create_time  > :START_DATE ");
-            parameter.put("START_DATE", startDate);
+            if (StringUtils.isNotBlank(endDate)) {
+                sb.append("and a.create_time  < :END_DATE ");
+                parameter.put("END_DATE", endDate);
+            }
         }
 
-        if(StringUtils.isNotBlank(endDate)){
-            sb.append("and a.create_time  < :END_DATE ");
-            parameter.put("END_DATE", endDate);
+        if (StringUtils.equals(busiTypeTime, "2")) {
+            if (StringUtils.isNotBlank(startDate)) {
+                sb.append("and a.consult_time  > :START_DATE ");
+                parameter.put("START_DATE", startDate);
+            }
+
+            if (StringUtils.isNotBlank(endDate)) {
+                sb.append("and a.consult_time  < :END_DATE ");
+                parameter.put("END_DATE", endDate);
+            }
         }
 
-        if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and e.EMPLOYEE_ID IN ("+employeeIds+") ");
+        if (StringUtils.isNotBlank(employeeIds)) {
+            sb.append("and e.EMPLOYEE_ID IN (" + employeeIds + ") ");
         }
 
-        if(StringUtils.isNotBlank(orgIds)){
-            sb.append("and f.org_id in ( "+orgIds+") ");
+        if (StringUtils.isNotBlank(orgIds)) {
+            sb.append("and f.org_id in ( " + orgIds + ") ");
         }
 
         if (StringUtils.isNotBlank(name)) {
@@ -457,25 +469,25 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_citycabin  ");
         sb.append(" where CITY_CABIN_ID= :ID ");
-        parameter.put("ID",id);
+        parameter.put("ID", id);
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
-        if(recordSet.size()<0 || recordSet ==null){
+        if (recordSet.size() < 0 || recordSet == null) {
             return null;
         }
         return recordSet.get(0);
     }
 
-    public RecordSet queryCustServMonStatInfo(String employeeId,String monDate) throws Exception {
+    public RecordSet queryCustServMonStatInfo(String employeeId, String monDate) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_employee a,stat_custservice_month b ");
         sb.append("where a.EMPLOYEE_ID=b.object_id ");
         sb.append("and b.stat_month= :MONDATE  ");
 
-        parameter.put("MONDATE",monDate);
+        parameter.put("MONDATE", monDate);
 
-        if(StringUtils.isNotBlank(employeeId)){
-            sb.append("and b.OBJECT_ID IN ("+employeeId+") ");
+        if (StringUtils.isNotBlank(employeeId)) {
+            sb.append("and b.OBJECT_ID IN (" + employeeId + ") ");
         }
 
 
@@ -483,7 +495,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         return recordSet;
     }
 
-    public RecordSet queryPartyInfoForCustClear(String partyId,String projectId) throws Exception{
+    public RecordSet queryPartyInfoForCustClear(String partyId, String projectId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_party a, ins_project b ,ins_project_linkman c ");
@@ -491,59 +503,57 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" and b.PROJECT_ID=c.PROJECT_ID ");
         sb.append(" and a.PARTY_ID = :PARTY_ID");
         sb.append(" and b.PROJECT_ID = :PROJECT_ID");
-        parameter.put("PARTY_ID",partyId);
-        parameter.put("PROJECT_ID",projectId);
-        return this.queryBySql(sb.toString(),parameter);
+        parameter.put("PARTY_ID", partyId);
+        parameter.put("PROJECT_ID", projectId);
+        return this.queryBySql(sb.toString(), parameter);
     }
 
-    public RecordSet queryCustClearInfo(String partyId,String status,String applyEmpId,String aduitEmpId) throws Exception{
+    public RecordSet queryCustClearInfo(String partyId, String status, String applyEmpId, String aduitEmpId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_party_clear a where 1=1 ");
 
-        if(StringUtils.isNotBlank(partyId)){
-            sb.append("and a.PARTY_ID IN ("+partyId+") ");
+        if (StringUtils.isNotBlank(partyId)) {
+            sb.append("and a.PARTY_ID IN (" + partyId + ") ");
         }
 
-        if(StringUtils.isNotBlank(status)){
-            sb.append("and a.STATUS IN ("+status+") ");
+        if (StringUtils.isNotBlank(status)) {
+            sb.append("and a.STATUS IN (" + status + ") ");
         }
 
-        if(StringUtils.isNotBlank(applyEmpId)){
-            sb.append("and a.APPLY_EMPLOYEE_ID IN ("+applyEmpId+") ");
+        if (StringUtils.isNotBlank(applyEmpId)) {
+            sb.append("and a.APPLY_EMPLOYEE_ID IN (" + applyEmpId + ") ");
         }
 
-        if(StringUtils.isNotBlank(aduitEmpId)){
-            sb.append("and a.AUDIT_EMPLOYEE_ID IN ("+aduitEmpId+") ");
+        if (StringUtils.isNotBlank(aduitEmpId)) {
+            sb.append("and a.AUDIT_EMPLOYEE_ID IN (" + aduitEmpId + ") ");
         }
 
 
-
-
-        return this.queryBySql(sb.toString(),parameter);
+        return this.queryBySql(sb.toString(), parameter);
     }
 
 
-    public RecordSet queryPartyVisitInfo(String partyId,String employeeId) throws Exception{
+    public RecordSet queryPartyVisitInfo(String partyId, String employeeId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_party_visit a where 1=1 ");
 
-        if(StringUtils.isNotBlank(partyId)){
-            sb.append("and a.PARTY_ID IN ("+partyId+") ");
+        if (StringUtils.isNotBlank(partyId)) {
+            sb.append("and a.PARTY_ID IN (" + partyId + ") ");
         }
 
 
-        if(StringUtils.isNotBlank(employeeId)){
-            sb.append("and a.VISIT_EMPLOYEE_ID IN ("+employeeId+") ");
+        if (StringUtils.isNotBlank(employeeId)) {
+            sb.append("and a.VISIT_EMPLOYEE_ID IN (" + employeeId + ") ");
         }
 
         sb.append("order by create_time desc ");
 
-        return this.queryBySql(sb.toString(),parameter);
+        return this.queryBySql(sb.toString(), parameter);
     }
 
-    public RecordSet queryChildEmpByEmpIdsAndName(String employeeIds,String name,String orgId) throws Exception{
+    public RecordSet queryChildEmpByEmpIdsAndName(String employeeIds, String name, String orgId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
 
         StringBuilder sb = new StringBuilder();
@@ -555,29 +565,28 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("where b.USER_ID = a.USER_ID ");
         sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
         sb.append("and a.status = '0' ");
-        sb.append("and b.status = '0' " );
+        sb.append("and b.status = '0' ");
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
 
 
-
-        if(StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
             parameter.put("NAME", name);
         }
 
-        if(StringUtils.isNotBlank(orgId)){
-            sb.append("and d.org_id in ( "+orgId+") ");
+        if (StringUtils.isNotBlank(orgId)) {
+            sb.append("and d.org_id in ( " + orgId + ") ");
         }
 
-        if(StringUtils.isNotBlank(employeeIds)){
-            sb.append("and b.employee_id in ( "+employeeIds+") ");
+        if (StringUtils.isNotBlank(employeeIds)) {
+            sb.append("and b.employee_id in ( " + employeeIds + ") ");
         }
 
-        return this.queryBySql(sb.toString(),parameter);
+        return this.queryBySql(sb.toString(), parameter);
     }
 
-    public RecordSet queryAllCustServiceByName(String name,String orgId) throws Exception{
+    public RecordSet queryAllCustServiceByName(String name, String orgId) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
 
         StringBuilder sb = new StringBuilder();
@@ -589,24 +598,23 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("where b.USER_ID = a.USER_ID ");
         sb.append("and d.EMPLOYEE_ID = b.EMPLOYEE_ID ");
         sb.append("and a.status = '0' ");
-        sb.append("and b.status = '0' " );
+        sb.append("and b.status = '0' ");
         sb.append("and now() < d.end_date ");
         sb.append("and e.ORG_ID = d.ORG_ID ");
         sb.append("and d.job_role in ('46','118','69','119') ");
         sb.append("and e.name='客户部' ");
 
-        if(StringUtils.isNotBlank(name)) {
+        if (StringUtils.isNotBlank(name)) {
             sb.append("and b.name like concat('%',:NAME,'%') ");
             parameter.put("NAME", name);
         }
 
-        if(StringUtils.isNotBlank(orgId)){
-            sb.append("and d.org_id in ( "+orgId+") ");
+        if (StringUtils.isNotBlank(orgId)) {
+            sb.append("and d.org_id in ( " + orgId + ") ");
         }
 
 
-
-        return this.queryBySql(sb.toString(),parameter);
+        return this.queryBySql(sb.toString(), parameter);
     }
 
     public RecordSet queryPartyTagInfoByPartyId(String partyId) throws Exception {
@@ -615,35 +623,35 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append("select * from ins_party_tag a ");
         sb.append("where a.PARTY_ID= :PARTY_ID ");
         sb.append("and a.STATUS= '0' ");
-        parameter.put("PARTY_ID",partyId);
+        parameter.put("PARTY_ID", partyId);
 
         RecordSet recordSet = this.queryBySql(sb.toString(), parameter);
         return recordSet;
     }
 
-    public List<PartyOriginalActionEntity> queryPartyOriginalAction(String partyId,String projectId,String actionCode) throws Exception{
-        Map<String,String> parameter=new HashMap<String,String>();
+    public List<PartyOriginalActionEntity> queryPartyOriginalAction(String partyId, String projectId, String actionCode) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from ins_project_original_action a ");
         sb.append("where 1=1 ");
 
-        if(StringUtils.isNotBlank(partyId)){
+        if (StringUtils.isNotBlank(partyId)) {
             sb.append("and a.PARTY_ID=:PARTY_ID ");
-            parameter.put("PARTY_ID",partyId);
+            parameter.put("PARTY_ID", partyId);
         }
 
-        if(StringUtils.isNotBlank(partyId)){
+        if (StringUtils.isNotBlank(partyId)) {
             sb.append("and a.PROJECT_ID=:PROJECT_ID ");
-            parameter.put("PROJECT_ID",projectId);
+            parameter.put("PROJECT_ID", projectId);
         }
 
-        if(StringUtils.isNotBlank(actionCode)){
+        if (StringUtils.isNotBlank(actionCode)) {
             sb.append("and a.ACTION_CODE=:ACTION_CODE ");
-            parameter.put("ACTION_CODE",actionCode);
+            parameter.put("ACTION_CODE", actionCode);
         }
 
-        List<PartyOriginalActionEntity> list=this.queryBySql(PartyOriginalActionEntity.class,sb.toString(),parameter);
-        if(list.size()<=0){
+        List<PartyOriginalActionEntity> list = this.queryBySql(PartyOriginalActionEntity.class, sb.toString(), parameter);
+        if (list.size() <= 0) {
             return null;
         }
         return list;
@@ -651,12 +659,13 @@ public class CustomerServiceDAO extends StrongObjectDAO {
 
     /**
      * 2020/03/27新增实时统计客户代表月报表
+     *
      * @param employeeId
      * @param startDate
      * @param endDate
      * @return
      */
-    public RecordSet queryNewCustServMonStatInfo(String employeeId,String startDate,String endDate) throws Exception{
+    public RecordSet queryNewCustServMonStatInfo(String employeeId, String startDate, String endDate,String busiTypeTime) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append(" select v.employee_id ,count(1) as consult_count,sum(v.sm_count) as scan_count,");
@@ -684,15 +693,81 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" and b.project_id=d.project_id");
         sb.append(" and d.action_code='SMJRLC' ");
         sb.append(" and c.ROLE_TYPE = 'CUSTOMERSERVICE' ");
-        sb.append(" and a.create_time BETWEEN :START_DATE and :END_DATE ");
+
+        if(StringUtils.equals(busiTypeTime,"2")){
+            sb.append(" and a.consult_time BETWEEN :START_DATE and :END_DATE ");
+        }else{
+            sb.append(" and a.create_time BETWEEN :START_DATE and :END_DATE ");
+        }
         sb.append(" and c.link_employee_id= :EMPLOYEE_ID ");
         sb.append(" ) v ");
         sb.append(" group by v.employee_id ");
 
-        parameter.put("START_DATE",startDate);
-        parameter.put("END_DATE",endDate);
-        parameter.put("EMPLOYEE_ID",employeeId);
+        parameter.put("START_DATE", startDate);
+        parameter.put("END_DATE", endDate);
+        parameter.put("EMPLOYEE_ID", employeeId);
 
-        return this.queryBySql(sb.toString(),parameter);
+        return this.queryBySql(sb.toString(), parameter);
     }
+
+
+    //2020/03/01新增
+    public Record queryCustomerInfoByCustId(String partyId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARTY_ID", partyId);
+        return this.queryByPk("ins_party", parameter);
+    }
+
+    //2020/03/02新增
+    public Record queryProjectInfoByCustId(String custId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("PARTY_ID", custId);
+        return this.query("ins_project", parameter).get(0);
+    }
+
+    //2020/05/17新增
+    public RecordSet queryGoodLiveInfoActionInfo(String partyId, String projectId, String actionCode, String status) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_project_original_action a ");
+        sb.append(" where a.PROJECT_ID=:PROJECT_ID ");
+        sb.append(" and   a.PARTY_ID=:PARTY_ID ");
+        sb.append(" and   a.ACTION_CODE=:ACTION_CODE ");
+        sb.append(" and   a.STATUS=:STATUS ");
+        sb.append(" and   a.FINISH_TIME IS NOT NULL ");
+        parameter.put("PROJECT_ID", projectId);
+        parameter.put("PARTY_ID", partyId);
+        parameter.put("ACTION_CODE", actionCode);
+        parameter.put("STATUS", status);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
+    public RecordSet queryCustomerInfo4Merge(String roleType, String mobile, String custservieEmpId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_project_linkman a ,ins_project b, ins_party c ");
+        sb.append(" where a.PROJECT_ID=b.PROJECT_ID ");
+        sb.append(" and b.PARTY_ID=c.PARTY_ID  ");
+        sb.append(" and a.ROLE_TYPE= :ROLE_TYPE  ");
+        sb.append(" and c.PARTY_STATUS='0'  ");
+        sb.append(" and (c.OPEN_ID IS NULL or c.OPEN_ID='')  ");
+
+
+        if (StringUtils.isNotBlank(mobile)) {
+            sb.append("and c.MOBILE_NO=:MOBILE_NO ");
+            parameter.put("MOBILE_NO", mobile);
+        }
+
+        if (StringUtils.isNotBlank(custservieEmpId)) {
+            sb.append("and a.LINK_EMPLOYEE_ID=:LINK_EMPLOYEE_ID ");
+            parameter.put("LINK_EMPLOYEE_ID", custservieEmpId);
+        }
+
+        sb.append(" order by c.create_time  desc ");
+
+
+        parameter.put("ROLE_TYPE", roleType);
+        return this.queryBySql(sb.toString(), parameter);
+    }
+
 }
