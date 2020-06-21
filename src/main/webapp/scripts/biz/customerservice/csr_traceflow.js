@@ -264,7 +264,6 @@
                     var actionCode = data.get("ACTION_CODE");
                     let ltType = actionCode.split("_")[1];
 
-                    console.log(ltType);
 
                     if (name == "undefined" || name == null)
                         name = "";
@@ -605,7 +604,9 @@
                 $("#styles").empty();
                 var html = [];
 
-
+                if(datas==null){
+                    return;
+                }
                 var length = datas.length;
 
                 for (var i = 0; i < length; i++) {
