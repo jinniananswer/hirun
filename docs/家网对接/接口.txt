@@ -6,7 +6,7 @@ http://www.hi-run.net/api/modes
 	PageNo：当前页
 	PageSize：每页数量
 
-http://www.hi-run.net/api/projects?staff_id=223&start=1510371113&end=1510371114  包含
+http://www.hi-run.net/api/projects?staff_id=42&start=1591245517&end=1591245817包含
 获取《需求蓝图指导书》有效推送
 	staff_id:员工ID
 	start：开始时间戳（秒）包含开始时间
@@ -35,7 +35,7 @@ http://www.hi-run.net/api/scans?staff_id=514&start=1511057242&end=1511057242 包
 	PageNo：当前页
 	PageSize：每页数量
 
-http://www.hi-run.net/api/commends?start=1521340354&end=1521340354 不包含
+http://www.hi-run.net/api/commendsV2?staff_id=42&start=1591245517&end=1591245817 不包含
 《需求蓝图一》推送
 	staff_id:员工ID
 	start：开始时间戳（秒）
@@ -58,7 +58,7 @@ http://www.hi-run.net/api/staffs
 	PageNo：当前页
 	PageSize：每页数量
 
-API地址：http://www.hi-run.net/api/wxshare
+API地址：http://www.hi-run.net/api/wxshare?staff_id=1657&start=1590022800&end=1590033600
 输入参数：staff_id:员工ID
 		start：开始时间戳（秒）
 		end：结束时间戳（秒）
