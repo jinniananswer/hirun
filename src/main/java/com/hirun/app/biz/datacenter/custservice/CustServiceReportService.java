@@ -117,6 +117,8 @@ public class CustServiceReportService extends GenericService {
         String name = request.getString("NAME");
         String tagId = request.getString("TAG_ID");
         String wxNick = request.getString("WX_NICK");
+        //2020/06/15
+        String busiTypeTime=request.getString("BUSI_TYPE_TIME");
 
 
         if (StringUtils.isNotBlank(startDate)) {
@@ -166,7 +168,7 @@ public class CustServiceReportService extends GenericService {
         }
 
 
-        RecordSet custServFinishActionInfo = dao.queryCustServFinishActionInfo(startDate, endDate, employeeIds, orgId, name, tagId, wxNick);
+        RecordSet custServFinishActionInfo = dao.queryCustServFinishActionInfo(startDate, endDate, employeeIds, orgId, name, tagId, wxNick,busiTypeTime);
         if (custServFinishActionInfo.size() <= 0 || custServFinishActionInfo == null) {
             return response;
         }
@@ -522,6 +524,9 @@ public class CustServiceReportService extends GenericService {
         List<OrgEntity> allOrgs = OrgBean.getAllOrgs();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
 
+        //20200615新增
+        String busiTypeTime=request.getString("BUSI_TYPE_TIME");
+
         String startDate = null;
         String endDate = null;
         Date transDate = null;
@@ -618,7 +623,7 @@ public class CustServiceReportService extends GenericService {
 
             JSONObject custservicestat = new JSONObject();
             //RecordSet statSet = dao.queryCustServMonStatInfo(record.get("EMPLOYEE_ID"), monDate);
-            RecordSet statSet=dao.queryNewCustServMonStatInfo(record.get("EMPLOYEE_ID"),startDate,endDate);
+            RecordSet statSet=dao.queryNewCustServMonStatInfo(record.get("EMPLOYEE_ID"),startDate,endDate,busiTypeTime);
             if (statSet.size() <= 0) {
                 custservicestat.put("STAT_MONTH", monDate);
                 custservicestat.put("OBJECT_ID", record.get("EMPLOYEE_ID"));
