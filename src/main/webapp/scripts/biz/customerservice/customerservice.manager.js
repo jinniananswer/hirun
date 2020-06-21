@@ -131,17 +131,19 @@
                 $("#messagebox").css("display","none");
 
 
-                var length = datas.length;
-                for(var i=0;i<length;i++) {
-                    var data = datas.get(i);
-                    var wxnick=data.get("WX_NICK");
-                    var mobile=data.get("MOBILE_NO");
-                    var create_date=data.get("CREATE_TIME");
-                    var party_name=data.get("PARTY_NAME");
-                    var custserviceName=data.get("CUSTSERVICENAME");
-                    var headUrl=data.get("HEAD_URL");
-                    var partyTagName=data.get("PARTYTAGNAME");
-                    var showMobile=data.get("SHOWMOBILE");
+                let length = datas.length;
+                for(let i=0;i<length;i++) {
+                    let data = datas.get(i);
+                    let wxnick=data.get("WX_NICK");
+                    let mobile=data.get("MOBILE_NO");
+                    let create_date=data.get("CREATE_TIME");
+                    let party_name=data.get("PARTY_NAME");
+                    let custserviceName=data.get("CUSTSERVICENAME");
+                    let headUrl=data.get("HEAD_URL");
+                    let partyTagName=data.get("PARTYTAGNAME");
+                    let showMobile=data.get("SHOWMOBILE");
+                    let consultTime=data.get("CONSULT_TIME");
+
 
                     html.push("<li class='link' ><div class=\"group\"><div class=\"content\">");
 
@@ -178,7 +180,11 @@
 
                     }
                     html.push("<div class=\"content content-auto\">");
-                    html.push("咨询时间: " + create_date.substr(0,19));
+                    if(consultTime==''||consultTime==null){
+                        html.push("咨询时间: ");
+                    }else{
+                        html.push("咨询时间: " + consultTime.substr(0,19));
+                    }
                     html.push("</div>")
 
                     html.push("<div class=\"content content-auto\">");
