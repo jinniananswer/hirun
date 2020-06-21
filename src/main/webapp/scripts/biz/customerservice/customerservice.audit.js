@@ -194,7 +194,7 @@
                     html.push("</div>");
 
                     html.push("<div class=\"content content-auto\">");
-                    html.push("<span class=''>咨询时间：</span>"+createDate);
+                    html.push("<span class=''>创建时间：</span>"+createDate);
                     html.push("</div>");
 
                     html.push("<div class=\"content content-auto\">");
