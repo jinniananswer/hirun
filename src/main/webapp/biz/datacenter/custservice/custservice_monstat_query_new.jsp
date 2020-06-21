@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户代表月报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.new.js?v=20190823"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.monstat.query.new.js?v=20200823"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -108,6 +108,12 @@
 										</span>
 									</div>
 								</li>
+                                <li class="link">
+                                      <div class="label">业务时间</div>
+                                      <div class="value">
+                                           <span id="busiTypeTimeContainer"></span>
+                                      </div>
+                                 </li>
                                 <li>
                                     <div class="label">客户代表</div>
                                     <div class="value">

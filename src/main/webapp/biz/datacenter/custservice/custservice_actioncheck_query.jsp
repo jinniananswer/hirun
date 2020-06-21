@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20190803"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20200614"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -130,6 +130,12 @@
                                                  <input type="hidden" id="ORG_ID" name="ORG_ID" nullable="yes" desc="所属部门" />
                                              </div>
                                              <div class="more"></div>
+                                         </li>
+                                         <li class="link">
+                                                          <div class="label">业务时间</div>
+                                                          <div class="value">
+                                                              <span id="busiTypeTimeContainer"></span>
+                                                          </div>
                                          </li>
          								<li>
                                              <div class="label">开始日期</div>
