@@ -80,7 +80,7 @@ public class CustServService extends GenericService {
         String partyId = request.getString("PARTY_ID");
         String projectId = request.getString("PROJECT_ID");
         /*这里查询一下对应的linkempid的原因是如果是主管或者组长查看流程，不能根据组长以及主管的id获取数据*/
-        RecordSet linkmanSet = dao.queryLinkmanByProjectIdAndRoleType(projectId, CustomerServiceConst.CUSTOMERSERVICEROLETYPE,"valid");
+        RecordSet linkmanSet = dao.queryLinkmanByProjectIdAndRoleType(projectId, CustomerServiceConst.CUSTOMERSERVICEROLETYPE, "valid");
 
         if (linkmanSet.size() > 0 || linkmanSet != null) {
             custServlinkEmpId = linkmanSet.get(0).get("LINK_EMPLOYEE_ID");
@@ -90,7 +90,7 @@ public class CustServService extends GenericService {
         PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
 
         RecordSet partyActionList = dao.queryPartyFlowByProjectId(projectId);
-        RecordSet projectDesignerInfo = dao.queryLinkmanByProjectIdAndRoleType(projectId, CustomerServiceConst.PROJECTDESIGNERROLETYPE,"unvaild");
+        RecordSet projectDesignerInfo = dao.queryLinkmanByProjectIdAndRoleType(projectId, CustomerServiceConst.PROJECTDESIGNERROLETYPE, "unvaild");
         RecordSet projectBluePrintInfo = dao.queryBluePrintByOpenIdAndActionCode(partyEntity.getOpenId(), "XQLTY");//查询需求蓝图一
         RecordSet cityCabinList = dao.getCityCabinByCityId(orgEntity.getCity(), "");//查询操作员对应地州的城市木屋
         RecordSet insScanCityInfo = dao.queryInsScanCityInfoByProIdAndPId(projectId, partyId);
@@ -153,22 +153,22 @@ public class CustServService extends GenericService {
 
                                 Record xqlteRecord = xqlteRecordSet.get(0);
                                 //功能蓝图内容
-                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC"))&&!StringUtils.equals(xqlteRecord.get("FUNC"),"false")){
+                                if (StringUtils.isNotEmpty(xqlteRecord.get("FUNC")) && !StringUtils.equals(xqlteRecord.get("FUNC"), "false")) {
                                     JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC"), "A");
                                     if (jsonObject != null) {
                                         response.set("FUNC_TREE", jsonObject);
                                     }
                                 }
 
-                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC_B"))&&!StringUtils.equals(xqlteRecord.get("FUNC_B"),"false")){
-                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_B"),"B");
+                                if (StringUtils.isNotEmpty(xqlteRecord.get("FUNC_B")) && !StringUtils.equals(xqlteRecord.get("FUNC_B"), "false")) {
+                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_B"), "B");
                                     if (jsonObject != null) {
                                         response.set("FUNC_TREE_B", jsonObject);
                                     }
                                 }
 
-                                if(StringUtils.isNotEmpty(xqlteRecord.get("FUNC_C"))&&!StringUtils.equals(xqlteRecord.get("FUNC_C"),"false")){
-                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_C"),"C");
+                                if (StringUtils.isNotEmpty(xqlteRecord.get("FUNC_C")) && !StringUtils.equals(xqlteRecord.get("FUNC_C"), "false")) {
+                                    JSONObject jsonObject = BluePrintBean.getFuncTree(xqlteRecord.get("FUNC_C"), "C");
                                     if (jsonObject != null) {
                                         response.set("FUNC_TREE_C", jsonObject);
                                     }
@@ -337,15 +337,15 @@ public class CustServService extends GenericService {
         dao.save("ins_project_original_action", new String[]{"PROJECT_ID", "ACTION_CODE"}, parameter);
 
         //同步选择的员工信息给家网
-        PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyId);
-        if(partyEntity!=null){
-            if(StringUtils.isNotBlank(partyEntity.getOpenId())){
-                Map<String,String>  logMap=new HashMap<>();
-                logMap.put("OPEN_ID",partyEntity.getOpenId());
-                logMap.put("CREATE_USER_ID",session.getSessionEntity().getUserId());
-                logMap.put("CREATE_TIME",TimeTool.now());
-                SyncBean.syncRoleInfo(partyEntity.getOpenId(),designer_employee_id,logMap);
-                dao.insert("SYNC_PARTY_LOG",logMap);
+        PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
+        if (partyEntity != null) {
+            if (StringUtils.isNotBlank(partyEntity.getOpenId())) {
+                Map<String, String> logMap = new HashMap<>();
+                logMap.put("OPEN_ID", partyEntity.getOpenId());
+                logMap.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+                logMap.put("CREATE_TIME", TimeTool.now());
+                SyncBean.syncRoleInfo(partyEntity.getOpenId(), designer_employee_id, logMap);
+                dao.insert("SYNC_PARTY_LOG", logMap);
             }
         }
 
@@ -418,8 +418,8 @@ public class CustServService extends GenericService {
         Long partyId = null;
         if (StringUtils.isNotEmpty(customerId)) {
             //如果为报备客户，在客户信息录入界面无论选哪个类型，客户类型都为报备客户
-            if(StringUtils.isNotEmpty(prepareId)){
-                partyInfo.put("CUST_TYPE","4");
+            if (StringUtils.isNotEmpty(prepareId)) {
+                partyInfo.put("CUST_TYPE", "4");
             }
             partyInfo.put("CUST_ID", customerId);
             dao.save("ins_party", new String[]{"CUST_ID"}, partyInfo);
@@ -841,14 +841,14 @@ public class CustServService extends GenericService {
                 Record childRecord = allCustServiceEmpEntity.get(i);
                 employeeIds += childRecord.get("EMPLOYEE_ID") + ",";
             }
-            employeeIds = employeeIds+custServicerEmployeeId;
+            employeeIds = employeeIds + custServicerEmployeeId;
         } else if (Permission.hasAllShop()) {
             RecordSet allCustServiceEmpEntity = EmployeeBean.queryEmployeeByEmpIdsAndOrgId("", orgId);
             for (int i = 0; i < allCustServiceEmpEntity.size(); i++) {
                 Record childRecord = allCustServiceEmpEntity.get(i);
                 employeeIds += childRecord.get("EMPLOYEE_ID") + ",";
             }
-            employeeIds = employeeIds+custServicerEmployeeId;
+            employeeIds = employeeIds + custServicerEmployeeId;
         } else {
             RecordSet childEmployeeRecordSet = EmployeeBean.recursiveAllSubordinatesByPempIdAndVaild(custServicerEmployeeId, "0");
             if (childEmployeeRecordSet.size() <= 0 || childEmployeeRecordSet == null) {
@@ -933,11 +933,11 @@ public class CustServService extends GenericService {
         //PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
         Record customerRecord = dao.queryCustomerInfoByCustId(partyId);
         //20200517新增，初始化修改好看好住信息修改时，判断之前是否以及完成过该动作，如果有则需要控制前台有些字段不可编辑
-        RecordSet goodLiveActionInfo=dao.queryGoodLiveInfoActionInfo(partyId,projectId,"HZHK","1");
-        if(goodLiveActionInfo.size()<=0){
-            response.set("HAS_EDIT_INFO_FLAG","false");
-        }else{
-            response.set("HAS_EDIT_INFO_FLAG","true");
+        RecordSet goodLiveActionInfo = dao.queryGoodLiveInfoActionInfo(partyId, projectId, "HZHK", "1");
+        if (goodLiveActionInfo.size() <= 0) {
+            response.set("HAS_EDIT_INFO_FLAG", "false");
+        } else {
+            response.set("HAS_EDIT_INFO_FLAG", "true");
         }
 
         partyInfo.put("COMPANY", customerRecord.get("COMPANY"));
@@ -1034,10 +1034,10 @@ public class CustServService extends GenericService {
         projectInfo.put("HOUSE_ROOM_NO", projectRecord.get("HOUSE_ROOM_NO"));
         projectInfo.put("HOUSE_ID", projectRecord.get("HOUSE_ID"));
 
-        HousesEntity housesEntity=HousesBean.getHousesEntityById(projectRecord.get("HOUSE_ID"));
-        if(housesEntity==null){
-            projectInfo.put("HOUSE_NAME","");
-        }else{
+        HousesEntity housesEntity = HousesBean.getHousesEntityById(projectRecord.get("HOUSE_ID"));
+        if (housesEntity == null) {
+            projectInfo.put("HOUSE_NAME", "");
+        } else {
             projectInfo.put("HOUSE_NAME", HousesBean.getHousesEntityById(projectRecord.get("HOUSE_ID")).getName());
         }
 
@@ -1121,6 +1121,7 @@ public class CustServService extends GenericService {
     /**
      * 变更好看好住信息，连带处理客户合并的情况，是将家网产生的客户往已录入好看好住信息客户上合并，
      * 以防止后续已录入客户已在主主营业务系统走了流程而去更改cust_no,cust_id等情况
+     *
      * @param request
      * @return
      * @throws Exception
@@ -1131,25 +1132,25 @@ public class CustServService extends GenericService {
         String custId = request.getString("PARTY_ID");
         //String houseId = request.getString("house_id");
 
-        String mergePartyId=request.getString("mergePartyId");
-        String mergeProjectId=request.getString("mergeProjectId");
+        String mergePartyId = request.getString("mergePartyId");
+        String mergeProjectId = request.getString("mergeProjectId");
 
         AppSession session = SessionManager.getSession();
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
 
-        Map<String,Map<String,String>> resultMap=this.buildCommonInfo(request);
+        Map<String, Map<String, String>> resultMap = this.buildCommonInfo(request);
 
 
         //1、保存party信息
         Map<String, String> customerInfo = resultMap.get("CUSTOMER_INFO");
-        PartyEntity partyEntity=dao.queryPartyInfoByPartyId(custId);
+        PartyEntity partyEntity = dao.queryPartyInfoByPartyId(custId);
         //处理客户合并的场景
-        if(StringUtils.isNotBlank(mergePartyId)){
+        if (StringUtils.isNotBlank(mergePartyId)) {
             customerInfo.put("PARTY_ID", mergePartyId);
-            customerInfo.put("OPEN_ID",partyEntity.getOpenId());
-            customerInfo.put("WX_NICK",partyEntity.getWxNick());
-            customerInfo.put("HEAD_URL",partyEntity.getHeadUrl());
-        }else{
+            customerInfo.put("OPEN_ID", partyEntity.getOpenId());
+            customerInfo.put("WX_NICK", partyEntity.getWxNick());
+            customerInfo.put("HEAD_URL", partyEntity.getHeadUrl());
+        } else {
             customerInfo.put("PARTY_ID", custId);
         }
 
@@ -1161,10 +1162,10 @@ public class CustServService extends GenericService {
         //保存项目信息
         Map<String, String> projectInfo = resultMap.get("PROJECT_INFO");
         //处理客户合并的情况
-        if(StringUtils.isNotBlank(mergeProjectId)){
-            projectInfo.put("PROJECT_ID",mergeProjectId);
-        }else{
-            projectInfo.put("PROJECT_ID",projectId);
+        if (StringUtils.isNotBlank(mergeProjectId)) {
+            projectInfo.put("PROJECT_ID", mergeProjectId);
+        } else {
+            projectInfo.put("PROJECT_ID", projectId);
         }
         projectInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         projectInfo.put("UPDATE_TIME", session.getCreateTime());
@@ -1174,10 +1175,10 @@ public class CustServService extends GenericService {
         //保存项目意向信息表
         Map<String, String> projectIntentionInfo = resultMap.get("PROJECT_INTENTION_INFO");
         //处理客户合并的情况
-        if(StringUtils.isNotBlank(mergeProjectId)){
-            projectIntentionInfo.put("PROJECT_ID",mergeProjectId);
-        }else{
-            projectIntentionInfo.put("PROJECT_ID",projectId);
+        if (StringUtils.isNotBlank(mergeProjectId)) {
+            projectIntentionInfo.put("PROJECT_ID", mergeProjectId);
+        } else {
+            projectIntentionInfo.put("PROJECT_ID", projectId);
         }
 
         dao.save("ins_project_intention", new String[]{"PROJECT_ID"}, projectIntentionInfo);
@@ -1185,10 +1186,10 @@ public class CustServService extends GenericService {
         //修改工程更新时间
         Map<String, String> projectActionInfo = new HashMap<String, String>();
         //处理客户合并的情况
-        if(StringUtils.isNotBlank(mergeProjectId)){
-            projectActionInfo.put("PROJECT_ID",mergeProjectId);
-        }else{
-            projectActionInfo.put("PROJECT_ID",projectId);
+        if (StringUtils.isNotBlank(mergeProjectId)) {
+            projectActionInfo.put("PROJECT_ID", mergeProjectId);
+        } else {
+            projectActionInfo.put("PROJECT_ID", projectId);
         }
         projectActionInfo.put("ACTION_CODE", "HZHK");
         projectActionInfo.put("STATUS", "1");
@@ -1199,24 +1200,24 @@ public class CustServService extends GenericService {
 
         //新增特殊处理包括1、各环节客户信息同步
         //需要将完成的家网动作做转移
-        if(StringUtils.isNotBlank(mergeProjectId)){
-            RecordSet actionList=dao.queryPartyFlowByProjectId(projectId);
-            List<Map<String,String>> actionUpdateList=new ArrayList<>();
-            for(int i=0;i<actionList.size();i++){
-                Map<String,String> updateActionMap=new HashMap<>();
-                Record actionRecord=actionList.get(i);
-                if(StringUtils.equals(actionRecord.get("ACTION_CODE"),"SMJRLC")
-                        ||StringUtils.equals(actionRecord.get("ACTION_CODE"),"XQLTE")
-                        ||StringUtils.equals(actionRecord.get("ACTION_CODE"),"GZGZH")){
-                    updateActionMap.put("PROJECT_ID",mergeProjectId);
-                    updateActionMap.put("PARTY_ID",mergePartyId);
-                    updateActionMap.put("ACTION_CODE",actionRecord.get("ACTION_CODE"));
-                    updateActionMap.put("STATUS",actionRecord.get("STATUS"));
-                    updateActionMap.put("FINISH_TIME",actionRecord.get("FINISH_TIME"));
-                    updateActionMap.put("CREATE_USER_ID",actionRecord.get("CREATE_USER_ID"));
-                    updateActionMap.put("CREATE_TIME",actionRecord.get("CREATE_TIME"));
-                    updateActionMap.put("UPDATE_USER_ID",session.getSessionEntity().getUserId());
-                    updateActionMap.put("UPDATE_TIME",TimeTool.now());
+        if (StringUtils.isNotBlank(mergeProjectId)) {
+            RecordSet actionList = dao.queryPartyFlowByProjectId(projectId);
+            List<Map<String, String>> actionUpdateList = new ArrayList<>();
+            for (int i = 0; i < actionList.size(); i++) {
+                Map<String, String> updateActionMap = new HashMap<>();
+                Record actionRecord = actionList.get(i);
+                if (StringUtils.equals(actionRecord.get("ACTION_CODE"), "SMJRLC")
+                        || StringUtils.equals(actionRecord.get("ACTION_CODE"), "XQLTE")
+                        || StringUtils.equals(actionRecord.get("ACTION_CODE"), "GZGZH")) {
+                    updateActionMap.put("PROJECT_ID", mergeProjectId);
+                    updateActionMap.put("PARTY_ID", mergePartyId);
+                    updateActionMap.put("ACTION_CODE", actionRecord.get("ACTION_CODE"));
+                    updateActionMap.put("STATUS", actionRecord.get("STATUS"));
+                    updateActionMap.put("FINISH_TIME", actionRecord.get("FINISH_TIME"));
+                    updateActionMap.put("CREATE_USER_ID", actionRecord.get("CREATE_USER_ID"));
+                    updateActionMap.put("CREATE_TIME", actionRecord.get("CREATE_TIME"));
+                    updateActionMap.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+                    updateActionMap.put("UPDATE_TIME", TimeTool.now());
 
                     dao.save("ins_project_original_action", new String[]{"PROJECT_ID", "ACTION_CODE"}, updateActionMap);
                 }
@@ -1225,42 +1226,43 @@ public class CustServService extends GenericService {
 
         }
         // 3、发送通知给对应的家装顾问告知客户信息变更
-        this.syncPartyInfo(partyEntity,request);
+        this.syncPartyInfo(partyEntity, request);
 
         //更改状态,将客户状态改成合并销户2
-        if(StringUtils.isNotBlank(mergePartyId)){
-            Map<String,String> updatePartyStatusMap=new HashMap<>();
-            updatePartyStatusMap.put("PARTY_STATUS","2");
-            updatePartyStatusMap.put("PARTY_ID",custId);
-            updatePartyStatusMap.put("UPDATE_USER_ID",session.getSessionEntity().getUserId());
-            updatePartyStatusMap.put("UPDATE_TIME",TimeTool.now());
-            dao.save("ins_party",new String[]{"PARTY_ID"},updatePartyStatusMap);
+        if (StringUtils.isNotBlank(mergePartyId)) {
+            Map<String, String> updatePartyStatusMap = new HashMap<>();
+            updatePartyStatusMap.put("PARTY_STATUS", "2");
+            updatePartyStatusMap.put("PARTY_ID", custId);
+            updatePartyStatusMap.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
+            updatePartyStatusMap.put("UPDATE_TIME", TimeTool.now());
+            dao.save("ins_party", new String[]{"PARTY_ID"}, updatePartyStatusMap);
         }
 
 
-      //  OrderBean.updateOrder(custId,houseName+":"+houseBuilding+":"+houseRoomNo,house_mode,house_area);
+        //  OrderBean.updateOrder(custId,houseName+":"+houseBuilding+":"+houseRoomNo,house_mode,house_area);
         return response;
     }
 
     /**
      * 同步客户代表环节的信息至家装顾问环节以及家网
+     *
      * @param partyEntity
      * @param request
      * @throws Exception
      */
-    public  void syncPartyInfo(PartyEntity partyEntity,ServiceRequest request) throws Exception{
-        if(partyEntity==null){
+    public void syncPartyInfo(PartyEntity partyEntity, ServiceRequest request) throws Exception {
+        if (partyEntity == null) {
             return;
         }
-        if(StringUtils.isBlank(partyEntity.getOpenId())){
+        if (StringUtils.isBlank(partyEntity.getOpenId())) {
             return;
         }
-        CustDAO dao=DAOFactory.createDAO(CustDAO.class);
-        CustomerEntity customerEntity=dao.getCustomerEntityByIdentifyCode(partyEntity.getOpenId());
-        if(customerEntity==null){
+        CustDAO dao = DAOFactory.createDAO(CustDAO.class);
+        CustomerEntity customerEntity = dao.getCustomerEntityByIdentifyCode(partyEntity.getOpenId());
+        if (customerEntity == null) {
             return;
         }
-        if(!StringUtils.equals("1",customerEntity.getCustStatus())){
+        if (!StringUtils.equals("1", customerEntity.getCustStatus())) {
             return;
         }
 
@@ -1271,27 +1273,27 @@ public class CustServService extends GenericService {
         String houseMode = request.getString("HOUSEKIND");
         String houseArea = request.getString("AREA");
         AppSession session = SessionManager.getSession();
-        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
 
 
         //拼装需要发给家装顾问的消息
         StringBuilder msgContent = new StringBuilder();
-        String houseCounselorId=customerEntity.getHouseCounselorId();
-        msgContent.append(EmployeeBean.getEmployeeByEmployeeId(houseCounselorId).getName()+"，您好！" +
-                "【"+EmployeeBean.getEmployeeByEmployeeId(employeeId).getName())
-                .append("】已完善了您的客户【"+customerEntity.getCustName()+"||微信昵称:"+customerEntity.getWxNick()+"】相关信息。")
-                .append("变更内容由原来的客户姓名:"+customerEntity.getCustName()+"变成"+"["+partyName+"],")
-                .append("联系号码:"+customerEntity.getMobileNo()+"变成"+"["+mobileNo+"],")
-                .append("楼盘:"+HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName()+
-                        "变成"+"["+HousesBean.getHousesEntityById(houseId).getName()+"]。")
-                .append("变更时间为:"+ TimeTool.now());
+        String houseCounselorId = customerEntity.getHouseCounselorId();
+        msgContent.append(EmployeeBean.getEmployeeByEmployeeId(houseCounselorId).getName() + "，您好！" +
+                "【" + EmployeeBean.getEmployeeByEmployeeId(employeeId).getName())
+                .append("】已完善了您的客户【" + customerEntity.getCustName() + "||微信昵称:" + customerEntity.getWxNick() + "】相关信息。")
+                .append("变更内容由原来的客户姓名:" + customerEntity.getCustName() + "变成" + "[" + partyName + "],")
+                .append("联系号码:" + customerEntity.getMobileNo() + "变成" + "[" + mobileNo + "],")
+                .append("楼盘:" + HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName() +
+                        "变成" + "[" + HousesBean.getHousesEntityById(houseId).getName() + "]。")
+                .append("变更时间为:" + TimeTool.now());
         //同步信息给家装顾问环节
         customerEntity.setCustName(partyName);
         customerEntity.setMobileNo(mobileNo);
         customerEntity.setHouseId(houseId);
         customerEntity.setHouseMode(houseMode);
         customerEntity.setHouseArea(houseArea);
-        dao.update("INS_CUSTOMER",customerEntity.getContent());
+        dao.update("INS_CUSTOMER", customerEntity.getContent());
 
         //拼装日志数据
         Map<String, String> logMap = new HashMap<>();
@@ -1300,13 +1302,13 @@ public class CustServService extends GenericService {
         //保存所有日志
         logMap.put("CONTENT", msgContent.toString());
         logMap.put("OPEN_ID", customerEntity.getIdentifyCode());
-        logMap.put("CREATE_USER_ID",session.getSessionEntity().getUserId());
-        logMap.put("CREATE_TIME",TimeTool.now());
-        dao.insert("SYNC_PARTY_LOG",logMap);
+        logMap.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+        logMap.put("CREATE_TIME", TimeTool.now());
+        dao.insert("SYNC_PARTY_LOG", logMap);
         //发送消息
-        if(!StringUtils.equals(customerEntity.getCustName(),partyName)
-                ||!StringUtils.equals(customerEntity.getMobileNo(),mobileNo)
-                ||!StringUtils.equals(customerEntity.getHouseId(),houseId)) {
+        if (!StringUtils.equals(customerEntity.getCustName(), partyName)
+                || !StringUtils.equals(customerEntity.getMobileNo(), mobileNo)
+                || !StringUtils.equals(customerEntity.getHouseId(), houseId)) {
             MsgBean.sendMsg(EmployeeBean.getEmployeeByEmployeeId(houseCounselorId).getUserId(), msgContent.toString(), "0", TimeTool.now(), MsgType.sys);
 
         }
@@ -1470,14 +1472,14 @@ public class CustServService extends GenericService {
             changecustlog.put("UPDATE_DATE", session.getCreateTime());
             dao.insertAutoIncrement("custservice_change_log", changecustlog);
             //将蓝图信息也要变更过来
-            PartyEntity partyEntity=dao.queryPartyInfoByPartyId(partyIdArr[i]);
-            if(StringUtils.isBlank(partyEntity.getOpenId())){
+            PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyIdArr[i]);
+            if (StringUtils.isBlank(partyEntity.getOpenId())) {
                 return response;
             }
-            String openId=partyEntity.getOpenId();
+            String openId = partyEntity.getOpenId();
             Map<String, String> blueActionInfo = new HashMap<String, String>();
-            blueActionInfo.put("OPEN_ID",openId);
-            blueActionInfo.put("REL_EMPLOYEE_ID",custServiceEmpId);
+            blueActionInfo.put("OPEN_ID", openId);
+            blueActionInfo.put("REL_EMPLOYEE_ID", custServiceEmpId);
             dao.save("ins_blueprint_action", new String[]{"OPEN_ID"}, blueActionInfo);
 
         }
@@ -1574,13 +1576,14 @@ public class CustServService extends GenericService {
             String linkEmpId = record.get("LINK_EMPLOYEE_ID");
 
             //新增楼盘翻译
-            String houseAddress=HousesBean.getHousesEntityById(record.get("HOUSE_ID")).getName();
+            if (record.get("HOUSE_ID") != null) {
+                String houseAddress = HousesBean.getHousesEntityById(record.get("HOUSE_ID")).getName();
 
-            if(StringUtils.isNotBlank(record.get("HOUSE_BUILDING"))){
-                houseAddress=houseAddress+"::"+record.get("HOUSE_BUILDING");
+                if (StringUtils.isNotBlank(record.get("HOUSE_BUILDING"))) {
+                    houseAddress = houseAddress + "::" + record.get("HOUSE_BUILDING");
+                }
+                record.put("HOUSE_ADDRESS", houseAddress);
             }
-            record.put("HOUSE_ADDRESS",houseAddress);
-
 
             if (!partyRecord.containsKey(partyInfoId)) {
                 if (StringUtils.equals("CUSTOMERSERVICE", roleType)) {
@@ -1680,7 +1683,7 @@ public class CustServService extends GenericService {
             if (partyEntity != null) {
                 applyRecord.put("PARTY_NAME", partyEntity.getPartyName());
                 applyRecord.put("WX_NICK", partyEntity.getWxNick());
-                applyRecord.put("CREATE_TIME",partyEntity.getCreateTime());
+                applyRecord.put("CREATE_TIME", partyEntity.getCreateTime());
             }
             if (StringUtils.isNotBlank(auditEmpId)) {
                 applyRecord.put("AUDIT_EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
@@ -1760,7 +1763,7 @@ public class CustServService extends GenericService {
             if (partyEntity != null) {
                 applyRecord.put("PARTY_NAME", partyEntity.getPartyName());
                 applyRecord.put("WX_NICK", partyEntity.getWxNick());
-                applyRecord.put("CREATE_TIME",partyEntity.getCreateTime());
+                applyRecord.put("CREATE_TIME", partyEntity.getCreateTime());
             }
             if (StringUtils.isNotBlank(auditEmpId)) {
                 applyRecord.put("AUDIT_EMPLOYEE_NAME", EmployeeCache.getEmployeeNameEmployeeId(auditEmpId));
@@ -1813,9 +1816,8 @@ public class CustServService extends GenericService {
             CustServiceStatBean.clearCustomerUpdateStat(recordSet,partyEntity);
         }*/
 
-     return response;
+        return response;
     }
-
 
 
     public ServiceResponse initQuery4PartyVisit(ServiceRequest request) throws Exception {
@@ -1853,13 +1855,13 @@ public class CustServService extends GenericService {
             String partyInfoId = record.get("PARTY_ID");
             String linkEmpId = record.get("LINK_EMPLOYEE_ID");
             //新增楼盘翻译
-            String houseAddress=HousesBean.getHousesEntityById(record.get("HOUSE_ID")).getName();
-
-            if(StringUtils.isNotBlank(record.get("HOUSE_BUILDING"))){
-                houseAddress=houseAddress+"::"+record.get("HOUSE_BUILDING");
+            if(record.get("HOUSE_ID")!=null) {
+                String houseAddress = HousesBean.getHousesEntityById(record.get("HOUSE_ID")).getName();
+                if (StringUtils.isNotBlank(record.get("HOUSE_BUILDING"))) {
+                    houseAddress = houseAddress + "::" + record.get("HOUSE_BUILDING");
+                }
+                record.put("HOUSE_ADDRESS", houseAddress);
             }
-
-            record.put("HOUSE_ADDRESS",houseAddress);
             if (!partyRecord.containsKey(partyInfoId)) {
                 if (StringUtils.equals("CUSTOMERSERVICE", roleType)) {
                     record.put("CUSTSERVICENAME", EmployeeCache.getEmployeeNameEmployeeId(linkEmpId));
@@ -1905,8 +1907,8 @@ public class CustServService extends GenericService {
         String visitWay = request.getString("VISIT_WAY");//回访方式
         String visitContent = request.getString("VISIT_CONTENT");//回访内容
         String visitTime = request.getString("VISIT_TIME");//回访时间
-        if(StringUtils.isBlank(visitTime)){
-            visitTime=session.getCreateTime();
+        if (StringUtils.isBlank(visitTime)) {
+            visitTime = session.getCreateTime();
         }
         String partyId = request.getString("PARTY_ID");
 
@@ -2004,10 +2006,10 @@ public class CustServService extends GenericService {
     public ServiceResponse checkCustomerByMobile(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         CustomerServiceDAO dao = new CustomerServiceDAO("ins");
-        AppSession session=SessionManager.getSession();
-        String employeeId=session.getSessionEntity().get("EMPLOYEE_ID");
-        String mobileNo=request.getString("mobileNo");
-        RecordSet recordSet = dao.queryCustomerInfo4Merge("CUSTOMERSERVICE",mobileNo,employeeId);
+        AppSession session = SessionManager.getSession();
+        String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
+        String mobileNo = request.getString("mobileNo");
+        RecordSet recordSet = dao.queryCustomerInfo4Merge("CUSTOMERSERVICE", mobileNo, employeeId);
         if (recordSet.size() <= 0) {
             return response;
         }
@@ -2055,18 +2057,18 @@ public class CustServService extends GenericService {
         return response;
     }
 
-    public ServiceResponse checkInfoByOpenIdFromCounselor(ServiceRequest request) throws Exception{
-        ServiceResponse response=new ServiceResponse();
-        String openId=request.getString("openId");
-        CustDAO custDao=new CustDAO("ins");
-        CustomerEntity customerEntity=custDao.getCustomerEntityByIdentifyCode(openId);
-        if(customerEntity==null || !StringUtils.equals("1",customerEntity.getCustStatus())){
-            response.set("EXIST_CUSTOMER_INFO_FLAG","FLASE");
-        }else{
+    public ServiceResponse checkInfoByOpenIdFromCounselor(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String openId = request.getString("openId");
+        CustDAO custDao = new CustDAO("ins");
+        CustomerEntity customerEntity = custDao.getCustomerEntityByIdentifyCode(openId);
+        if (customerEntity == null || !StringUtils.equals("1", customerEntity.getCustStatus())) {
+            response.set("EXIST_CUSTOMER_INFO_FLAG", "FLASE");
+        } else {
             //在家装顾问环节存在客户信息，则打上标记
-            response.set("CUSTOMER_ENTITY",customerEntity);
-            response.set("HOUSE_NAME",HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName());
-            response.set("EXIST_CUSTOMER_INFO_FLAG","TRUE");
+            response.set("CUSTOMER_ENTITY", customerEntity);
+            response.set("HOUSE_NAME", HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName());
+            response.set("EXIST_CUSTOMER_INFO_FLAG", "TRUE");
         }
         return response;
     }
