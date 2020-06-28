@@ -1474,13 +1474,17 @@ public class CustServService extends GenericService {
             //将蓝图信息也要变更过来
             PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyIdArr[i]);
             if (StringUtils.isBlank(partyEntity.getOpenId())) {
-                return response;
+                continue;
             }
             String openId = partyEntity.getOpenId();
-            Map<String, String> blueActionInfo = new HashMap<String, String>();
-            blueActionInfo.put("OPEN_ID", openId);
-            blueActionInfo.put("REL_EMPLOYEE_ID", custServiceEmpId);
-            dao.save("ins_blueprint_action", new String[]{"OPEN_ID"}, blueActionInfo);
+            RecordSet blueSet=dao.queryBluePrintByOpenIdAndActionCode(openId,"XQLTE");
+            if(blueSet.size()>0){
+                Map<String, String> blueActionInfo = new HashMap<String, String>();
+                blueActionInfo.put("OPEN_ID", openId);
+                blueActionInfo.put("REL_EMPLOYEE_ID", custServiceEmpId);
+                dao.save("ins_blueprint_action", new String[]{"OPEN_ID"}, blueActionInfo);
+            }
+
 
         }
         return response;

@@ -269,7 +269,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
             sb.append(" and action_code=:ACTION_CODE");
             parameter.put("ACTION_CODE", action_code);
         }
-        sb.append("order by create_time ");
+        sb.append(" order by create_time ");
         parameter.put("OPEN_ID", openid);
         RecordSet recordSet = queryBySql(sb.toString(), parameter);
 
