@@ -3,6 +3,7 @@ package com.hirun.app.biz.datacenter.custservice;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.employee.EmployeeBean;
+import com.hirun.app.bean.houses.HousesBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.permission.Permission;
 import com.hirun.app.bean.plan.PlanStatBean;
@@ -199,6 +200,12 @@ public class CustServiceReportService extends GenericService {
             String tagName = "无标签";
             if (StringUtils.isNotBlank(record.get("TAG_ID"))) {
                 tagName = StaticDataTool.getCodeName("PARTY_TAG", (record.get("TAG_ID")));
+            }
+            //2020/07/01新增
+            if(StringUtils.isNotBlank(record.get("HOUSE_ID"))){
+                String houseId=record.get("HOUSE_ID");
+                String newHouseAddress=HousesBean.getHousesEntityById(houseId).getName();
+                record.put("HOUSE_ADDRESS",newHouseAddress);
             }
             record.put("TAG_NAME", tagName);
         }
