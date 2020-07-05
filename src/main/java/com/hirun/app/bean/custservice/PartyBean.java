@@ -356,6 +356,12 @@ public class PartyBean {
             param.put("XQLTE_CREATE_TIME", transUnixTimeToNormal(jsonObject.getString("update_time")));
             param.put("XQLTE_UPDATE_TIME", transUnixTimeToNormal(jsonObject.getString("update_time")));
 
+            //20200705新增
+            //2020-07-05新增三个蓝图的保存时间
+            param.put("A_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("A_create_time")));
+            param.put("B_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("B_create_time")));
+            param.put("C_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("C_create_time")));
+
             if ((StringUtils.isNotBlank(funcA) && !StringUtils.equals("false", funcA))
                     || (StringUtils.isNotBlank(funcB) && !StringUtils.equals("false", funcB))
                     || (StringUtils.isNotBlank(funcC) && !StringUtils.equals("false", funcC))) {
@@ -522,6 +528,10 @@ public class PartyBean {
         param.put("STYLEPRINT_UPDATE_TIME", transUnixTimeToNormal(jsonObject.getString("fglt_update_time")));
         param.put("STYLE", jsonObject.getString("style"));
 
+        //2020-07-05新增三个蓝图的保存时间
+        param.put("A_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("A_create_time")));
+        param.put("B_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("B_create_time")));
+        param.put("C_CREATE_TIME",transUnixTimeToNormal(jsonObject.getString("C_create_time")));
 
         dao.insertAutoIncrement("ins_blueprint_action", param);//将需求蓝图二的内容转换成ins数据
         //更新报表
