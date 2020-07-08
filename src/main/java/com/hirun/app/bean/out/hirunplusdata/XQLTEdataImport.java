@@ -25,7 +25,7 @@ public class XQLTEdataImport {
 
     private static String host = "www.hi-run.net";
     private static String path = "/api/projectltv2";
-    private static String pageSize = "100";
+    private static String pageSize = "20";
 
     public static void dataImport(String start, String end) throws Exception {
         CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -94,7 +94,10 @@ public class XQLTEdataImport {
 
                 dbParam.put("FGLT_CREATE_TIME", jsonData.getString("fglt_update_time"));
                 dbParam.put("FGLT_UPDATE_TIME", jsonData.getString("fglt_update_time"));
-
+                //2020-07-05新增三个蓝图的保存时间
+                dbParam.put("A_CREATE_TIME",jsonData.getString("A_create_time"));
+                dbParam.put("B_CREATE_TIME",jsonData.getString("B_create_time"));
+                dbParam.put("C_CREATE_TIME",jsonData.getString("C_create_time"));
 
                 dbParam.put("IS_CHANGE", jsonData.getString("ischange"));
                 dbParam.put("OPEN_ID", jsonData.getString("openid"));
@@ -167,6 +170,11 @@ public class XQLTEdataImport {
 
                 dbParam.put("STYLE", jsonData.getString("style"));
 
+                //2020-07-05新增三个蓝图的保存时间
+                dbParam.put("A_CREATE_TIME",jsonData.getString("A_create_time"));
+                dbParam.put("B_CREATE_TIME",jsonData.getString("B_create_time"));
+                dbParam.put("C_CREATE_TIME",jsonData.getString("C_create_time"));
+
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "1");
                 dbParam.put("DEAL_TIME",TimeTool.now());
@@ -219,6 +227,11 @@ public class XQLTEdataImport {
                 //2020-01-08家网需求蓝图变化新增A\B\C三类调整
                 dbParam.put("FUNC_B", jsonData.getString("funs_B"));
                 dbParam.put("FUNC_C", jsonData.getString("funs_C"));
+
+                //2020-07-05新增三个蓝图的保存时间
+                dbParam.put("A_CREATE_TIME",jsonData.getString("A_create_time"));
+                dbParam.put("B_CREATE_TIME",jsonData.getString("B_create_time"));
+                dbParam.put("C_CREATE_TIME",jsonData.getString("C_create_time"));
 
                 dbParam.put("STYLE", jsonData.getString("style"));
                 dbParam.put("INDB_TIME", TimeTool.now());

@@ -31,6 +31,21 @@
                     }
                 );
 
+                $.Select.append(
+                    "busiTypeTimeContainer",
+                    {
+                        id:"busiTimeType",
+                        name:"busiTimeType",
+                    },
+                    [
+                        {TEXT:"录入时间", VALUE:"1"},
+                        {TEXT:"咨询时间", VALUE:"2"},
+                    ]
+                );
+
+                $("#busiTimeType").val("1");
+
+
                 window["orgTree"] = new Wade.Tree("orgTree");
 
                 $("#orgTree").textAction(function(e, nodeData){
@@ -86,8 +101,11 @@
                 let name= $("#NAME").val();
                 let tagId=$("#QUERY_TAG_ID").val();
                 let wxNick=$("#WX_NICK").val();
+                let busiTypeTime=$("#busiTimeType").val();
+
+
                 var param='&CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate
-                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick;
+                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick+"&BUSI_TYPE_TIME="+busiTypeTime;
                 $.ajaxPost('queryCustServFinishActionInfo',param,function(data) {
                     var rst = new Wade.DataMap(data);
                     var datas=rst.get("CUSTSERVICEFINISHACTIONINFO");
@@ -142,6 +160,7 @@
                     let wxnick=data.get("WX_NICK");
                     let visitcount=data.get("VISITCOUNT");
                     let tagName=data.get("TAG_NAME");
+                    let consultTime=data.get("CONSULT_TIME");
 
                     if(wxnick=="undefined" || wxnick ==null || wxnick =="null"){
                         wxnick='';
@@ -190,11 +209,17 @@
                         visitcount='0';
                     }
 
+                    if(consultTime===""||consultTime==null||consultTime==="undefined"){
+                        consultTime="";
+                    }else{
+                        consultTime=consultTime.substr(0,19)
+                    }
+
                     myTable.addRow({
                         "_className":"no",
                         "CUST_NAME":partyName,
                         "WX_NICK":wxnick,
-                        "CREATE_TIME":create_date.substr(0,19),
+                        "CREATE_TIME":consultTime,
                         "ADDRESS":houseAddress,
                         "CUST_SERVICE":custservName,
                         "SCAN_DATE":smjrlcfinishTime,
@@ -314,9 +339,11 @@
                 let name= $("#NAME").val();
                 let tagId=$("#QUERY_TAG_ID").val();
                 let wxNick=$("#WX_NICK").val();
+                let busiTypeTime=$("#busiTimeType").val();
+
 
                 var param='CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&START_DATE="+startDate+"&END_DATE="+endDate
-                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick;
+                    +"&NAME="+name+"&TAG_ID="+tagId+"&WX_NICK="+wxNick+"&BUSI_TYPE_TIME="+busiTypeTime;
                 window.location.href = "/exportCustActionInfo?"+param;
             },
 

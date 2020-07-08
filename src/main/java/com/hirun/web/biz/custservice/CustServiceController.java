@@ -228,4 +228,16 @@ public class CustServiceController extends RootController {
         ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.submitPartyTagInfo", paramter);
         return response.toJsonString();
     }
+
+    @RequestMapping(value = "/customer/checkCustomerByMobile")
+    public @ResponseBody String checkCustomerByMobile(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.checkCustomerByMobile", paramter);
+        return response.toJsonString();
+    }
+
+    @RequestMapping(value = "/customer/checkInfoByOpenIdFromCounselor")
+    public @ResponseBody String checkInfoByOpenIdFromCounselor(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("OperationCenter.custservice.CustServService.checkInfoByOpenIdFromCounselor", paramter);
+        return response.toJsonString();
+    }
 }

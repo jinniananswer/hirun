@@ -131,17 +131,19 @@
                 $("#messagebox").css("display","none");
 
 
-                var length = datas.length;
-                for(var i=0;i<length;i++) {
-                    var data = datas.get(i);
-                    var wxnick=data.get("WX_NICK");
-                    var mobile=data.get("MOBILE_NO");
-                    var create_date=data.get("CREATE_TIME");
-                    var party_name=data.get("PARTY_NAME");
-                    var custserviceName=data.get("CUSTSERVICENAME");
-                    var headUrl=data.get("HEAD_URL");
-                    var partyTagName=data.get("PARTYTAGNAME");
-                    var showMobile=data.get("SHOWMOBILE");
+                let length = datas.length;
+                for(let i=0;i<length;i++) {
+                    let data = datas.get(i);
+                    let wxnick=data.get("WX_NICK");
+                    let mobile=data.get("MOBILE_NO");
+                    let create_date=data.get("CREATE_TIME");
+                    let party_name=data.get("PARTY_NAME");
+                    let custserviceName=data.get("CUSTSERVICENAME");
+                    let headUrl=data.get("HEAD_URL");
+                    let partyTagName=data.get("PARTYTAGNAME");
+                    let showMobile=data.get("SHOWMOBILE");
+                    let consultTime=data.get("CONSULT_TIME");
+
 
                     html.push("<li class='link' ><div class=\"group\"><div class=\"content\">");
 
@@ -178,7 +180,11 @@
 
                     }
                     html.push("<div class=\"content content-auto\">");
-                    html.push("咨询时间: " + create_date.substr(0,19));
+                    if(consultTime==''||consultTime==null){
+                        html.push("咨询时间: ");
+                    }else{
+                        html.push("咨询时间: " + consultTime.substr(0,19));
+                    }
                     html.push("</div>")
 
                     html.push("<div class=\"content content-auto\">");
@@ -200,14 +206,27 @@
                         html.push("<span class=\"e_tag e_tag-orange\" ontap='$.custservicemanager.redirectPartyTagManager(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
                         html.push(partyTagName);
                         html.push("</span>");
+                        html.push("  ");
+                        html.push("<span>");
+                        html.push("</span>");
+                        html.push("<span class=\"e_tag e_tag-green\" ontap='$.custservicemanager.redirectPartyFamily(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                        html.push("家");
+                        html.push("</span>");
                         html.push("</div>")
                     }else {
                         html.push("<div class=\"content content-auto\">");
                         html.push("<span class=\"e_tag e_tag-orange\" ontap='$.custservicemanager.redirectPartyTagManager(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
                         html.push("无标签");
                         html.push("</span>");
+                        html.push("  ");
+                        html.push("<span>");
+                        html.push("</span>");
+                        html.push("<span class=\"e_tag e_tag-green\" ontap='$.custservicemanager.redirectPartyFamily(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>");
+                        html.push("家");
+                        html.push("</span>");
                         html.push("</div>")
                     }
+
 
                     html.push("</div>")
 
@@ -244,6 +263,11 @@
             redirectPartyVisit : function(parytId,projectId) {
                 $.redirect.open('redirectPartyVisit?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '客户回访');
             },
+
+            redirectPartyFamily : function(parytId,projectId) {
+                $.redirect.open('redirectPartyFamily?PARTY_ID='+parytId+'&PROJECT_ID='+projectId, '家庭客户');
+            },
+
 
             redirectPartyTagManager : function(parytId,projectId) {
                     $.beginPageLoading();

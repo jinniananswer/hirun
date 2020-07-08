@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表流程</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/csr_traceflow.js?v=20200402"></script>
+    <script src="/scripts/biz/customerservice/csr_traceflow.js?v=20200620"></script>
 </head>
 <body>
         <div class="c_header">

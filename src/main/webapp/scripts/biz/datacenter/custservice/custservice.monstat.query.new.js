@@ -14,6 +14,21 @@
                     useScroller:true
                 });
 
+                $.Select.append(
+                    "busiTypeTimeContainer",
+                    {
+                        id:"busiTimeType",
+                        name:"busiTimeType",
+                    },
+                    [
+                        {TEXT:"录入时间", VALUE:"1"},
+                        {TEXT:"咨询时间", VALUE:"2"},
+                    ]
+                );
+
+                $("#busiTimeType").val("1");
+
+
                 var now = $.date.now();
                 var nowYYYYMM = $.date.now().substring(0,4) + $.date.now().substring(5,7);
 
@@ -76,8 +91,10 @@
                 var custServiceEmpId=$("#CUSTSERVICEEMPLOYEEID").val();
                 var orgId=$("#ORG_ID").val();
                 var monDate=$('#MON_DATE').val();
+                let busiTypeTime=$("#busiTimeType").val();
 
-                var param='&CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&MON_DATE="+monDate;
+
+                var param='&CUSTSERVICEEMPID='+custServiceEmpId+"&ORG_ID="+orgId+"&MON_DATE="+monDate+"&BUSI_TYPE_TIME="+busiTypeTime;
                 $.ajaxPost('queryNewCustServMonStatInfo',param,function(data) {
                     var rst = new Wade.DataMap(data);
                     var datas=rst.get("CUSTSERVICESTATINFO");
@@ -200,10 +217,12 @@
             },
 
             export : function() {
-                var custServiceEmpId=$("#CUSTSERVICEEMPLOYEEID").val();
-                var orgId=$("#ORG_ID").val();
-                var monDate=$('#MON_DATE').val();
-                window.location.href = "/exportCustServiceMonStat?CUSTSERVICEEMPID=" + custServiceEmpId+"&ORG_ID="+orgId+"&MON_DATE="+monDate;
+                let custServiceEmpId=$("#CUSTSERVICEEMPLOYEEID").val();
+                let orgId=$("#ORG_ID").val();
+                let monDate=$('#MON_DATE').val();
+                let busiTypeTime=$("#busiTimeType").val();
+
+                window.location.href = "/exportCustServiceMonStat?CUSTSERVICEEMPID=" + custServiceEmpId+"&ORG_ID="+orgId+"&MON_DATE="+monDate+"&BUSI_TYPE_TIME"+busiTypeTime;
             },
 
         }});

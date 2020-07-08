@@ -1,7 +1,7 @@
 ﻿1、获取《需求蓝图二/三》有效推送
 req:
-http://www.hi-run.net/api/projectlt?stage=2&staff_id=12&start=1562864122//8月前使用接口
-http://www.hi-run.net/api/projectlttest?stage=2&start=1565659665&end=1565746066//8月开始使用新接口
+http://www.hi-run.net/api/projectltv2?stage=2&staff_id=236&start=1589861953&end=1589864353//8月前使用接口
+http://www.hi-run.net/api/projectlttest?stage=2&start=1587537017&end=1587539297//8月开始使用新接口
 staff_id:员工ID
 start：开始时间戳（秒）
 end：结束时间戳（秒） 
@@ -110,7 +110,7 @@ create_time：创建时间
 4、获取《扫客户代表码进入全流程数据》
 req:
 http://www.hi-run.net/api/scanlog
-http://www.hi-run.net/api/scanlog?PageNo=1&PageSize=100&role_id=11&start=1562381248&end=1562643490&staff_id=615
+http://www.hi-run.net/api/scanlog?PageNo=1&PageSize=100&role_id=11&start=1592361845&end=1592369845&staff_id=606
 http://www.hi-run.net/api/scanlog?PageNo=1&PageSize=100&role_id=11&staff_id=615
 staff_id:员工ID
 role_id:角色id

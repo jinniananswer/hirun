@@ -3,27 +3,27 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
-    <title>变更客户代表</title>
+    <title>家庭网管理</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/change.customerservice.js?v=20200620"></script>
+    <script src="/scripts/biz/family/family.manager.js?v=20190717"></script>
 </head>
 <body>
     <div class="c_header">
-        <div class="back" ontap="$.redirect.closeCurrentPage();">变更客户代表</div>
+        <div class="back" ontap="$.redirect.closeCurrentPage();"></div>
         <div class="fn">
         <button class="e_button-blue" type="button" ontap="showPopup('UI-popup','UI-popup-query-cond')"><span class="e_ico-search"></span></button>
         </div>
     </div>
 
     <div class="c_scroll c_scroll-float c_scroll-header" id="scroll_div">
-        <div id="tip" class="c_tip">请点击标题栏右侧的放大镜，先查询需要变更的客户列表，再选择新客户代表提交</div>
+        <div id="tip" class="c_tip">请点击标题栏右侧的放大镜，先查询需要组建家庭的客户列表，然后点击组建家庭按钮。该操作不可逆</div>
             <!--开始-->
             <div class="l_padding">
 
                 <div class="c_title">
                     <div class="fn">
                         <ul>
-                           <li ontap="$.changecustomerservice.chooseNewCustService();"><span class="e_ico-change"></span>选择新客户代表</li>
+                           <li ontap="$.familyManager.createFamily();"><span class="e_ico-home"></span>组建家庭</li>
                         </ul>
                     </div>
                 </div>
@@ -93,8 +93,8 @@
                                 <!-- 列表 结束 -->
                                  <div class="c_space"></div>
                                 <div class="c_submit c_submit-full">
-                                    <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.changecustomerservice.clearCond()">重置</button>
-                                    <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.changecustomerservice.query();" class="e_button-r e_button-l e_button-green">查询</button>
+                                    <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.familyManager.clearCond()">重置</button>
+                                    <button type="button" id="SUBMIT_QUERY" name="SUBMIT_QUERY" ontap="$.familyManager.query();" class="e_button-r e_button-l e_button-green">查询</button>
                                 </div>
                                   <div class="c_space-3"></div>
                             </div>
@@ -117,7 +117,7 @@
                                                 <div class="value">
                                                         <span class="e_mix">
                                                             <input id="SEARCH_TEXT" name="SEARCH_TEXT" type="text" placeholder="请输入员工姓名（模糊搜索）" nullable="yes" desc="查询条件"/>
-                                                            <button type="button" class="e_button-blue" ontap="$.changecustomerservice.searchNewCustService();"><span class="e_ico-search"></span><span>查询</span></button>
+                                                            <button type="button" class="e_button-blue" ontap="$.familyManager.searchNewCustService();"><span class="e_ico-search"></span><span>查询</span></button>
                                                         </span>
                                                 </div>
                                             </li>
@@ -148,7 +148,7 @@
                                     </div>
                                   <div class="c_space-3"></div>
                                     <div id="submitButton" class="c_submit c_submit-full" style="display:none">
-                                         <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.changecustomerservice.confirmCustService()">提交</button>
+                                         <button type="button" class="e_button-r e_button-l e_button-green" ontap="$.familyManager.confirmCustService()">提交</button>
                                     </div>
                                   <div class="c_space-3"></div>
                                   <div class="c_space-3"></div>
@@ -173,7 +173,7 @@
                                                  <div class="value">
                                                      <span class="e_mix">
                                                          <input id="CUSTSERVICE_NAME" name="CUSTSERVICE_NAME" type="text" placeholder="请输入客户代表姓名（模糊搜索）" nullable="no" desc="查询条件"/>
-                                                         <button type="button" class="e_button-blue" ontap="$.changecustomerservice.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
+                                                         <button type="button" class="e_button-blue" ontap="$.familyManager.queryCustService();"><span class="e_ico-search"></span><span>查询</span></button>
                                                      </span>
                                                  </div>
                                             </li>
@@ -217,7 +217,7 @@
 
 <script>
     Wade.setRatio();
-    $.changecustomerservice.init();
+    $.familyManager.init();
 </script>
 </body>
 </html>

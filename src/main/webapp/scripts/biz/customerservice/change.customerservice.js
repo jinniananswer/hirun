@@ -128,7 +128,7 @@
                     }
 
                     html.push("<div class=\"content \">");
-                    html.push("咨询时间: " + create_date.substr(0,19));
+                    html.push("录入时间: " + create_date.substr(0,19));
                     html.push("</div>")
 
                     html.push("<div class=\"content \">");

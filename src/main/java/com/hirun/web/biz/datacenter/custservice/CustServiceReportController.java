@@ -69,7 +69,7 @@ public class CustServiceReportController extends RootController {
         parameter.put("CUSTSERVICEEMPID", request.getParameter("CUSTSERVICEEMPID"));
         parameter.put("ORG_ID", request.getParameter("ORG_ID"));
         parameter.put("MON_DATE", request.getParameter("MON_DATE"));
-
+        parameter.put("BUSI_TYPE_TIME",request.getParameter("BUSI_TYPE_TIME"));
 
 
         ServiceResponse response = ServiceClient.call("DataCenter.custservice.CustServiceReportService.queryNewCustServMonStatInfo", parameter);
@@ -172,6 +172,7 @@ public class CustServiceReportController extends RootController {
         parameter.put("TAG_ID", request.getParameter("TAG_ID"));
         parameter.put("WX_NICK", request.getParameter("WX_NICK"));
         parameter.put("ORG_ID", request.getParameter("ORG_ID"));
+        parameter.put("BUSI_TYPE_TIME",request.getParameter("BUSI_TYPE_TIME"));
 
         ServiceResponse response = ServiceClient.call("DataCenter.custservice.CustServiceReportService.queryCustServFinishActionInfo", parameter);
 
