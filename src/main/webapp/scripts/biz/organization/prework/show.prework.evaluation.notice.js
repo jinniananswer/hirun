@@ -28,8 +28,8 @@
                     $("#cg_design_sign_date").html(startDate+" 08:20");
                     $("#cg_design_start_date").html(startDate);
 
-                    $("#counselor_sign_date").html(startDate+"、"+endDate+" 08:20");
-                    $("#counselor_sign_date").html(startDate+"、"+endDate);
+                    $("#counselor_sign_date").html(startDate+"-"+endDate+" 08:20");
+                    $("#counselor_start_date").html(startDate+"-"+endDate);
 
                     $("#kj_sign_date").html(endDate+" 08:20");
                     $("#kj_start_date").html(endDate);
