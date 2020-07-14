@@ -283,10 +283,18 @@
                         return;
                     }
 
-                    if($("#consult_time").val()===''){
-                        MessageBox.alert("咨询时间不允许为空");
-                        return;
+                    if($("#customer_type").val()==='1'){
+                        if($("#consult_time").val()===''){
+                            MessageBox.alert("咨询时间不允许为空");
+                            return;
+                        }
+                    }else if($("#customer_type").val()==='2'){
+                        if($("#marketing_time").val()===''){
+                            MessageBox.alert("选择客户类型为活动客户,活动时间不允许为空");
+                            return;
+                        }
                     }
+
 
                     $("#baseinfo").css("display", "none");
                     $("#custintention").css("display", "");

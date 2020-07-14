@@ -934,7 +934,7 @@ public class CustServService extends GenericService {
         Record customerRecord = dao.queryCustomerInfoByCustId(partyId);
         //20200517新增，初始化修改好看好住信息修改时，判断之前是否以及完成过该动作，如果有则需要控制前台有些字段不可编辑
         RecordSet goodLiveActionInfo = dao.queryGoodLiveInfoActionInfo(partyId, projectId, "HZHK", "1");
-        if (goodLiveActionInfo.size() <= 0) {
+        if (goodLiveActionInfo.size() <= 0 ||StringUtils.isBlank(customerRecord.get("CONSULT_TIME"))) {
             response.set("HAS_EDIT_INFO_FLAG", "false");
         } else {
             response.set("HAS_EDIT_INFO_FLAG", "true");
