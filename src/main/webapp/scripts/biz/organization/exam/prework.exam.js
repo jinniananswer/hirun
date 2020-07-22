@@ -17,6 +17,11 @@
                         break;
                     }
                 }
+
+                if (this.examId == null || typeof(this.examId) == "undefined") {
+                    MessageBox.alert("您没有选中任何考试科目");
+                    return;
+                }
                 $.ajaxPost('initPreworkExam',"&EXAM_ID="+this.examId,function(data) {
                     $("#CONFIRM_BUTTON").css("display", "none");
                     $("#exam").css("display", "none");
