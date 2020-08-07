@@ -1277,6 +1277,11 @@ public class CustServService extends GenericService {
 
 
         //拼装需要发给家装顾问的消息
+        String newHouseName="";
+        if(StringUtils.isNotBlank(houseId)){
+            newHouseName=HousesBean.getHousesEntityById(houseId).getName();
+        }
+
         StringBuilder msgContent = new StringBuilder();
         String houseCounselorId = customerEntity.getHouseCounselorId();
         msgContent.append(EmployeeBean.getEmployeeByEmployeeId(houseCounselorId).getName() + "，您好！" +
@@ -1285,7 +1290,7 @@ public class CustServService extends GenericService {
                 .append("变更内容由原来的客户姓名:" + customerEntity.getCustName() + "变成" + "[" + partyName + "],")
                 .append("联系号码:" + customerEntity.getMobileNo() + "变成" + "[" + mobileNo + "],")
                 .append("楼盘:" + HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName() +
-                        "变成" + "[" + HousesBean.getHousesEntityById(houseId).getName() + "]。")
+                        "变成" + "[" +newHouseName + "]。")
                 .append("变更时间为:" + TimeTool.now());
         //同步信息给家装顾问环节
         customerEntity.setCustName(partyName);
