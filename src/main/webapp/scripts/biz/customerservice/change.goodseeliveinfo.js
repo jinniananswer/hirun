@@ -283,6 +283,11 @@
                         return;
                     }
 
+                    if($("#house_id").val()===''){
+                        MessageBox.alert("楼盘不允许为空");
+                        return;
+                    }
+
                     if($("#customer_type").val()==='1'){
                         if($("#consult_time").val()===''){
                             MessageBox.alert("咨询时间不允许为空");

@@ -1278,12 +1278,18 @@ public class CustServService extends GenericService {
 
         //拼装需要发给家装顾问的消息
         String newHouseName="";
+        String oldHouseName="";
         if(StringUtils.isNotBlank(houseId)){
             newHouseName=HousesBean.getHousesEntityById(houseId).getName();
         }
 
         StringBuilder msgContent = new StringBuilder();
         String houseCounselorId = customerEntity.getHouseCounselorId();
+
+        if(StringUtils.isNotBlank(customerEntity.getHouseId())){
+            oldHouseName=HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName();
+        }
+
         msgContent.append(EmployeeBean.getEmployeeByEmployeeId(houseCounselorId).getName() + "，您好！" +
                 "【" + EmployeeBean.getEmployeeByEmployeeId(employeeId).getName())
                 .append("】已完善了您的客户【" + customerEntity.getCustName() + "||微信昵称:" + customerEntity.getWxNick() + "】相关信息。")
