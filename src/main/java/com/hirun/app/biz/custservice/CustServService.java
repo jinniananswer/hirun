@@ -1295,7 +1295,7 @@ public class CustServService extends GenericService {
                 .append("】已完善了您的客户【" + customerEntity.getCustName() + "||微信昵称:" + customerEntity.getWxNick() + "】相关信息。")
                 .append("变更内容由原来的客户姓名:" + customerEntity.getCustName() + "变成" + "[" + partyName + "],")
                 .append("联系号码:" + customerEntity.getMobileNo() + "变成" + "[" + mobileNo + "],")
-                .append("楼盘:" + HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName() +
+                .append("楼盘:" + oldHouseName +
                         "变成" + "[" +newHouseName + "]。")
                 .append("变更时间为:" + TimeTool.now());
         //同步信息给家装顾问环节
