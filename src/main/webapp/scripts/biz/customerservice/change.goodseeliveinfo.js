@@ -832,21 +832,32 @@
 
             changeGoodSeeLiveInfo : function(){
                 if($.validate.verifyAll("allSubmitArea")) {
-                    $.beginPageLoading();
                     var parameter = $.buildJsonData("allSubmitArea");
-                    $.ajaxPost('changeGoodSeeLiveInfo', parameter, function (data) {
-                        $.endPageLoading();
-                        MessageBox.success("修改成功","点击确定返回修改页面，点击取消关闭当前页面", function(btn){
-                            if("ok" == btn) {
-                                document.location.reload();
-                            }
-                            else {
-                                $.redirect.closeCurrentPage();
-                            }
-                        },{"cancel":"取消"})
-                    });
+
+                    MessageBox.success("提示信息", "确认是否保存?点击确认继续，点击取消退出。", function (btn) {
+                        if ("ok" == btn) {
+                            $.beginPageLoading();
+                            $.changegoodseeliveinfo.realChange(parameter);
+                        }
+                    }, {"cancel": "取消"})
                 }
             },
+
+
+            realChange: function (parameter) {
+                $.ajaxPost('changeGoodSeeLiveInfo', parameter, function (data) {
+                    $.endPageLoading();
+                    MessageBox.success("修改成功","点击确定返回修改页面，点击取消关闭当前页面", function(btn){
+                        if("ok" == btn) {
+                            document.location.reload();
+                        }
+                        else {
+                            $.redirect.closeCurrentPage();
+                        }
+                    },{"cancel":"取消"})
+                });
+            },
+
 
             drawProjectInfo : function (projectInfo,hasEditInfoFlag) {
                 if(projectInfo===''){

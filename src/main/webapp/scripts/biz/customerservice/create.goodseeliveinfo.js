@@ -793,9 +793,14 @@
                         return;
                     }
 
-                    $.beginPageLoading();
                     var parameter = $.buildJsonData("allSubmitArea");
-                    $.goodseelive.realCreate(parameter);
+
+                    MessageBox.success("提示信息", "确认是否保存?点击确认继续，点击取消退出。", function (btn) {
+                        if ("ok" == btn) {
+                            $.beginPageLoading();
+                            $.goodseelive.realCreate(parameter);
+                        }
+                    }, {"cancel": "取消"})
                 }
             },
 

@@ -126,7 +126,8 @@ var custQuery4HouseCounselor = {
                 "YJALTS_NUM": data.get("YJALTS_NUM"),
                 "YJALTS_LAST_TIME": data.get("YJALTS_LAST_TIME"),
                 "DKCSMU_LAST_TIME": data.get("DKCSMU_LAST_TIME"),
-                "WX_NICK": data.get("WX_NICK")
+                "WX_NICK": data.get("WX_NICK"),
+                "FIRST_PLAN_DATE":data.get("FIRST_PLAN_DATE")
             });
         }
     },
