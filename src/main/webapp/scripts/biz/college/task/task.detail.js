@@ -44,18 +44,18 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                         </van-col>
                     </van-row>
                 </div>
-                <van-action-sheet v-model="show" title="标题">
+                <van-action-sheet v-model="show" title="评分">
                     <div class="content">
-                        <van-cell :center="true" title="难度">
-                            <template #right-icon>
-                                <van-rate v-model="value" allow-half void-icon="star" void-color="#eee" />
+                        <van-field name="rate" label="课程难度">
+                            <template #input>
+                                <van-rate v-model="value" />
                             </template>
-                        </van-cell>
-                        <van-cell :center="true" title="讲师">
-                            <template #right-icon>
-                                <van-rate v-model="value" allow-half void-icon="star" void-color="#eee" />
+                        </van-field>
+                        <van-field name="rate" label="老师评分">
+                            <template #input>
+                                <van-rate v-model="value" />
                             </template>
-                        </van-cell>
+                        </van-field>
                         <div style="margin: 16px;">
                             <van-button round block type="info" native-type="submit">
                                 提交
