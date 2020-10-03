@@ -46,9 +46,36 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
         },
         methods: {
             onSubmit : function() {
-                ajax.post('login', this.data, function(response) {
-                   alert(JSON.stringify(response));
+                $.ajaxPost('/loginPost',this.data,function(data){
+                    window.location.href = "/phone/home.html";
+                }, function(resultCode, resultInfo){
+                    if(resultCode == "HIRUN_LOGIN_000001")
+                        vm.$toast({
+                            message : resultInfo,
+                            overlay : true,
+                            type : 'fail',
+                            closeOnClickOverlay : true
+                        });
+                    else if(resultCode == "HIRUN_LOGIN_000002") {
+                        vm.$toast({
+                            message : resultInfo,
+                            overlay : true,
+                            type : 'fail',
+                            closeOnClickOverlay : true
+                        });
+                    }
+                    else{
+                        vm.$toast({
+                            message : resultInfo,
+                            overlay : true,
+                            type : 'fail',
+                            closeOnClickOverlay : true
+                        });
+                    }
                 });
+                // ajax.post('login', this.data, function(response) {
+                //    alert(JSON.stringify(response));
+                // });
             },
 
             switchOption : function(value) {

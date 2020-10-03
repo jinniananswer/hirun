@@ -25,77 +25,13 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                         />
                     </template>
                 </van-cell>
-                <van-tabs v-model="activeKey">
-                    <van-tab :title="menu.title" v-for="menu in menus">
-                        <van-cell-group title="计划总结">
+                <van-tabs v-model="activeKey" :swipe-threshold="3">
+                    <van-tab :title="menu.node.title" v-for="menu in menus">
+                        <van-cell-group :title="secondMenu.node.title" v-for="secondMenu in menu.children">
                             <van-grid :column-num="3" square>
-                                <van-grid-item icon="todo-list-o" color="#59bd6d" text="计划录入" >
+                                <van-grid-item :text="childMenu.node.title" v-for="(childMenu, index) in secondMenu.children" @click="openMenu(childMenu.node.menuUrl)">
                                     <template #icon>
-                                        <van-icon name="todo-list-o" size="2rem" color="#59bd6d" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="bookmark-o" text="当日总结">
-                                    <template #icon>
-                                        <van-icon name="bookmark-o" size="2rem" color="#ec9f51" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="notes-o" text="计划补录">
-                                    <template #icon>
-                                        <van-icon name="notes-o" size="2rem" color="#417ef1" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="label-o" color="#4faaf8" text="总结补录">
-                                    <template #icon>
-                                        <van-icon name="label-o" size="2rem" color="#4faaf8" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="label-o" color="#4faaf8" text="休假填写">
-                                    <template #icon>
-                                        <van-icon name="birthday-cake-o" size="2rem" color="#e5605b" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="todo-list-o" color="#59bd6d" text="我的计划" >
-                                    <template #icon>
-                                        <van-icon name="todo-list-o" size="2rem" color="#59bd6d" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="todo-list-o" text="员工月度目标设定">
-                                    <template #icon>
-                                        <van-icon name="calendar-o" size="2rem" color="#ec9f51" />
-                                    </template>
-                                </van-grid-item>
-                            </van-grid>
-                        </van-cell-group>
-                        <van-cell-group title="楼盘规划">
-                            <van-grid :column-num="3" square>
-                                <van-grid-item icon="todo-list-o" color="#59bd6d" text="新增楼盘" >
-                                    <template #icon>
-                                        <van-icon name="home-o" size="2rem" color="#59bd6d" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="bookmark-o" text="楼盘查询">
-                                    <template #icon>
-                                        <van-icon name="hotel-o" size="2rem" color="#ec9f51" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="notes-o" text="新增散盘">
-                                    <template #icon>
-                                        <van-icon name="shop-collect-o" size="2rem" color="#417ef1" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="label-o" color="#4faaf8" text="散盘查询">
-                                    <template #icon>
-                                        <van-icon name="shop-o" size="2rem" color="#4faaf8" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="label-o" color="#4faaf8" text="我的楼盘">
-                                    <template #icon>
-                                        <van-icon name="home-o" size="2rem" color="#e5605b" />
-                                    </template>
-                                </van-grid-item>
-                                <van-grid-item icon="todo-list-o" color="#59bd6d" text="我的散盘" >
-                                    <template #icon>
-                                        <van-icon name="shop-o" size="2rem" color="#59bd6d" />
+                                        <van-icon :name="childMenu.node.iconfont" size="2rem" :color="index % 5 == 0 ? '#59bd6d' : (index % 5 == 1 ? '#ec9f51' : (index % 5 == 2 ? '#417ef1' : (index % 5 == 3 ? '#4faaf8' : '#e5605b')))" />
                                     </template>
                                 </van-grid-item>
                             </van-grid>
@@ -104,11 +40,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                         <br/>
                         <br/>
                     </van-tab>
-                    <van-tab title="组织机构">组织机构</van-tab>
-                    <van-tab title="培训学习">培训学习</van-tab>
-                    <van-tab title="数据中心">数据中心</van-tab>
-                    <van-tab title="数据中心">供应链</van-tab>
-                    <van-tab title="数据中心">财务管理</van-tab>
                 </van-tabs>
                 
                 <van-tabbar v-model="active" :z-index="99" style="padding-top:0.5rem;padding-bottom: 0.5rem;background-color: #141516">
@@ -134,11 +65,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
             </div>`,
         data: function () {
             return {
-                option: 'B',
-                value: '22c067',
                 activeKey: 0,
                 active: 0,
-
                 employee : {},
                 menus: []
             }
@@ -149,17 +77,20 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 ajax.get('api/organization/employee/getLoginEmployee', '', function(data) {
                     that.employee = data;
                 });
-              // ajax.get('api/system/menu/listPhone', '', function(data) {
-              //     alert('aa');
-              //     alert(JSON.stringify(data));
-              // });
+                ajax.get('api/system/menu/listPhone', '', function(data) {
+                    that.menus = data;
+                });
             },
+
             submit : function() {
 
             },
 
-            switchOption : function(value) {
-                this.option = value;
+            openMenu : function(url) {
+                if (url.charAt(0) != '/') {
+                    url = '/' + url;
+                }
+                redirect.open(url);
             }
         },
         mounted () {
