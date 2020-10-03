@@ -12,7 +12,8 @@ require.config({
         'ajax': '/frame/vant/component/ajax',
         'vant-select': '/frame/vant/component/select',
         'redirect': '/frame/vant/component/redirect',
-        'page-title': '/frame/vant/component/page.title'
+        'page-title': '/frame/vant/component/page.title',
+        'bottom': '/frame/vant/component/bottom'
     },
     shim: {
         'vant': {

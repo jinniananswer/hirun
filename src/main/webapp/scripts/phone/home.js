@@ -1,18 +1,9 @@
-require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], function (Vue, vant, ajax, vantSelect, pageTitle, redirect) {
+require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'bottom'], function (Vue, vant, ajax, vantSelect, pageTitle, redirect, bottom) {
     let vm = new Vue({
         el: '#app',
         template: `
             <div>
-                <van-nav-bar
-                    title="鸿助手"
-                    :left-arrow="false"
-                    :fixed="true"
-                    :z-index="99"
-                    style="background-color: #141516;padding-top: 0.5em;padding-bottom: 0.5em">
-                    <template #title>
-                        <div class="van-ellipsis" style="color:#8a8b8b">鸿助手</div>
-                    </template>
-                </van-nav-bar>
+                <page-title title="鸿助手" :needBack="false"></page-title>
                 <van-cell :title="employee.name" center="true" :label="employee.orgName + '/' + employee.jobRoleName"  style="margin-top:3.8rem">
                     <template #icon>
                         <van-image
@@ -42,26 +33,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                     </van-tab>
                 </van-tabs>
                 
-                <van-tabbar v-model="active" :z-index="99" style="padding-top:0.5rem;padding-bottom: 0.5rem;background-color: #141516">
-                    <van-tabbar-item icon="home-o">
-                        <template #icon>
-                            <van-icon name="wap-home" size="2rem" color="#57be6a" />
-                        </template>
-                        <div style="color:#57be6a">首页</div>
-                    </van-tabbar-item>
-                    <van-tabbar-item icon="search">
-                        <template #icon>
-                            <van-icon name="chat-o" size="2rem" />
-                        </template>
-                        消息
-                    </van-tabbar-item>
-                    <van-tabbar-item icon="friends-o">
-                        <template #icon>
-                            <van-icon name="setting-o" size="2rem"/>
-                        </template>
-                        工具
-                    </van-tabbar-item>
-                </van-tabbar>
+                <bottom></bottom>
             </div>`,
         data: function () {
             return {
