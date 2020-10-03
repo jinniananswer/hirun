@@ -1,7 +1,7 @@
 define(['vue','vant', 'redirect'], function(Vue, vant, redirect){
     Vue.component('bottom', {
         props: {
-            active : {default : 0}
+            active : {default : -1}
         },
 
         data : function(){

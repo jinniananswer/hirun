@@ -33,7 +33,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'bottom
                     </van-tab>
                 </van-tabs>
                 
-                <bottom></bottom>
+                <bottom :active="0"></bottom>
             </div>`,
         data: function () {
             return {
