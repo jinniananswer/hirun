@@ -17,12 +17,17 @@ define(['vue','vant','axios'], function(Vue,vant,axios){
                 mask: true,
                 message: "加载中..."
             });
-
             let successMethod = function(info) {
                 let data = info.data;
                 let code = data.code;
                 if (code != 0) {
-                    vm.$toast('操作失败');
+                    vm.$toast({
+                        message : '操作失败',
+                        duration : 0,
+                        overlay : true,
+                        type : 'fail',
+                        closeOnClickOverlay : true
+                    });
                 } else if (successFunc == null || typeof(successFunc) == "undefined") {
                     if (needConfirm) {
                         vm.$dialog.confirm({
@@ -48,7 +53,7 @@ define(['vue','vant','axios'], function(Vue,vant,axios){
                     successFunc(data.rows);
                 }
 
-                if (loading != null) {
+                if (loading != null && code == '0') {
                     vm.$toast.clear();
                 }
             }
