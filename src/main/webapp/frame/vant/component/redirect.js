@@ -5,7 +5,7 @@ define(['ajax'], function(ajax){
         },
 
         toHome: function() {
-            window.top.location.href = '/phone/phone_index.jsp';
+            window.top.location.href = '/phone/home.html';
         },
 
         open: function(url) {
