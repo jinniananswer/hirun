@@ -13,7 +13,11 @@ require.config({
         'vant-select': '/frame/vant/component/select',
         'redirect': '/frame/vant/component/redirect',
         'page-title': '/frame/vant/component/page.title',
-        'bottom': '/frame/vant/component/bottom'
+        'bottom': '/frame/vant/component/bottom',
+        'moment': '/frame/vant/date/moment.min',
+        'util': '/frame/vant/component/util',
+
+
     },
     shim: {
         'vant': {
