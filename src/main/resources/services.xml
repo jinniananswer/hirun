@@ -137,6 +137,8 @@
     <entity name="OperationCenter.plan.PlanService.additionalAddCustAction"  class="com.hirun.app.biz.plan.PlanService" method="additionalAddCustAction"/>
     <entity name="OperationCenter.plan.PlanService.setMonPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="setMonPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.initPlanEntry"  class="com.hirun.app.biz.plan.PlanService" method="initPlanEntry"/>
+    <!---过程产品分享-->
+    <entity name="OperationCenter.custservice.ShareProdImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.ShareProductImportTaskService" method="hirunplusDataImport"/>
 
     <!--初始化客户流程-->
     <entity name="OperationCenter.custservice.CustServService.initCsrTraceFlow"  class="com.hirun.app.biz.custservice.CustServService" method="initCsrTraceFlow"/>

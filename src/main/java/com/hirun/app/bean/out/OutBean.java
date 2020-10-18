@@ -341,4 +341,42 @@ public class OutBean {
 
         return isExist;
     }
+
+    public static boolean isExistData4ProdShare(String openId,String staffId, String openDate) throws Exception{
+        boolean isExist = false;
+        GenericDAO dao = new GenericDAO("out");
+
+        StringBuilder sql = new StringBuilder();
+        Map<String, String> parameter = new HashMap<String, String>();
+        parameter.put("OPEN_ID", openId);
+        parameter.put("STAFF_ID", staffId);
+        parameter.put("OPEN_DATE", openDate);
+
+
+        //查在线表
+        sql.append(" select * from out_hirunplus_product_share ");
+        sql.append(" where 1=1 ");
+        sql.append(" and OPEN_ID = :OPEN_ID");
+        sql.append(" and STAFF_ID = :STAFF_ID");
+        sql.append(" and OPEN_DATE = :OPEN_DATE");
+
+        RecordSet set = dao.queryBySql(sql.toString(), parameter);
+        if(set == null || set.size() == 0) {
+            //查历史表
+            sql = new StringBuilder();
+            sql.append(" select * from out_his_hirunplus_product_share ");
+            sql.append(" where 1=1 ");
+            sql.append(" and OPEN_ID = :OPEN_ID");
+            sql.append(" and STAFF_ID = :STAFF_ID");
+            sql.append(" and OPEN_DATE = :OPEN_DATE");
+            set = dao.queryBySql(sql.toString(), parameter);
+            if(set != null && set.size() > 0) {
+                isExist = true;
+            }
+        } else {
+            isExist = true;
+        }
+
+        return isExist;
+    }
 }
