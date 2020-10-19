@@ -122,7 +122,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             },
 
             openFile : function(fileUrl) {
-                alert(fileUrl);
                 redirect.open(fileUrl, '')
             },
 

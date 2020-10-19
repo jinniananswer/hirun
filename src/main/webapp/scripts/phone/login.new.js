@@ -46,8 +46,42 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
         },
         methods: {
             onSubmit : function() {
+                let that = this;
                 $.ajaxPost('/loginPost',this.data,function(data){
-                    window.location.href = "/phone/home.html";
+                    let param = new URLSearchParams()
+                    param.append('username', that.data.username)
+                    param.append('password', that.data.password)
+                    ajax.post('/api/system/auth/login', param,function(resultData){
+                        sessionStorage.setItem('hirun-helper-jwt', resultData.jwt); // 保存 token
+                        sessionStorage.setItem('hirun-helper-funcCodes', JSON.stringify(resultData.funcCodes)); // 保存功能权限
+
+                        window.location.href = "/phone/home.html";
+                    }, function(resultCode, resultInfo){
+                        if(resultCode == "HIRUN_LOGIN_000001")
+                            vm.$toast({
+                                message : resultInfo,
+                                overlay : true,
+                                type : 'fail',
+                                closeOnClickOverlay : true
+                            });
+                        else if(resultCode == "HIRUN_LOGIN_000002") {
+                            vm.$toast({
+                                message : resultInfo,
+                                overlay : true,
+                                type : 'fail',
+                                closeOnClickOverlay : true
+                            });
+                        }
+                        else{
+                            vm.$toast({
+                                message : resultInfo,
+                                overlay : true,
+                                type : 'fail',
+                                closeOnClickOverlay : true
+                            });
+                        }
+                    });
+                    // window.location.href = "/phone/home.html";
                 }, function(resultCode, resultInfo){
                     if(resultCode == "HIRUN_LOGIN_000001")
                         vm.$toast({
