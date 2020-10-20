@@ -30,8 +30,23 @@ require.config({
 require(['vue', 'vant', 'vant-select', 'axios'], function(Vue, vant, vantSelect, axios) {
     vant.install(Vue);
     Vue.use(vant.Lazyload);
-    axios.defaults.baseURL = 'http://localhost:8082/';
+    axios.defaults.baseURL = 'http://localhost:8080/';
+    axios.interceptors.request.use(
+        config => {
+            const token = sessionStorage.getItem('hirun-helper-jwt')
+            if (token ) { // 判断是否存在 token，如果存在的话，则每个 http header 都加上 token
+                config.headers.authorization = token  // 请求头加上token
+            }
+            return config
+        },
+        err => {
+            return Promise.reject(err)
+        }
+    )
 });
+
+
+
 
 
 
