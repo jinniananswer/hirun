@@ -781,7 +781,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select a.cust_id,a.cust_no,a.cust_name,b.prepare_employee_id,b.prepare_time,a.mobile_no," +
-                " b.status as prepare_status,c.house_id,c.house_building,c.house_mode,c.house_room_no, b.id as prepare_id, " +
+                " b.status as prepare_status,c.house_id,c.house_building,c.house_mode,c.house_room_no, b.id as prepare_id, c.project_id ," +
                 " e.employee_id as custservice_employee_id,a.cust_type,a.cust_status,d.status as order_status");
         sb.append(" from cust_base a LEFT JOIN cust_preparation b on (a.prepare_id=b.id)," +
                 "   ins_project c," +
@@ -796,7 +796,14 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     }
 
 
-
+    public RecordSet queryCustomerBaseInfo(String partyId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from cust_base a ");
+        sb.append(" and   a.PARTY_ID=:PARTY_ID ");
+        parameter.put("PARTY_ID", partyId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
 
 
 }
