@@ -841,11 +841,10 @@
                 for (var i = 0; i < length; i++) {
                     var data = datas.get(i);
                     var isSelect = data.get("isSelect");
-                    console.log(isSelect);
                     if (isSelect) {
-                        html.push("<li class='link' cust_id='" + data.get("CUST_ID") + "' custName='" + data.get("CUST_NAME") + "' house_id='" + data.get("HOUSE_ID") + "' house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' cust_no='" + data.get("CUST_NO") + "'  project_id='" + data.get("PROJECT_ID") + "' +  ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                        html.push("<li class='link' cust_id='" + data.get("CUST_ID") + "' custName='" + data.get("CUST_NAME") + "' isSelect='" + data.get("isSelect") + "' house_id='" + data.get("HOUSE_ID") + "' house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' cust_no='" + data.get("CUST_NO") + "'  project_id='" + data.get("PROJECT_ID") + "' +  ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     } else {
-                        html.push("<li class='link' style='pointer-events: none;'  + cust_id='" + data.get("CUST_ID")+ + "' + house_id='" + data.get("HOUSE_ID") + "' + house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' custName='" + data.get("CUST_NAME") + "' cust_no='" + data.get("CUST_NO") + "' project_id='" + data.get("PROJECT_ID")
+                        html.push("<li class='link' style='pointer-events: none;'  + cust_id='" + data.get("CUST_ID")+ "' + house_id='" + data.get("HOUSE_ID") + "' + house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' custName='" + data.get("CUST_NAME") + "' cust_no='" + data.get("CUST_NO") + "' project_id='" + data.get("PROJECT_ID")  + "'isSelect='" + data.get("isSelect")
                             + "' ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     }
                     html.push("</div></div>");
@@ -907,6 +906,7 @@
                 var custName = '';
                 var custNo = '';
                 let projectId='';
+                let isSelect='';
                 for (var i = 0; i < length; i++) {
                     var li = $(lis[i]);
                     var className = li.attr("class");
@@ -918,10 +918,16 @@
                         custName = li.attr("custName")
                         custNo = li.attr("cust_no");
                         projectId=li.attr("project_id");
+                        isSelect=li.attr("project_id");
                     }
 
                     if (custId == '') {
                         MessageBox.alert("您没有选中任何客户，请先选择");
+                        return;
+                    }
+
+                    if (isSelect == 'false') {
+                        MessageBox.alert("该客户不满足条件，不能专程您的客户，请重新选择。");
                         return;
                     }
 
@@ -932,6 +938,10 @@
                         }
                     }, {"cancel": "取消"})
                 }
+            },
+
+            continueSave:function(){
+                hidePopup('UI-popup', 'UI-CUSTOMERLIST');
             },
 
             realCreate: function (parameter) {
