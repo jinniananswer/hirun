@@ -117,6 +117,17 @@ public class Permission {
         return false;
     }
 
+    public static boolean hasContinueSaveCustomer() throws Exception{
+        if(isSuperUser())
+            return true;
+        RightsCollection rights = RightsCollection.getInstance();
+        if(rights.hasFuncCode("SAVE_MORE_CUSTOMER"))
+            return true;
+
+        return false;
+    }
+
+
     public static boolean isSuperUser() throws Exception {
         SessionEntity session = SessionManager.getSession().getSessionEntity();
         BizSessionEntity bizSession = new BizSessionEntity(session);
