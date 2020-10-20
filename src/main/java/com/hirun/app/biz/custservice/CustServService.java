@@ -3,10 +3,12 @@ package com.hirun.app.biz.custservice;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.common.MsgBean;
+import com.hirun.app.bean.cust.CustPreparationBean;
 import com.hirun.app.bean.custservice.BluePrintBean;
 import com.hirun.app.bean.custservice.CustServiceStatBean;
 import com.hirun.app.bean.employee.EmployeeBean;
 import com.hirun.app.bean.houses.HousesBean;
+import com.hirun.app.bean.order.OrderBean;
 import com.hirun.app.bean.org.OrgBean;
 import com.hirun.app.bean.out.SyncBean;
 import com.hirun.app.bean.permission.Permission;
@@ -421,8 +423,15 @@ public class CustServService extends GenericService {
             if (StringUtils.isNotEmpty(prepareId)) {
                 partyInfo.put("CUST_TYPE", "4");
             }
+            //有cust_base无party的情况
+            partyId = dao.insertAutoIncrement("ins_party", partyInfo);
+
             partyInfo.put("CUST_ID", customerId);
-            dao.save("ins_party", new String[]{"CUST_ID"}, partyInfo);
+            partyInfo.put("PARTY_ID",partyId+"");
+            //兼容两张表客户姓名名称对不上的问题
+            partyInfo.put("CUST_NAME",partyInfo.get("PARTY_NAME"));
+
+            dao.save("cust_base", new String[]{"CUST_ID"}, partyInfo);
         } else {
             partyInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
             partyInfo.put("CREATE_TIME", session.getCreateTime());
@@ -434,7 +443,7 @@ public class CustServService extends GenericService {
         Map<String, String> projectInfo = result.get("PROJECT_INFO");
 
         Long projectId = null;
-        if (StringUtils.isNotEmpty(customerId)) {
+        if (StringUtils.isNotEmpty(project_id)) {
             projectInfo.put("PROJECT_ID", project_id);
             dao.save("ins_project", new String[]{"PROJECT_ID"}, projectInfo);
         } else {
@@ -503,7 +512,7 @@ public class CustServService extends GenericService {
             dao.insertBatch("ins_project_original_action", partyProjectActionList);
         }
         //如果为上门咨询客户，客户订单状态直接改成咨询，否则为初始化
-        /*String orderStatus = "";
+        String orderStatus = "";
         String stage = "";
         if (StringUtils.equals(customerType, "1")) {
             stage = "10";
@@ -532,7 +541,10 @@ public class CustServService extends GenericService {
                     "", orderStatus, orderType, consultTime, stage);
         } else {
             if(StringUtils.isEmpty(customerId)){
-                customerId=partyId+"";
+                //20201020修改,如果只是单纯的新增则需要新生成cust_base的信息
+                partyInfo.put("PARTY_ID",partyId+"");
+                partyInfo.put("CUST_NAME",partyInfo.get("PARTY_NAME"));
+                customerId=dao.insertAutoIncrement("cust_base", partyInfo)+"";
             }
             OrderBean.createConsultOrder(customerId + "", houseId, decorateAddress, house_mode, house_area, ""
                     , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
@@ -556,7 +568,7 @@ public class CustServService extends GenericService {
             }else{
                 CustPreparationBean.updateCustomerPrepare(prepareId, "1", session.getSessionEntity().getUserId());
             }
-        }*/
+        }
         //更新报表数据，新增咨询数
         CustServiceStatBean.updateCustServiceStat(session.getSessionEntity().get("EMPLOYEE_ID"), "GOODSEEGOODLIVE");
 
@@ -2024,7 +2036,7 @@ public class CustServService extends GenericService {
         AppSession session = SessionManager.getSession();
         String employeeId = session.getSessionEntity().get("EMPLOYEE_ID");
         String mobileNo = request.getString("mobileNo");
-        RecordSet recordSet = dao.queryCustomerInfo4Merge("CUSTOMERSERVICE", mobileNo, employeeId);
+        RecordSet recordSet = dao.queryCustomerByMobile(mobileNo);
         if (recordSet.size() <= 0) {
             return response;
         }
@@ -2086,4 +2098,12 @@ public class CustServService extends GenericService {
         return response;
     }
 
+
+    public ServiceResponse loadPrepareInfo(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String openId = request.getString("CUST_ID");
+        CustomerServiceDAO custDao = new CustomerServiceDAO("ins");
+
+        return response;
+    }
 }
