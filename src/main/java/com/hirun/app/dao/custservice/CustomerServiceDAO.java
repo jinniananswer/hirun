@@ -800,7 +800,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select * from cust_base a ");
-        sb.append(" and   a.PARTY_ID=:PARTY_ID ");
+        sb.append(" where   a.PARTY_ID=:PARTY_ID ");
         parameter.put("PARTY_ID", partyId);
         return this.queryBySql(sb.toString(), parameter);
     }
