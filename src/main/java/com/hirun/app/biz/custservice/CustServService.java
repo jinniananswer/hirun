@@ -1334,7 +1334,6 @@ public class CustServService extends GenericService {
             customerInfo.put("OPEN_ID", partyEntity.getOpenId());
             customerInfo.put("HEAD_URL", partyEntity.getHeadUrl());
             dao.save("cust_base", new String[]{"CUST_ID"}, customerInfo);
-
             OrderBean.updateConsultOrder(customerId + "", houseId, decorateAddress, house_mode, house_area, ""
                     , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
                     "", orderStatus, orderType, consultTime, stage);
@@ -1378,7 +1377,6 @@ public class CustServService extends GenericService {
             String status = record.get("STATUS");
             String prepareExpireTime = record.get("PREPARATION_EXPIRE_TIME");
             String prepareHouseId = record.get("HOUSE_ID");
-            System.out.println(TimeTool.compareTwoTime(prepareExpireTime, TimeTool.now()));
             if (TimeTool.compareTwoTime(prepareExpireTime, TimeTool.now()) != 0) {
                 //有效期内
                 if (StringUtils.equals(houseId, prepareHouseId)) {
