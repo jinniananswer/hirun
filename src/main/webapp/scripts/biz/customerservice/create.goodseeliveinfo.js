@@ -844,9 +844,9 @@
                     var isSelect = data.get("isSelect");
 
                     if (isSelect) {
-                        html.push("<li class='link' cust_id='" + data.get("CUST_ID") + "' custName='" + data.get("CUST_NAME") + "' house_id='" + data.get("HOUSE_ID") + "' house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' cust_no='" + data.get("CUST_NO") + "' +  ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                        html.push("<li class='link' cust_id='" + data.get("CUST_ID") + "' custName='" + data.get("CUST_NAME") + "' house_id='" + data.get("HOUSE_ID") + "' house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' cust_no='" + data.get("CUST_NO") + "'  project_id='" + data.get("PROJECT_ID") + "' +  ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     } else {
-                        html.push("<li class='link' style='pointer-events: none;' + cust_id='" + data.get("CUST_ID") + "' + house_id='" + data.get("HOUSE_ID") + "' + house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' custName='" + data.get("CUST_NAME") + "' cust_no='" + data.get("CUST_NO")
+                        html.push("<li class='link' style='pointer-events: none;'  + cust_id='" + data.get("CUST_ID")+ + "' + house_id='" + data.get("HOUSE_ID") + "' + house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' custName='" + data.get("CUST_NAME") + "' cust_no='" + data.get("CUST_NO") + "' project_id='" + data.get("PROJECT_ID")
                             + "' ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     }
                     html.push("</div></div>");
@@ -907,6 +907,7 @@
                 var houseName = '';
                 var custName = '';
                 var custNo = '';
+                let projectId='';
                 for (var i = 0; i < length; i++) {
                     var li = $(lis[i]);
                     var className = li.attr("class");
@@ -917,6 +918,7 @@
                         prepareId = li.attr("prepare_id")
                         custName = li.attr("custName")
                         custNo = li.attr("cust_no");
+                        projectId=li.attr("project_id");
                     }
 
                     if (custId == '') {
@@ -927,7 +929,7 @@
                     MessageBox.success("提示信息", "是否转换成你的客户，该动作不可逆。", function (btn) {
                         if ("ok" == btn) {
                             $.beginPageLoading();
-                            $.goodseelive.loadCustomer(custId, houseId, houseName, prepareId, custName, custNo);
+                            $.goodseelive.loadCustomer(custId, houseId, houseName, prepareId, custName, custNo,projectId);
                         }
                     }, {"cancel": "取消"})
                 }
@@ -946,7 +948,7 @@
                 });
             },
 
-            loadCustomer: function (custId, houseId, houseName, prepareId, custName, custNo) {
+            loadCustomer: function (custId, houseId, houseName, prepareId, custName, custNo,projectId) {
 
                 $("#cust_id").val(custId);
                 $("#prepare_id").val(prepareId);
@@ -954,6 +956,8 @@
                 $("#houseName").val(houseName);
                 $("#NAME").val(custName);
                 $("#customerNo").val(custNo)
+                $("#project_id").val(projectId)
+
 
                 $.endPageLoading();
                 hidePopup('UI-popup', 'UI-CUSTOMERLIST');
