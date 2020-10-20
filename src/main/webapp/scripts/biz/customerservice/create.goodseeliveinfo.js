@@ -275,7 +275,6 @@
 
                     //2020/03/02新增
                     var continueSave = rst.get("CONTINUE");
-                    console.log(continueSave);
                     if (continueSave == 'true') {
                         $('#saveContinue').val('true');
                         $('#continueSaveButton').attr("disable", true);
@@ -842,8 +841,8 @@
                 for (var i = 0; i < length; i++) {
                     var data = datas.get(i);
                     var isSelect = data.get("isSelect");
-
-                    if (isSelect==='false') {
+                    console.log(isSelect);
+                    if (isSelect) {
                         html.push("<li class='link' cust_id='" + data.get("CUST_ID") + "' custName='" + data.get("CUST_NAME") + "' house_id='" + data.get("HOUSE_ID") + "' house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' cust_no='" + data.get("CUST_NO") + "'  project_id='" + data.get("PROJECT_ID") + "' +  ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     } else {
                         html.push("<li class='link' style='pointer-events: none;'  + cust_id='" + data.get("CUST_ID")+ + "' + house_id='" + data.get("HOUSE_ID") + "' + house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' custName='" + data.get("CUST_NAME") + "' cust_no='" + data.get("CUST_NO") + "' project_id='" + data.get("PROJECT_ID")
