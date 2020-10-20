@@ -2031,11 +2031,10 @@ public class CustServService extends GenericService {
         for (int i = 0; i < recordSet.size(); i++) {
             Record record = recordSet.get(i);
             record.put("HOUSE_NAME", "");
-            //record.put("ORDER_STATUS_NAME", StaticDataTool.getCodeName("ORDER_STATUS", record.get("ORDER_STATUS")));
-            //record.put("PREPARE_STATUS_NAME", StaticDataTool.getCodeName("PREPARATION_STATUS", record.get("PREPARE_STATUS")));
+            record.put("ORDER_STATUS_NAME", StaticDataTool.getCodeName("ORDER_STATUS", record.get("ORDER_STATUS")));
+            record.put("PREPARE_STATUS_NAME", StaticDataTool.getCodeName("PREPARATION_STATUS", record.get("PREPARE_STATUS")));
             record.put("CUST_TYPE_NAME", StaticDataTool.getCodeName("CUSTOMER_TYPE", record.get("CUST_TYPE")));
             //翻译客户代表
-/*
             if (StringUtils.isEmpty(record.get("CUSTSERVICE_EMPLOYEE_ID"))) {
                 record.put("CUST_SERVICE_NAME", "");
             } else {
@@ -2047,7 +2046,6 @@ public class CustServService extends GenericService {
             } else {
                 record.put("PREPARE_NAME", EmployeeBean.getEmployeeByEmployeeId(record.get("PREPARE_EMPLOYEE_ID")).getName());
             }
-*/
 
             if (StringUtils.isEmpty(record.get("HOUSE_ID"))) {
                 record.put("HOUSE_NAME", "");
@@ -2056,7 +2054,7 @@ public class CustServService extends GenericService {
             }
 
 
-/*            //如果订单状态不为初始化，则不允许选择
+            //如果订单状态不为初始化，则不允许选择
             if (!StringUtils.equals("0", record.get("ORDER_STATUS"))) {
                 record.put("isSelect", false);
             } else {
@@ -2065,7 +2063,7 @@ public class CustServService extends GenericService {
                 } else {
                     record.put("isSelect", false);
                 }
-            }*/
+            }
         }
 
         response.set("CUSTOMERINFO", ConvertTool.toJSONArray(recordSet));
