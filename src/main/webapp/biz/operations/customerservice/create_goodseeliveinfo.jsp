@@ -38,13 +38,12 @@
         </div>
         <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
             <ul >
-<!--                <li class="link required">
+               <li class="link required">
                     <div class="label">是否单独木制品</div>
                     <div class="value">
                         <input type="checkbox" id="onlyWood" name="onlyWood"/>
                     </div>
                 </li>
--->
 
                 <li class="link required">
                     <div class="label">客户编码</div>
@@ -63,7 +62,9 @@
                <li class="link required">
                        <div class="label">电话号码</div>
                        <div class="value">
-                             <input type="text" id="CONTACT" name="CONTACT" placeholder="请填写正确的电话号码" nullable="no" desc="电话号码" />
+                             <input type="text" id="CONTACT" name="CONTACT" placeholder="请填写正确的电话号码"
+                             nullable="no" desc="电话号码"
+                             onblur="$.goodseelive.checkCustomerByMobile(this);"/>
                        </div>
                 </li>
                 <li class="link required">
