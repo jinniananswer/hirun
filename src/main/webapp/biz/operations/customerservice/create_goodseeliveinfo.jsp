@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户需求信息录入</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/create.goodseeliveinfo.js?v=20200809"></script>
+    <script src="/scripts/biz/customerservice/create.goodseeliveinfo.js?v=20201020"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -38,13 +38,12 @@
         </div>
         <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
             <ul >
-<!--                <li class="link required">
+               <li class="link required">
                     <div class="label">是否单独木制品</div>
                     <div class="value">
                         <input type="checkbox" id="onlyWood" name="onlyWood"/>
                     </div>
                 </li>
--->
 
                 <li class="link required">
                     <div class="label">客户编码</div>
@@ -63,7 +62,9 @@
                <li class="link required">
                        <div class="label">电话号码</div>
                        <div class="value">
-                             <input type="text" id="CONTACT" name="CONTACT" placeholder="请填写正确的电话号码" nullable="no" desc="电话号码" />
+                             <input type="text" id="CONTACT" name="CONTACT" placeholder="请填写正确的电话号码"
+                             nullable="no" desc="电话号码"
+                             onblur="$.goodseelive.checkCustomerByMobile(this);"/>
                        </div>
                 </li>
                 <li class="link required">

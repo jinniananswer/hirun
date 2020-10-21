@@ -52,119 +52,118 @@
                 );
 
 
-
                 $.Select.append(
                     "houseKindContainer",
                     {
-                        id:"HOUSEKIND",
-                        name:"HOUSEKIND",
-                        addDefault:true,
-                        nullable:"yes"
+                        id: "HOUSEKIND",
+                        name: "HOUSEKIND",
+                        addDefault: true,
+                        nullable: "yes"
                     },
                     [
-                        {TEXT:"一房", VALUE:"1"},
-                        {TEXT:"两房", VALUE:"2"},
-                        {TEXT:"三房", VALUE:"3"},
-                        {TEXT:"四房", VALUE:"4"},
-                        {TEXT:"五房", VALUE:"5"},
-                        {TEXT:"平层与错层", VALUE:"6"},
-                        {TEXT:"复式", VALUE:"7"},
-                        {TEXT:"别墅", VALUE:"9"},
+                        {TEXT: "一房", VALUE: "1"},
+                        {TEXT: "两房", VALUE: "2"},
+                        {TEXT: "三房", VALUE: "3"},
+                        {TEXT: "四房", VALUE: "4"},
+                        {TEXT: "五房", VALUE: "5"},
+                        {TEXT: "平层与错层", VALUE: "6"},
+                        {TEXT: "复式", VALUE: "7"},
+                        {TEXT: "别墅", VALUE: "9"},
                     ]
                 );
 
                 $.Select.append(
                     "sampleHouseContainer",
                     {
-                        id:"sample_house",
-                        name:"sample_house",
-                        addDefault:true
+                        id: "sample_house",
+                        name: "sample_house",
+                        addDefault: true
                     },
                     [
-                        {TEXT:"阶段性样品房", VALUE:"1"},
-                        {TEXT:"木制品样板房", VALUE:"2"},
+                        {TEXT: "阶段性样品房", VALUE: "1"},
+                        {TEXT: "木制品样板房", VALUE: "2"},
                     ]
                 );
 
                 $.Select.append(
                     "customerTypeContainer",
                     {
-                        id:"customer_type",
-                        name:"customer_type",
-                        addDefault:true,
-                        nullable:"yes"
+                        id: "customer_type",
+                        name: "customer_type",
+                        addDefault: true,
+                        nullable: "yes"
                     },
                     [
-                        {TEXT:"上门咨询", VALUE:"1"},
-                        {TEXT:"活动客户", VALUE:"2"},
-                        {TEXT:"电话咨询", VALUE:"3"},
-                        {TEXT:"报备客户", VALUE:"4"},
-                        {TEXT:"其他", VALUE:"5"},
-                        {TEXT:"网络咨询", VALUE:"6"},
+                        {TEXT: "上门咨询", VALUE: "1"},
+                        {TEXT: "活动客户", VALUE: "2"},
+                        {TEXT: "电话咨询", VALUE: "3"},
+                        {TEXT: "报备客户", VALUE: "4"},
+                        {TEXT: "其他", VALUE: "5"},
+                        {TEXT: "网络咨询", VALUE: "6"},
                     ]
                 );
 
                 $.Select.append(
                     "marketingTypeContainer",
                     {
-                        id:"marketing_type",
-                        name:"marketing_type",
-                        addDefault:true,
+                        id: "marketing_type",
+                        name: "marketing_type",
+                        addDefault: true,
                     },
                     [
-                        {TEXT:"房交会", VALUE:"1"},
-                        {TEXT:"家博会", VALUE:"2"},
-                        {TEXT:"业主见面会", VALUE:"3"},
-                        {TEXT:"其他", VALUE:"4"},
+                        {TEXT: "房交会", VALUE: "1"},
+                        {TEXT: "家博会", VALUE: "2"},
+                        {TEXT: "业主见面会", VALUE: "3"},
+                        {TEXT: "其他", VALUE: "4"},
                     ]
                 );
 
-/*                $("#customer_type").bind("change", function(){
-                    if(this.value=='2'){
-                        $('#marketing_type').attr("disabled",false);
-                        $('#marketing_name').attr("disabled",false);
-                        $('#marketing_time').attr("disabled",false);
-                        $('#phone_consult_time').attr("disabled",true);
-                       // $('#consult_time').attr("disabled",true);
-                        $('#phone_consult_time').val('');
-                       // $('#consult_time').val('');
-                    }else if(this.value=='3'){
-                        $('#phone_consult_time').attr("disabled",false);
-                        $('#marketing_type').attr("disabled",true);
-                        $('#marketing_name').attr("disabled",true);
-                        $('#marketing_time').attr("disabled",true);
-                        $('#consult_time').attr("disabled",true);
-                        $('#marketing_type').val('');
-                        $('#marketing_name').val('');
-                        $('#marketing_time').val('');
-                        $('#consult_time').val('');
-                    }else if(this.value=='1'){
-                        $('#consult_time').attr("disabled",false);
+                /*                $("#customer_type").bind("change", function(){
+                                    if(this.value=='2'){
+                                        $('#marketing_type').attr("disabled",false);
+                                        $('#marketing_name').attr("disabled",false);
+                                        $('#marketing_time').attr("disabled",false);
+                                        $('#phone_consult_time').attr("disabled",true);
+                                       // $('#consult_time').attr("disabled",true);
+                                        $('#phone_consult_time').val('');
+                                       // $('#consult_time').val('');
+                                    }else if(this.value=='3'){
+                                        $('#phone_consult_time').attr("disabled",false);
+                                        $('#marketing_type').attr("disabled",true);
+                                        $('#marketing_name').attr("disabled",true);
+                                        $('#marketing_time').attr("disabled",true);
+                                        $('#consult_time').attr("disabled",true);
+                                        $('#marketing_type').val('');
+                                        $('#marketing_name').val('');
+                                        $('#marketing_time').val('');
+                                        $('#consult_time').val('');
+                                    }else if(this.value=='1'){
+                                        $('#consult_time').attr("disabled",false);
 
-                        let now = $.date.now();
-                        $('#consult_time').val(now);
+                                        let now = $.date.now();
+                                        $('#consult_time').val(now);
 
-                        $('#phone_consult_time').attr("disabled",true);
-                        $('#marketing_name').attr("disabled",true);
-                        $('#marketing_time').attr("disabled",true);
-                        $('#marketing_type').val('');
-                        $('#marketing_name').val('');
-                        $('#marketing_time').val('');
-                        $('#marketing_type').attr("disabled",true);
-                        $('#phone_consult_time').val('');
-                    }else{
-                        $('#marketing_type').attr("disabled",true);
-                        $('#marketing_name').attr("disabled",true);
-                        $('#marketing_time').attr("disabled",true);
-                        $('#marketing_type').val('');
-                        $('#marketing_name').val('');
-                        $('#marketing_time').val('');
-                        $('#phone_consult_time').attr("disabled",true);
-                        $('#phone_consult_time').val('');
-                        $('#consult_time').attr("disabled",true);
-                        $('#consult_time').val('');
-                    }
-                });*/
+                                        $('#phone_consult_time').attr("disabled",true);
+                                        $('#marketing_name').attr("disabled",true);
+                                        $('#marketing_time').attr("disabled",true);
+                                        $('#marketing_type').val('');
+                                        $('#marketing_name').val('');
+                                        $('#marketing_time').val('');
+                                        $('#marketing_type').attr("disabled",true);
+                                        $('#phone_consult_time').val('');
+                                    }else{
+                                        $('#marketing_type').attr("disabled",true);
+                                        $('#marketing_name').attr("disabled",true);
+                                        $('#marketing_time').attr("disabled",true);
+                                        $('#marketing_type').val('');
+                                        $('#marketing_name').val('');
+                                        $('#marketing_time').val('');
+                                        $('#phone_consult_time').attr("disabled",true);
+                                        $('#phone_consult_time').val('');
+                                        $('#consult_time').attr("disabled",true);
+                                        $('#consult_time').val('');
+                                    }
+                                });*/
 
                 window["marketing_time"] = new Wade.DateField(
                     "marketing_time",
@@ -188,7 +187,7 @@
                     "consult_time",
                     {
                         dropDown: true,
-                        format:"yyyy-MM-dd HH:mm:ss",
+                        format: "yyyy-MM-dd HH:mm:ss",
                         useTime: true,
                     }
                 );
@@ -197,52 +196,52 @@
                 $.Select.append(
                     "informationSourceContainer",
                     {
-                        id:"information_source",
-                        name:"information_source",
-                        addDefault:true,
-                        disabled:true
+                        id: "information_source",
+                        name: "information_source",
+                        addDefault: true,
+                        disabled: true
                     },
                     [
-                        {TEXT:"报纸", VALUE:"1"},
-                        {TEXT:"电视媒体", VALUE:"2"},
-                        {TEXT:"户外广告牌", VALUE:"3"},
-                        {TEXT:"家装顾问-电话", VALUE:"4"},
-                        {TEXT:"家装顾问-守点", VALUE:"5"},
-                        {TEXT:"其他", VALUE:"6"},
-                        {TEXT:"熟人介绍", VALUE:"7"},
-                        {TEXT:"网络开发平台", VALUE:"8"},
-                        {TEXT:"小区宣传", VALUE:"9"},
-                        {TEXT:"展会", VALUE:"10"},
+                        {TEXT: "报纸", VALUE: "1"},
+                        {TEXT: "电视媒体", VALUE: "2"},
+                        {TEXT: "户外广告牌", VALUE: "3"},
+                        {TEXT: "家装顾问-电话", VALUE: "4"},
+                        {TEXT: "家装顾问-守点", VALUE: "5"},
+                        {TEXT: "其他", VALUE: "6"},
+                        {TEXT: "熟人介绍", VALUE: "7"},
+                        {TEXT: "网络开发平台", VALUE: "8"},
+                        {TEXT: "小区宣传", VALUE: "9"},
+                        {TEXT: "展会", VALUE: "10"},
                     ]
                 );
 
                 $.Select.append(
                     "bankContainer",
                     {
-                        id:"bank_id",
-                        name:"bank_id",
-                        addDefault:true,
+                        id: "bank_id",
+                        name: "bank_id",
+                        addDefault: true,
                     },
                     [
-                        {TEXT:"建设银行", VALUE:"1"},
+                        {TEXT: "建设银行", VALUE: "1"},
                     ]
                 );
 
                 $.Select.append(
                     "monthNumContainer",
                     {
-                        id:"month_num",
-                        name:"month_num",
-                        addDefault:true,
+                        id: "month_num",
+                        name: "month_num",
+                        addDefault: true,
                     },
                     [
-                        {TEXT:"6期", VALUE:"1"},
-                        {TEXT:"12期", VALUE:"2"},
-                        {TEXT:"18期", VALUE:"3"},
-                        {TEXT:"24期", VALUE:"4"},
-                        {TEXT:"36期", VALUE:"5"},
-                        {TEXT:"48期", VALUE:"6"},
-                        {TEXT:"60期", VALUE:"7"},
+                        {TEXT: "6期", VALUE: "1"},
+                        {TEXT: "12期", VALUE: "2"},
+                        {TEXT: "18期", VALUE: "3"},
+                        {TEXT: "24期", VALUE: "4"},
+                        {TEXT: "36期", VALUE: "5"},
+                        {TEXT: "48期", VALUE: "6"},
+                        {TEXT: "60期", VALUE: "7"},
                     ]
                 );
 
@@ -275,14 +274,13 @@
 
 
                     //2020/03/02新增
-                    var continueSave=rst.get("CONTINUE");
-                    console.log(continueSave);
-                    if(continueSave=='true'){
+                    var continueSave = rst.get("CONTINUE");
+                    if (continueSave == 'true') {
                         $('#saveContinue').val('true');
-                        $('#continueSaveButton').attr("disable",true);
-                    }else{
+                        $('#continueSaveButton').attr("disable", true);
+                    } else {
                         $('#saveContinue').val('false');
-                        $('#continueSaveButton').attr("disable",true);
+                        $('#continueSaveButton').attr("disable", false);
                     }
 
 
@@ -325,33 +323,32 @@
             next: function () {
                 if (this.index == 0 && $.validate.verifyAll("baseinfo")) {
 
-                    if($("#HOUSEKIND").val()===''){
+                    if ($("#HOUSEKIND").val() === '') {
                         MessageBox.alert("户型不允许为空");
                         return;
                     }
 
-                    if($("#customer_type").val()===''){
+                    if ($("#customer_type").val() === '') {
                         MessageBox.alert("客户类型不允许为空");
                         return;
                     }
 
-                    if($("#house_id").val()===''){
+                    if ($("#house_id").val() === '') {
                         MessageBox.alert("楼盘不允许为空");
                         return;
                     }
 
-                    if($("#customer_type").val()==='1'){
-                        if($("#consult_time").val()===''){
+                    if ($("#customer_type").val() === '1') {
+                        if ($("#consult_time").val() === '') {
                             MessageBox.alert("咨询时间不允许为空");
                             return;
                         }
-                    }else if($("#customer_type").val()==='2'){
-                        if($("#marketing_time").val()===''){
+                    } else if ($("#customer_type").val() === '2') {
+                        if ($("#marketing_time").val() === '') {
                             MessageBox.alert("选择客户类型为活动客户,活动时间不允许为空");
                             return;
                         }
                     }
-
 
 
                     $("#baseinfo").css("display", "none");
@@ -706,38 +703,38 @@
 
             },
 
-            searchHouse :function(){
-                var param=$.buildJsonData("houseArea");
+            searchHouse: function () {
+                var param = $.buildJsonData("houseArea");
                 $.beginPageLoading();
-                $.ajaxPost('/houses/queryHousesByName',param, function (data) {
+                $.ajaxPost('/houses/queryHousesByName', param, function (data) {
                     $.endPageLoading();
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("HOUSES_LIST");
                     $.goodseelive.drawHouse(datas);
-                    showPopup('UI-popup','UI-HOUSELIST');
+                    showPopup('UI-popup', 'UI-HOUSELIST');
 
                 });
             },
 
-            drawHouse : function(datas){
+            drawHouse: function (datas) {
                 $.endPageLoading();
 
                 $("#houses").empty();
                 var html = [];
 
-                if(datas == null || datas.length <= 0){
-                    $("#houseMessageBox").css("display","");
-                    $("#houseConfirmButton").css("display","none");
+                if (datas == null || datas.length <= 0) {
+                    $("#houseMessageBox").css("display", "");
+                    $("#houseConfirmButton").css("display", "none");
                     return;
                 }
 
-                $("#houseMessageBox").css("display","none");
-                $("#houseConfirmButton").css("display","");
+                $("#houseMessageBox").css("display", "none");
+                $("#houseConfirmButton").css("display", "");
 
                 var length = datas.length;
-                for(var i=0;i<length;i++) {
+                for (var i = 0; i < length; i++) {
                     var data = datas.get(i);
-                    html.push("<li class='link' id='" + data.get("HOUSES_ID") + "' name='" + data.get("NAME")+ "' ontap='$.goodseelive.selectHouse(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    html.push("<li class='link' id='" + data.get("HOUSES_ID") + "' name='" + data.get("NAME") + "' ontap='$.goodseelive.selectHouse(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     html.push("</div></div>");
                     html.push("<div class=\"main\"><div class=\"title\">");
                     html.push(data.get("NAME"));
@@ -751,12 +748,12 @@
                 $.insertHtml('beforeend', $("#houses"), html.join(""));
             },
 
-            selectHouse : function (e) {
+            selectHouse: function (e) {
                 var obj = $(e);
 
-                if(!obj.hasClass("checked")) {
+                if (!obj.hasClass("checked")) {
                     obj.addClass("checked");
-                }else{
+                } else {
                     obj.attr("class", "link");
                 }
                 //添加选择样式
@@ -785,13 +782,16 @@
 
             createGoodSeeLiveInfo: function () {
                 if ($.validate.verifyAll("allSubmitArea")) {
-                    var isMoreCustomer=$("#isMoreCustomer").val();
-                    var saveContinue=$("#saveContinue").val();
-                    //判断客户代表是否有权限提交
-                    if(saveContinue=='false'&&isMoreCustomer=='true'){
-                        MessageBox.alert("该客户存在多客户,您没有新增的权限。请输入号码选择客户转成您的客户或者联系文员进行新增。");
-                        return;
+                    var isMoreCustomer = $("#isMoreCustomer").val();
+                    var saveContinue = $("#saveContinue").val();
+                    let prepareId = $("#prepare_id").val();
+                    if (prepareId === '') {
+                        if (saveContinue == 'false' && isMoreCustomer == 'true') {
+                            MessageBox.alert("该客户存在多客户,您没有新增的权限。请输入号码选择客户转成您的客户或者联系文员进行新增。");
+                            return;
+                        }
                     }
+                    //判断客户代表是否有权限提交
 
                     var parameter = $.buildJsonData("allSubmitArea");
 
@@ -804,47 +804,48 @@
                 }
             },
 
-            checkCustomerByMobile:function(){
+            checkCustomerByMobile: function () {
                 $.beginPageLoading();
-                var mobileNo=$('#CONTACT').val();
-                $.ajaxPost('/customer/checkCustomerByMobile','&mobileNo='+mobileNo, function (data) {
+                var mobileNo = $('#CONTACT').val();
+                $.ajaxPost('/customer/checkCustomerByMobile', '&mobileNo=' + mobileNo, function (data) {
                     $.endPageLoading();
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("CUSTOMERINFO");
 
-                    if(datas == null || datas.length <= 0){
+                    if (datas == null || datas.length <= 0) {
+                        $("#isMoreCustomer").val("false");
                         return;
                     }
                     $.goodseelive.drawCustomer(datas);
-                    showPopup('UI-popup','UI-CUSTOMERLIST');
+                    showPopup('UI-popup', 'UI-CUSTOMERLIST');
                 });
             },
 
-            drawCustomer : function(datas){
+            drawCustomer: function (datas) {
                 $.endPageLoading();
 
                 $("#moreCustomer").empty();
                 var html = [];
-                if(datas == null || datas.length <= 0){
-                    $("#confirmCustButton").css("display","none");
+                if (datas == null || datas.length <= 0) {
+                    $("#confirmCustButton").css("display", "none");
                     $("#isMoreCustomer").val("false");
                     return;
-                }else{
+                } else {
                     $("#isMoreCustomer").val("true");
                 }
 
-                $("#confirmCustButton").css("display","");
+                $("#confirmCustButton").css("display", "");
 
 
                 var length = datas.length;
-                for(var i=0;i<length;i++) {
+                for (var i = 0; i < length; i++) {
                     var data = datas.get(i);
-                    var isSelect=data.get("isSelect");
-
-                    if(isSelect){
-                        html.push("<li class='link' cust_id='" + data.get("CUST_ID") + "'  ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
-                    }else{
-                        html.push("<li class='link' style='pointer-events: none;' + cust_id='" + data.get("CUST_ID") + "' ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    var isSelect = data.get("isSelect");
+                    if (isSelect) {
+                        html.push("<li class='link' cust_id='" + data.get("CUST_ID") + "' custName='" + data.get("CUST_NAME") + "' isSelect='" + data.get("isSelect") + "' house_id='" + data.get("HOUSE_ID") + "' house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' cust_no='" + data.get("CUST_NO") + "'  project_id='" + data.get("PROJECT_ID") + "' +  ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    } else {
+                        html.push("<li class='link' style='pointer-events: none;'  + cust_id='" + data.get("CUST_ID")+ "' + house_id='" + data.get("HOUSE_ID") + "' + house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' custName='" + data.get("CUST_NAME") + "' cust_no='" + data.get("CUST_NO") + "' project_id='" + data.get("PROJECT_ID")  + "'isSelect='" + data.get("isSelect")
+                            + "' ontap='$.goodseelive.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
                     }
                     html.push("</div></div>");
                     html.push("<div class=\"main\"><div class=\"title\">客户姓名：");
@@ -881,12 +882,12 @@
                 $.insertHtml('beforeend', $("#moreCustomer"), html.join(""));
             },
 
-            selectCustomer : function (e) {
+            selectCustomer: function (e) {
                 var obj = $(e);
 
-                if(!obj.hasClass("checked")) {
+                if (!obj.hasClass("checked")) {
                     obj.addClass("checked");
-                }else{
+                } else {
                     obj.attr("class", "link");
                 }
                 //添加选择样式
@@ -899,24 +900,48 @@
                 var lis = $("#moreCustomer li");
                 var length = lis.length;
                 var custId = '';
+                var prepareId = '';
+                var houseId = '';
+                var houseName = '';
+                var custName = '';
+                var custNo = '';
+                let projectId='';
+                let isSelect='';
                 for (var i = 0; i < length; i++) {
                     var li = $(lis[i]);
                     var className = li.attr("class");
                     if (className == "link checked") {
-                        custId=li.attr("cust_id");
+                        custId = li.attr("cust_id");
+                        houseId = li.attr("house_id");
+                        houseName = li.attr("house_name")
+                        prepareId = li.attr("prepare_id")
+                        custName = li.attr("custName")
+                        custNo = li.attr("cust_no");
+                        projectId=li.attr("project_id");
+                        isSelect=li.attr("project_id");
                     }
 
-                    if(custId =='') {
+                    if (custId == '') {
                         MessageBox.alert("您没有选中任何客户，请先选择");
+                        return;
+                    }
+
+                    if (isSelect == 'false') {
+                        MessageBox.alert("该客户不满足条件，不能专程您的客户，请重新选择。");
                         return;
                     }
 
                     MessageBox.success("提示信息", "是否转换成你的客户，该动作不可逆。", function (btn) {
                         if ("ok" == btn) {
-                            $.goodseelive.loadCustomer(custId);
+                            $.beginPageLoading();
+                            $.goodseelive.loadCustomer(custId, houseId, houseName, prepareId, custName, custNo,projectId);
                         }
                     }, {"cancel": "取消"})
                 }
+            },
+
+            continueSave:function(){
+                hidePopup('UI-popup', 'UI-CUSTOMERLIST');
             },
 
             realCreate: function (parameter) {
@@ -932,22 +957,35 @@
                 });
             },
 
-            loadCustomer:function (custId) {
-                $.ajaxPost('initChangeGoodSeeLiveInfo','&CUST_ID='+custId, function (data) {
-                    $.endPageLoading();
-                    var partyInfo=data.PARTYINFO;
-                    var projectInfo=data.PROJECTINFO;
-                    var intentionInfo=data.PROJECTINTENTIONINFO;
+            loadCustomer: function (custId, houseId, houseName, prepareId, custName, custNo,projectId) {
 
-                    $.goodseelive.drawPartyInfo(partyInfo)
-                    $.goodseelive.drawProjectInfo(projectInfo)
-                    $.goodseelive.drawIntentionInfo(intentionInfo)
-                    hidePopup('UI-popup', 'UI-CUSTOMERLIST');
-                });
+                $("#cust_id").val(custId);
+                $("#prepare_id").val(prepareId);
+                $("#house_id").val(houseId);
+                $("#houseName").val(houseName);
+                $("#NAME").val(custName);
+                $("#customerNo").val(custNo)
+                $("#project_id").val(projectId)
+
+
+                $.endPageLoading();
+                hidePopup('UI-popup', 'UI-CUSTOMERLIST');
+
+                /*                $.ajaxPost('initChangeGoodSeeLiveInfo','&CUST_ID='+custId, function (data) {
+                                    $.endPageLoading();
+                                    var partyInfo=data.PARTYINFO;
+                                    var projectInfo=data.PROJECTINFO;
+                                    var intentionInfo=data.PROJECTINTENTIONINFO;
+
+                                    $.goodseelive.drawPartyInfo(partyInfo)
+                                    $.goodseelive.drawProjectInfo(projectInfo)
+                                    $.goodseelive.drawIntentionInfo(intentionInfo)
+                                    hidePopup('UI-popup', 'UI-CUSTOMERLIST');
+                                });*/
             },
 
-            drawPartyInfo : function (partyInfo) {
-                if(partyInfo==''){
+            drawPartyInfo: function (partyInfo) {
+                if (partyInfo == '') {
                     return;
                 }
                 $("#NAME").val(partyInfo.CUST_NAME);
@@ -972,8 +1010,8 @@
                 $("#phone_consult_time").val(partyInfo.TEL_CONSULT_TIME);
             },
 
-            drawProjectInfo : function (projectInfo) {
-                if(projectInfo==''){
+            drawProjectInfo: function (projectInfo) {
+                if (projectInfo == '') {
                     return;
                 }
                 $("#HOUSEKIND").val(projectInfo.HOUSEKIND);
@@ -1000,8 +1038,8 @@
                 $("#project_id").val(projectInfo.PROJECT_ID);
             },
 
-            drawIntentionInfo : function (projectIntentionInfo) {
-                if(projectIntentionInfo==''){
+            drawIntentionInfo: function (projectIntentionInfo) {
+                if (projectIntentionInfo == '') {
                     return;
                 }
                 $("#CHINESESTYLE").val(projectIntentionInfo.CHINESESTYLE);

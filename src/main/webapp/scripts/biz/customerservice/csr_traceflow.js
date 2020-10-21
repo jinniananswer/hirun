@@ -182,7 +182,7 @@
                     var status = data.get("STATUS");
 
                     html += '<li id="' + action_code + '_li">';
-                    html += '<div class="box" onclick="$.csrTraceFlow.showFlowDetail(this);" id="' + action_code + '">';
+                    html += '<div class="box" onclick="$.csrTraceFlow.showFlowDetail(this);" status="' + status + '" id="' + action_code + '">';
 
                     if ("APSJS" == action_code || "DKCSMW" == action_code || "HZHK" == action_code) {
                         html += '<div class="ico e_ico-task"></div>';
@@ -363,6 +363,8 @@
 
             showFlowDetail: function (e) {
                 var action_code = $(e).attr('id');
+                var status = $(e).attr('status');
+
                 var party_id = $("#PARTY_ID").val();
                 var project_id = $("#PROJECT_ID").val();
 
@@ -383,7 +385,7 @@
 
                 }
                 if ("HZHK" == action_code) {
-                    window.location.href = "/redirectToChangeGoodSeeLiveInfo?PARTY_ID=" + party_id + "&PROJECT_ID=" + project_id;
+                    window.location.href = "/redirectToChangeGoodSeeLiveInfo?PARTY_ID=" + party_id + "&PROJECT_ID=" + project_id+"&STATUS=" + status;
                     //$.redirect.open('redirectToChangeGoodSeeLiveInfo?PARTY_ID='+party_id+'&PROJECT_ID='+project_id, '好看好住修改界面');
                 }
                 if ("XQLTY" == action_code) {

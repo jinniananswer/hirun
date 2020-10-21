@@ -221,6 +221,18 @@
                     $("#hasEditInfoFlag").val(hasEditInfoFlag);
 
 
+                    //2020/03/02新增
+                    var continueSave = rst.get("CONTINUE");
+                    console.log(continueSave);
+                    if (continueSave == 'true') {
+                        $('#saveContinue').val('true');
+                        $('#continueSaveButton').attr("disable", true);
+                    } else {
+                        $('#saveContinue').val('false');
+                        $('#continueSaveButton').attr("disable", true);
+                    }
+
+
                     $.changegoodseeliveinfo.drawHobbyList(hobbyList);
                     $.changegoodseeliveinfo.drawTopicList(chineseStyleList,"chinesestylelist","UI-CHINESSSTYLE");
                     $.changegoodseeliveinfo.drawTopicList(europeanClassicsList,"europeanclassicslist","UI-EUROPEANCLASSICS");
@@ -429,11 +441,17 @@
             checkCustomerByMobile:function(){
                 $.beginPageLoading();
                 let mobileNo=$('#CONTACT').val();
+                let status=$('#STATUS').val();
                 let hasEditInfoFlag=$('#hasEditInfoFlag').val();
                 let openId=$('#openId').val();
 
+                if(status==='1'){
+                    $.endPageLoading();
+                    return;
+                }
+
                 //如果已经做过客户资料编辑，不再做客户合并
-                if(hasEditInfoFlag==='true'){
+/*                if(hasEditInfoFlag==='true'){
                     $.endPageLoading();
                     return;
                 }
@@ -441,26 +459,19 @@
                 if(openId===''||openId==null||openId==='undefined'){
                     $.endPageLoading();
                     return;
-                }
+                }*/
 
-                $.ajaxPost('/customer/checkCustomerByMobile','&mobileNo='+mobileNo, function (data) {
+                $.ajaxPost('/customer/checkCustomerByMobile', '&mobileNo=' + mobileNo, function (data) {
                     $.endPageLoading();
-                    let rst = new Wade.DataMap(data);
-                    let datas = rst.get("CUSTOMERINFO");
+                    var rst = new Wade.DataMap(data);
+                    var datas = rst.get("CUSTOMERINFO");
 
-                    if(datas == null || datas.length <= 0){
-                        let openId=$("#openId").val();
-                        if(openId===''||openId==null||openId=='undefined'){
-                            return;
-                        }else{
-                            //如果在客户代表环节未找到相关信息则去家装顾问环节找是否存在已编辑的信息
-                            $.changegoodseeliveinfo.checkInfoByOpenIdFromCounselor(openId);
-                        }
-                    }else{
-                        $.changegoodseeliveinfo.drawCustomer(datas);
-                        showPopup('UI-popup','UI-CUSTOMERLIST');
+                    if (datas == null || datas.length <= 0) {
+                        $("#isMoreCustomer").val("false");
+                        return;
                     }
-
+                    $.changegoodseeliveinfo.drawCustomer(datas);
+                    showPopup('UI-popup', 'UI-CUSTOMERLIST');
                 });
             },
 
@@ -493,29 +504,36 @@
                 $("#houseName").val(houseName);
             },
 
-            drawCustomer : function(datas){
+            drawCustomer: function (datas) {
                 $.endPageLoading();
 
                 $("#moreCustomer").empty();
-                let html = [];
-                if(datas == null || datas.length <= 0){
-                    $("#confirmCustButton").css("display","none");
+                var html = [];
+                if (datas == null || datas.length <= 0) {
+                    $("#confirmCustButton").css("display", "none");
                     $("#isMoreCustomer").val("false");
                     return;
-                }else{
+                } else {
                     $("#isMoreCustomer").val("true");
                 }
 
-                $("#confirmCustButton").css("display","");
+                $("#confirmCustButton").css("display", "");
 
 
                 var length = datas.length;
-                for(var i=0;i<length;i++) {
+                for (var i = 0; i < length; i++) {
                     var data = datas.get(i);
+                    var isSelect = data.get("isSelect");
 
-                    html.push("<li class='link' partyId='" + data.get("PARTY_ID") + "' projectId='" + data.get("PROJECT_ID") + "'  ontap='$.changegoodseeliveinfo.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");                    html.push("</div></div>");
+                    if (isSelect) {
+                        html.push("<li class='link'  cust_id='" + data.get("CUST_ID")  + "' custName='" + data.get("CUST_NAME") + "' isSelect='" + data.get("isSelect") + "' house_id='" + data.get("HOUSE_ID") + "' house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' cust_no='" + data.get("CUST_NO") + "' project_id='" + data.get("PROJECT_ID")  + "' +  ontap='$.changegoodseeliveinfo.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    } else {
+                        html.push("<li class='link' style='pointer-events: none;' + cust_id='" + data.get("CUST_ID") + "' + house_id='" + data.get("HOUSE_ID") + "' + house_name='" + data.get("HOUSE_NAME") + "' prepare_id='" + data.get("PREPARE_ID") + "' custName='" + data.get("CUST_NAME") + "' cust_no='" + data.get("CUST_NO") + "' project_id='" + data.get("PROJECT_ID") + "' isSelect='" + data.get("isSelect")
+                            + "' ontap='$.changegoodseeliveinfo.selectCustomer(this);'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    }
+                    html.push("</div></div>");
                     html.push("<div class=\"main\"><div class=\"title\">客户姓名：");
-                    html.push(data.get("PARTY_NAME"));
+                    html.push(data.get("CUST_NAME"));
                     html.push("</div>");
                     html.push("<div class='content content-auto'>楼盘地址：");
                     html.push(data.get("HOUSE_NAME"));
@@ -523,9 +541,25 @@
                     html.push("<div class='content content-auto'>电话：");
                     html.push(data.get("MOBILE_NO"));
                     html.push("</div>");
+                    html.push("<div class='content content-auto'>客户状态：");
+                    html.push(data.get("ORDER_STATUS_NAME"));
+                    html.push("</div>");
                     html.push("<div class='content content-auto'>客户类型：");
                     html.push(data.get("CUST_TYPE_NAME"));
                     html.push("</div>");
+                    html.push("<div class='content content-auto'>申报人：");
+                    html.push(data.get("PREPARE_NAME"));
+                    html.push("</div>");
+                    html.push("<div class='content content-auto'>申报时间：");
+                    html.push(data.get("PREPARE_TIME"));
+                    html.push("</div>");
+                    html.push("<div class='content content-auto'>申报状态：");
+                    html.push(data.get("PREPARE_STATUS_NAME"));
+                    html.push("</div>");
+                    html.push("<div class='content content-auto'>客户代表：");
+                    html.push(data.get("CUST_SERVICE_NAME"));
+                    html.push("</div>");
+
                     html.push("</div></div></div>");
                     html.push("</li>");
                 }
@@ -551,30 +585,43 @@
                 let length = lis.length;
                 let partyId = '';
                 let projectId='';
+                var custId = '';
+                var prepareId = '';
+                var houseId = '';
+                var houseName = '';
+                var custName = '';
+                var custNo = '';
+                var isSelect='';
                 for (var i = 0; i < length; i++) {
                     var li = $(lis[i]);
                     var className = li.attr("class");
                     if (className == "link checked") {
-                        partyId=li.attr("partyId");
-                        projectId=li.attr("projectId");
+                        custId = li.attr("cust_id");
+                        houseId = li.attr("house_id");
+                        houseName = li.attr("house_name")
+                        prepareId = li.attr("prepare_id")
+                        custName = li.attr("custName")
+                        custNo = li.attr("cust_no");
+                        projectId=li.attr("project_id");
+                        isSelect=li.attr("isSelect");
                     }
 
-                    if(partyId =='') {
+                    if(cust_id =='') {
                         MessageBox.alert("您没有选中任何客户，请先选择");
                         return;
                     }
 
-                    MessageBox.success("提示信息", "是否确认合并，该动作不可逆。", function (btn) {
+                    MessageBox.success("提示信息", "是否确认转成您的客户，该动作不可逆。", function (btn) {
                         if ("ok" == btn) {
                             $.beginPageLoading();
-                            $.changegoodseeliveinfo.loadCustomer(partyId,projectId);
+                            $.changegoodseeliveinfo.loadCustomer(custId, houseId, houseName, prepareId, custName, custNo,projectId);
                         }
                     }, {"cancel": "取消"})
                 }
             },
 
             loadCustomer:function (partyId,projectId) {
-                $.ajaxPost('initChangeGoodSeeLiveInfo','&PARTY_ID='+partyId+'&PROJECT_ID='+projectId, function (data) {
+                /*$.ajaxPost('initChangeGoodSeeLiveInfo','&PARTY_ID='+partyId+'&PROJECT_ID='+projectId, function (data) {
                     $.endPageLoading();
                     var partyInfo=data.PARTYINFO;
                     var projectInfo=data.PROJECTINFO;
@@ -591,7 +638,18 @@
                     $.changegoodseeliveinfo.drawOtherInfo(partyInfo,projectInfo);
 
                     hidePopup('UI-popup', 'UI-CUSTOMERLIST');
-                });
+                });*/
+
+                $("#cust_id").val(custId);
+                $("#prepare_id").val(prepareId);
+                $("#house_id").val(houseId);
+                $("#houseName").val(houseName);
+                $("#NAME").val(custName);
+                $("#customerNo").val(custNo)
+                $("#project_id").val(projectId)
+
+                $.endPageLoading();
+                hidePopup('UI-popup', 'UI-CUSTOMERLIST');
             },
 
             drawOtherInfo :function(partyInfo,projectInfo){
@@ -834,6 +892,16 @@
                 if($.validate.verifyAll("allSubmitArea")) {
                     var parameter = $.buildJsonData("allSubmitArea");
 
+                    var isMoreCustomer = $("#isMoreCustomer").val();
+                    var saveContinue = $("#saveContinue").val();
+                    let prepareId = $("#prepare_id").val();
+                    if (prepareId === '') {
+                        if (saveContinue == 'false' && isMoreCustomer == 'true') {
+                            MessageBox.alert("该客户存在多客户,您没有新增的权限。请输入号码选择客户转成您的客户或者联系文员进行新增。");
+                            return;
+                        }
+                    }
+
                     MessageBox.success("提示信息", "确认是否保存?点击确认继续，点击取消退出。", function (btn) {
                         if ("ok" == btn) {
                             $.beginPageLoading();
@@ -884,7 +952,7 @@
                 $("#OTHER_SOURCE").val(projectInfo.OTHER_SOURCE);
                 $("#house_building").val(projectInfo.HOUSE_BUILDING);
                 $("#house_room_no").val(projectInfo.HOUSE_ROOM_NO);
-                $("#project_id").val(projectInfo.PROJECT_ID);
+                //$("#project_id").val(projectInfo.PROJECT_ID);
                 $("#HOUSEKIND").val(projectInfo.HOUSE_MODE);
                 $("#houseAddress").val(projectInfo.HOUSE_ADDRESS)
             },
@@ -895,7 +963,7 @@
                 }
                 $("#NAME").val(partyInfo.PARTY_NAME);
                 $("#customerNo").val(partyInfo.CUST_NO);
-                $("#cust_id").val(partyInfo.PARTY_ID);
+                //$("#cust_id").val(partyInfo.PARTY_ID);
                 //$("#prepare_id").val(partyInfo.PREPARE_ID);
                 $("#AGE").val(partyInfo.AGE);
                 $("#EDUCATE").val(partyInfo.EDUCATE);
