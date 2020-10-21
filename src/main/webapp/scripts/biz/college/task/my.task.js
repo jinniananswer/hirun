@@ -10,17 +10,17 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             <template v-if="isTodayTask">
                                 <template v-if="isTodayCourseTask">
                                     <van-cell-group title="课程任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.todayTask.courseTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId" />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.todayTask.courseTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=false'" />
                                     </van-cell-group>
                                 </template>
                                 <template v-if="isTodayCoursewareTask">
                                     <van-cell-group title="课件任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.todayTask.coursewareTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId"  />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.todayTask.coursewareTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=false'"  />
                                     </van-cell-group>
                                 </template>
                                 <template v-if="isTodayPracticeTask">
                                     <van-cell-group title="实践任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.todayTask.practiceTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId" />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.todayTask.practiceTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=false'" />
                                     </van-cell-group>
                                 </template>
                             </template>
@@ -33,17 +33,17 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             <template v-if="isTomorrowTask">
                                 <template v-if="isTomorrowCourseTask">
                                     <van-cell-group title="课程任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.tomorrowTask.courseTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId" />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.tomorrowTask.courseTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=false'" />
                                     </van-cell-group>
                                 </template>
                                 <template v-if="isTomorrowCoursewareTask">
                                     <van-cell-group title="课件任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.tomorrowTask.coursewareTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId" />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.tomorrowTask.coursewareTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=false'" />
                                     </van-cell-group>
                                 </template>
                                 <template v-if="isTomorrowPracticeTask">
                                     <van-cell-group title="实践任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.tomorrowTask.practiceTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId" />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.tomorrowTask.practiceTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=false'" />
                                     </van-cell-group>
                                 </template>
                             </template>
@@ -56,12 +56,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             <template v-if="isFinishTask">
                                 <template v-if="isFinishCourseTask">
                                     <van-cell-group title="课程任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.finishTask.courseTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId" />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.finishTask.courseTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=true'" />
                                     </van-cell-group>
                                 </template>
                                 <template v-if="isFinishCoursewareTask">
                                     <van-cell-group title="课件任务">
-                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.finishTask.coursewareTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId" />
+                                        <van-cell :title="item.taskName" v-for="item in myTaskInfo.finishTask.coursewareTaskList" is-link :label="item.taskDesc" :url="'/biz/college/task/task_detail.html?taskId=' + item.taskId + '&isFinish=true'" />
                                     </van-cell-group>
                                 </template>
                                 <template v-if="isFinishPracticeTask">

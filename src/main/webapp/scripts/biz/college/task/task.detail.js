@@ -5,7 +5,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             <div>
                 <page-title title="任务详情"/>
                 <div style="margin-top:3.8rem">
-                    <van-cell style="background-color: #f8f8f8;color:#969799" :border="false" is-link title="家装知识学习任务" value="评分" @click="showEval"/>
+                    <template v-if="isFinish=='true'">
+                        <van-cell style="background-color: #f8f8f8;color:#969799" :border="false" is-link :title="taskDetailInfo.taskNam" value="评分" @click="showEval"/>
+                    </template>
                     <van-cell-group>
                         <van-cell border="false" center="true">
                             <template #title>
@@ -38,6 +40,15 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                 </div>
                             </template>
                         </van-cell>
+                         <template v-if="isFinish=='true'">
+                             <van-cell title="任务完成时间">
+                                <template #label>
+                                    <div class="van-multi-ellipsis--l2" style="margin-top:1em">
+                                        {{taskDetailInfo.taskCompleteDate}}
+                                    </div>
+                                </template>
+                            </van-cell>
+                        </template>
                     </van-cell-group>
                     <template v-if="taskDetailInfo.taskStudyContentList != null && taskDetailInfo.taskStudyContentList != '[]' && taskDetailInfo.taskStudyContentList.length > 0">
                         <van-cell-group title="学习课件">
@@ -56,7 +67,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             </van-row>
                         </div>
                     </template>
-                    <template v-if="!isFinish" align="center">
+                    <template v-if="isFinish!='true'" align="center">
                         <template v-if="taskDetailInfo.studyType == '2'" align="center">
                             <van-field
                                   readonly
@@ -75,9 +86,18 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                   />
                                 </van-popup>
                             <template v-if="!taskDetailInfo.isSelectTutorFlag">
-                                <van-col span="12" align="center">
-                                    <van-button type="primary" icon="plus" round block>上传心得</van-button>
-                                </van-col>
+                                <van-cell-group title="心得体会">
+                                    <van-field
+                                      v-model="experience"
+                                      rows="1"
+                                      autosize
+                                      label="心得体会"
+                                      type="textarea"
+                                      readonly
+                                      placeholder="请输入心得体会"
+                                    />
+                                    <van-uploader v-model="fileList" :after-read="uploadOne" multiple :max-count="5" />
+                                </van-cell-group>
                             </template>
                         </template>
                     </template>
@@ -85,16 +105,16 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         <div class="content">
                             <van-field name="rate" label="课程难度">
                                 <template #input>
-                                    <van-rate v-model="value" />
+                                    <van-rate v-model="taskDifficultyScore" />
                                 </template>
                             </van-field>
                             <van-field name="rate" label="老师评分">
                                 <template #input>
-                                    <van-rate v-model="value" />
+                                    <van-rate v-model="tutorScore" />
                                 </template>
                             </van-field>
                             <div style="margin: 16px;">
-                                <van-button round block type="info" native-type="submit">
+                                <van-button round block type="info" @click="submitScore" native-type="submit">
                                     提交
                                 </van-button>
                             </div>
@@ -113,7 +133,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 showTutorPicker: false,
                 selectTutorList: [],
                 tutor: '',
-                isFinish:  util.getRequest("isFinish")
+                isFinish:  util.getRequest("isFinish"),
+                experience: '',
+                fileList: [],
+                taskDifficultyScore: '',
+                tutorScore: ''
             }
         },
         methods: {
@@ -169,6 +193,43 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 ajax.post('api/CollegeEmployeeTaskTutor/addByTaskIdAndSelectTutor', request, function(responseData){
                     that.showTutorPicker = false;
                     that.initTaskInfo();
+                },null, true);
+            },
+            uploadOne: function (file) {
+                let param = new URLSearchParams()
+                param.append('multipart', file.file)
+                ajax.post('api/system/file/uploadOne', param, function(responseData){
+
+                },null, true);
+            },
+            beforeRead: function (file) {
+                if (file.type !== 'image/png') {
+                    Toast('请上传 png 格式图片');
+                    return false;
+                }
+            },
+            submitScore: function (event) {
+                let that = this;
+                if (that.taskDifficultyScore == '' || that.tutorScore == '' || undefined == that.tutorScore || undefined == that.taskDifficultyScore){
+                    vm.$toast({
+                        message : "请给任务难度和老师进行评分后再提交",
+                        overlay : true,
+                        type : 'fail',
+                        closeOnClickOverlay : true
+                    });
+                    return;
+                }
+                let taskId=that.taskId;
+                if(taskId=='undefined'){
+                    taskId=null;
+                }
+                let request = new URLSearchParams()
+                request.append('taskId', taskId)
+                request.append('tutorScore', that.tutorScore)
+                request.append('taskDifficultyScore', that.taskDifficultyScore)
+                ajax.post('api/CollegeStudyTaskScore/taskScore', request, function(responseData){
+                    that.initTaskInfo();
+                    that.show = false;
                 },null, true);
             }
         },
