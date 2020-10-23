@@ -10,8 +10,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 </van-cell> 
                 <div v-model="topic">
                     <van-cell>{{topic.topicNum}}.{{topic.name}}{{topic.type==1?' (单选题)':topic.type==2?' (多选题)':topic.type==3?' (判断题)':' (填空题)'}}</van-cell>
-                    <van-radio-group v-if="topic.type==1 || topic.type==3" :v-model="option" >
-                        <van-cell-group v-for="(item ,index) in topic.topicOptions"  @click="switchOption(item.symbol, topic.type)">
+                    <van-radio-group v-if="topic.type==1 || topic.type==3" v-model="option" >
+                        <van-cell-group v-for="(item ,index) in topic.topicOptions">
                             <van-cell :value="item.name" center="true">
                                 <template #right-icon >
                                     <van-radio :name="item.symbol" checked-color="#07c160"></van-radio>
@@ -20,8 +20,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         </van-cell-group>
                     </van-radio-group>
                     
-                    <van-checkbox-group v-if="topic.type==2" :v-model="option">
-                        <van-cell-group v-for="(item ,index) in topic.topicOptions"  @click="switchOption(item.symbol, topic.type)">
+                    <van-checkbox-group v-if="topic.type==2" v-model="options">
+                        <van-cell-group v-for="(item ,index) in topic.topicOptions">
                             <van-cell :value="item.name" center="true">
                                 <template #right-icon >
                                     <van-checkbox :name="item.symbol" checked-color="#07c160"></van-checkbox>
@@ -60,6 +60,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 // 当前页
                 currentPage: 0,
                 option: '',
+                options: [],
                 value: '',
                 // 所有题目信息
                 topics: [],
@@ -81,30 +82,34 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 result: '',
             }
         },
-        // 页面初始化触发点
-        created: function () {
-            this.taskId = '3017';
-            this.scoreType = '0'
-            this.queryTopicInfo();
-        },
         methods: {
-            switchOption : function(value, type) {
+            // 页面初始化触发点
+            created: function () {
+                //this.taskId = '3017';
+                //this.scoreType = '0'
+                this.queryTopicInfo();
+            },
+            setCurrentAnswer : function(type) {
+                let answer = '';
                 if (type == '2') {
-                    this.option += value;
-                    this.option.sort();
+                    //this.option += value;
+                    //this.option.sort();
+                    this.options.forEach(option => {
+                        answer += option
+                    })
                 } else {
-                    this.option = value;
+                    answer = this.option;
                 }
                 this.answerInfo = {
                     index: this.currentIndex,
-                    answer: this.option
+                    answer: answer
                 };
                 this.answerInfos.push(this.answerInfo);
                 this.topic.isAnswer = true;
                 this.answerInfo = {};
             },
 
-            queryTopicInfo : function (obj) {
+            queryTopicInfo : function () {
                 let param = new URLSearchParams();
                 param.append('taskId', this.taskId);
                 let that = this;
@@ -121,7 +126,13 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     vm.$toast("亲，已经是第一页了！");
                     return;
                 }
-                this.option = '';
+                let type = this.topic.type;
+                this.setCurrentAnswer(type);
+                if (type == '2') {
+                    this.options = [];
+                } else {
+                    this.option = '';
+                }
                 this.currentIndex = this.currentIndex - 1;
                 this.topic = this.topics[this.currentIndex];
             },
@@ -131,7 +142,13 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     vm.$toast("亲，已经是第最后页了！");
                     return;
                 }
-                this.option = '';
+                let type = this.topic.type;
+                this.setCurrentAnswer(type);
+                if (type == '2') {
+                    this.options = [];
+                } else {
+                    this.option = '';
+                }
                 this.currentIndex = this.currentIndex + 1;
                 this.topic = this.topics[this.currentIndex];
             },
@@ -141,12 +158,22 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             },
 
             onSubmit : function () {
+                let type = this.topic.type;
+                if ((this.options == [] || this.options.length == 0) && this.option == ''){
+                    vm.$toast("亲，请答完所有题目后再交卷！");
+                    return;
+                }
+                this.setCurrentAnswer(type);
+                if (type == '2') {
+                    this.options = [];
+                } else {
+                    this.option = '';
+                }
                 if (this.maxIndex > this.answerInfos.length) {
                     vm.$toast("亲，请答完所有题目后再交卷！");
                     return;
                 }
                 // this.pause();
-
                 // 算分（目前由于传参问题导致暂时只能js计算）
                 this.score = 0;
                 for (let i = 0; i < this.topics.length; i++) {
@@ -196,7 +223,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             },
         },
         mounted () {
-
+            this.created();
         }
     });
     return vm;

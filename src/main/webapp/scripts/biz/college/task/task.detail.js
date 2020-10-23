@@ -59,10 +59,10 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         <div style="margin-top:1em;margin-right:1em;margin-left:1em;margin-bottom:1em">
                             <van-row :gutter="20">
                                 <van-col span="12">
-                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag" @click="openFile(taskDetailInfo.isExerciseFlag)" type="primary" icon="plus" round block>我要练习</van-button>
+                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag" @click="exam(0)" type="primary" icon="plus" round block>我要练习</van-button>
                                 </van-col>
                                 <van-col span="12">
-                                    <van-button :disabled="!taskDetailInfo.isExamFlag"  @click="openFile(taskDetailInfo.isExamFlag)" type="danger" icon="fire-o" round block>我要考试</van-button>
+                                    <van-button :disabled="!taskDetailInfo.isExamFlag"  @click="exam(1)" type="danger" icon="fire-o" round block>我要考试</van-button>
                                 </van-col>
                             </van-row>
                         </div>
@@ -120,6 +120,40 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             </div>
                         </div>
                     </van-action-sheet>
+                    <van-dialog v-model="examConfirmShow" title="考试详情" @confirm="examConfirm" show-cancel-button>
+                       <van-cell title="考试描述">
+                            <template #label>
+                                <div class="van-multi-ellipsis--l2" style="margin-top:1em">
+                                    {{examDetailInfo.examDesc}}
+                                </div>
+                            </template>
+                        </van-cell>
+                        <van-cell title="题目详情">
+                            <template #label>
+                                <div  v-for="item in examDetailInfo.examTopicList" class="van-multi-ellipsis--l2" style="margin-top:1em">
+                                    {{item.topicType}}题数量:{{item.topicNum}},每题{{item.topicScore}}分
+                                </div>
+                            </template>
+                        </van-cell>
+                         <template v-if="'1' == examType">
+                             <van-cell title="考试次数">
+                                <template #label>
+                                    <div class="van-multi-ellipsis--l2" style="margin-top:1em">
+                                        该任务最大考试次数为{{examDetailInfo.maxExamNum}}次,您当前考试次数为{{examDetailInfo.currentExamNum}}次，是否继续考试？
+                                    </div>
+                                </template>
+                            </van-cell>
+                         </template>
+                        <template v-if="'0' == examType">
+                             <van-cell title="练习次数">
+                                <template #label>
+                                    <div class="van-multi-ellipsis--l2" style="margin-top:1em">
+                                        该任务已经练习了{{examDetailInfo.currentExamNum}}次，是否继续练习？
+                                    </div>
+                                </template>
+                            </van-cell>
+                         </template>
+                    </van-dialog>
                 </div>
                 <bottom :active="2"></bottom>
             </div>`,
@@ -137,7 +171,10 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 experience: '',
                 fileList: [],
                 taskDifficultyScore: '',
-                tutorScore: ''
+                tutorScore: '',
+                examConfirmShow: false,
+                examDetailInfo: {},
+                examType: ''
             }
         },
         methods: {
@@ -231,6 +268,49 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.initTaskInfo();
                     that.show = false;
                 },null, true);
+            },
+            exam: function (examType) {
+                this.examType = examType;
+
+                let that = this;
+                let taskId=that.taskId;
+                if(taskId=='undefined'){
+                    taskId=null;
+                }
+                let request = new URLSearchParams()
+                request.append('taskId', taskId)
+                request.append('examType', examType)
+                ajax.get('api/CollegeTaskScore/getExamDetailByTaskId', request, function(responseData){
+                    that.examDetailInfo = responseData;
+                    let maxExamNum = responseData.maxExamNum;
+                    let currentExamNum = responseData.currentExamNum;
+                    //考试需要判断开始次数
+                    if (examType == "1"){
+                        if (maxExamNum <= currentExamNum){
+                            let message = "该任务最大考试次数为" + maxExamNum + "次,您当前考试次数为" + currentExamNum + "次，不能继续考试！";
+                            vm.$toast({
+                                message : message,
+                                overlay : true,
+                                type : 'fail',
+                                closeOnClickOverlay : true
+                            });
+                            return;
+                        }else {
+                            that.examConfirmShow = true;
+                        }
+                    }else {
+                        that.examConfirmShow = true;
+                    }
+                },null, true);
+            },
+            examConfirm: function() {
+                this.examConfirmShow = false;
+                let that = this;
+                let taskId=that.taskId;
+                if(taskId=='undefined'){
+                    taskId=null;
+                }
+                redirect.open('/biz/college/exam/exam.html?taskId='+taskId+'&examType='+that.examType, '考试');
             }
         },
         mounted () {
