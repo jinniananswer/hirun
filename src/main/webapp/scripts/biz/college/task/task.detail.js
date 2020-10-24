@@ -195,6 +195,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 ajax.get('/api/CollegeEmployeeTask/queryEmployTaskInfoByTaskId', {taskId:taskId}, function(data) {
                     that.taskDetailInfo = data;
                     that.tutor = data.selectTutor;
+                    that.taskDifficultyScore = data.taskDifficultyScore;
+                    that.tutorScore = data.tutorScore;
                 });
             },
             selectTutor: function () {
