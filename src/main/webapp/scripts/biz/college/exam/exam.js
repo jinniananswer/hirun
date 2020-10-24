@@ -28,7 +28,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                 </template>
                             </van-cell>   
                         </van-cell-group>
-                        <!--<van-checkbox v-for="(item ,index) in topic.topicOptions" :name="item.symbol">{{item.name}}</van-checkbox>-->
                     </van-checkbox-group>
                 </div>
                 
@@ -49,9 +48,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 
                 <van-action-sheet v-model="showError" title="答题结果详情">
                    
-                    <div v-for="(item ,index) in resultInfos">
-                         <van-button v-if="item.isCorrect==false" class="float"  type="danger" size="small">{{item.index}}</van-button>
-                         <van-button v-if="item.isCorrect==true" class="float"  type="primary" size="small">{{item.index}}</van-button>
+                    <div v-for="(item ,index) in topics">
+                         <van-button v-if="item.isCorrect==false" class="float"  type="danger" size="small">{{item.topicNum}}</van-button>
+                         <van-button v-if="item.isCorrect==true" class="float"  type="primary" size="small">{{item.topicNum}}</van-button>
                     </div>
                 </van-action-sheet>
             </div>`,
@@ -79,36 +78,17 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 screoType: util.getRequest("screoType"),
                 score: '',
                 taskId: util.getRequest("taskId"),
-                result: '',
             }
         },
         methods: {
             // 页面初始化触发点
             created: function () {
-                //this.taskId = '3017';
-                //this.scoreType = '0'
+                this.taskId = '3017';
+                this.scoreType = '0'
                 this.queryTopicInfo();
             },
-            setCurrentAnswer : function(type) {
-                let answer = '';
-                if (type == '2') {
-                    //this.option += value;
-                    //this.option.sort();
-                    this.options.forEach(option => {
-                        answer += option
-                    })
-                } else {
-                    answer = this.option;
-                }
-                this.answerInfo = {
-                    index: this.currentIndex,
-                    answer: answer
-                };
-                this.answerInfos.push(this.answerInfo);
-                this.topic.isAnswer = true;
-                this.answerInfo = {};
-            },
 
+            // 习题信息初始化
             queryTopicInfo : function () {
                 let param = new URLSearchParams();
                 param.append('taskId', this.taskId);
@@ -121,80 +101,94 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 });
             },
 
+            // 上一页
             prev : function () {
                 if (0 == this.currentIndex) {
                     vm.$toast("亲，已经是第一页了！");
                     return;
                 }
-                let type = this.topic.type;
-                this.setCurrentAnswer(type);
-                if (type == '2') {
-                    this.options = [];
-                } else {
-                    this.option = '';
-                }
+                this.setAnswer();
+
                 this.currentIndex = this.currentIndex - 1;
                 this.topic = this.topics[this.currentIndex];
+
+                this.setOption();
             },
 
+            // 下一页
             next : function () {
                 if (this.maxIndex - 1 == this.currentIndex) {
                     vm.$toast("亲，已经是第最后页了！");
                     return;
                 }
-                let type = this.topic.type;
-                this.setCurrentAnswer(type);
-                if (type == '2') {
-                    this.options = [];
-                } else {
-                    this.option = '';
-                }
+                this.setAnswer();
+
                 this.currentIndex = this.currentIndex + 1;
                 this.topic = this.topics[this.currentIndex];
+
+                this.setOption();
             },
 
+            // 初始化下页选项信息
+            setOption: function() {
+                if (this.topic.type == '2' && this.topic.answer != '') {
+                    for (let j = 0; j < this.topic.answer.length; j++) {
+                        this.options.push(this.topic.answer.substring(j, j+1));
+                    }
+                } else {
+                    this.option = this.topic.answer;
+                }
+            },
+
+            // 保存本题信息
+            setAnswer: function() {
+                let type = this.topic.type;
+                let answer = '';
+                if (type == '2') {
+                    this.options.forEach(option => {
+                        answer += option
+                    })
+                    this.options = [];
+                } else {
+                    answer = this.option;
+                    this.option = '';
+                }
+                this.topic.answer = answer;
+                if (answer != '') {
+                    this.topic.isAnswer = true;
+                }
+            },
+
+            // 展示答题板
             detail : function () {
+                if (this.topic.answer != '') {
+                    this.topic.isAnswer = true;
+                }
                 this.show = true;
             },
 
+            // 交卷
             onSubmit : function () {
-                let type = this.topic.type;
-                if ((this.options == [] || this.options.length == 0) && this.option == ''){
-                    vm.$toast("亲，请答完所有题目后再交卷！");
-                    return;
+                if ((this.topic.answer == '' || this.topic.answer == undefined)) {
+                    this.setAnswer();
                 }
-                this.setCurrentAnswer(type);
-                if (type == '2') {
-                    this.options = [];
-                } else {
-                    this.option = '';
-                }
-                if (this.maxIndex > this.answerInfos.length) {
-                    vm.$toast("亲，请答完所有题目后再交卷！");
-                    return;
-                }
+
+                this.topics.forEach(x => {
+                    if (!x.isAnswer) {
+                        vm.$toast("亲，请答完所有题目后再交卷！");
+                        return;
+                    }
+                });
                 // this.pause();
                 // 算分（目前由于传参问题导致暂时只能js计算）
                 this.score = 0;
                 for (let i = 0; i < this.topics.length; i++) {
-                    for (let j = 0; j < this.answerInfos.length; j++) {
-                        let t = this.topics[i];
-                        let a = this.answerInfos[j];
-                        if (a.index == t.topicNum - 1) {
-                            this.resultInfo = {
-                                index: a.index + 1,
-                                answer: a.answer + 1,
-                                isCorrect: false
-                            };
-                            if (a.answer == t.correctAnswer) {
-                                this.score += t.score;
-                                this.resultInfo.isCorrect = true;
-                            }
-                            break;
-                        }
+                    let temp = this.topics[i];
+                    temp.isCorrect = false;
+                    if (temp.answer == temp.correctAnswer) {
+                        this.score += temp.score;
+                        temp.isCorrect = true;
                     }
-                    // 记录答题信息
-                    this.resultInfos.push(this.resultInfo);
                 }
 
                 // 入表
@@ -208,14 +202,21 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 },null, true);
             },
 
+            // 从答题板跳转至题目
             goToIndex : function (num) {
+                if ((this.topic.answer == '' || this.topic.answer == undefined)) {
+                    this.setAnswer();
+                }
                 this.currentIndex = num - 1;
                 this.topic = this.topics[this.currentIndex];
                 this.show = false;
+                this.setOption();
             },
 
+            // 展示答题情况
             showResult : function () {
                 this.showError = true;
+
             },
 
             pause: function () {
