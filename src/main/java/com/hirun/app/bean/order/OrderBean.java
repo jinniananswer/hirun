@@ -170,7 +170,7 @@ public class OrderBean {
         OrderDAO orderDAO = DAOFactory.createDAO(OrderDAO.class);
         Map<String, String> orderConsult = new HashMap<String, String>();
         RecordSet recordSet=orderDAO.queryOrderConsult(orderId);
-        if(recordSet.size()<0) {
+        if(recordSet.size()<=0) {
             orderConsult.put("ORDER_ID", orderId);
             orderConsult.put("CUST_SERVICE_EMPLOYEE_ID", customerServiceEmployeeId);
             orderConsult.put("DESIGN_EMPLOYEE_ID", designEmployeeId);

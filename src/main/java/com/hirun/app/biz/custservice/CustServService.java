@@ -559,7 +559,7 @@ public class CustServService extends GenericService {
                     "", orderStatus, orderType, consultTime, stage);
         }
         //更新报备状态
-        if (StringUtils.isNotEmpty(prepareId)) {
+        if (StringUtils.isNotEmpty(prepareId)&&!StringUtils.equals("undefined",prepareId)) {
             Record record = CustPreparationBean.getCustomerPrepare(prepareId);
             String status = record.get("STATUS");
             String prepareExpireTime = record.get("PREPARATION_EXPIRE_TIME");
