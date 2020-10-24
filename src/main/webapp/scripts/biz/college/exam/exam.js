@@ -83,8 +83,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
         methods: {
             // 页面初始化触发点
             created: function () {
-                this.taskId = '3017';
-                this.scoreType = '0'
+                // this.taskId = '3017';
+                // this.scoreType = '0'
                 this.queryTopicInfo();
             },
 
@@ -154,14 +154,14 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     this.option = '';
                 }
                 this.topic.answer = answer;
-                if (answer != '') {
+                if (answer != '' && answer != undefined) {
                     this.topic.isAnswer = true;
                 }
             },
 
             // 展示答题板
             detail : function () {
-                if (this.topic.answer != '') {
+                if (this.topic.answer != '' && this.topic.answer != undefined) {
                     this.topic.isAnswer = true;
                 }
                 this.show = true;
