@@ -628,6 +628,30 @@ public class HousesService extends GenericService {
         return response;
     }
 
+    public ServiceResponse queryHousesByNameNotSan(ServiceRequest request) throws Exception {
+        ServiceResponse response = new ServiceResponse();
+        String housesName = request.getString("HOUSES_NAME");
+        List<HousesEntity> housesEntityList = HousesBean.queryHousesEntityListByName(housesName);
+        List<HousesEntity> newHouses=new ArrayList<>();
+        if(housesEntityList.size()>0){
+            for(HousesEntity housesEntity : housesEntityList){
+                if(StringUtils.equals(housesEntity.getNature(),"3")){
+                    continue;
+                }
+                String newhouseName=housesEntity.getName();
+                newhouseName=newhouseName + " ("+StaticDataTool.getCodeName("BIZ_CITY",housesEntity.getCity())+" )";
+                housesEntity.setName(newhouseName);
+                newHouses.add(housesEntity);
+            }
+            response.set("HOUSES_LIST", ConvertTool.toJSONArray(newHouses, new String[] {"HOUSES_ID","NAME"}));
+            return response;
+        }
+
+        response.set("HOUSES_LIST", ConvertTool.toJSONArray(housesEntityList, new String[] {"HOUSES_ID","NAME"}));
+
+        return response;
+    }
+
     public ServiceResponse initCreateScatterHouses(ServiceRequest request) throws Exception{
         AppSession session = SessionManager.getSession();
         SessionEntity sessionEntity = session.getSessionEntity();

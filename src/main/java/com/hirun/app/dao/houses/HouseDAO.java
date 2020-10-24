@@ -29,7 +29,7 @@ public class HouseDAO extends StrongObjectDAO {
 
     public List<HousesEntity> queryHousesEntityListByName(String housesName) throws Exception {
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT HOUSES_ID, NAME ");
+        sql.append(" SELECT HOUSES_ID, NAME ,CITY ,NATURE ");
         sql.append(" FROM INS_HOUSES ");
         sql.append(" WHERE 1=1 ");
         sql.append(" AND now() < DESTROY_DATE ");

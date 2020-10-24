@@ -1030,7 +1030,7 @@
             searchHouse :function(){
                 var param=$.buildJsonData("houseArea");
                 $.beginPageLoading();
-                $.ajaxPost('/houses/queryHousesByName',param, function (data) {
+                $.ajaxPost('/houses/queryHousesByNameNotSan',param, function (data) {
                     $.endPageLoading();
                     var rst = new Wade.DataMap(data);
                     var datas = rst.get("HOUSES_LIST");
