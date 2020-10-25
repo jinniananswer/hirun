@@ -2,6 +2,7 @@ package com.hirun.app.biz.task.out;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hirun.app.bean.out.hirunplusdata.ShareProductDataImport;
+import com.hirun.app.bean.out.hirunplusdata.ShareProductSendDataImport;
 import com.hirun.app.dao.out.DataGetTimeDAO;
 import com.hirun.pub.domain.out.DataGetTimeEntity;
 import com.most.core.app.database.dao.factory.DAOFactory;
@@ -33,6 +34,9 @@ public class ShareProductImportTaskService extends GenericService {
         }
 
         ShareProductDataImport.dataImport(start, now);
+
+        ShareProductSendDataImport.dataImport(start, now);
+
 
         if(dataGetTimeEntity == null) {
             dataGetTimeEntity = new DataGetTimeEntity();
