@@ -152,6 +152,7 @@ public class TransProductShareDataToInsService extends GenericService {
         sendData.put("DEPARTMENT",jsonObject.getString("DEPARTMENT"));
         sendData.put("CONTENT",jsonObject.getString("CONTENT"));
         sendData.put("STAFF_ID",jsonObject.getString("STAFF_ID"));
+        sendData.put("STAFF_NAME",jsonObject.getString("STAFF_NAME"));
         sendData.put("EMPLOYEE_ID",employeeId);
         sendData.put("SEND_TIME",transUnixTimeToNormal(jsonObject.getString("SHARE_DATE")));
         sendData.put("SHOP_ID",shopId);
@@ -197,6 +198,7 @@ public class TransProductShareDataToInsService extends GenericService {
         openData.put("DEPARTMENT",jsonObject.getString("DEPARTMENT"));
         openData.put("CONTENT",jsonObject.getString("CONTENT"));
         openData.put("STAFF_ID",jsonObject.getString("STAFF_ID"));
+        openData.put("STAFF_NAME",jsonObject.getString("STAFF_NAME"));
         openData.put("EMPLOYEE_ID",employeeId);
         openData.put("SEND_TIME",transUnixTimeToNormal(jsonObject.getString("SHARE_DATE")));
         openData.put("OPEN_TIME",transUnixTimeToNormal(jsonObject.getString("OPEN_DATE")));
