@@ -72,7 +72,7 @@ public class ShareProductSendDataImport {
                 dbParam.put("SHARE_DATE", jsonData.getString("create_time"));
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "1");
-                dbParam.put("SEND_ID", jsonData.getString("id"));
+                dbParam.put("SEND_ID", jsonData.getString("curr_flog"));
 
                 hisarrayList.add(dbParam);
                 continue;
@@ -90,7 +90,7 @@ public class ShareProductSendDataImport {
             dbParam.put("ROLE_ID", jsonData.getString("role_id"));
             dbParam.put("STAFF_NAME", jsonData.getString("staff_name"));
             dbParam.put("SHARE_DATE", jsonData.getString("create_time"));
-            dbParam.put("SEND_ID", jsonData.getString("id"));
+            dbParam.put("SEND_ID", jsonData.getString("curr_flog"));
             dbParam.put("INDB_TIME", TimeTool.now());
             dbParam.put("DEAL_TAG", "0");
 

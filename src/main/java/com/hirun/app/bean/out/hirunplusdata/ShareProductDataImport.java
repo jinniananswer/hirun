@@ -78,7 +78,7 @@ public class ShareProductDataImport {
                 dbParam.put("SHARE_DATE", jsonData.getString("send_time"));
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "1");
-                dbParam.put("SEND_ID", jsonData.getString("id"));
+                dbParam.put("SEND_ID", jsonData.getString("from_flog"));
 
                 hisarrayList.add(dbParam);
                 continue;
@@ -100,7 +100,7 @@ public class ShareProductDataImport {
             dbParam.put("HEAD_URL", jsonData.getString("headimgurl"));
             dbParam.put("OPEN_DATE", jsonData.getString("create_time"));
             dbParam.put("SHARE_DATE", jsonData.getString("send_time"));
-            dbParam.put("SEND_ID", jsonData.getString("id"));
+            dbParam.put("SEND_ID", jsonData.getString("from_flog"));
             dbParam.put("INDB_TIME", TimeTool.now());
             dbParam.put("DEAL_TAG", "0");
 
