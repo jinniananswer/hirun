@@ -140,7 +140,7 @@
     <entity name="OperationCenter.plan.PlanService.setMonPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="setMonPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.initPlanEntry"  class="com.hirun.app.biz.plan.PlanService" method="initPlanEntry"/>
     <!---过程产品分享-->
-    <entity name="OperationCenter.custservice.ShareProdImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.ShareProductImportTaskService" method="hirunplusDataImport"/>
+    <entity name="OperationCenter.custservice.ShareProductImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.ShareProductImportTaskService" method="hirunplusDataImport"/>
     <entity name="OperationCenter.custservice.TransProductShareDataToInsService.transProductShareData2Ins"  class="com.hirun.app.biz.task.out.TransProductShareDataToInsService" method="transProductShareData2Ins"/>
 
     <!--初始化客户流程-->
