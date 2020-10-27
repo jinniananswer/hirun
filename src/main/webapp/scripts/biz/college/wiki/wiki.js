@@ -9,8 +9,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                     shape="round"
                     placeholder="请输入搜索关键词"
                 />
+                <div style="margin-top:1em;margin-right:1em;margin-left:1em;">
+                    <van-button type="primary" icon="plus" round block url="/biz/college/wiki/wikireport.html">发百科</van-button>
+                </div>
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="设计类" value="更多"/>
-                <van-cell-group v-for="(item ,index) in designWikis">
+                <van-cell-group v-for="(item ,index) in designWikis.slice(0,2)">
                     <van-cell is-link :center="true" border="false" >
                         <template #title>
                             <div class="van-multi-ellipsis">{{item.wikiTitle}}</div>
@@ -35,12 +38,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 <br/>
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="基础工程" value="更多"/>
-                <van-cell-group v-for="(item ,index) in baseWikis">
+                <van-cell-group v-for="(item ,index) in baseWikis.slice(0,2)">
                     <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" />
                 </van-cell-group>
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="软装工程" value="更多"/>
-                <van-cell-group v-for="(item ,index) in softWikis">
+                <van-cell-group v-for="(item ,index) in softWikis.slice(0,2)">
                     <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" />
                 </van-cell-group>
                 
