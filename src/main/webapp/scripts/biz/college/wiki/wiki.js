@@ -10,47 +10,23 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                     placeholder="请输入搜索关键词"
                 />
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="设计类" value="更多"/>
-                <van-cell-group>
-                    <van-cell is-link :center="true" border="false">
+                <van-cell-group v-for="(item ,index) in designWikis">
+                    <van-cell is-link :center="true" border="false" >
                         <template #title>
-                            <div class="van-multi-ellipsis">设计的精髓</div>
+                            <div class="van-multi-ellipsis">{{item.title}}</div>
                         </template>
                         <template #label>
                             <van-row>
-                                <div class="van-multi-ellipsis--l2">设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓设计的精髓</div>
+                                <div class="van-multi-ellipsis--l2">{{item.content}}</div>
                             </van-row>
                             <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
                                 <van-col span="6"></van-col>
-                                <van-col span="6">
-                                    <van-icon name="good-job-o" size="1.2rem"/>999
-                                </van-col>
-                                <van-col span="6">
-                                    <van-icon name="eye-o" size="1.2rem"/> 999
-                                </van-col>
-                                <van-col span="6">
-                                    <van-icon name="star-o" size="1.2rem"/> 999
-                                </van-col>
-                            </van-row>
-                        </template>
-                    </van-cell>
-                    <van-cell is-link center="true">
-                        <template #title>
-                            <div class="van-multi-ellipsis">好的平面图长什么样子</div>
-                        </template>
-                        <template #label>
-                            <van-row>
-                                <div class="van-multi-ellipsis--l2">好的平面图长什么样子好的平面图长什么样子好的平面图长什么样子好的平面图长什么样子好的平面图长什么样子好的平面图长什么样子好的平面图长什么样子</div>
-                            </van-row>
-                            <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
                                 <van-col span="6"></van-col>
                                 <van-col span="6">
-                                    <van-icon name="good-job-o" size="1.2rem"/>999
+                                    <van-icon name="good-job-o" size="1.2rem"/>{{item.thumbsUp}}
                                 </van-col>
                                 <van-col span="6">
-                                    <van-icon name="eye-o" size="1.2rem"/> 999
-                                </van-col>
-                                <van-col span="6">
-                                    <van-icon name="star-o" size="1.2rem"/> 999
+                                    <van-icon name="eye-o" size="1.2rem"/> {{item.clicks}}
                                 </van-col>
                             </van-row>
                         </template>
@@ -59,27 +35,50 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 <br/>
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="基础工程" value="更多"/>
-                <van-cell-group>
-                    <van-cell title="基础施工的标准流程" is-link label="描述信息" />
-                    <van-cell title="水电验收标准" is-link label="描述信息" />
+                <van-cell-group v-for="(item ,index) in baseWikis">
+                    <van-cell :title="item.wikiName" is-link label="item.item.wikiContent" />
                 </van-cell-group>
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="软装工程" value="更多"/>
-                <van-cell-group>
-                    <van-cell title="软装的搭配哲学" is-link label="描述信息" />
-                    <van-cell title="软装材料详解" is-link label="描述信息" />
+                <van-cell-group v-for="(item ,index) in softWikis">
+                    <van-cell :title="item.wikiName" is-link label="item.item.wikiContent" />
                 </van-cell-group>
+                
+                
             </div>`,
         data: function () {
             return {
-                value : ''
+                value : '',
+                designWikis: [],
+                baseWikis: [],
+                softWikis:[],
+                wiki: {}
             }
         },
         methods: {
+            queryByText: function (keyStr) {
+                let param = new URLSearchParams()
+                param.append('keyStr', '1');
+                let that = this;
+                ajax.get('api/CollegeWiki/queryByText', param, function(responseData){
+                    if (null != responseData) {
+                        for (let i = 0; i < responseData.size(); i++) {
+                            let wiki = responseData.get(i);
 
+                            if (that.type == '0') {
+                                that.designWikis = wiki;
+                            }else if (that.type == '1') {
+                                that.baseWikis = wiki;
+                            }else if (that.type == '2') {
+                                that.softWikis = wiki;
+                            }
+                        }
+                    }
+                },null, true);
+            }
         },
         mounted () {
-
+            this.queryByText('');
         }
     });
     return vm;
