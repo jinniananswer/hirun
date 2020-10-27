@@ -10,5 +10,7 @@
         <task taskName="hirunSignInDataImportTask" cronExpr="0 5/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusSignInDataImportTask"/>
         <task taskName="hirunXqlteDataImportTask" cronExpr="0 8/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusXQLTEImportTask"/>
         <!--<task taskName="hirunTransCustserviceFromTableToIns" cronExpr="0 15/30 0-23 * * ?" className="com.hirun.app.task.TransCustServiceDataToInsTask"/>-->
+        <task taskName="productShareImportTask" cronExpr="0 5/30 0-23 * * ?" className="com.hirun.app.task.HirunPlusShareProdImportTask"/>
+        <task taskName="productShareTransToIns" cronExpr="0 8/30 0-23 * * ?" className="com.hirun.app.task.TransProductShareDataToInsTask"/>
     </cronTask>
 </task>
