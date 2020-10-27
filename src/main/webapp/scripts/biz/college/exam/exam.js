@@ -75,7 +75,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 resultInfo: {},
                 show: false,
                 showError: false,
-                screoType: util.getRequest("screoType"),
+                screoType: util.getRequest("scoreType"),
                 score: '',
                 taskId: util.getRequest("taskId"),
             }

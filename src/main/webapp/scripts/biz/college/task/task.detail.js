@@ -14,7 +14,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                 <div class="van-multi-ellipsis">{{taskDetailInfo.taskName}}</div>
                             </template>
                             <template #right-icon v-if="taskDetailInfo.isDelayFlag">
-                                <van-tag type="danger">已延期</van-tag>
+                                <van-tag type="danger">{{delayDesc}}</van-tag>
                             </template>
                             <template #label>
                                 <van-row>
@@ -22,7 +22,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                 </van-row>
                             </template>
                         </van-cell>
-                        <template v-if="taskDetailInfo.studyType != '2'">
+                        <template v-if="taskDetailInfo.studyType != '2' && taskDetailInfo.studyType != '3'">
                             <van-cell title="学习进度">
                                 <template #label>
                                     <van-progress :percentage="taskDetailInfo.taskProgress" style="margin-top:1em"/>
@@ -59,7 +59,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         <div style="margin-top:1em;margin-right:1em;margin-left:1em;margin-bottom:1em">
                             <van-row :gutter="20">
                                 <van-col span="12">
-                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag" @click="exam(0)" type="primary" icon="plus" round block>我要练习</van-button>
+                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag && (taskDetailInfo.studyType == '3' && isFinish == 'true')" @click="exam(0)" type="primary" icon="plus" round block>我要练习</van-button>
                                 </van-col>
                                 <van-col span="12">
                                     <van-button :disabled="!taskDetailInfo.isExamFlag || isFinish=='true'"  @click="exam(1)" type="danger" icon="fire-o" round block>我要考试</van-button>
@@ -174,7 +174,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 tutorScore: '',
                 examConfirmShow: false,
                 examDetailInfo: {},
-                examType: ''
+                examType: '',
+                delayDesc: '已延期',
             }
         },
         methods: {
@@ -191,6 +192,13 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 let taskId=that.taskId;
                 if(taskId=='undefined'){
                     taskId=null;
+                }
+                let isFinish=that.isFinish;
+                if(isFinish=='undefined'){
+                    isFinish='false';
+                }
+                if (isFinish == 'true'){
+                    that.delayDesc = '延期完成'
                 }
                 ajax.get('/api/CollegeEmployeeTask/queryEmployTaskInfoByTaskId', {taskId:taskId}, function(data) {
                     that.taskDetailInfo = data;
@@ -312,7 +320,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 if(taskId=='undefined'){
                     taskId=null;
                 }
-                redirect.open('/biz/college/exam/exam.html?taskId='+taskId+'&examType='+that.examType, '考试');
+                redirect.open('/biz/college/exam/exam.html?taskId='+taskId+'&scoreType='+that.examType, '考试');
             }
         },
         mounted () {
