@@ -67,40 +67,50 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             </van-row>
                         </div>
                     </template>
-                    <template v-if="isFinish!='true'" align="center">
-                        <template v-if="taskDetailInfo.studyType == '2'" align="center">
+                    <template v-if="taskDetailInfo.studyType == '2'" align="center">
                             <van-field
+                              readonly
+                              clickable
+                              label="导师"
+                              :value="tutor"
+                              placeholder="选择导师"
+                              @click="selectTutor"
+                            />
+                            <van-popup v-model="showTutorPicker" round position="bottom">
+                              <van-picker
+                                show-toolbar
+                                :columns="selectTutorList"
+                                @cancel="showTutorPicker = false"
+                                @confirm="onConfirm"
+                              />
+                            </van-popup>
+                            <template v-if="isFinish != 'true'">
+                                <van-field
                                   readonly
                                   clickable
-                                  label="导师"
-                                  :value="tutor"
-                                  placeholder="选择导师"
-                                  @click="selectTutor"
+                                  label="上传心得"
+                                  placeholder="上传心得"
+                                  @click="uploadExperience"
                                 />
-                                <van-popup v-model="showTutorPicker" round position="bottom">
-                                  <van-picker
-                                    show-toolbar
-                                    :columns="selectTutorList"
-                                    @cancel="showTutorPicker = false"
-                                    @confirm="onConfirm"
-                                  />
-                                </van-popup>
+                            </template>
+                            
                             <template v-if="!taskDetailInfo.isSelectTutorFlag">
                                 <van-cell-group title="心得体会">
                                     <van-field
                                       v-model="experience"
                                       rows="1"
                                       autosize
-                                      label="心得体会"
+                                      label="心得描述"
                                       type="textarea"
-                                      readonly
+                                      :readonly="isFinish=='true'"
                                       placeholder="请输入心得体会"
                                     />
-                                    <van-uploader v-model="fileList" :after-read="uploadOne" multiple :max-count="5" />
+                                </van-cell-group>
+                                <van-cell-group title="上传照片">
+                                    <van-uploader v-model="fileList"disabled :after-read="uploadOne" multiple :max-count="5" />
                                 </van-cell-group>
                             </template>
                         </template>
-                    </template>
                     <van-action-sheet v-model="show" title="评分">
                         <div class="content">
                             <van-field name="rate" label="课程难度">
@@ -205,6 +215,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.tutor = data.selectTutor;
                     that.taskDifficultyScore = data.taskDifficultyScore;
                     that.tutorScore = data.tutorScore;
+                    that.experience = data.experience;
+                    that.fileList = data.fileList;
                 });
             },
             selectTutor: function () {
@@ -321,6 +333,14 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     taskId=null;
                 }
                 redirect.open('/biz/college/exam/exam.html?taskId='+taskId+'&scoreType='+that.examType, '考试');
+            },
+            uploadExperience: function () {
+                let that = this;
+                let taskId=that.taskId;
+                if(taskId=='undefined'){
+                    taskId=null;
+                }
+                redirect.open('/biz/college/task/task_experience.html?taskId='+taskId, '上传心得');
             }
         },
         mounted () {

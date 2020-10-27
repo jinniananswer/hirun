@@ -14,73 +14,84 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 </div>
                 <van-tabs v-model="active">
                     <van-tab title="广场">
-                        <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="设计类" value="更多"/>
-                        <van-cell-group>
-                            <van-cell is-link :center="true" border="false">
-                                <template #title>
-                                    <div class="van-multi-ellipsis">什么是风格蓝图？</div>
-                                </template>
-                                <template #label>
-                                    <van-row>
-                                        <div class="van-multi-ellipsis--l2">风格蓝图是由三大类28大主题系列构成，每个主题系列代表着风格蓝图是由三大类28大主题系列构成，每个主题系列代表着风格蓝图是由三大类28大主题系列构成，每个主题系列代表着</div>
-                                    </van-row>
-                                    <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
-                                        <van-col span="6"></van-col>
-                                        <van-col span="6">
-                                            <van-icon name="good-job-o" size="1.2rem"/>999
-                                        </van-col>
-                                        <van-col span="6">
-                                            <van-icon name="eye-o" size="1.2rem"/> 999
-                                        </van-col>
-                                    </van-row>
-                                </template>
-                            </van-cell>
-                            <van-cell is-link center="true">
-                                <template #title>
-                                    <div class="van-multi-ellipsis">什么是功能蓝图？</div>
-                                </template>
-                                <template #label>
-                                    <van-row>
-                                        <div class="van-multi-ellipsis--l2">功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图功能蓝图</div>
-                                    </van-row>
-                                    <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
-                                        <van-col span="6"></van-col>
-                                        <van-col span="6">
-                                            <van-icon name="good-job-o" size="1.2rem"/>999
-                                        </van-col>
-                                        <van-col span="6">
-                                            <van-icon name="eye-o" size="1.2rem"/> 999
-                                        </van-col>
-                                    </van-row>
-                                </template>
-                            </van-cell>
-                        </van-cell-group>
-                        <br/>
-                        <van-cell-group title="产品类">
-                            <van-cell title="我司产品主要有哪些？" is-link label="描述信息" />
-                            <van-cell title="我司产品的分类？" is-link label="描述信息" />
+                        <van-cell-group v-for="question in questionInfos">
+                            <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link :title="question.questionTypeName" value="更多"/>
+                            <van-cell-group>
+                                <van-cell is-link :center="true" border="false" v-for="item in question.questionList.slice(0,2)">
+                                    <template #title>
+                                        <div class="van-multi-ellipsis">{{item.questionTitle}}</div>
+                                    </template>
+                                    <template #label>
+                                        <van-row>
+                                            <div class="van-multi-ellipsis--l2">{{item.questionContent}}</div>
+                                        </van-row>
+                                        <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
+                                            <van-col span="6"></van-col>
+                                            <van-col span="6">
+                                                <van-icon name="good-job-o" size="1.2rem"/>{{item.thumbsUp}}
+                                            </van-col>
+                                            <van-col span="6">
+                                                <van-icon name="eye-o" size="1.2rem"/> {{item.clicks}}
+                                            </van-col>
+                                        </van-row>
+                                    </template>
+                                </van-cell>
+                            </van-cell-group>
+                            <br/>
                         </van-cell-group>
                     </van-tab>
                     <van-tab title="我的问题">
-                        <van-cell-group title="产品类">
-                            <van-cell title="报销流程是怎样的？" is-link label="描述信息" />
-                            <van-cell title="我司的主要竞争对手？" is-link label="描述信息" />
+                        <van-cell-group v-for="question in myQuestionInfos">
+                            <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link :title="question.questionTypeName" value="更多"/>
+                            <van-cell-group>
+                                <van-cell is-link :center="true" border="false" v-for="item in question.questionList.slice(0,2)">
+                                    <template #title>
+                                        <div class="van-multi-ellipsis">{{item.questionTitle}}</div>
+                                    </template>
+                                    <template #label>
+                                        <van-row>
+                                            <div class="van-multi-ellipsis--l2">{{item.questionContent}}</div>
+                                        </van-row>
+                                        <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
+                                            <van-col span="6"></van-col>
+                                            <van-col span="6">
+                                                <van-icon name="good-job-o" size="1.2rem"/>{{item.thumbsUp}}
+                                            </van-col>
+                                            <van-col span="6">
+                                                <van-icon name="eye-o" size="1.2rem"/> {{item.clicks}}
+                                            </van-col>
+                                        </van-row>
+                                    </template>
+                                </van-cell>
+                            </van-cell-group>
+                            <br/>
                         </van-cell-group>
                     </van-tab>
                 </van-tabs>
-                
+                <bottom :active="2"></bottom>
             </div>`,
         data: function () {
             return {
                 value : '',
-                active : 0
+                active : 0,
+                questionInfos: [],
+                myQuestionInfos: []
             }
         },
         methods: {
+            init: function () {
+                let that = this
+                ajax.get('/api/CollegeQuestion/queryQuestionByName', '' , function(data) {
+                    that.questionInfos = data;
+                });
 
+                ajax.get('/api/CollegeQuestion/queryLoginQuestion', '' , function(data) {
+                    that.myQuestionInfos = data;
+                });
+            }
         },
         mounted () {
-
+            this.init();
         }
     });
     return vm;
