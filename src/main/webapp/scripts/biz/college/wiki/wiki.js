@@ -13,11 +13,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 <van-cell-group v-for="(item ,index) in designWikis">
                     <van-cell is-link :center="true" border="false" >
                         <template #title>
-                            <div class="van-multi-ellipsis">{{item.title}}</div>
+                            <div class="van-multi-ellipsis">{{item.wikiTitle}}</div>
                         </template>
                         <template #label>
                             <van-row>
-                                <div class="van-multi-ellipsis--l2">{{item.content}}</div>
+                                <div class="van-multi-ellipsis--l2">{{item.wikiContent}}</div>
                             </van-row>
                             <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
                                 <van-col span="6"></van-col>
@@ -36,12 +36,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="基础工程" value="更多"/>
                 <van-cell-group v-for="(item ,index) in baseWikis">
-                    <van-cell :title="item.wikiName" is-link label="item.item.wikiContent" />
+                    <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" />
                 </van-cell-group>
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="软装工程" value="更多"/>
                 <van-cell-group v-for="(item ,index) in softWikis">
-                    <van-cell :title="item.wikiName" is-link label="item.item.wikiContent" />
+                    <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" />
                 </van-cell-group>
                 
                 
@@ -62,15 +62,15 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 let that = this;
                 ajax.get('api/CollegeWiki/queryByText', param, function(responseData){
                     if (null != responseData) {
-                        for (let i = 0; i < responseData.size(); i++) {
-                            let wiki = responseData.get(i);
+                        for (let i = 0; i < responseData.length; i++) {
+                            let wiki = responseData[i];
 
-                            if (that.type == '0') {
-                                that.designWikis = wiki;
-                            }else if (that.type == '1') {
-                                that.baseWikis = wiki;
-                            }else if (that.type == '2') {
-                                that.softWikis = wiki;
+                            if (wiki.wikiType == '1') {
+                                that.designWikis.push(wiki);
+                            }else if (wiki.wikiType == '2') {
+                                that.baseWikis.push(wiki);
+                            }else if (wiki.wikiType == '3') {
+                                that.softWikis.push(wiki);
                             }
                         }
                     }
