@@ -106,9 +106,21 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                       placeholder="请输入心得体会"
                                     />
                                 </van-cell-group>
-                                <van-cell-group title="上传照片">
-                                    <van-uploader v-model="fileList"disabled :after-read="uploadOne" multiple :max-count="5" />
+                                <van-cell-group title="图片展示">
+                                     <van-image v-for="item in fileList"
+                                      width="30%"
+                                      height="30%"
+                                      fit="contain"
+                                      :src="item.fileUrl"
+                                    />
                                 </van-cell-group>
+                                <van-field
+                                  readonly
+                                  clickable
+                                  label="查看照片"
+                                  placeholder="查看照片"
+                                  @click="seeImg"
+                                />
                             </template>
                         </template>
                     <van-action-sheet v-model="show" title="评分">
@@ -186,6 +198,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 examDetailInfo: {},
                 examType: '',
                 delayDesc: '已延期',
+                index: 0,
+                showImg: false
             }
         },
         methods: {
@@ -341,7 +355,14 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     taskId=null;
                 }
                 redirect.open('/biz/college/task/task_experience.html?taskId='+taskId, '上传心得');
-            }
+            },
+            seeImg: function () {
+                ImagePreview({
+                    images: this.fileList,
+                    closeable: true,
+                });
+            },
+
         },
         mounted () {
             this.initTaskInfo();
