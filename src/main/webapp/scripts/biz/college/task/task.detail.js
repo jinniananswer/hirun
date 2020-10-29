@@ -106,14 +106,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                       placeholder="请输入心得体会"
                                     />
                                 </van-cell-group>
-                                <van-cell-group title="图片展示">
-                                     <van-image v-for="item in fileList"
-                                      width="30%"
-                                      height="30%"
-                                      fit="contain"
-                                      :src="item.fileUrl"
-                                    />
-                                </van-cell-group>
                                 <van-field
                                   readonly
                                   clickable
@@ -121,6 +113,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                   placeholder="查看照片"
                                   @click="seeImg"
                                 />
+                                <van-image-preview v-model="showImg" :images="fileUrlList" @change="onChange">
+                                  <template v-slot:index>第{{ index }}页</template>
+                                </van-image-preview>
                             </template>
                         </template>
                     <van-action-sheet v-model="show" title="评分">
@@ -199,7 +194,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 examType: '',
                 delayDesc: '已延期',
                 index: 0,
-                showImg: false
+                showImg: false,
+                fileUrlList: []
             }
         },
         methods: {
@@ -231,6 +227,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.tutorScore = data.tutorScore;
                     that.experience = data.experience;
                     that.fileList = data.fileList;
+                    if (undefined != that.fileList && null != that.fileList && that.fileList.length > 0){
+                        that.fileList.forEach(file => {
+                            that.fileUrlList.push(file.fileUrl)
+                        })
+                    }
                 });
             },
             selectTutor: function () {
@@ -260,10 +261,10 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 if(taskId=='undefined'){
                     taskId=null;
                 }
-                let request = {};
-                request.taskId = taskId;
-                request.selectTutor = value;
-                ajax.post('api/CollegeEmployeeTaskTutor/addByTaskIdAndSelectTutor', request, function(responseData){
+                let param = new URLSearchParams()
+                param.append('taskId', taskId)
+                param.append('selectTutor', value)
+                ajax.post('api/CollegeEmployeeTaskTutor/addByTaskIdAndSelectTutor', param, function(responseData){
                     that.showTutorPicker = false;
                     that.initTaskInfo();
                 },null, true);
@@ -357,10 +358,10 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 redirect.open('/biz/college/task/task_experience.html?taskId='+taskId, '上传心得');
             },
             seeImg: function () {
-                ImagePreview({
-                    images: this.fileList,
-                    closeable: true,
-                });
+                this.showImg = true
+            },
+            onChange(index) {
+                this.index = index;
             },
 
         },

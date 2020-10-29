@@ -3,11 +3,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
         el: '#app',
         template: `
             <div>
-                <br/>
-                <br/>
-                <br/>
                 <page-title title="我要提问"/>
-                <van-cell-group title="请填写问题信息">
+                <div style="margin-top:3.8rem">
                     <van-form @submit="submit">
                         <van-field
                             v-model="title"
@@ -67,7 +64,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             </van-button>
                         </div>
                     </van-form>
-                </van-cell-group>
+                </div>
                 <bottom :active="2"></bottom>
             </div>`,
         data: function () {
