@@ -635,9 +635,9 @@ public class HousesService extends GenericService {
         List<HousesEntity> newHouses=new ArrayList<>();
         if(housesEntityList.size()>0){
             for(HousesEntity housesEntity : housesEntityList){
-                if(StringUtils.equals(housesEntity.getNature(),"3")){
+/*                if(StringUtils.equals(housesEntity.getNature(),"3")){
                     continue;
-                }
+                }*/
                 String newhouseName=housesEntity.getName();
                 newhouseName=newhouseName + " ("+StaticDataTool.getCodeName("BIZ_CITY",housesEntity.getCity())+" )";
                 housesEntity.setName(newhouseName);
