@@ -633,11 +633,28 @@ public class HousesService extends GenericService {
         String housesName = request.getString("HOUSES_NAME");
         List<HousesEntity> housesEntityList = HousesBean.queryHousesEntityListByName(housesName);
         List<HousesEntity> newHouses=new ArrayList<>();
+
+        AppSession session = SessionManager.getSession();
+        SessionEntity sessionEntity = session.getSessionEntity();
+        String orgId = OrgBean.getOrgId(sessionEntity);
+        boolean hasAllCity = Permission.hasAllCity();
+
+        OrgEntity org = null;
+        if (StringUtils.isNotBlank(orgId)) {
+            OrgDAO dao = new OrgDAO("ins");
+            org = dao.queryOrgById(orgId);
+        }
+
         if(housesEntityList.size()>0){
             for(HousesEntity housesEntity : housesEntityList){
 /*                if(StringUtils.equals(housesEntity.getNature(),"3")){
                     continue;
                 }*/
+                if(!hasAllCity){
+                    if(!StringUtils.equals(housesEntity.getCity(),org.getCity())){
+                        continue;
+                    }
+                }
                 String newhouseName=housesEntity.getName();
                 newhouseName=newhouseName + " ("+StaticDataTool.getCodeName("BIZ_CITY",housesEntity.getCity())+" )";
                 housesEntity.setName(newhouseName);
