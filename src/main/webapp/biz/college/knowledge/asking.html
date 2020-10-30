@@ -9,10 +9,17 @@
     <script src="/frame/vant/requirejs/require.config.js"></script>
 </head>
 <body style="height: 100%;background-color: #f8f8f8">
-<div id="app" style="height: 100%">
+<div id="app" style="height: 100%" v-cloak>
 
 </div>
 <script src="/scripts/biz/college/knowledge/asking.js"></script>
-
+<style>
+    .van-nav-bar .van-icon {
+        color: #dddddd;
+    }
+    [v-cloak] {
+        display: none;
+    }
+</style>
 </body>
 </html>

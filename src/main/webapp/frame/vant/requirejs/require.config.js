@@ -31,6 +31,7 @@ require(['vue', 'vant', 'vant-select', 'axios'], function(Vue, vant, vantSelect,
     vant.install(Vue);
     Vue.use(vant.Lazyload);
     Vue.use(vant.Dialog);
+    Vue.use(vant.ImagePreview);
     axios.defaults.baseURL = 'http://localhost:8080/';
     axios.interceptors.request.use(
         config => {

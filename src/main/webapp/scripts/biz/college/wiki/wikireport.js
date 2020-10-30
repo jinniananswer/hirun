@@ -3,22 +3,25 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
         el: '#app',
         template: `
             <div>
-                <page-title title="我要提问"/>
-                <div style="margin-top:3.8rem">
+                <br/>
+                <br/>
+                <br/>
+                <page-title title="我要发表"/>
+                <van-cell-group title="请填写百科标题">
                     <van-form @submit="submit">
                         <van-field
-                            v-model="title"
-                            name="问题标题"
-                            label="问题标题"
+                            v-model="wikiTitle"
+                            name="百科标题"
+                            label="百科标题"
                             required
                             left-icon="smile-o"
-                            placeholder="请输入问题的标题"/>
+                            placeholder="请输入百科的标题"/>
                         <van-field
-                            v-model="desc"
-                            name="问题描述"
-                            label="问题描述"
+                            v-model="wikiContent"
+                            name="百科内容"
+                            label="百科内容"
                             required
-                            placeholder="请输入问题描述"
+                            placeholder="请输入百科内容"
                             type="textarea"
                             rows="6"
                             autosize
@@ -28,9 +31,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         <van-field
                           readonly
                           clickable
-                          label="问题类型"
+                          label="百科类型"
                           :value="questionType"
-                          placeholder="问题类型"
+                          placeholder="百科类型"
                           @click="selectQuestionType"
                         />
                         <van-popup v-model="showQuestionType" round position="bottom">
@@ -41,40 +44,23 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             @confirm="onConfirmType"
                           />
                         </van-popup>
-                        
-                        <van-field
-                          readonly
-                          clickable
-                          label="回答老师"
-                          :value="teacher"
-                          placeholder="回答老师"
-                          @click="selectQuestionTeacher"
-                        />
-                        <van-popup v-model="showQuestionTeacher" round position="bottom">
-                          <van-picker
-                            show-toolbar
-                            :columns="selectQuestionTeacherList"
-                            @cancel="showQuestionTeacher = false"
-                            @confirm="onConfirmTeacher"
-                          />
-                         </van-popup>
+               
                         <div style="margin: 16px;">
                             <van-button round block type="info" native-type="submit">
                                 提交
                             </van-button>
                         </div>
                     </van-form>
-                </div>
+                </van-cell-group>
                 <bottom :active="2"></bottom>
             </div>`,
         data: function () {
             return {
-                title : '',
-                desc : '',
+                wikiContent : '',
                 selectQuestionTypeList: [],
                 selectQuestionTeacherList: [],
                 questionType: '',
-                teacher: '',
+                wikiTitle: '',
                 showQuestionType: false,
                 showQuestionTeacher: false
             }
@@ -83,17 +69,16 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             submit: function() {
                 let that = this;
                 let param = new URLSearchParams()
-                param.append("questionType", that.questionType);
-                param.append("teacherId", that.teacher);
-                param.append("title", that.title);
-                param.append("desc", that.desc);
-                ajax.post('/api/CollegeQuestion/addQuestionByType', param, function(data) {
-                    redirect.open('/biz/college/knowledge/square.html', '上传心得');
+                param.append("wikiType", that.questionType);
+                param.append("wikiTitle", that.wikiTitle);
+                param.append("wikiContent", that.wikiContent);
+                ajax.post('/api/CollegeWiki/addWiki', param, function(data) {
+                    redirect.open('/biz/college/wiki/wiki.html', '上传百科');
                 });
             },
             selectQuestionType: function () {
                 let that = this;
-                ajax.get('/api/CollegeQuestion/queryQuestionTypeOptions', '', function(data) {
+                ajax.get('/api/CollegeQuestion/queryWikiOptions', '', function(data) {
                     data.forEach((tutor) => {
                         that.selectQuestionTypeList.push("[" + tutor.value + "]" + tutor.name);
                     })

@@ -75,7 +75,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 resultInfo: {},
                 show: false,
                 showError: false,
-                screoType: util.getRequest("screoType"),
+                scoreType: util.getRequest("scoreType"),
                 score: '',
                 taskId: util.getRequest("taskId"),
             }
@@ -92,6 +92,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             queryTopicInfo : function () {
                 let param = new URLSearchParams();
                 param.append('taskId', this.taskId);
+                param.append('scoreType', this.scoreType);
                 let that = this;
                 ajax.get('api/CollegeEmployeeTask/queryTopicByTaskId', param, function(data) {
                     that.topics = data.taskTopics;
@@ -198,7 +199,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 param.append('score', this.score)
                 param.append('scoreType', this.scoreType)
                 ajax.post('api/CollegeTaskScore/addScore', param, function(responseData){
-                    that.showResult();
+                   that.showResult();
                 },null, true);
             },
 
