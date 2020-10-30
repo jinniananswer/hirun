@@ -1289,7 +1289,11 @@ public class CustServService extends GenericService {
 
         }*/
         // 3、发送通知给对应的家装顾问告知客户信息变更
-        this.syncPartyInfo(partyEntity, request);
+        try {
+            this.syncPartyInfo(partyEntity, request);
+        } catch (Exception e) {
+            log.error("散盘数据删除导致数据取不到错误：", e);
+        }
 
 /*
         //更改状态,将客户状态改成合并销户2
@@ -1460,6 +1464,7 @@ public class CustServService extends GenericService {
         //拼装日志数据
         Map<String, String> logMap = new HashMap<>();
         //同步家网
+
         SyncBean.syncCustomerInfo(customerEntity, logMap);
         //保存所有日志
         logMap.put("CONTENT", msgContent.toString());
