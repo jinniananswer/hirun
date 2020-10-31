@@ -59,7 +59,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         <div style="margin-top:1em;margin-right:1em;margin-left:1em;margin-bottom:1em">
                             <van-row :gutter="20">
                                 <van-col span="12">
-                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag && (taskDetailInfo.studyType == '3' && isFinish == 'true')" @click="exam(0)" type="primary" icon="plus" round block>我要练习</van-button>
+                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag || (taskDetailInfo.studyType == '3' && isFinish == 'true')" @click="exam(0)" type="primary" icon="plus" round block>我要练习</van-button>
                                 </van-col>
                                 <van-col span="12">
                                     <van-button :disabled="!taskDetailInfo.isExamFlag || isFinish=='true'"  @click="exam(1)" type="danger" icon="fire-o" round block>我要考试</van-button>
