@@ -2026,8 +2026,12 @@ public class CustServService extends GenericService {
             String partyInfoId = record.get("PARTY_ID");
             String linkEmpId = record.get("LINK_EMPLOYEE_ID");
             //新增楼盘翻译
-            if (record.get("HOUSE_ID") != null) {
-                String houseAddress = HousesBean.getHousesEntityById(record.get("HOUSE_ID")).getName();
+            if (StringUtils.isNotBlank(record.get("HOUSE_ID"))) {
+                String houseAddress="";
+                HousesEntity housesEntity=HousesBean.getHousesEntityById(record.get("HOUSE_ID"));
+                if(housesEntity!=null){
+                    houseAddress=housesEntity.getName();
+                }
                 if (StringUtils.isNotBlank(record.get("HOUSE_BUILDING"))) {
                     houseAddress = houseAddress + "::" + record.get("HOUSE_BUILDING");
                 }

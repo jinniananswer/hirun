@@ -10,6 +10,7 @@ import com.hirun.app.bean.plan.PlanStatBean;
 import com.hirun.app.cache.EmployeeCache;
 import com.hirun.app.dao.custservice.CustomerServiceDAO;
 import com.hirun.app.dao.org.OrgDAO;
+import com.hirun.pub.domain.entity.houses.HousesEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
 import com.hirun.pub.domain.entity.org.OrgEntity;
@@ -204,7 +205,12 @@ public class CustServiceReportService extends GenericService {
             //2020/07/01新增
             if(StringUtils.isNotBlank(record.get("HOUSE_ID"))){
                 String houseId=record.get("HOUSE_ID");
-                String newHouseAddress=HousesBean.getHousesEntityById(houseId).getName();
+                String newHouseAddress="";
+
+                HousesEntity housesEntity=HousesBean.getHousesEntityById(houseId);
+                if(housesEntity!=null){
+                    newHouseAddress=housesEntity.getName();
+                }
                 record.put("HOUSE_ADDRESS",newHouseAddress);
             }
             record.put("TAG_NAME", tagName);
