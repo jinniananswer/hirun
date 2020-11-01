@@ -93,8 +93,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
         methods: {
             // 页面初始化触发点
             created: function () {
-                this.taskId = '9999';
-                this.scoreType = '1';
+                if (this.taskId == '' || this.taskId == undefined) {
+                    this.taskId = '9999';
+                    this.scoreType = '1';
+                }
+
                 this.queryTopicInfo();
             },
 
@@ -201,13 +204,13 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     this.setAnswer();
                 }
 
-                // for (let i = 0; i < this.topics.length; i++) {
-                //     let temp = this.topics[i];
-                //     if (!temp.isAnswer) {
-                //         vm.$toast("亲，请答完所有题目后再交卷！");
-                //         return;
-                //     }
-                // }
+                for (let i = 0; i < this.topics.length; i++) {
+                    let temp = this.topics[i];
+                    if (!temp.isAnswer) {
+                        vm.$toast("亲，请答完所有题目后再交卷！");
+                        return;
+                    }
+                }
                 // this.pause();
                 // 算分（目前由于传参问题导致暂时只能js计算）
                 this.score = 0;
