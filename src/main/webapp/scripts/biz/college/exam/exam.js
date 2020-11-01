@@ -34,25 +34,37 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 <div>
                     <van-button plain  type="info" size="small" @click="prev">上一题</van-button>
                     <van-button plain  type="info" size="small" @click="next">下一题</van-button>
-                    <van-button plain  type="info" size="small" @click="detail">答题状况</van-button>
-                    <van-button plain  type="info" size="small" @click="onSubmit">提交</van-button>
+                    <van-button plain  type="info" size="small" @click="showErrorDeail">答题状况</van-button>
+                    <van-button v-if="topic.isSubmit==false || topic.isSubmit==undefined" plain  type="info" size="small" @click="onSubmit">提交</van-button>
+                    <van-button v-if="topic.isSubmit==true" plain  type="info" size="small" @click="onSubmit">考试结果</van-button>
                 </div>
                 
-                <van-action-sheet v-model="show" title="答题详情">
+                <van-action-sheet v-model="showResult" title="答题详情">
                    
                     <div v-for="(item ,index) in topics">
-                         <van-button v-if="item.isAnswer==false" class="float"  type="default" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
-                         <van-button v-if="item.isAnswer==true" class="float"  type="info" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
+                         <van-button v-if="(topic.isSubmit==false || topic.isSubmit==undefined) && item.isAnswer==false" class="float"  type="default" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
+                         <van-button v-if="(topic.isSubmit==false || topic.isSubmit==undefined) && item.isAnswer==true" class="float"  type="info" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
+                         <van-button v-if="item.isSubmit==true && item.isCorrect==false" class="float"  type="danger" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
+                         <van-button v-if="item.isSubmit==true && item.isCorrect==true" class="float"  type="primary" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
                     </div>
                 </van-action-sheet>
                 
-                <van-action-sheet v-model="showError" title="答题结果详情">
-                   
-                    <div v-for="(item ,index) in topics">
-                         <van-button v-if="item.isCorrect==false" class="float"  type="danger" size="small">{{item.topicNum}}</van-button>
-                         <van-button v-if="item.isCorrect==true" class="float"  type="primary" size="small">{{item.topicNum}}</van-button>
-                    </div>
-                </van-action-sheet>
+                <van-dialog v-model="showScore" title="考试结果" @confirm="closePage" @cancel="showErrorDeail" show-cancel-button>
+                    <van-cell center="true">
+                        <template #right-icon>
+                            <van-cell>
+                                结果：{{isPass==true? '恭喜过关' : '考试失败'}}
+                            </van-cell>
+                        </template>
+                    </van-cell>
+                    <van-cell>
+                        <template #right-icon>
+                            <van-cell class="van-multi-ellipsis--l2" style="margin-top:1em">
+                                得分：{{score}}
+                            </van-cell>
+                        </template>
+                    </van-cell>
+                </van-dialog>
             </div>`,
         data: function () {
             return {
@@ -60,31 +72,29 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 currentPage: 0,
                 option: '',
                 options: [],
-                value: '',
                 // 所有题目信息
                 topics: [],
                 // 当前页的题目信息
-                topic: {},
-                time: 30 * 60 * 60 * 1000,
+                topic: {
+                    isSubmit: false,
+                },
+                time: 1 * 60 * 60 * 1000,
                 currentIndex: '',
                 maxIndex: '',
-                // 已答题目信息
-                answerInfos: [],
-                answerInfo: {},
-                resultInfos: [],
-                resultInfo: {},
                 show: false,
-                showError: false,
-                scoreType: util.getRequest("scoreType"),
+                showResult: false,
+                showScore: false,
+                scoreType: util.getRequest("screoType"),
                 score: '',
                 taskId: util.getRequest("taskId"),
+                isPass: false,
             }
         },
         methods: {
             // 页面初始化触发点
             created: function () {
-                // this.taskId = '3017';
-                // this.scoreType = '0'
+                this.taskId = '9999';
+                this.scoreType = '1';
                 this.queryTopicInfo();
             },
 
@@ -100,6 +110,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.topic = that.topics[0];
                     that.currentIndex = 0;
                 });
+            },
+
+            // 关闭页面,跳转至任务详情
+            closePage : function () {
+                redirect.open('/biz/college/task/task_detail.html?taskId='+this.taskId, '任务详情');
             },
 
             // 上一页
@@ -132,7 +147,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
 
             // 初始化下页选项信息
             setOption: function() {
-                if (this.topic.type == '2' && this.topic.answer != '') {
+                if (this.topic.type == '2' && this.topic.answer != '' && this.topic.answer != undefined) {
                     for (let j = 0; j < this.topic.answer.length; j++) {
                         this.options.push(this.topic.answer.substring(j, j+1));
                     }
@@ -160,12 +175,24 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 }
             },
 
-            // 展示答题板
-            detail : function () {
-                if (this.topic.answer != '' && this.topic.answer != undefined) {
+            // 展示答题情况
+            showErrorDeail : function () {
+                if (this.option != '' && this.option != undefined && (this.topic.isSubmit==false || this.topic.isSubmit==undefined)) {
+                    this.setAnswer();
+                }
+
+                if (this.topic.answer != '' && this.topic.answer != undefined && (this.topic.isSubmit==false || this.topic.isSubmit==undefined)) {
                     this.topic.isAnswer = true;
                 }
-                this.show = true;
+
+                if (this.topic.isSubmit) {
+                    this.showScore = false;
+                }
+                this.showResult = true;
+            },
+
+            showScoreInfo : function () {
+                this.showScore = true;
             },
 
             // 交卷
@@ -174,18 +201,20 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     this.setAnswer();
                 }
 
-                this.topics.forEach(x => {
-                    if (!x.isAnswer) {
-                        vm.$toast("亲，请答完所有题目后再交卷！");
-                        return;
-                    }
-                });
+                // for (let i = 0; i < this.topics.length; i++) {
+                //     let temp = this.topics[i];
+                //     if (!temp.isAnswer) {
+                //         vm.$toast("亲，请答完所有题目后再交卷！");
+                //         return;
+                //     }
+                // }
                 // this.pause();
                 // 算分（目前由于传参问题导致暂时只能js计算）
                 this.score = 0;
                 for (let i = 0; i < this.topics.length; i++) {
                     let temp = this.topics[i];
                     temp.isCorrect = false;
+                    temp.isSubmit = true;
                     if (temp.answer == temp.correctAnswer) {
                         this.score += temp.score;
                         temp.isCorrect = true;
@@ -199,7 +228,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 param.append('score', this.score)
                 param.append('scoreType', this.scoreType)
                 ajax.post('api/CollegeTaskScore/addScore', param, function(responseData){
-                   that.showResult();
+                    that.isPass = responseData;
+                    that.showScoreInfo();
                 },null, true);
             },
 
@@ -210,14 +240,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 }
                 this.currentIndex = num - 1;
                 this.topic = this.topics[this.currentIndex];
-                this.show = false;
+                this.showResult = false;
                 this.setOption();
-            },
-
-            // 展示答题情况
-            showResult : function () {
-                this.showError = true;
-
             },
 
             pause: function () {
