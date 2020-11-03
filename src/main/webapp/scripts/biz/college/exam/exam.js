@@ -3,64 +3,69 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
         el: '#app',
         template: `
             <div>
-                <van-cell value=" ">
-                    <template #right-icon>
-                        倒计时：<van-count-down :time="time" color="#07c160" />
-                    </template>
-                </van-cell> 
-                <div v-model="topic">
-                    <van-cell>{{topic.topicNum}}.{{topic.name}}{{topic.type==1?' (单选题)':topic.type==2?' (多选题)':topic.type==3?' (判断题)':' (填空题)'}}</van-cell>
-                    <van-radio-group v-if="topic.type==1 || topic.type==3" v-model="option" >
-                        <van-cell-group v-for="(item ,index) in topic.topicOptions">
-                            <van-cell :value="item.name" center="true">
-                                <template #right-icon >
-                                    <van-radio :disabled="examStop" :name="item.symbol" checked-color="#07c160" @click="setAnswer(item.symbol)"></van-radio>
-                                </template>
-                            </van-cell>   
-                        </van-cell-group>
-                    </van-radio-group>
-                    
-                    <van-checkbox-group v-if="topic.type==2" v-model="options" @change="setAnswer()">
-                        <van-cell-group v-for="(item ,index) in topic.topicOptions">
-                            <van-cell :value="item.name" center="true">
-                                <template #right-icon >
-                                    <van-checkbox shape="square" :disabled="examStop" :name="item.symbol" checked-color="#07c160"></van-checkbox>
-                                </template>
-                            </van-cell>   
-                        </van-cell-group>
-                    </van-checkbox-group>
-                </div>
-                <van-pagination v-model="currentIndex" prev-text="上一题" next-text="下一题" @change="changeTopic" :page-count="topics.length" mode="simple" />
-                <van-cell>
-                    <van-col v-if="!examStop" span="12">
-                        <van-button @click="detail" type="primary" icon="browsing-history-o" round block>答题状况</van-button>
-                    </van-col>
-                    <van-col v-if="examStop" span="12">
-                        <van-button @click="showResult(score)" type="primary" icon="browsing-history-o" round block>答题详情</van-button>
-                    </van-col>
-                    <van-col span="12">
-                        <van-button :disabled="examStop"  @click="onSubmit" type="danger" icon="completed" round block>提交</van-button>
-                    </van-col>
-                </van-cell>
-                
-                <van-action-sheet v-model="show" title="答题状况">
-                   
-                    <div v-for="(item ,index) in topics">
-                         <van-button v-if="item.isAnswer==false" class="float"  type="default" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
-                         <van-button v-if="item.isAnswer==true" class="float"  type="info" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
+                <page-title title="答题"/>
+                <div style="margin-top:3.8rem">
+                    <van-cell value=" ">
+                        <template #title>
+                            <van-tag plain size="large"> 倒计时：<van-count-down :time="time" color="#07c160" ref="countDown" @finish="stopExam"/></van-tag>
+                        </template>
+                    </van-cell> 
+                    <div v-model="topic">
+                        <van-cell>{{topic.topicNum}}.{{topic.name}}{{topic.type==1?' (单选题)':topic.type==2?' (多选题)':topic.type==3?' (判断题)':' (填空题)'}}</van-cell>
+                        <van-radio-group v-if="topic.type==1 || topic.type==3" v-model="option" >
+                            <van-cell-group v-for="(item ,index) in topic.topicOptions">
+                                <van-cell :value="item.name" center="true">
+                                    <template #right-icon >
+                                        <van-radio :disabled="examStop" :name="item.symbol" checked-color="#07c160" @click="setAnswer(item.symbol)"></van-radio>
+                                    </template>
+                                </van-cell>   
+                            </van-cell-group>
+                        </van-radio-group>
+                        
+                        <van-checkbox-group v-if="topic.type==2" v-model="options" @change="setAnswer()">
+                            <van-cell-group v-for="(item ,index) in topic.topicOptions">
+                                <van-cell :value="item.name" center="true">
+                                    <template #right-icon >
+                                        <van-checkbox shape="square" :disabled="examStop" :name="item.symbol" checked-color="#07c160"></van-checkbox>
+                                    </template>
+                                </van-cell>   
+                            </van-cell-group>
+                        </van-checkbox-group>
                     </div>
-                </van-action-sheet>
-                <van-dialog v-model="showError" title="考试结果" show-cancel-button cancel-button-text="返回任务详情" @cancel="returnTaskDetail">
-                    <van-tag size="large" >{{resultTipStart}}<van-tag text-color="#ad0000">{{score}}</van-tag>{{resultTipEnd}}</van-tag>
-                    <van-cell center="true">
-                        <van-icon :name="examPassIcon" :color="examColor" size="50px"/>
-                    </van-cell>
-                    <van-tag v-if="scoreType == '1'" size="large">{{resultPassMsg}}</van-tag>
+                    <van-pagination v-model="currentIndex" prev-text="上一题" next-text="下一题" @change="changeTopic" :page-count="topics.length" mode="simple" />
                     <van-cell>
-                        <van-button v-for="(item ,index) in topics.slice(topicDetailStart,topicDetailEnd)" class="float" @click=goToIndex(item.topicNum) :type="item.isCorrect==false ? 'danger':'primary'" size="small">{{item.topicNum}}</van-button>
+                        <van-col v-if="!examStop" span="12">
+                            <van-button @click="detail" type="primary" icon="browsing-history-o" round block>答题状况</van-button>
+                        </van-col>
+                        <van-col v-if="examStop" span="12">
+                            <van-button @click="showResult(score)" type="primary" icon="browsing-history-o" round block>答题详情</van-button>
+                        </van-col>
+                        <van-col span="12">
+                            <van-button :disabled="examStop"  @click="onSubmit" type="danger" icon="completed" round block>提交</van-button>
+                        </van-col>
                     </van-cell>
-                    <van-pagination v-model="topicDetailCurrentPage" @change="changeTopicDetailPage" :page-count="topicDetailCount" mode="simple" />
-                </van-dialog>
+                    
+                    <van-action-sheet v-model="show" title="答题状况">
+                       
+                        <div v-for="(item ,index) in topics">
+                             <van-button v-if="item.isAnswer==false" class="float"  type="default" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
+                             <van-button v-if="item.isAnswer==true" class="float"  type="info" size="small" @click="goToIndex(item.topicNum)">{{item.topicNum}}</van-button>
+                        </div>
+                    </van-action-sheet>
+                    <van-dialog v-model="showError" title="考试结果" show-cancel-button cancel-button-text="返回任务详情" @cancel="returnTaskDetail">
+                        <van-tag size="large" >{{resultTipStart}}<van-tag text-color="#ad0000">{{score}}</van-tag>{{resultTipEnd}}</van-tag>
+                        <van-cell center>
+                            <van-icon :name="examPassIcon" :color="examColor" size="50px"/>
+                        </van-cell>
+                        <van-tag v-if="scoreType == '1'" size="large">{{resultPassMsg}}</van-tag>
+                        <van-cell>
+                            <van-button v-for="(item ,index) in topics.slice(topicDetailStart,topicDetailEnd)" class="float" @click=goToIndex(item.topicNum) :type="item.isCorrect==false ? 'danger':'primary'" size="small">{{item.topicNum}}</van-button>
+                        </van-cell>
+                        <van-pagination v-model="topicDetailCurrentPage" @change="changeTopicDetailPage" :page-count="topicDetailCount" mode="simple" />
+                    </van-dialog>
+                </div>
+                
+                <bottom :active="2"></bottom>
             </div>`,
         data: function () {
             return {
@@ -86,6 +91,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 scoreType: util.getRequest("scoreType"),
                 score: '',
                 taskId: util.getRequest("taskId"),
+                isFinish: util.getRequest("isFinish"),
                 passScore: '',
                 resultTipStart: '',
                 resultTipEnd: '',
@@ -121,7 +127,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.topic = that.topics[0];
                     that.currentIndex = 0;
                     that.passScore = data.passScore;
-                    that.time = data.taskTimeLen*60*1000
+                    that.time = data.taskTimeLen*60*1000;
                 });
             },
 
@@ -189,6 +195,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
 
             // 交卷
             onSubmit: function () {
+                this.test();
+                return;
                 for (let i = 0; i < this.topics.length; i++){
                     let topic = this.topics[i];
                     if (!topic.isAnswer) {
@@ -228,6 +236,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 this.topic = this.topics[this.currentIndex];
                 this.show = false;
                 this.setOption();
+                this.showError = false;
             },
 
             // 展示答题情况
@@ -298,6 +307,29 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     isFinish = true
                 }
                 redirect.open('/biz/college/task/task_detail.html?taskId=' + this.taskId + '&isFinish=' + isFinish, '任务详情');
+            },
+            stopExam: function () {
+
+                vm.$dialog.confirm({
+                    title: '答题超时',
+                    message: '未在规定时间内完成答题，考试结束，点击确定重新考试，点击取消返回任务详情',
+                })
+                    .then(() => {
+                        this.created();
+                        this.$refs.countDown.reset();
+                    })
+                    .catch(() => {
+                        let that = this;
+                        let taskId=that.taskId;
+                        if(taskId=='undefined'){
+                            taskId = null;
+                        }
+                        let isFinish = that.isFinish;
+                        if(isFinish=='undefined'){
+                            isFinish = false;
+                        }
+                        redirect.open('/biz/college/task/task_detail.html?taskId='+taskId+'&scoreType='+that.examType + '&isFinish=' + isFinish, '考试');
+                    });
             }
         },
         mounted() {
