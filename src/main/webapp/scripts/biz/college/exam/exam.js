@@ -195,8 +195,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
 
             // 交卷
             onSubmit: function () {
-                this.test();
-                return;
                 for (let i = 0; i < this.topics.length; i++){
                     let topic = this.topics[i];
                     if (!topic.isAnswer) {
