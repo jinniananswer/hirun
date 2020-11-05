@@ -171,8 +171,12 @@ public class CustDAO extends StrongObjectDAO {
         parameter.put("WX_NICK", wxNick);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT customer.CUST_ID,CUST_NAME, HOUSE_COUNSELOR_ID, employee.NAME ,customer.WX_NICK,customer.first_plan_date FROM ins_customer customer ");
-        sb.append("LEFT JOIN ins_employee employee ON (employee.EMPLOYEE_ID = customer.HOUSE_COUNSELOR_ID and employee.STATUS = '0' ), ");
+        sb.append("SELECT customer.CUST_ID,CUST_NAME, HOUSE_COUNSELOR_ID, employee.NAME ,customer.WX_NICK,customer.first_plan_date,mpo.opencount FROM ins_customer customer ");
+        sb.append("LEFT JOIN ins_employee employee ON (employee.EMPLOYEE_ID = customer.HOUSE_COUNSELOR_ID and employee.STATUS = '0' ) ");
+
+        //20201106
+        sb.append("left join (select count(1) opencount,mp.open_id,mp.employee_id from ins_midprod_open mp group by mp.open_id,mp.employee_id ) mpo ON (customer.identify_code=mpo.open_id and customer.house_counselor_id=mpo.employee_id), ");
+
         sb.append("(SELECT cust_id,employee_id, GROUP_CONCAT(DISTINCT action_code) finish_actions FROM ins_cust_original_action where 1=1 ");
 
         if(StringUtils.isNotBlank(startDate)) {
