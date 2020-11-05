@@ -59,7 +59,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         <div style="margin-top:1em;margin-right:1em;margin-left:1em;margin-bottom:1em">
                             <van-row :gutter="20">
                                 <van-col span="12">
-                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag && (taskDetailInfo.studyType == '3' && isFinish == 'true')" @click="exam(0)" type="primary" icon="plus" round block>我要练习</van-button>
+                                    <van-button :disabled="!taskDetailInfo.isExerciseFlag || (taskDetailInfo.studyType == '3' && isFinish == 'true')" @click="exam(0)" type="primary" icon="plus" round block>我要练习</van-button>
                                 </van-col>
                                 <van-col span="12">
                                     <van-button :disabled="!taskDetailInfo.isExamFlag || isFinish=='true'"  @click="exam(1)" type="danger" icon="fire-o" round block>我要考试</van-button>
@@ -226,12 +226,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.taskDifficultyScore = data.taskDifficultyScore;
                     that.tutorScore = data.tutorScore;
                     that.experience = data.experience;
-                    that.fileList = data.fileList;
-                    if (undefined != that.fileList && null != that.fileList && that.fileList.length > 0){
-                        that.fileList.forEach(file => {
-                            that.fileUrlList.push(file.fileUrl)
-                        })
-                    }
+                    that.fileUrlList = data.fileList;
                 });
             },
             selectTutor: function () {
@@ -345,9 +340,13 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 let that = this;
                 let taskId=that.taskId;
                 if(taskId=='undefined'){
-                    taskId=null;
+                    taskId = null;
                 }
-                redirect.open('/biz/college/exam/exam.html?taskId='+taskId+'&scoreType='+that.examType, '考试');
+                let isFinish = that.isFinish;
+                if(isFinish=='undefined'){
+                    isFinish = false;
+                }
+                redirect.open('/biz/college/exam/exam.html?taskId='+taskId+'&scoreType='+that.examType + '&isFinish=' + isFinish, '考试');
             },
             uploadExperience: function () {
                 let that = this;
