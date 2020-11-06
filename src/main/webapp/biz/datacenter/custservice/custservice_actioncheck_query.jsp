@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20200620"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20201105"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -50,6 +50,7 @@
 						<th col="CITYCABIN">带看城市木屋楼盘地址</th>
 						<th col="EXCEPERICE">带看后反馈情况</th>
 						<th col="VISITCOUNT" ontap="$.sortTable(this, 'int')">回访次数</th>
+						<th col="OPEN_COUNT" ontap="$.sortTable(this, 'int')">中间产品推送次数</th>
 						<th col="TAG_NAME" >客户标签</th>
 						<!--<th class="e_red" col="detail">详情</th>-->
 					   </tr>

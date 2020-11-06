@@ -161,6 +161,8 @@
                     let visitcount=data.get("VISITCOUNT");
                     let tagName=data.get("TAG_NAME");
                     let consultTime=data.get("CONSULT_TIME");
+                    let openMidCount=data.get("OPENCOUNT");
+
 
                     if(wxnick=="undefined" || wxnick ==null || wxnick =="null"){
                         wxnick='';
@@ -209,6 +211,10 @@
                         visitcount='0';
                     }
 
+                    if(openMidCount=="undefined" || openMidCount ==null ){
+                        openMidCount='0';
+                    }
+
                     if(consultTime===""||consultTime==null||consultTime==="undefined"){
                         consultTime="";
                     }else{
@@ -231,6 +237,7 @@
                         "CITYCABIN":scanCityCabins,
                         "EXCEPERICE":experience,
                         "VISITCOUNT":"<span class='e_red'  ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>"+visitcount+"</span>",
+                        "OPEN_COUNT":"<span class='e_red' >"+openMidCount+"</span>",
                         "TAG_NAME":tagName,
                     });
 

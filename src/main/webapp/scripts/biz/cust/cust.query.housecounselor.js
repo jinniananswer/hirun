@@ -107,7 +107,11 @@ var custQuery4HouseCounselor = {
         let length = datas.length;
         for (let i = 0; i < length; i++) {
             let data = datas.get(i);
+            let openMidCount=data.get("OPENCOUNT");
 
+            if(openMidCount=="undefined" || openMidCount ==null ){
+                openMidCount='0';
+            }
             custTable.addRow({
                 "_className": "no",
                 "CUST_NAME": data.get("CUST_NAME"),
@@ -126,6 +130,7 @@ var custQuery4HouseCounselor = {
                 "YJALTS_NUM": data.get("YJALTS_NUM"),
                 "YJALTS_LAST_TIME": data.get("YJALTS_LAST_TIME"),
                 "DKCSMU_LAST_TIME": data.get("DKCSMU_LAST_TIME"),
+                "OPEN_COUNT":"<span class='e_red' >"+openMidCount+"</span>",
                 "WX_NICK": data.get("WX_NICK"),
                 "FIRST_PLAN_DATE":data.get("FIRST_PLAN_DATE")
             });
