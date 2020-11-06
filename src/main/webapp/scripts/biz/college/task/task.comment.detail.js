@@ -28,8 +28,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             </template>
                         </van-cell>
                     </van-cell-group>
-                    <van-cell-group title="心得体会">
+                    <van-cell-group title="心得体会" v-if="(experience != '' && undefined != experience) || (undefined != experienceImgList && experienceImgList != [] && experienceImgList.length > 0)">
                         <van-field
+                          v-if="experience != '' && undefined != experience"
                           v-model="experience"
                           rows="1"
                           autosize
@@ -39,13 +40,14 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                           placeholder="请输入心得体会"
                         />
                         <van-field
+                          v-if="undefined != experienceImgList && experienceImgList != [] && experienceImgList.length > 0"
                           readonly
                           clickable
                           label="心得照片"
                           placeholder="查看照片"
-                          @click="seeImg"
+                          @click="seeExperienceImg"
                         />
-                        <van-image-preview v-model="showImg" :images="fileList" @change="onChange">
+                        <van-image-preview v-model="showExperienceImg" :images="experienceImgList" @change="onChange">
                           <template v-slot:index>第{{ index }}页</template>
                         </van-image-preview>
                     </van-cell-group>
@@ -55,9 +57,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                           clickable
                           label="任务照片"
                           placeholder="查看照片"
-                          @click="seeImg"
+                          @click="seeTaskImg"
                         />
-                        <van-image-preview v-model="showImg" :images="fileList" @change="onChange">
+                        <van-image-preview v-model="showTaskImg" :images="fileList" @change="onChange">
                           <template v-slot:index>第{{ index }}页</template>
                         </van-image-preview>
                     </van-cell-group>
@@ -96,9 +98,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 experienceScore: 0,
                 imgScore: 0,
                 fileList: [],
+                experienceImgList: [],
                 experience: '',
                 index: 0,
-                showImg: false
+                showTaskImg: false,
+                showExperienceImg: false
             }
         },
         methods: {
@@ -114,13 +118,17 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.imgScore = data.imgScore
                     that.experience = data.experience;
                     that.fileList = data.fileList;
+                    that.experienceImgList = data.experienceImgList;
                 });
             },
             showEval : function() {
                 this.show = true;
             },
-            seeImg: function () {
-                this.showImg = true
+            seeTaskImg: function () {
+                this.showTaskImg = true
+            },
+            seeExperienceImg: function () {
+                this.showExperienceImg = true
             },
             onChange(index) {
                 this.index = index;

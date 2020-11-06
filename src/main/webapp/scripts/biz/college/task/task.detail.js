@@ -84,7 +84,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                 @confirm="onConfirm"
                               />
                             </van-popup>
-                            <template v-if="isFinish != 'true'">
+                            <template v-if="isFinish != 'true' && !taskDetailInfo.isSelectTutorFlag">
                                 <van-field
                                   readonly
                                   clickable
@@ -93,28 +93,41 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                   @click="uploadExperience"
                                 />
                             </template>
-                            
                             <template v-if="!taskDetailInfo.isSelectTutorFlag">
-                                <van-cell-group title="心得体会">
+                                <van-cell-group title="心得体会" v-if="(experience != '' && undefined != experience) || (undefined != experienceImgList && experienceImgList != [] && experienceImgList.length > 0)">
                                     <van-field
+                                      v-if="experience != '' && undefined != experience"
                                       v-model="experience"
                                       rows="1"
                                       autosize
                                       label="心得描述"
                                       type="textarea"
-                                      :readonly="isFinish=='true'"
+                                      readonly
                                       placeholder="请输入心得体会"
                                     />
+                                    <van-field
+                                      v-if="undefined != experienceImgList && experienceImgList != [] && experienceImgList.length > 0"
+                                      readonly
+                                      clickable
+                                      label="心得照片"
+                                      placeholder="查看照片"
+                                      @click="seeExperienceImg"
+                                    />
                                 </van-cell-group>
-                                <van-field
-                                  readonly
-                                  clickable
-                                  label="查看照片"
-                                  placeholder="查看照片"
-                                  @click="seeImg"
-                                />
-                                <van-image-preview v-model="showImg" :images="fileUrlList" @change="onChange">
-                                  <template v-slot:index>第{{ index }}页</template>
+                                <van-cell-group title="任务照片" v-if="undefined != fileUrlList && fileUrlList != [] && fileUrlList.length > 0">
+                                    <van-field
+                                      readonly
+                                      clickable
+                                      label="任务照片"
+                                      placeholder="查看照片"
+                                      @click="seeTaskImg"
+                                    />
+                                </van-cell-group>
+                                <van-image-preview v-model="showExperienceImg" :images="experienceImgList" @change="onExperienceImgChange">
+                                  <template v-slot:index>第{{ experienceImgIndex }}页</template>
+                                </van-image-preview>
+                                <van-image-preview v-model="showTaskImg" :images="fileUrlList" @change="onTaskImgChange">
+                                  <template v-slot:index>第{{ taskImgIndex }}页</template>
                                 </van-image-preview>
                             </template>
                         </template>
@@ -193,9 +206,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 examDetailInfo: {},
                 examType: '',
                 delayDesc: '已延期',
-                index: 0,
-                showImg: false,
-                fileUrlList: []
+                experienceImgIndex: 0,
+                taskImgIndex: 0,
+                showTaskImg: false,
+                showExperienceImg:false,
+                fileUrlList: [],
+                experienceImgList: []
             }
         },
         methods: {
@@ -204,7 +220,21 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             },
 
             openFile : function(fileUrl) {
-                redirect.open(fileUrl, '')
+                //redirect.open(fileUrl, '')
+                //Android终端
+                let isAndroid = /(Android)/i.test(navigator.userAgent);
+            　　 //Ios终端
+                let isiOS = /(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent);
+                if(isiOS) {
+                    try {
+                        window.webkit.messageHandlers.openCourseware.postMessage(fileUrl);
+                    } catch (err) {
+
+                    }
+                }
+                else if(isAndroid) {
+                    document.location = "office://courseware?FILE_URL="+fileUrl;
+                }
             },
 
             initTaskInfo: function () {
@@ -227,6 +257,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.tutorScore = data.tutorScore;
                     that.experience = data.experience;
                     that.fileUrlList = data.fileList;
+                    that.experienceImgList = data.experienceImgList;
                 });
             },
             selectTutor: function () {
@@ -256,10 +287,10 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 if(taskId=='undefined'){
                     taskId=null;
                 }
-                let param = new URLSearchParams()
-                param.append('taskId', taskId)
-                param.append('selectTutor', value)
-                ajax.post('api/CollegeEmployeeTaskTutor/addByTaskIdAndSelectTutor', param, function(responseData){
+                let request = {};
+                request.taskId = taskId;
+                request.selectTutor = value;
+                ajax.post('api/CollegeEmployeeTaskTutor/addByTaskIdAndSelectTutor', request, function(responseData){
                     that.showTutorPicker = false;
                     that.initTaskInfo();
                 },null, true);
@@ -316,15 +347,37 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.examDetailInfo = responseData;
                     let maxExamNum = responseData.maxExamNum;
                     let currentExamNum = responseData.currentExamNum;
+                    let topicFlag = responseData.topicFlag;
+                    if (undefined == topicFlag || null == topicFlag || !topicFlag){
+                        let message = '';
+                        if (examType == "1"){
+                            message = '该考试下题目标签未设置题目，请联系管理员设置题目'
+                        }else {
+                            message = '该练习下题目标签未设置题目，请联系管理员设置题目'
+                        }
+                        vm.$dialog.alert({
+                            title: '提示',
+                            message: message,
+                        }).then(() => {
+                            // on close
+                        });
+                        return;
+                    }
                     //考试需要判断开始次数
                     if (examType == "1"){
                         if (maxExamNum <= currentExamNum){
                             let message = "该任务最大考试次数为" + maxExamNum + "次,您当前考试次数为" + currentExamNum + "次，不能继续考试！";
-                            vm.$toast({
+                            /*vm.$toast({
                                 message : message,
                                 overlay : true,
                                 type : 'fail',
                                 closeOnClickOverlay : true
+                            });*/
+                            vm.$dialog.alert({
+                                title: '提示',
+                                message: message,
+                            }).then(() => {
+                                // on close
                             });
                             return;
                         }else {
@@ -356,12 +409,18 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 }
                 redirect.open('/biz/college/task/task_experience.html?taskId='+taskId, '上传心得');
             },
-            seeImg: function () {
-                this.showImg = true
+            seeTaskImg: function () {
+                this.showTaskImg = true
             },
-            onChange(index) {
-                this.index = index;
+            seeExperienceImg: function () {
+                this.showExperienceImg = true
             },
+            onExperienceImgChange: function(index) {
+                this.experienceImgIndex = index;
+            },
+            onTaskImgChange: function (index) {
+                this.taskImgIndex = index;
+            }
 
         },
         mounted () {

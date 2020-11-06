@@ -16,6 +16,7 @@ require.config({
         'bottom': '/frame/vant/component/bottom',
         'moment': '/frame/vant/date/moment.min',
         'util': '/frame/vant/component/util',
+        'vant-upload-img': '/frame/vant/component/upload.img',
 
 
     },

@@ -1,4 +1,4 @@
-require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util', 'axios'], function (Vue, vant, ajax, vantSelect, pageTitle, redirect, util, axios) {
+require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util', 'axios', 'vant-upload-img'], function (Vue, vant, ajax, vantSelect, pageTitle, redirect, util, axios, vantUploadImg) {
     let vm = new Vue({
         el: '#app',
         template: `
@@ -14,9 +14,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util',
                           type="textarea"
                           placeholder="请输入心得体会"
                         />
+                         <vant-upload-img ref="uploadExperienceImg" maxCount="3" text="心得图片"></vant-upload-img>
+                        <!--<van-uploader v-model="experienceImgList" ref="upload" upload-text="心得图片" :after-read="uploadOne" multiple :max-count="5" />-->
                     </van-cell-group>
                     <van-cell-group title="上传照片">
-                        <van-uploader v-model="fileList" ref="upload" upload-text="上传图片" :after-read="uploadOne" multiple :max-count="5" />
+                        <vant-upload-img ref="uploadTaskImg" maxCount="5" text="心得图片"></vant-upload-img>
+                        <!--<van-uploader v-model="fileList" ref="upload" upload-text="上传图片" :after-read="uploadOne" multiple :max-count="5" />-->
                     </van-cell-group>
                     <div style="margin-top:1em;margin-right:1em;margin-left:1em;margin-bottom:1em">
                         <van-row :gutter="20">
@@ -25,6 +28,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util',
                             </van-col>
                         </van-row>
                     </div>
+                    <vant-upload-img ref="upload" :maxCount="5"></vant-upload-img>
                 </div>
                 <bottom :active="2"></bottom>
             </div>`,
@@ -35,6 +39,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util',
                 taskId: util.getRequest("taskId"),
                 experience: '',
                 fileList: [],
+                experienceImgList: []
             }
         },
         methods: {
@@ -45,34 +50,38 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util',
                     taskId=null;
                 }
                 let experience = that.experience;
-                if(null == experience || undefined == experience || '' == experience){
-                    vm.$toast.fail('请输入心得描述再提交！');
+                let experienceImgFileId = this.$refs.uploadExperienceImg.fileId;
+                if((null == experience || undefined == experience || '' == experience) && (null == experienceImgFileId || undefined == experienceImgFileId || '' == experienceImgFileId)){
+                    vm.$toast.fail('请输入心得描述或上传心得图票再提交！');
                     return;
                 }
-                let fileList = that.fileList
-                if (null == fileList || undefined == fileList || [] == fileList || 0 == fileList.length){
+                let taskImgFileId = this.$refs.uploadTaskImg.fileId;
+                if (null == taskImgFileId || undefined == taskImgFileId || '' == taskImgFileId){
                     vm.$toast.fail('请上传照片后再提交！');
                     return;
                 }
-                let fileIdList = ['49fab7a3-992b-4242-9074-2d20ac4293f1', '49fab7a3-992b-4242-9074-2d20ac4293f1'];
-                let param = new URLSearchParams()
+                //let formData = new FormData();
+                /*let param = new URLSearchParams()
                 param.append('taskId', taskId)
                 param.append('experience', experience)
-                param.append('fileIdList', fileIdList)
-                ajax.post('/api/CollegeTaskExperience/addExperience', param, function(data) {
+                param.append('fileList', fileIdList)
+                param.append('experienceImgList', experienceImgIdList)*/
+                let request = {};
+                request.taskId = taskId;
+                request.experience = experience;
+                request.taskImgFileId = taskImgFileId;
+                request.experienceImgFileId = experienceImgFileId;
+                ajax.post('/api/CollegeTaskExperience/addExperience', request, function(data) {
                     redirect.open('/biz/college/task/task_detail.html?taskId=' + taskId + '&isFinish=true', '任务详情');
                 });
             },
             uploadOne: function (file) {
-                let param = new URLSearchParams()
-                param.append('file', file.file)
-                const token = sessionStorage.getItem('hirun-helper-jwt')
-                axios.post('api/system/file/uploadOne', param, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
-
-                }).catch(error => {
-                    alert('更新用户数据失败' + error)
-                })
-
+                let formData = new FormData();
+                formData.append("file",file.file);
+                formData.append("taskId", this.taskId);
+                axios.post('api/system/file/uploadOne', formData, function(data) {
+                    alert(JSON.stringify(data));
+                });
             },
         },
         mounted () {
