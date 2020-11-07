@@ -16,9 +16,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                     <van-tabs v-model="active">
                         <van-tab title="广场">
                             <van-cell-group v-for="question in questionInfos">
-                                <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link :title="question.questionTypeName" @click="openDetail(question.questionType)" value="更多"/>
+                                <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link :title="question.questionTypeName" @click="openQuestionList(question.questionType)" value="更多"/>
                                 <van-cell-group>
-                                    <van-cell is-link :center="true" border="false" v-for="item in question.questionList.slice(0,2)">
+                                    <van-cell is-link :center="true" border="false" v-for="item in question.questionList.slice(0,2)" @click="openQuestionDetail(item)">
                                         <template #title>
                                             <div class="van-multi-ellipsis">{{item.questionTitle}}</div>
                                         </template>
@@ -53,7 +53,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                                             <van-row>
                                                 <div class="van-multi-ellipsis--l2">{{item.questionContent}}</div>
                                             </van-row>
-                                            <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
+                                            <van-row style="padding-top:1em" type="flex" align="bottom">
+                                                <van-col span="6"></van-col>
                                                 <van-col span="6"></van-col>
                                                 <van-col span="6">
                                                     <van-icon name="good-job-o" size="1.2rem"/>{{item.thumbsUp}}
@@ -92,8 +93,11 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                     that.myQuestionInfos = data;
                 });
             },
-            openDetail: function (questionType) {
-                redirect.open('/biz/college/knowledge/question_type_detail.html?questionType='+questionType, '更多问题');
+            openQuestionList: function (questionType) {
+                redirect.open('/biz/college/knowledge/question_list.html?questionType='+questionType, '更多问题');
+            },
+            openQuestionDetail: function (item) {
+                redirect.open('/biz/college/knowledge/question_detail.html?questionId='+item.questionId, '问题详情');
             }
         },
         mounted () {
