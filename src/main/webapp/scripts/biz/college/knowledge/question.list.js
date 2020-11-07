@@ -16,7 +16,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                     <van-row>
                                         <div class="van-multi-ellipsis--l2">{{item.questionContent}}</div>
                                     </van-row>
-                                    <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
+                                    <van-row style="padding-top:1em" type="flex" align="bottom">
+                                        <van-col span="6"></van-col>
                                         <van-col span="6"></van-col>
                                         <van-col span="6">
                                             <van-icon name="good-job-o" size="1.2rem"/>{{item.thumbsUp}}
