@@ -35,7 +35,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             </template>
                             <van-cell>
                                 <template #right-icon>
-                                    <van-row>
+                                    <van-row class="float-right">
                                         <van-col @click="thumbsUp">
                                             <van-icon name="good-job-o" size="1.2rem" @click="thumbsUp(reply)"/>{{reply.thumbsUp}}
                                         </van-col>

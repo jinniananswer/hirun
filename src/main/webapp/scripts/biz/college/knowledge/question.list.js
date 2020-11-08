@@ -8,7 +8,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     <van-cell-group v-for="question in questionInfos">
                         <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" :title="question.questionTypeName"/>
                         <van-cell-group>
-                            <van-cell is-link :center="true" border="false" v-for="item in question.questionList">
+                            <van-cell is-link :center="true" border="false" v-for="item in question.questionList"  @click="openQuestionDetail(item)">
                                 <template #title>
                                     <div class="van-multi-ellipsis">{{item.questionTitle}}</div>
                                 </template>
@@ -51,7 +51,21 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 ajax.get('/api/CollegeQuestion/queryQuestionByQuestionType', param , function(data) {
                     that.questionInfos = data;
                 });
-            }
+            },
+            openQuestionDetail: function (item) {
+                this.addClick(item);
+                redirect.open('/biz/college/knowledge/question_detail.html?questionId='+item.questionId, '问题详情');
+            },
+            addClick: function (item) {
+                let param = new URLSearchParams()
+                param.append('questionId', item.questionId);
+                let that = this;
+                that.question = item;
+                ajax.post('api/CollegeQuestion/addClick', param, function (responseData) {
+
+                });
+            },
+
         },
         mounted () {
             this.init();
