@@ -33,7 +33,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                     <div class="van-multi-ellipsis--l2">{{reply.replyContent}}</div>
                                 </van-row>
                             </template>
-                            <van-cell>
+                            <!--<van-cell>
                                 <template #right-icon>
                                     <van-row class="float-right">
                                         <van-col @click="thumbsUp">
@@ -41,7 +41,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                         </van-col>
                                     </van-row>
                                 </template>
-                            </van-cell>
+                            </van-cell>-->
                             <template #label>
                                 <!--回复者-->
                                 <van-row>
