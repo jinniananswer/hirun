@@ -53,13 +53,19 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                         </div>
                     </van-action-sheet>
                     <van-dialog v-model="showError" title="考试结果" show-cancel-button cancel-button-text="返回任务详情" @cancel="returnTaskDetail">
-                        <van-tag size="large" >{{resultTipStart}}<van-tag text-color="#ad0000">{{score}}</van-tag>{{resultTipEnd}}</van-tag>
-                        <van-cell center>
-                            <van-icon :name="examPassIcon" :color="examColor" size="50px"/>
-                        </van-cell>
-                        <van-tag v-if="scoreType == '1'" size="large">{{resultPassMsg}}</van-tag>
+                        <van-tag size="large" >{{resultTipStart}}<van-tag size="large" text-color="#ad0000">{{score}}</van-tag>{{resultTipEnd}}{{resultPassMsg}}</van-tag>
+                        <van-row type="flex" justify="center">
+                          <van-col span="8">
+                              <van-cell>
+                                <van-icon :name="examPassIcon" :color="examColor" size="70px"/>
+                              </van-cell>
+                              <!--<van-cell>
+                                <van-tag v-if="scoreType == '1'" size="large">{{resultPassMsg}}</van-tag>
+                              </van-cell>-->
+                          </van-col>
+                        </van-row>
                         <van-cell>
-                            <van-button v-for="(item ,index) in topics.slice(topicDetailStart,topicDetailEnd)" class="float" @click=goToIndex(item.topicNum) :type="item.isCorrect==false ? 'danger':'primary'" size="small">{{item.topicNum}}</van-button>
+                            <van-button v-for="(item ,index) in topics.slice(topicDetailStart,topicDetailEnd)" class="float" @click=goToIndex(item.topicNum) :type="item.isCorrect==false ? 'danger':'primary'" size="small">{{item.topicNum < 10 ? '0' + item.topicNum : item.topicNum}}</van-button>
                         </van-cell>
                         <van-pagination v-model="topicDetailCurrentPage" @change="changeTopicDetailPage" :page-count="topicDetailCount" mode="simple" />
                     </van-dialog>
@@ -242,16 +248,16 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 this.showError = true;
                 if (this.scoreType == '0') {
                     this.resultTipStart = '本次练习得分为';
-                    this.resultTipEnd = '分!';
+                    this.resultTipEnd = '分!  ';
                 } else if (this.scoreType == '1') {
                     this.resultTipStart = '本次考试得分为';
-                    this.resultTipEnd = '分';
+                    this.resultTipEnd = '分!  ';
                     if (score < this.passScore) {
-                        this.resultPassMsg = '不合格!';
+                        this.resultPassMsg = '考试不通过!';
                         this.examPassIcon = 'close';
                         this.examColor = '#009900';
                     } else {
-                        this.resultPassMsg = '合格!';
+                        this.resultPassMsg = '考试通过了!';
                         this.examPassIcon = 'passed';
                         this.examColor = '#FF0000';
                     }
