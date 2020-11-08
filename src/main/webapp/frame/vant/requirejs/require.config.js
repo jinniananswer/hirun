@@ -17,14 +17,13 @@ require.config({
         'moment': '/frame/vant/date/moment.min',
         'util': '/frame/vant/component/util',
         'vant-upload-img': '/frame/vant/component/upload.img',
-
-
     },
     shim: {
         'vant': {
             deps: ['vue', 'css!/frame/vant/index.css']
         }
-    }
+    },
+    urlArgs: 'v=202011090115'
 });
 
 
@@ -33,7 +32,7 @@ require(['vue', 'vant', 'vant-select', 'axios'], function(Vue, vant, vantSelect,
     Vue.use(vant.Lazyload);
     Vue.use(vant.Dialog);
     Vue.use(vant.ImagePreview);
-    axios.defaults.baseURL = 'http://bss.hi-run.net/';
+    axios.defaults.baseURL = 'http://localhost:8082/';
     axios.interceptors.request.use(
         config => {
             const token = sessionStorage.getItem('hirun-helper-jwt')

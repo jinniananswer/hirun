@@ -38,8 +38,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
         data: function () {
             return {
                 data : {
-                  username : '',
-                  password : ''
+                    username : '',
+                    password : '',
+                    automatic: '1'
                 },
                 checked : true
             }
@@ -47,6 +48,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
         methods: {
             onSubmit : function() {
                 let that = this;
+                if (this.checked == false) {
+                    data.automatic = '0';
+                }
                 $.ajaxPost('/loginPost',this.data,function(data){
                     let param = new URLSearchParams()
                     param.append('username', that.data.username)

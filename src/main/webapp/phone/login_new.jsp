@@ -19,7 +19,7 @@
 <div id="app" style="height: 100%">
 
 </div>
-<script src="/scripts/phone/login.new.js"></script>
+<script src="/scripts/phone/login.new.js?v=20201109"></script>
 <style>
     .van-tabs__line {color: #f3b100}
     .van-cell {background-color: #282333;color:#ddd}
