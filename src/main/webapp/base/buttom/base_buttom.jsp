@@ -17,7 +17,7 @@
     <div class="tab">
         <div class="list">
             <ul>
-                <li ontap="baseButtom.open('phone/phone_index.jsp','首页')">
+                <li ontap="baseButtom.open('phone/home.jsp','首页')">
                     <div class="ico"><span class="e_ico-home"></span></div>
                     <div class="text">首页</div>
                 </li>
@@ -25,7 +25,7 @@
                     <div class="ico"><span class="e_ico-msg"></span></div>
                     <div class="text">我的消息</div>
                 </li>
-                <li ontap="baseButtom.open('phone/toolbox.jsp','工具箱')">
+                <li ontap="baseButtom.open('phone/setting.html','工具箱')">
                     <div class="ico"><span class="e_ico-config"></span></div>
                     <div class="text">工具箱</div>
                 </li>

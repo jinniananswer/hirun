@@ -3,7 +3,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
         el: '#app',
         template: `
             <div>
-                <page-title title="家装百科"/>
+                <page-title title="知识分享"/>
                 <br/>
                 <br/>
                 <br/>

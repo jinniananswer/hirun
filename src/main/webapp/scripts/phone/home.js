@@ -48,7 +48,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'bottom
                 let that = this;
                 let jwt = sessionStorage.getItem("hirun-helper-jwt");
                 if (undefined == jwt || null == jwt || '' == jwt){
-                    let cookie = document.cookie
+                    let cookie = document.cookie;
                     let arr,reg = new RegExp("(^| )auth=([^;]*)(;|$)");
                     if(arr = document.cookie.match(reg)){
                         let auth = arr[2].replace('\"',"").split("@")
@@ -58,6 +58,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'bottom
                         param.append('username', userName)
                         param.append('password', password)
                         ajax.post('/api/system/auth/login', param,function(resultData){
+                            ajax.get('api/organization/employee/getLoginEmployee', '', function(data) {
+                                that.employee = data;
+                            });
+                            ajax.get('api/system/menu/listPhone', '', function(data) {
+                                that.menus = data;
+                            });
                             sessionStorage.setItem('hirun-helper-jwt', resultData.jwt); // 保存 token
                             sessionStorage.setItem('hirun-helper-funcCodes', JSON.stringify(resultData.funcCodes)); // 保存功能权限
                         }, function(resultCode, resultInfo){
@@ -85,15 +91,17 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'bottom
                                 });
                             }
                         });
+                    } else {
+                        redirect.toHome();
                     }
+                } else {
+                    ajax.get('api/organization/employee/getLoginEmployee', '', function(data) {
+                        that.employee = data;
+                    });
+                    ajax.get('api/system/menu/listPhone', '', function(data) {
+                        that.menus = data;
+                    });
                 }
-
-                ajax.get('api/organization/employee/getLoginEmployee', '', function(data) {
-                    that.employee = data;
-                });
-                ajax.get('api/system/menu/listPhone', '', function(data) {
-                    that.menus = data;
-                });
             },
 
             submit : function() {

@@ -31,7 +31,7 @@ public class LoginController extends RootController {
         String userAgent = request.getHeader("User-Agent");
         UserAgentUtil agentUtil = new UserAgentUtil(userAgent);
         if(agentUtil.phone())
-            return "phone/phone_index";
+            return "phone/home";
         else
             return "index";
     }
@@ -43,7 +43,7 @@ public class LoginController extends RootController {
         UserAgentUtil agentUtil = new UserAgentUtil(userAgent);
 
         if(agentUtil.phone()){
-            return "phone/login";
+            return "phone/login_new";
         }
         else {
             return "login";

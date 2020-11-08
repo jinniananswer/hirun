@@ -12,9 +12,13 @@
 <div id="app" style="height: 100%" v-cloak>
 
 </div>
-<script src="/scripts/phone/home.js"></script>
+<script src="/scripts/phone/home.js?v=20201109"></script>
 <style>
     .van-tabs__line {background-color: #22c067}
+
+    .van-hairline--top-bottom::after, .van-hairline-unset--top-bottom::after {
+        border-width: 0px;
+    }
     [v-cloak] {
         display: none;
     }

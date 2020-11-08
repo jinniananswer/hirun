@@ -3,7 +3,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
         el: '#app',
         template: `
             <div>
-                <page-title title="家装广场"/>
+                <page-title title="你问我答"/>
                 <div style="margin-top:3.8rem">
                     <van-search
                         v-model="value"
