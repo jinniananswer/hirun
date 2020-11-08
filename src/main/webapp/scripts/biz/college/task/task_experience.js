@@ -18,7 +18,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util',
                         <!--<van-uploader v-model="experienceImgList" ref="upload" upload-text="心得图片" :after-read="uploadOne" multiple :max-count="5" />-->
                     </van-cell-group>
                     <van-cell-group title="上传照片">
-                        <vant-upload-img ref="uploadTaskImg" maxCount="5" text="心得图片"></vant-upload-img>
+                        <vant-upload-img ref="uploadTaskImg" maxCount="5" text="任务图片"></vant-upload-img>
                         <!--<van-uploader v-model="fileList" ref="upload" upload-text="上传图片" :after-read="uploadOne" multiple :max-count="5" />-->
                     </van-cell-group>
                     <div style="margin-top:1em;margin-right:1em;margin-left:1em;margin-bottom:1em">
