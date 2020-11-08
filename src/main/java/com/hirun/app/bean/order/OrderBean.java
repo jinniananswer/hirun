@@ -58,9 +58,9 @@ public class OrderBean {
         AppSession session = SessionManager.getSession();
         String userId = session.getSessionEntity().getUserId();
         String selfOrgId = OrgBean.getOrgId(session.getSessionEntity());
-        OrgEntity orgEntity= OrgBean.getAssignTypeOrg(selfOrgId,"2");
-        if(orgEntity!=null){
-            order.put("SHOP_ID",orgEntity.getOrgId());
+        OrgEntity orgEntity = OrgBean.getAssignTypeOrg(selfOrgId, "2");
+        if (orgEntity != null) {
+            order.put("SHOP_ID", orgEntity.getOrgId());
         }
         order.put("CREATE_USER_ID", userId);
         order.put("CREATE_TIME", session.getCreateTime());
@@ -169,15 +169,18 @@ public class OrderBean {
 
         OrderDAO orderDAO = DAOFactory.createDAO(OrderDAO.class);
         Map<String, String> orderConsult = new HashMap<String, String>();
-        orderConsult.put("ORDER_ID", orderId);
-        orderConsult.put("CUST_SERVICE_EMPLOYEE_ID", customerServiceEmployeeId);
-        orderConsult.put("DESIGN_EMPLOYEE_ID", designEmployeeId);
-        orderConsult.put("CONSULT_TIME", consultTime);
-        orderConsult.put("CREATE_USER_ID", userId);
-        orderConsult.put("CREATE_TIME", session.getCreateTime());
-        orderConsult.put("UPDATE_USER_ID", userId);
-        orderConsult.put("UPDATE_TIME", session.getCreateTime());
-        orderDAO.insert("order_consult", orderConsult);
+        RecordSet recordSet=orderDAO.queryOrderConsult(orderId);
+        if(recordSet.size()<=0) {
+            orderConsult.put("ORDER_ID", orderId);
+            orderConsult.put("CUST_SERVICE_EMPLOYEE_ID", customerServiceEmployeeId);
+            orderConsult.put("DESIGN_EMPLOYEE_ID", designEmployeeId);
+            orderConsult.put("CONSULT_TIME", consultTime);
+            orderConsult.put("CREATE_USER_ID", userId);
+            orderConsult.put("CREATE_TIME", session.getCreateTime());
+            orderConsult.put("UPDATE_USER_ID", userId);
+            orderConsult.put("UPDATE_TIME", session.getCreateTime());
+            orderDAO.insert("order_consult", orderConsult);
+        }
     }
 
     public static void updateConsultOrder(String custId, String housesId, String decorateAddress, String houseLayout, String floorage, String indoorArea,
@@ -217,17 +220,19 @@ public class OrderBean {
 
         if (StringUtils.isNotBlank(custServiceEmployeeId)) {
             Map<String, String> custServiceWorker = new HashMap<String, String>();
-            custServiceWorker.put("ORDER_ID", orderId + "");
-            custServiceWorker.put("ROLE_ID", "15");//客户代表
-            custServiceWorker.put("EMPLOYEE_ID", custServiceEmployeeId);
-            custServiceWorker.put("START_DATE", now);
-            custServiceWorker.put("END_DATE", "3000-12-31 23:59:59");
-            custServiceWorker.put("CREATE_USER_ID", userId);
-            custServiceWorker.put("CREATE_TIME", now);
-            custServiceWorker.put("UPDATE_USER_ID", userId);
-            custServiceWorker.put("UPDATE_TIME", now);
-
-            orderWorkers.add(custServiceWorker);
+            RecordSet recordSet = orderDAO.queryOrderWork(orderId, "15", custServiceEmployeeId);
+            if (recordSet.size() <= 0) {
+                custServiceWorker.put("ORDER_ID", orderId + "");
+                custServiceWorker.put("ROLE_ID", "15");//客户代表
+                custServiceWorker.put("EMPLOYEE_ID", custServiceEmployeeId);
+                custServiceWorker.put("START_DATE", now);
+                custServiceWorker.put("END_DATE", "3000-12-31 23:59:59");
+                custServiceWorker.put("CREATE_USER_ID", userId);
+                custServiceWorker.put("CREATE_TIME", now);
+                custServiceWorker.put("UPDATE_USER_ID", userId);
+                custServiceWorker.put("UPDATE_TIME", now);
+                orderWorkers.add(custServiceWorker);
+            }
         }
 
 
@@ -312,19 +317,19 @@ public class OrderBean {
         orderDAO.insertAutoIncrement("order_worker", worker);
     }
 
-    public static void updateOrderConsult(String custId,String emplyeeId) throws  Exception{
+    public static void updateOrderConsult(String custId, String emplyeeId) throws Exception {
         Record orderRecord = queryOrderByCustId(custId);
         OrderDAO orderDAO = DAOFactory.createDAO(OrderDAO.class);
         AppSession session = SessionManager.getSession();
         String userId = session.getSessionEntity().getUserId();
         StringBuilder updateSql = new StringBuilder();
-        Map<String,String> param=new HashMap<>();
+        Map<String, String> param = new HashMap<>();
         updateSql.append("UPDATE ORDER_CONSULT SET DESIGN_EMPLOYEE_ID=:EMPLOYEE_ID,UPDATE_USER_ID=:UPDATE_USER_ID,UPDATE_TIME=:UPDATE_TIME WHERE ORDER_ID=:ORDER_ID");
         param.put("EMPLOYEE_ID", emplyeeId);
         param.put("ORDER_ID", orderRecord.get("ORDER_ID"));
         param.put("UPDATE_USER_ID", userId);
         param.put("UPDATE_TIME", TimeTool.now());
-        orderDAO.executeUpdate(updateSql.toString(),param);
+        orderDAO.executeUpdate(updateSql.toString(), param);
     }
 
 }

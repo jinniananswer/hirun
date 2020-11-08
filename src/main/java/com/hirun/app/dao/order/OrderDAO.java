@@ -31,4 +31,13 @@ public class OrderDAO extends StrongObjectDAO {
         param.put("EMPLOYEE_ID",employeeId);
         return this.queryBySql(sql.toString(),param);
     }
+
+    public RecordSet queryOrderConsult(String orderId) throws Exception{
+        StringBuilder sql = new StringBuilder();
+        Map<String,String> param=new HashMap<>();
+        sql.append(" SELECT * FROM order_consult  " +
+                " WHERE ORDER_ID=:ORDER_ID  ");
+        param.put("ORDER_ID",orderId);
+        return this.queryBySql(sql.toString(),param);
+    }
 }

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户需求信息录入</title>
     <jsp:include page="/common.jsp"></jsp:include>
-    <script src="/scripts/biz/customerservice/change.goodseeliveinfo.js?v=202000809"></script>
+    <script src="/scripts/biz/customerservice/change.goodseeliveinfo.js?v=202001021"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -29,6 +29,8 @@
     <div class="l_padding" id="allSubmitArea">
         <input type="hidden" id="PARTY_ID" name="PARTY_ID" nullable="no" value="${pageContext.request.getParameter("PARTY_ID") }" desc="参与人ID" />
         <input type="hidden" id="PROJECT_ID" name="PROJECT_ID" nullable="no" value="${pageContext.request.getParameter("PROJECT_ID") }" desc="项目ID" />
+        <input type="hidden" id="STATUS" name="STATUS" nullable="no" value="${pageContext.request.getParameter("STATUS") }" desc="状态" />
+
         <input type="hidden" id="hasEditInfoFlag" name="hasEditInfoFlag" nullable="no" />
         <input type="hidden" id="openId" name="openId" nullable="no" />
         <input type="hidden" id="mergePartyId" name="mergePartyId"/>
@@ -44,17 +46,18 @@
         </div>
         <div class="c_list c_list-col-1 c_list-fixWrapSpace c_list-form">
             <ul >
-<!--                <li class="link required">
+               <li class="link">
                     <div class="label">是否单独木制品</div>
                     <div class="value">
                         <input type="checkbox" id="onlyWood" name="onlyWood" readonly/>
                     </div>
                 </li>
+                 <input type="hidden" id="cust_id" name="cust_id" readonly />
                  <input type="hidden" id="prepare_id" name="prepare_id" placeholder="" nullable="yes" desc="" />
                  <input type="hidden" id="project_id" name="project_id" placeholder="" nullable="yes" desc="" />
                  <input type="hidden" id="saveContinue" name="saveContinue" placeholder="" nullable="yes" desc="" />
                  <input type="hidden" id="isMoreCustomer" name="isMoreCustomer" placeholder="" nullable="yes" desc="" />
--->
+
                 <li class="link required">
                     <div class="label">客户编码</div>
                     <div class="value">
@@ -671,7 +674,7 @@
                 <div class="c_popupItem" id="UI-CUSTOMERLIST">
                     <!-- 标题栏 开始 -->
                     <div class="c_header">
-                        <div class="back" ontap="hidePopup(this);">确认是否需要合并客户</div>
+                        <div class="back" ontap="hidePopup(this);">客户存在多次,如果客户已有客户代表则不能转成自己的客户</div>
                     </div>
                     <!-- 标题栏 结束 -->
                     <div class="c_scroll">

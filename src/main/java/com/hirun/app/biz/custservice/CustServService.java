@@ -20,7 +20,6 @@ import com.hirun.pub.consts.CustomerServiceConst;
 import com.hirun.pub.domain.entity.cust.CustomerEntity;
 import com.hirun.pub.domain.entity.custservice.PartyEntity;
 import com.hirun.pub.domain.entity.custservice.ProjectEntity;
-import com.hirun.pub.domain.entity.custservice.ProjectIntentionEntity;
 import com.hirun.pub.domain.entity.houses.HousesEntity;
 import com.hirun.pub.domain.entity.org.EmployeeEntity;
 import com.hirun.pub.domain.entity.org.EmployeeJobRoleEntity;
@@ -387,7 +386,13 @@ public class CustServService extends GenericService {
         /*20200517新增*/
         String customerNoSeq = CustomerNoTool.getCustomerNoSeq();
         response.set("CUSTNO", customerNoSeq);
-
+        //需加上判断客户代表是否有继续保存的权限
+        Boolean savePri = Permission.hasContinueSaveCustomer();
+        if (savePri) {
+            response.set("CONTINUE", "true");
+        } else {
+            response.set("CONTINUE", "false");
+        }
         return response;
     }
 
@@ -427,9 +432,10 @@ public class CustServService extends GenericService {
             partyId = dao.insertAutoIncrement("ins_party", partyInfo);
 
             partyInfo.put("CUST_ID", customerId);
-            partyInfo.put("PARTY_ID",partyId+"");
+            partyInfo.put("PARTY_ID", partyId + "");
             //兼容两张表客户姓名名称对不上的问题
-            partyInfo.put("CUST_NAME",partyInfo.get("PARTY_NAME"));
+            partyInfo.put("CUST_NAME", partyInfo.get("PARTY_NAME"));
+            partyInfo.put("CUST_STATUS", "0");
 
             dao.save("cust_base", new String[]{"CUST_ID"}, partyInfo);
         } else {
@@ -445,6 +451,8 @@ public class CustServService extends GenericService {
         Long projectId = null;
         if (StringUtils.isNotEmpty(project_id)) {
             projectInfo.put("PROJECT_ID", project_id);
+            projectInfo.put("PARTY_ID", partyId + "");
+
             dao.save("ins_project", new String[]{"PROJECT_ID"}, projectInfo);
         } else {
             projectInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
@@ -454,16 +462,15 @@ public class CustServService extends GenericService {
         }
         //保存项目意向信息
         Map<String, String> projectIntentionInfo = result.get("PROJECT_INTENTION_INFO");
-
         if (StringUtils.isNotEmpty(project_id)) {
-            projectIntentionInfo.put("PROJECT_ID", project_id);
-            dao.save("ins_project_intention", new String[]{"PROJECT_ID"}, projectIntentionInfo);
+            projectIntentionInfo.put("PROJECT_ID", project_id + "");
         } else {
             projectIntentionInfo.put("PROJECT_ID", projectId + "");
-            projectIntentionInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
-            projectIntentionInfo.put("CREATE_TIME", session.getCreateTime());
-            dao.insertAutoIncrement("ins_project_intention", projectIntentionInfo);
         }
+        projectIntentionInfo.put("CREATE_USER_ID", session.getSessionEntity().getUserId());
+        projectIntentionInfo.put("CREATE_TIME", session.getCreateTime());
+        dao.insertAutoIncrement("ins_project_intention", projectIntentionInfo);
+
 
         //生成项目联系人信息
         Map<String, String> project_link_info = new HashMap<String, String>();
@@ -489,7 +496,7 @@ public class CustServService extends GenericService {
             Map<String, String> partyProjectActionInfo = new HashMap<String, String>();
             if (StringUtils.isNotEmpty(project_id)) {
                 partyProjectActionInfo.put("PROJECT_ID", project_id);
-                partyProjectActionInfo.put("PARTY_ID", customerId + "");
+                partyProjectActionInfo.put("PARTY_ID", partyId + "");
             } else {
                 partyProjectActionInfo.put("PROJECT_ID", projectId + "");
                 partyProjectActionInfo.put("PARTY_ID", partyId + "");
@@ -528,11 +535,11 @@ public class CustServService extends GenericService {
         }
 
         String decorateAddress = HousesBean.getHousesEntityById(houseId).getName();
-        if(StringUtils.isNotEmpty(houseBuilding)){
-            decorateAddress=decorateAddress+houseBuilding+"::";
+        if (StringUtils.isNotEmpty(houseBuilding)) {
+            decorateAddress = decorateAddress + houseBuilding + "::";
         }
-        if(StringUtils.isNotEmpty(houseRoomNo)){
-            decorateAddress=decorateAddress+houseRoomNo;
+        if (StringUtils.isNotEmpty(houseRoomNo)) {
+            decorateAddress = decorateAddress + houseRoomNo;
         }
 
         if (StringUtils.isNotEmpty(customerId)) {
@@ -540,23 +547,23 @@ public class CustServService extends GenericService {
                     , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
                     "", orderStatus, orderType, consultTime, stage);
         } else {
-            if(StringUtils.isEmpty(customerId)){
+            if (StringUtils.isEmpty(customerId)) {
                 //20201020修改,如果只是单纯的新增则需要新生成cust_base的信息
-                partyInfo.put("PARTY_ID",partyId+"");
-                partyInfo.put("CUST_NAME",partyInfo.get("PARTY_NAME"));
-                customerId=dao.insertAutoIncrement("cust_base", partyInfo)+"";
+                partyInfo.put("PARTY_ID", partyId + "");
+                partyInfo.put("CUST_NAME", partyInfo.get("PARTY_NAME"));
+                partyInfo.put("CUST_STATUS", "0");
+                customerId = dao.insertAutoIncrement("cust_base", partyInfo) + "";
             }
             OrderBean.createConsultOrder(customerId + "", houseId, decorateAddress, house_mode, house_area, ""
                     , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
                     "", orderStatus, orderType, consultTime, stage);
         }
         //更新报备状态
-        if (StringUtils.isNotEmpty(prepareId)) {
+        if (StringUtils.isNotEmpty(prepareId)&&!StringUtils.equals("undefined",prepareId)) {
             Record record = CustPreparationBean.getCustomerPrepare(prepareId);
             String status = record.get("STATUS");
             String prepareExpireTime = record.get("PREPARATION_EXPIRE_TIME");
             String prepareHouseId = record.get("HOUSE_ID");
-            System.out.println(TimeTool.compareTwoTime(prepareExpireTime, TimeTool.now()));
             if (TimeTool.compareTwoTime(prepareExpireTime, TimeTool.now()) != 0) {
                 //有效期内
                 if (StringUtils.equals(houseId, prepareHouseId)) {
@@ -565,7 +572,7 @@ public class CustServService extends GenericService {
                 } else {
                     CustPreparationBean.updateCustomerPrepare(prepareId, "1", session.getSessionEntity().getUserId());
                 }
-            }else{
+            } else {
                 CustPreparationBean.updateCustomerPrepare(prepareId, "1", session.getSessionEntity().getUserId());
             }
         }
@@ -946,7 +953,7 @@ public class CustServService extends GenericService {
         Record customerRecord = dao.queryCustomerInfoByCustId(partyId);
         //20200517新增，初始化修改好看好住信息修改时，判断之前是否以及完成过该动作，如果有则需要控制前台有些字段不可编辑
         RecordSet goodLiveActionInfo = dao.queryGoodLiveInfoActionInfo(partyId, projectId, "HZHK", "1");
-        if (goodLiveActionInfo.size() <= 0 ||StringUtils.isBlank(customerRecord.get("CONSULT_TIME"))) {
+        if (goodLiveActionInfo.size() <= 0 || StringUtils.isBlank(customerRecord.get("CONSULT_TIME"))) {
             response.set("HAS_EDIT_INFO_FLAG", "false");
         } else {
             response.set("HAS_EDIT_INFO_FLAG", "true");
@@ -1127,6 +1134,14 @@ public class CustServService extends GenericService {
 
         response.set("PROJECTINTENTIONINFO", projectIntentionInfo);
 
+        //需加上判断客户代表是否有继续保存的权限
+        Boolean savePri = Permission.hasContinueSaveCustomer();
+        if (savePri) {
+            response.set("CONTINUE", "true");
+        } else {
+            response.set("CONTINUE", "false");
+        }
+
         return response;
     }
 
@@ -1141,41 +1156,75 @@ public class CustServService extends GenericService {
     public ServiceResponse changeGoodSeeLiveInfo(ServiceRequest request) throws Exception {
         ServiceResponse response = new ServiceResponse();
         String projectId = request.getString("PROJECT_ID");
-        String custId = request.getString("PARTY_ID");
+        String partyId = request.getString("PARTY_ID");
         //String houseId = request.getString("house_id");
+
+        AppSession session = SessionManager.getSession();
+        String customerId = request.getString("cust_id");
+        String project_id = request.getString("project_id");
+        String customerType = request.getString("customer_type");
+        String onlyWood = request.getString("onlyWood");
+        String houseId = request.getString("house_id");
+        String houseBuilding = request.getString("house_building");
+        String houseRoomNo = request.getString("house_room_no");
+        String consultTime = request.getString("consult_time");
+        String house_mode = request.getString("HOUSEKIND");//户型
+        String house_area = request.getString("AREA");//面积
+        String prepareId = request.getString("prepare_id");
+
 
         String mergePartyId = request.getString("mergePartyId");
         String mergeProjectId = request.getString("mergeProjectId");
 
-        AppSession session = SessionManager.getSession();
         CustomerServiceDAO dao = DAOFactory.createDAO(CustomerServiceDAO.class);
 
         Map<String, Map<String, String>> resultMap = this.buildCommonInfo(request);
 
 
         //1、保存party信息
+
         Map<String, String> customerInfo = resultMap.get("CUSTOMER_INFO");
-        PartyEntity partyEntity = dao.queryPartyInfoByPartyId(custId);
+        PartyEntity partyEntity = dao.queryPartyInfoByPartyId(partyId);
         //处理客户合并的场景
-        if (StringUtils.isNotBlank(mergePartyId)) {
+/*        if (StringUtils.isNotBlank(mergePartyId)) {
             customerInfo.put("PARTY_ID", mergePartyId);
             customerInfo.put("OPEN_ID", partyEntity.getOpenId());
             customerInfo.put("WX_NICK", partyEntity.getWxNick());
             customerInfo.put("HEAD_URL", partyEntity.getHeadUrl());
         } else {
             customerInfo.put("PARTY_ID", custId);
-        }
+        }*/
 
         customerInfo.put("UPDATE_USER_ID", session.getSessionEntity().getUserId());
         customerInfo.put("UPDATE_TIME", session.getCreateTime());
+        customerInfo.put("PARTY_ID", partyId);
 
+        if (StringUtils.isNotEmpty(prepareId)) {
+            customerInfo.put("CUST_TYPE", "4");
+        }
+        //保存party信息
         dao.save("ins_party", new String[]{"PARTY_ID"}, customerInfo);
+
+/*
+
+        if (StringUtils.isNotEmpty(customerId)) {
+            //如果为报备客户，在客户信息录入界面无论选哪个类型，客户类型都为报备客户
+
+            //有cust_base和ins_party
+
+            customerInfo.put("CUST_ID", customerId);
+            customerInfo.put("PARTY_ID", partyId + "");
+            //兼容两张表客户姓名名称对不上的问题
+            customerInfo.put("CUST_NAME", customerInfo.get("PARTY_NAME"));
+            dao.save("cust_base", new String[]{"CUST_ID"}, customerInfo);
+        }
+*/
 
         //保存项目信息
         Map<String, String> projectInfo = resultMap.get("PROJECT_INFO");
         //处理客户合并的情况
-        if (StringUtils.isNotBlank(mergeProjectId)) {
-            projectInfo.put("PROJECT_ID", mergeProjectId);
+        if (StringUtils.isNotBlank(project_id)) {
+            projectInfo.put("PROJECT_ID", project_id);
         } else {
             projectInfo.put("PROJECT_ID", projectId);
         }
@@ -1187,19 +1236,21 @@ public class CustServService extends GenericService {
         //保存项目意向信息表
         Map<String, String> projectIntentionInfo = resultMap.get("PROJECT_INTENTION_INFO");
         //处理客户合并的情况
-        if (StringUtils.isNotBlank(mergeProjectId)) {
-            projectIntentionInfo.put("PROJECT_ID", mergeProjectId);
+        if (StringUtils.isNotBlank(project_id)) {
+            projectIntentionInfo.put("PROJECT_ID", project_id);
+            //如果project_id不为空的化的话，是通过报备转咨询过来的
+            dao.insertAutoIncrement("ins_project_intention", projectIntentionInfo);
         } else {
             projectIntentionInfo.put("PROJECT_ID", projectId);
+            dao.save("ins_project_intention", new String[]{"PROJECT_ID"}, projectIntentionInfo);
         }
 
-        dao.save("ins_project_intention", new String[]{"PROJECT_ID"}, projectIntentionInfo);
 
         //修改工程更新时间
         Map<String, String> projectActionInfo = new HashMap<String, String>();
         //处理客户合并的情况
-        if (StringUtils.isNotBlank(mergeProjectId)) {
-            projectActionInfo.put("PROJECT_ID", mergeProjectId);
+        if (StringUtils.isNotBlank(project_id)) {
+            projectActionInfo.put("PROJECT_ID", project_id);
         } else {
             projectActionInfo.put("PROJECT_ID", projectId);
         }
@@ -1212,7 +1263,7 @@ public class CustServService extends GenericService {
 
         //新增特殊处理包括1、各环节客户信息同步
         //需要将完成的家网动作做转移
-        if (StringUtils.isNotBlank(mergeProjectId)) {
+        /*if (StringUtils.isNotBlank(project_id)) {
             RecordSet actionList = dao.queryPartyFlowByProjectId(projectId);
             List<Map<String, String>> actionUpdateList = new ArrayList<>();
             for (int i = 0; i < actionList.size(); i++) {
@@ -1236,10 +1287,15 @@ public class CustServService extends GenericService {
             }
 
 
-        }
+        }*/
         // 3、发送通知给对应的家装顾问告知客户信息变更
-        this.syncPartyInfo(partyEntity, request);
+        try {
+            this.syncPartyInfo(partyEntity, request);
+        } catch (Exception e) {
+            log.error("散盘数据删除导致数据取不到错误：", e);
+        }
 
+/*
         //更改状态,将客户状态改成合并销户2
         if (StringUtils.isNotBlank(mergePartyId)) {
             Map<String, String> updatePartyStatusMap = new HashMap<>();
@@ -1249,7 +1305,94 @@ public class CustServService extends GenericService {
             updatePartyStatusMap.put("UPDATE_TIME", TimeTool.now());
             dao.save("ins_party", new String[]{"PARTY_ID"}, updatePartyStatusMap);
         }
+*/
+        //如果为上门咨询客户，客户订单状态直接改成咨询，否则为初始化
+        String orderStatus = "";
+        String stage = "";
+        if (StringUtils.equals(customerType, "1")) {
+            stage = "10";
+            orderStatus = "2";
+        } else {
+            stage = "0";
+            orderStatus = "1";
+        }
+        //如果为单独木制品流程则订单类型为W
+        String orderType = "H";
+        if (StringUtils.isNotEmpty(onlyWood)) {
+            orderType = "W";
+        }
 
+        String decorateAddress = HousesBean.getHousesEntityById(houseId).getName();
+        if (StringUtils.isNotEmpty(houseBuilding)) {
+            decorateAddress = decorateAddress + houseBuilding + "::";
+        }
+        if (StringUtils.isNotEmpty(houseRoomNo)) {
+            decorateAddress = decorateAddress + houseRoomNo;
+        }
+
+        if (StringUtils.isNotEmpty(customerId)) {
+
+            customerInfo.put("CUST_NAME", customerInfo.get("PARTY_NAME"));
+            customerInfo.put("PARTY_ID", partyId + "");
+            customerInfo.put("CUST_STATUS", "0");
+            customerInfo.put("OPEN_ID", partyEntity.getOpenId());
+            customerInfo.put("HEAD_URL", partyEntity.getHeadUrl());
+            dao.save("cust_base", new String[]{"CUST_ID"}, customerInfo);
+            OrderBean.updateConsultOrder(customerId + "", houseId, decorateAddress, house_mode, house_area, ""
+                    , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
+                    "", orderStatus, orderType, consultTime, stage);
+        } else {
+
+            //20201020修改,如果只是单纯的新增则需要新生成cust_base的信息
+            RecordSet customerBase = dao.queryCustomerBaseInfo(partyId);
+            if (customerBase.size() > 0) {
+                customerInfo.put("CUST_NAME", customerInfo.get("PARTY_NAME"));
+                customerInfo.put("PARTY_ID", partyId + "");
+                customerInfo.put("CUST_STATUS", "0");
+                customerInfo.put("OPEN_ID", partyEntity.getOpenId());
+                customerInfo.put("HEAD_URL", partyEntity.getHeadUrl());
+                customerInfo.put("CUST_ID", customerBase.get(0).get("CUST_ID"));
+
+
+                dao.save("cust_base", new String[]{"CUST_ID"}, customerInfo);
+
+                OrderBean.updateConsultOrder(customerBase.get(0).get("CUST_ID") + "", houseId, decorateAddress, house_mode, house_area, ""
+                        , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
+                        "", orderStatus, orderType, consultTime, stage);
+
+            } else {
+                customerInfo.put("CUST_NAME", customerInfo.get("PARTY_NAME"));
+                customerInfo.put("PARTY_ID", partyId + "");
+                customerInfo.put("CUST_STATUS", "0");
+                customerInfo.put("OPEN_ID", partyEntity.getOpenId());
+                customerInfo.put("HEAD_URL", partyEntity.getHeadUrl());
+
+                customerId = dao.insertAutoIncrement("cust_base", customerInfo) + "";
+
+                OrderBean.createConsultOrder(customerId + "", houseId, decorateAddress, house_mode, house_area, ""
+                        , "", session.getSessionEntity().get("EMPLOYEE_ID"), "",
+                        "", orderStatus, orderType, consultTime, stage);
+            }
+
+        }
+        //更新报备状态
+        if (StringUtils.isNotEmpty(prepareId)) {
+            Record record = CustPreparationBean.getCustomerPrepare(prepareId);
+            String status = record.get("STATUS");
+            String prepareExpireTime = record.get("PREPARATION_EXPIRE_TIME");
+            String prepareHouseId = record.get("HOUSE_ID");
+            if (TimeTool.compareTwoTime(prepareExpireTime, TimeTool.now()) != 0) {
+                //有效期内
+                if (StringUtils.equals(houseId, prepareHouseId)) {
+                    //楼盘一致
+                    CustPreparationBean.updateCustomerPrepare(prepareId, "2", session.getSessionEntity().getUserId());
+                } else {
+                    CustPreparationBean.updateCustomerPrepare(prepareId, "1", session.getSessionEntity().getUserId());
+                }
+            } else {
+                CustPreparationBean.updateCustomerPrepare(prepareId, "1", session.getSessionEntity().getUserId());
+            }
+        }
 
         //  OrderBean.updateOrder(custId,houseName+":"+houseBuilding+":"+houseRoomNo,house_mode,house_area);
         return response;
@@ -1289,17 +1432,17 @@ public class CustServService extends GenericService {
 
 
         //拼装需要发给家装顾问的消息
-        String newHouseName="";
-        String oldHouseName="";
-        if(StringUtils.isNotBlank(houseId)){
-            newHouseName=HousesBean.getHousesEntityById(houseId).getName();
+        String newHouseName = "";
+        String oldHouseName = "";
+        if (StringUtils.isNotBlank(houseId)) {
+            newHouseName = HousesBean.getHousesEntityById(houseId).getName();
         }
 
         StringBuilder msgContent = new StringBuilder();
         String houseCounselorId = customerEntity.getHouseCounselorId();
 
-        if(StringUtils.isNotBlank(customerEntity.getHouseId())){
-            oldHouseName=HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName();
+        if (StringUtils.isNotBlank(customerEntity.getHouseId())) {
+            oldHouseName = HousesBean.getHousesEntityById(customerEntity.getHouseId()).getName();
         }
 
         msgContent.append(EmployeeBean.getEmployeeByEmployeeId(houseCounselorId).getName() + "，您好！" +
@@ -1308,7 +1451,7 @@ public class CustServService extends GenericService {
                 .append("变更内容由原来的客户姓名:" + customerEntity.getCustName() + "变成" + "[" + partyName + "],")
                 .append("联系号码:" + customerEntity.getMobileNo() + "变成" + "[" + mobileNo + "],")
                 .append("楼盘:" + oldHouseName +
-                        "变成" + "[" +newHouseName + "]。")
+                        "变成" + "[" + newHouseName + "]。")
                 .append("变更时间为:" + TimeTool.now());
         //同步信息给家装顾问环节
         customerEntity.setCustName(partyName);
@@ -1321,6 +1464,7 @@ public class CustServService extends GenericService {
         //拼装日志数据
         Map<String, String> logMap = new HashMap<>();
         //同步家网
+
         SyncBean.syncCustomerInfo(customerEntity, logMap);
         //保存所有日志
         logMap.put("CONTENT", msgContent.toString());
@@ -1500,8 +1644,8 @@ public class CustServService extends GenericService {
                 continue;
             }
             String openId = partyEntity.getOpenId();
-            RecordSet blueSet=dao.queryBluePrintByOpenIdAndActionCode(openId,"XQLTE");
-            if(blueSet.size()>0){
+            RecordSet blueSet = dao.queryBluePrintByOpenIdAndActionCode(openId, "XQLTE");
+            if (blueSet.size() > 0) {
                 Map<String, String> blueActionInfo = new HashMap<String, String>();
                 blueActionInfo.put("OPEN_ID", openId);
                 blueActionInfo.put("REL_EMPLOYEE_ID", custServiceEmpId);
@@ -1882,8 +2026,12 @@ public class CustServService extends GenericService {
             String partyInfoId = record.get("PARTY_ID");
             String linkEmpId = record.get("LINK_EMPLOYEE_ID");
             //新增楼盘翻译
-            if(record.get("HOUSE_ID")!=null) {
-                String houseAddress = HousesBean.getHousesEntityById(record.get("HOUSE_ID")).getName();
+            if (StringUtils.isNotBlank(record.get("HOUSE_ID"))) {
+                String houseAddress="";
+                HousesEntity housesEntity=HousesBean.getHousesEntityById(record.get("HOUSE_ID"));
+                if(housesEntity!=null){
+                    houseAddress=housesEntity.getName();
+                }
                 if (StringUtils.isNotBlank(record.get("HOUSE_BUILDING"))) {
                     houseAddress = houseAddress + "::" + record.get("HOUSE_BUILDING");
                 }
@@ -2067,13 +2215,13 @@ public class CustServService extends GenericService {
 
 
             //如果订单状态不为初始化，则不允许选择
-            if (!StringUtils.equals("0", record.get("ORDER_STATUS"))) {
-                record.put("isSelect", false);
+            if (StringUtils.equals("1", record.get("ORDER_STATUS"))) {
+                record.put("isSelect", "true");
             } else {
                 if (StringUtils.isEmpty(record.get("CUSTSERVICE_EMPLOYEE_ID"))) {
-                    record.put("isSelect", true);
+                    record.put("isSelect", "true");
                 } else {
-                    record.put("isSelect", false);
+                    record.put("isSelect", "false");
                 }
             }
         }
@@ -2098,12 +2246,4 @@ public class CustServService extends GenericService {
         return response;
     }
 
-
-    public ServiceResponse loadPrepareInfo(ServiceRequest request) throws Exception {
-        ServiceResponse response = new ServiceResponse();
-        String openId = request.getString("CUST_ID");
-        CustomerServiceDAO custDao = new CustomerServiceDAO("ins");
-
-        return response;
-    }
 }

@@ -16,6 +16,7 @@ require.config({
         'bottom': '/frame/vant/component/bottom',
         'moment': '/frame/vant/date/moment.min',
         'util': '/frame/vant/component/util',
+        'vant-upload-img': '/frame/vant/component/upload.img',
 
 
     },
@@ -30,6 +31,8 @@ require.config({
 require(['vue', 'vant', 'vant-select', 'axios'], function(Vue, vant, vantSelect, axios) {
     vant.install(Vue);
     Vue.use(vant.Lazyload);
+    Vue.use(vant.Dialog);
+    Vue.use(vant.ImagePreview);
     axios.defaults.baseURL = 'http://localhost:8080/';
     axios.interceptors.request.use(
         config => {

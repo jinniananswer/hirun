@@ -103,6 +103,8 @@
     <entity name="OperationCenter.house.HousesService.queryHouses"  class="com.hirun.app.biz.houses.HousesService" method="queryHouses"/>
     <entity name="OperationCenter.house.HousesService.showMyHouseDetail"  class="com.hirun.app.biz.houses.HousesService" method="showMyHouseDetail"/>
     <entity name="OperationCenter.house.HousesService.queryHousesByName"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesByName"/>
+
+    <entity name="OperationCenter.house.HousesService.queryHousesByNameNotSan"  class="com.hirun.app.biz.houses.HousesService" method="queryHousesByNameNotSan"/>
     <entity name="OperationCenter.house.HousesService.initCreateScatterHouses"  class="com.hirun.app.biz.houses.HousesService" method="initCreateScatterHouses"/>
     <entity name="OperationCenter.house.HousesService.submitScatterHouses"  class="com.hirun.app.biz.houses.HousesService" method="submitScatterHouses"/>
     <entity name="OperationCenter.house.HousesService.autoUpdateNature"  class="com.hirun.app.biz.houses.HousesService" method="autoUpdateNature"/>
@@ -138,7 +140,8 @@
     <entity name="OperationCenter.plan.PlanService.setMonPlanTarget"  class="com.hirun.app.biz.plan.PlanService" method="setMonPlanTarget"/>
     <entity name="OperationCenter.plan.PlanService.initPlanEntry"  class="com.hirun.app.biz.plan.PlanService" method="initPlanEntry"/>
     <!---过程产品分享-->
-    <entity name="OperationCenter.custservice.ShareProdImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.ShareProductImportTaskService" method="hirunplusDataImport"/>
+    <entity name="OperationCenter.custservice.ShareProductImportTaskService.hirunplusDataImport"  class="com.hirun.app.biz.task.out.ShareProductImportTaskService" method="hirunplusDataImport"/>
+    <entity name="OperationCenter.custservice.TransProductShareDataToInsService.transProductShareData2Ins"  class="com.hirun.app.biz.task.out.TransProductShareDataToInsService" method="transProductShareData2Ins"/>
 
     <!--初始化客户流程-->
     <entity name="OperationCenter.custservice.CustServService.initCsrTraceFlow"  class="com.hirun.app.biz.custservice.CustServService" method="initCsrTraceFlow"/>
@@ -171,6 +174,9 @@
 
     <!--查询party信息用作变更客户代表-->
     <entity name="OperationCenter.custservice.CustServService.queryPartyInfo4ChangeCustService"  class="com.hirun.app.biz.custservice.CustServService" method="queryPartyInfo4ChangeCustService"/>
+
+    <!--查询报备信息-->
+    <entity name="OperationCenter.custservice.CustServService.loadPrepareInfo"  class="com.hirun.app.biz.custservice.CustServService" method="loadPrepareInfo"/>
     <!--初始化变更客户客户代表-->
     <entity name="OperationCenter.custservice.CustServService.initchangecustservice"  class="com.hirun.app.biz.custservice.CustServService" method="initchangecustservice"/>
     <entity name="OperationCenter.custservice.CustServService.searchNewCustService"  class="com.hirun.app.biz.custservice.CustServService" method="searchNewCustService"/>

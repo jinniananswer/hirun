@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author 推送打开数据采集
+ * @author 推送数据采集
  */
-public class ShareProductDataImport {
+public class ShareProductSendDataImport {
 
     private static String host = "www.hi-run.net";
-    private static String path = "/api/midprosharelogs";
+    private static String path = "/api/midprosendlogs";
     private static String pageSize = "100";
 
     public static void dataImport(String start, String end) throws Exception {
@@ -53,11 +53,9 @@ public class ShareProductDataImport {
             Map<String, String> dbParam = new HashMap<String, String>();
             JSONObject jsonData = jsonDataList.getJSONObject(i);
 
-
-            String openid = jsonData.getString("openid");
             String staffId = jsonData.getString("staff_id");
 
-            if (OutBean.isExistData4ProdShare(openid, staffId, jsonData.getString("create_time"))) {
+            if (OutBean.isExistData4ProdSend(staffId, jsonData.getString("create_time"))) {
                 //如果已经存在该数据了，则直接插历史表
                 dbParam.put("UID", jsonData.getString("uid"));
                 dbParam.put("MODE_ID", jsonData.getString("mode_id"));
@@ -71,14 +69,10 @@ public class ShareProductDataImport {
                 dbParam.put("CONTENT", jsonData.getString("content"));
                 dbParam.put("ROLE_ID", jsonData.getString("role_id"));
                 dbParam.put("STAFF_NAME", jsonData.getString("staff_name"));
-                dbParam.put("OPEN_ID", jsonData.getString("openid"));
-                dbParam.put("NICKNAME", jsonData.getString("nickname"));
-                dbParam.put("HEAD_URL", jsonData.getString("headimgurl"));
-                dbParam.put("OPEN_DATE", jsonData.getString("create_time"));
-                dbParam.put("SHARE_DATE", jsonData.getString("send_time"));
+                dbParam.put("SHARE_DATE", jsonData.getString("create_time"));
                 dbParam.put("INDB_TIME", TimeTool.now());
                 dbParam.put("DEAL_TAG", "1");
-                dbParam.put("SEND_ID", jsonData.getString("from_flog"));
+                dbParam.put("SEND_ID", jsonData.getString("curr_flog"));
 
                 hisarrayList.add(dbParam);
                 continue;
@@ -95,12 +89,8 @@ public class ShareProductDataImport {
             dbParam.put("CONTENT", jsonData.getString("content"));
             dbParam.put("ROLE_ID", jsonData.getString("role_id"));
             dbParam.put("STAFF_NAME", jsonData.getString("staff_name"));
-            dbParam.put("OPEN_ID", jsonData.getString("openid"));
-            dbParam.put("NICKNAME", jsonData.getString("nickname"));
-            dbParam.put("HEAD_URL", jsonData.getString("headimgurl"));
-            dbParam.put("OPEN_DATE", jsonData.getString("create_time"));
-            dbParam.put("SHARE_DATE", jsonData.getString("send_time"));
-            dbParam.put("SEND_ID", jsonData.getString("from_flog"));
+            dbParam.put("SHARE_DATE", jsonData.getString("create_time"));
+            dbParam.put("SEND_ID", jsonData.getString("curr_flog"));
             dbParam.put("INDB_TIME", TimeTool.now());
             dbParam.put("DEAL_TAG", "0");
 
@@ -109,11 +99,11 @@ public class ShareProductDataImport {
         }
 
         if(arrayList.size()>0){
-            dao.insertBatch("out_hirunplus_product_share", arrayList);
+            dao.insertBatch("out_hirunplus_product_send", arrayList);
         }
 
         if(hisarrayList.size()>0){
-            dao.insertBatch("out_his_hirunplus_product_share", hisarrayList);
+            dao.insertBatch("out_his_hirunplus_product_send", hisarrayList);
         }
 
 

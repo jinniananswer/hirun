@@ -234,12 +234,12 @@
 						<div class="back" ontap="backPopup(this)">请选择散盘</div>
 						<div class="right">
 							<div class="fn">
-								<button type="button" class="e_button-blue"
+<!--								<button type="button" class="e_button-blue"
 										ontap="scatterHousesPopup.onClickAddScatterHousesButton(this)">
 									<span class="e_ico-add"></span>
 									<span>新增散盘</span>
 								</button>
-
+-->
 							</div>
 
 						</div>

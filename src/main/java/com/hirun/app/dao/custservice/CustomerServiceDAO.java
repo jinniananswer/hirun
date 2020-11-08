@@ -386,7 +386,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     public RecordSet queryCustServFinishActionInfo(String startDate, String endDate, String employeeIds, String orgIds, String name, String tagId, String wxNick, String busiTypeTime) throws Exception {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
-        sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME , j.visitcount ,o.tag_id from ");
+        sb.append("select v.*,s.city_cabins,s.experience_time,s.experience , u.FUNCPRINT_CREATE_TIME,u.STYLEPRINT_CREATE_TIME , j.visitcount ,o.tag_id, mpo.opencount from ");
         sb.append(" ( ");
         sb.append("SELECT a.WX_NICK,a.OPEN_ID,a.create_time,a.PARTY_NAME,c.LINK_EMPLOYEE_ID,a.PARTY_ID,b.PROJECT_ID,d.FINISH_TIME,b.HOUSE_ADDRESS,d.ACTION_CODE,a.consult_time,b.house_id from ");
         sb.append("ins_party a, ins_project b, ins_project_linkman c , ins_project_original_action d ,ins_employee e , ins_employee_job_role f ");
@@ -451,6 +451,9 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         sb.append(" left join (select k.PARTY_ID,count(1) visitcount from ins_party_visit k group by k.PARTY_ID ) j ON (v.PARTY_ID=j.PARTY_ID) ");
         //2020/03/15新增
         sb.append(" left join ins_party_tag o  ON (v.PARTY_ID=o.PARTY_ID) ");
+
+        sb.append(" left join (select count(1) opencount,mp.open_id,mp.employee_id from ins_midprod_open mp group by mp.open_id,mp.employee_id ) mpo ON (v.open_id=mpo.open_id and v.LINK_EMPLOYEE_ID=mpo.employee_id) ");
+
 
         if (StringUtils.isNotBlank(tagId)) {
             sb.append(" where o.tag_id =:TAG_ID ");
@@ -781,7 +784,7 @@ public class CustomerServiceDAO extends StrongObjectDAO {
         Map<String, String> parameter = new HashMap<String, String>();
         StringBuilder sb = new StringBuilder();
         sb.append("select a.cust_id,a.cust_no,a.cust_name,b.prepare_employee_id,b.prepare_time,a.mobile_no," +
-                " b.status as prepare_status,c.house_id,c.house_building,c.house_mode,c.house_room_no, b.id as prepare_id, " +
+                " b.status as prepare_status,c.house_id,c.house_building,c.house_mode,c.house_room_no, b.id as prepare_id, c.project_id ," +
                 " e.employee_id as custservice_employee_id,a.cust_type,a.cust_status,d.status as order_status");
         sb.append(" from cust_base a LEFT JOIN cust_preparation b on (a.prepare_id=b.id)," +
                 "   ins_project c," +
@@ -796,7 +799,14 @@ public class CustomerServiceDAO extends StrongObjectDAO {
     }
 
 
-
+    public RecordSet queryCustomerBaseInfo(String partyId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from cust_base a ");
+        sb.append(" where   a.PARTY_ID=:PARTY_ID ");
+        parameter.put("PARTY_ID", partyId);
+        return this.queryBySql(sb.toString(), parameter);
+    }
 
 
 }
