@@ -47,7 +47,19 @@ public class MenuService extends GenericService{
         }
 
         JSONArray menus = new JSONArray();
+        List<MenuEntity> secondMenus = new ArrayList<>();
         for(MenuEntity menu : dir){
+            String menuId = menu.getMenuId();
+            List<MenuEntity> subMenus = queryMenusByParent(menuId, allMenus);
+            if (ArrayTool.isNotEmpty(subMenus)) {
+                for (MenuEntity subMenu : subMenus) {
+                    subMenu.setTitle(menu.getTitle() + " / " + subMenu.getTitle());
+                }
+                secondMenus.addAll(subMenus);
+            }
+        }
+
+        for(MenuEntity menu : secondMenus){
             String menuId = menu.getMenuId();
             List<MenuEntity> subMenus = queryMenusByParent(menuId, allMenus);
 
