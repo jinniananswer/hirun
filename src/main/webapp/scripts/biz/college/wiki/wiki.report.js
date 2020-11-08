@@ -85,15 +85,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                     that.showQuestionType = true;
                 });
             },
-            selectQuestionTeacher: function(){
-                let that = this;
-                ajax.get('/api/CollegeQuestion/queryQuestionTeacherOptions', '', function(data) {
-                    data.forEach((tutor) => {
-                        that.selectQuestionTeacherList.push("[" + tutor.value + "]" + tutor.name);
-                    })
-                    that.showQuestionTeacher = true;
-                });
-            },
             onConfirmType: function (value) {
                 this.questionType = value;
                 this.showQuestionType = false;

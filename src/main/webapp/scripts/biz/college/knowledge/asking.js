@@ -104,6 +104,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 let that = this;
                 let param = new URLSearchParams()
                 param.append("questionType", that.questionType);
+                that.selectQuestionTeacherList = [];
                 ajax.get('/api/CollegeQuestion/queryQuestionTeacherOptions', param, function(data) {
                     data.forEach((tutor) => {
                         that.selectQuestionTeacherList.push("[" + tutor.value + "]" + tutor.name);
