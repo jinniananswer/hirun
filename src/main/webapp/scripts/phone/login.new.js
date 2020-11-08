@@ -55,7 +55,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                         sessionStorage.setItem('hirun-helper-jwt', resultData.jwt); // 保存 token
                         sessionStorage.setItem('hirun-helper-funcCodes', JSON.stringify(resultData.funcCodes)); // 保存功能权限
 
-                        window.location.href = "/phone/home.html";
+                        window.location.href = "../../phone/home.jsp";
                     }, function(resultCode, resultInfo){
                         if(resultCode == "HIRUN_LOGIN_000001")
                             vm.$toast({
@@ -81,7 +81,7 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                             });
                         }
                     });
-                    // window.location.href = "/phone/home.html";
+                    // window.location.href = "/phone/home.jsp";
                 }, function(resultCode, resultInfo){
                     if(resultCode == "HIRUN_LOGIN_000001")
                         vm.$toast({

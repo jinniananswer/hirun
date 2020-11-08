@@ -33,7 +33,7 @@ require(['vue', 'vant', 'vant-select', 'axios'], function(Vue, vant, vantSelect,
     Vue.use(vant.Lazyload);
     Vue.use(vant.Dialog);
     Vue.use(vant.ImagePreview);
-    axios.defaults.baseURL = 'http://localhost:8080/';
+    axios.defaults.baseURL = 'http://bss.hi-run.net/';
     axios.interceptors.request.use(
         config => {
             const token = sessionStorage.getItem('hirun-helper-jwt')

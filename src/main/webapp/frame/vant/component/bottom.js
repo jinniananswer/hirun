@@ -12,13 +12,13 @@ define(['vue','vant', 'redirect'], function(Vue, vant, redirect){
 
         template: `
             <van-tabbar v-model="active" :z-index="99" active-color="#57be6a" style="padding-top:0.5rem;padding-bottom: 0.5rem;background-color: #141516">
-                <van-tabbar-item icon="home-o" url="/phone/home.html">
+                <van-tabbar-item icon="home-o" url="/phone/home.jsp">
                     <template #icon>
                         <van-icon name="wap-home" size="2rem" />
                     </template>
                     <div :style="active == 0 ? 'color : #57be6a' : ''">首页</div>
                 </van-tabbar-item>
-                <van-tabbar-item icon="search">
+                <van-tabbar-item icon="search" url='/biz/common/msglist_query.jsp'>
                     <template #icon>
                         <van-icon name="chat-o" size="2rem" />
                     </template>
