@@ -46,44 +46,48 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'bottom
         methods: {
             init : function() {
                 let that = this;
-                let cookie = document.cookie
-                let arr,reg = new RegExp("(^| )auth=([^;]*)(;|$)");
-                if(arr = document.cookie.match(reg)){
-                    let auth = arr[2].replace('\"',"").split("@")
-                    let userName = auth[0].replace('\"',"");
-                    let password = auth[1].replace('\"',"");
-                    let param = new URLSearchParams()
-                    param.append('username', userName)
-                    param.append('password', password)
-                    ajax.post('/api/system/auth/login', param,function(resultData){
-                        sessionStorage.setItem('hirun-helper-jwt', resultData.jwt); // 保存 token
-                        sessionStorage.setItem('hirun-helper-funcCodes', JSON.stringify(resultData.funcCodes)); // 保存功能权限
-                    }, function(resultCode, resultInfo){
-                        if(resultCode == "HIRUN_LOGIN_000001")
-                            vm.$toast({
-                                message : resultInfo,
-                                overlay : true,
-                                type : 'fail',
-                                closeOnClickOverlay : true
-                            });
-                        else if(resultCode == "HIRUN_LOGIN_000002") {
-                            vm.$toast({
-                                message : resultInfo,
-                                overlay : true,
-                                type : 'fail',
-                                closeOnClickOverlay : true
-                            });
-                        }
-                        else{
-                            vm.$toast({
-                                message : resultInfo,
-                                overlay : true,
-                                type : 'fail',
-                                closeOnClickOverlay : true
-                            });
-                        }
-                    });
+                let jwt = sessionStorage.getItem("hirun-helper-jwt");
+                if (undefined == jwt || null == jwt || '' == jwt){
+                    let cookie = document.cookie
+                    let arr,reg = new RegExp("(^| )auth=([^;]*)(;|$)");
+                    if(arr = document.cookie.match(reg)){
+                        let auth = arr[2].replace('\"',"").split("@")
+                        let userName = auth[0].replace('\"',"");
+                        let password = auth[1].replace('\"',"");
+                        let param = new URLSearchParams()
+                        param.append('username', userName)
+                        param.append('password', password)
+                        ajax.post('/api/system/auth/login', param,function(resultData){
+                            sessionStorage.setItem('hirun-helper-jwt', resultData.jwt); // 保存 token
+                            sessionStorage.setItem('hirun-helper-funcCodes', JSON.stringify(resultData.funcCodes)); // 保存功能权限
+                        }, function(resultCode, resultInfo){
+                            if(resultCode == "HIRUN_LOGIN_000001")
+                                vm.$toast({
+                                    message : resultInfo,
+                                    overlay : true,
+                                    type : 'fail',
+                                    closeOnClickOverlay : true
+                                });
+                            else if(resultCode == "HIRUN_LOGIN_000002") {
+                                vm.$toast({
+                                    message : resultInfo,
+                                    overlay : true,
+                                    type : 'fail',
+                                    closeOnClickOverlay : true
+                                });
+                            }
+                            else{
+                                vm.$toast({
+                                    message : resultInfo,
+                                    overlay : true,
+                                    type : 'fail',
+                                    closeOnClickOverlay : true
+                                });
+                            }
+                        });
+                    }
                 }
+
                 ajax.get('api/organization/employee/getLoginEmployee', '', function(data) {
                     that.employee = data;
                 });
