@@ -28,7 +28,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util',
                             </van-col>
                         </van-row>
                     </div>
-                    <vant-upload-img ref="upload" :maxCount="5"></vant-upload-img>
                 </div>
                 <bottom :active="2"></bottom>
             </div>`,
