@@ -18,8 +18,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                                     </van-row>
                                     <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
                                         <van-col span="6"></van-col>
-                                        <van-col span="6" @click="addThumbs">
-                                            <van-icon name="good-job-o" size="1.2rem"/>{{item.thumbsUp}}
+                                        <van-col span="6" @click.stop>
+                                            <van-icon name="good-job-o" size="1.2rem" @click="addThumbsUp(item)"/>{{item.thumbsUp}}
                                         </van-col>
                                         <van-col span="6">
                                             <van-icon name="eye-o" size="1.2rem"/> {{item.clicks}}
@@ -40,6 +40,9 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                 active : 0,
                 wikiType: util.getRequest("wikiType"),
                 wikiInfos: [],
+                wiki: {
+                    thumbs: 0
+                }
             }
         },
         methods: {
@@ -53,16 +56,50 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             },
 
             showWikiDetail: function (item) {
+                this.addClick(item);
                 redirect.open('/biz/college/wiki/wiki_detail.html?wikiId='+item.wikiId, '百科详情');
             },
 
-            addClicks: function () {
-
+            addClick: function (item) {
+                let param = new URLSearchParams()
+                param.append('wikiId', item.wikiId);
+                let that = this;
+                that.wiki = item;
+                ajax.post('api/CollegeWiki/addClick', param, function (responseData) {
+                    let type = that.wiki.wikiType;
+                    alert(type);
+                });
             },
 
-            addThumbs: function () {
-                alert(1);
-            },
+            addThumbsUp: function (item) {
+                let param = new URLSearchParams()
+                param.append('wikiId', item.wikiId);
+                let that = this;
+                that.wiki = item;
+                let cancelTag = '0';
+                if (item.thumbs > 0) {
+                    cancelTag = '1';
+                } else {
+                    that.wiki.thumbs = 0;
+                }
+                param.append('cancelTag', cancelTag);
+                ajax.post('api/CollegeWiki/thumbsUp', param, function (responseData) {
+                    let id = that.wiki.wikiId;
+                    let thumb = that.wiki.thumbs;
+                    for (let i = 0; i < that.wikiInfos[0].wikiList.length; i++) {
+                        let temp = that.wikiInfos[0].wikiList[i];
+                        if (temp.wikiId == id) {
+                            if (thumb == 0) {
+                                temp.thumbsUp = temp.thumbsUp + 1;
+                                temp.thumbs = 1;
+                            } else {
+                                temp.thumbsUp = temp.thumbsUp - 1;
+                                temp.thumbs = 0;
+                            }
+                        }
+                    }
+                });
+            }
         },
         mounted () {
             this.init();

@@ -14,10 +14,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                     v-model="value"
                     shape="round"
                     placeholder="请输入搜索关键词"
+                    @search="onSearch"
+                    @cancel="onCancel"
                 />
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="设计类"  @click="openDetail('1')" value="更多"/>
                 <van-cell-group v-for="(item ,index) in designWikis.slice(0,2)">
-                    <van-cell is-link to="showWikiDetail(item)" :center="true" border="false" >
+                    <van-cell is-link @click="showWikiDetail(item)" :center="true" border="false" >
                         <template #title>
                             <div class="van-multi-ellipsis">{{item.wikiTitle}}</div>
                         </template>
@@ -28,8 +30,8 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                             <van-row style="padding-top:1em" type="flex" align="bottom" justify="center">
                                 <van-col span="6"></van-col>
                                 <van-col span="6"></van-col>
-                                <van-col span="6">
-                                    <van-icon name="good-job-o" size="1.2rem"/>{{item.thumbsUp}}
+                                <van-col span="6" @click.stop>
+                                    <van-icon name="good-job-o" size="1.2rem" @click="addThumbsUp(item)"/>{{item.thumbsUp}}
                                 </van-col>
                                 <van-col span="6">
                                     <van-icon name="eye-o" size="1.2rem"/> {{item.clicks}}
@@ -42,12 +44,12 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="基础工程" @click="openDetail('2')" value="更多"/>
                 <van-cell-group v-for="(item ,index) in baseWikis.slice(0,2)">
-                    <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" />
+                    <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" @click="showWikiDetail(item)"/>
                 </van-cell-group>
                 
                 <van-cell style="background-color: #f8f8f8;color:#969799" :center="true" :border="false" is-link title="软装工程"  @click="openDetail('3')" value="更多"/>
                 <van-cell-group v-for="(item ,index) in softWikis.slice(0,2)">
-                    <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" />
+                    <van-cell :title="item.wikiTitle" is-link :label="item.wikiContent" @click="showWikiDetail(item)"/>
                 </van-cell-group>
                 
                 
@@ -58,16 +60,21 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 designWikis: [],
                 baseWikis: [],
                 softWikis:[],
-                wiki: {}
+                wiki: {
+                    thumbs: 0
+                }
             }
         },
         methods: {
             queryByText: function (keyStr) {
                 let param = new URLSearchParams()
-                param.append('keyStr', '1');
+                param.append('keyStr', keyStr);
                 let that = this;
                 ajax.get('api/CollegeWiki/queryByText', param, function(responseData){
                     if (null != responseData) {
+                        that.designWikis = [];
+                        that.baseWikis = [];
+                        that.softWikis = [];
                         for (let i = 0; i < responseData.length; i++) {
                             let wiki = responseData[i];
 
@@ -86,8 +93,82 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect'], functi
                 redirect.open('/biz/college/wiki/wiki_list.html?wikiType='+wikiType, '更多百科');
             },
             showWikiDetail: function (item) {
+                this.addClick(item);
                 redirect.open('/biz/college/wiki/wiki_detail.html?wikiId='+item.wikiId, '百科详情');
             },
+            onSearch: function (val) {
+                this.queryByText(val);
+            },
+            onCancel: function () {
+
+            },
+            addClick: function (item) {
+                let param = new URLSearchParams()
+                param.append('wikiId', item.wikiId);
+                let that = this;
+                that.wiki = item;
+                ajax.post('api/CollegeWiki/addClick', param, function (responseData) {
+
+                });
+            },
+            addThumbsUp: function (item) {
+                let param = new URLSearchParams()
+                param.append('wikiId', item.wikiId);
+                let that = this;
+                that.wiki = item;
+                let cancelTag = '0';
+                if (item.thumbs > 0) {
+                    cancelTag = '1';
+                } else {
+                    that.wiki.thumbs = 0;
+                }
+                param.append('cancelTag', cancelTag);
+                ajax.post('api/CollegeWiki/thumbsUp', param, function (responseData) {
+                    let type = that.wiki.wikiType;
+                    let id = that.wiki.wikiId;
+                    let thumb = that.wiki.thumbs;
+                    if (type == '1') {
+                        for (let i = 0; i < that.designWikis.length; i++) {
+                            let temp = that.designWikis[i];
+                            if (temp.wikiId == id) {
+                                if (thumb == 0) {
+                                    temp.thumbsUp = temp.thumbsUp + 1;
+                                    temp.thumbs = 1;
+                                } else {
+                                    temp.thumbsUp = temp.thumbsUp - 1;
+                                    temp.thumbs = 0;
+                                }
+                            }
+                        }
+                    }else if (type == '2') {
+                        for (let i = 0; i < that.baseWikis.length; i++) {
+                            let temp = that.baseWikis[i];
+                            if (temp.wikiId == id) {
+                                if (thumb == 0) {
+                                    temp.thumbsUp = temp.thumbsUp + 1;
+                                    temp.thumbs = 1;
+                                } else {
+                                    temp.thumbsUp = temp.thumbsUp - 1;
+                                    temp.thumbs = 0;
+                                }
+                            }
+                        }
+                    }else if (type == '3') {
+                        for (let i = 0; i < that.softWikis.length; i++) {
+                            let temp = that.softWikis[i];
+                            if (temp.wikiId == id) {
+                                if (thumb == 0) {
+                                    temp.thumbsUp = temp.thumbsUp + 1;
+                                    temp.thumbs = 1;
+                                } else {
+                                    temp.thumbsUp = temp.thumbsUp - 1;
+                                    temp.thumbs = 0;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         },
         mounted () {
             this.queryByText('');

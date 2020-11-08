@@ -30,17 +30,15 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
                             <template #title>
                                 <van-row>
                                     <div class="van-multi-ellipsis--l2">{{reply.replyer}}</div>
+                                    <template #right-icon>
+                                        <van-row>
+                                            <van-col @click="addThumbs">
+                                                <van-icon name="good-job-o" size="1.2rem" @click="addThumbs"/>{{reply.thumbsUp}}
+                                            </van-col>
+                                        </van-row>
+                                    </template>
                                 </van-row>
                             </template>
-                            <van-cell>
-                                <template #right-icon>
-                                    <van-row>
-                                        <van-col @click="addThumbs">
-                                            <van-icon name="good-job-o" size="1.2rem" @click="addThumbs"/>{{reply.thumbsUp}}
-                                        </van-col>
-                                    </van-row>
-                                </template>
-                            </van-cell>
                             <template #label>
                                 <van-row>
                                     <div class="van-multi-ellipsis--l2">{{reply.replyContent}}</div>
@@ -101,7 +99,6 @@ require(['vue', 'vant', 'ajax', 'vant-select', 'page-title', 'redirect', 'util']
             },
 
             reply: function () {
-                alert(this.replyContent);
                 let that = this;
                 let param = new URLSearchParams()
                 param.append("replyContent", that.replyContent);
