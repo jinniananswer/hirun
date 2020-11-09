@@ -111,8 +111,9 @@ public class CourseController extends RootController {
         ServiceResponse response = ServiceClient.call("OrgCenter.course.CourseService.queryCourseFile", parameter);
         JSONObject file = response.getJSONObject("FILE");
         String filePath = file.getString("STORAGE_PATH");
+        filePath = "/biz/organization/course/view_pdf.jsp?"+filePath;
         request.setAttribute("PATH", filePath);
-        return "/biz/organization/course/view_courseware";
+        return "/biz/organization/course/view_pad_pdf";
     }
 
     @RequestMapping("/redirectToViewPdf")
