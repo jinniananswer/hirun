@@ -222,6 +222,7 @@
     <entity name="CustCenter.cust.CustService.restoreCustById"  class="com.hirun.app.biz.cust.CustService" method="restoreCustById"/>
     <entity name="CustCenter.cust.CustService.queryCustAction4HouseCounselor"  class="com.hirun.app.biz.cust.CustService" method="queryCustAction4HouseCounselor"/>
     <entity name="CustCenter.cust.CustService.showCustomerBluePrintDetail"  class="com.hirun.app.biz.cust.CustService" method="showCustomerBluePrintDetail"/>
+    <entity name="CustCenter.cust.CustService.showMidProdDetail"  class="com.hirun.app.biz.cust.CustService" method="showMidProdDetail"/>
 
     <!--数据中心服务-->
     <entity name="DataCenter.houses.HousesReportService.reportAllHousesNature"  class="com.hirun.app.biz.datacenter.houses.HousesReportService" method="reportAllHousesNature"/>

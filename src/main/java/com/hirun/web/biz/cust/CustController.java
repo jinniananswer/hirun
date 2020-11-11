@@ -151,6 +151,12 @@ public class CustController extends RootController{
         return response.toJsonString();
     }
 
+    @RequestMapping(value = "showMidProdDetail")
+    public @ResponseBody String showMidProdDetail(@RequestParam Map paramter) throws Exception {
+        ServiceResponse response = ServiceClient.call("CustCenter.cust.CustService.showMidProdDetail", paramter);
+        return response.toJsonString();
+    }
+
     @RequestMapping("/cust/exportCustomerInfo4Counselor")
     public @ResponseBody void exportCustomerInfo4Counselor(HttpServletRequest request, HttpServletResponse httpResponse) throws Exception{
         Map<String, String> parameter = new HashMap<String, String>();

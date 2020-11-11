@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <title>客户代表动作检查报表</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20201105"></script>
+	<script src="scripts/biz/datacenter/custservice/custservice.actioncheck.query.js?v=20201111"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -98,6 +98,19 @@
 	        <div class="c_popupBox">
 		        <div class="c_popupWrapper" id="UI-popup_wrapper">
 					<div class="c_popupGroup">
+
+				        <div class="c_popupItem" id="MIDPRODUI-popup-query-cond">
+                                                                 <div class="c_header">
+                                                                      <div class="back" ontap="hidePopup(this)">中间产品信息</div>
+                                                                 </div>
+                                                                 <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                                                                       <div class="c_list c_list-line c_list-border c_list-space l_padding">
+                                                                             <ul id="midprodinfo">
+
+                                                                             </ul>
+                                                                       </div>
+                                                                 </div>
+                         </div>
 						<div class="c_popupItem" id="QueryCondPopupItem">
 							<div class="c_header">
         						<div class="back" ontap="backPopup(this)">查询条件</div>
@@ -207,6 +220,8 @@
                               </div>
                                <!-- 滚动 结束 -->
                           </div>
+
+
 
                          <div class="c_popupItem" id="UI-QUERYCUSTSERVICE">
                             <div class="c_header">

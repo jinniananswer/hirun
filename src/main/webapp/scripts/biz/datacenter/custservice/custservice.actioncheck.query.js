@@ -237,7 +237,7 @@
                         "CITYCABIN":scanCityCabins,
                         "EXCEPERICE":experience,
                         "VISITCOUNT":"<span class='e_red'  ontap='$.custServiceActionQuery.redirectPartyVisit(\""+data.get("PARTY_ID")+"\",\""+data.get("PROJECT_ID")+"\");'>"+visitcount+"</span>",
-                        "OPEN_COUNT":"<span class='e_red' >"+openMidCount+"</span>",
+                        "OPEN_COUNT":"<span class='e_red'  ontap='$.custServiceActionQuery.showMidProdDetail(\""+data.get("OPEN_ID")+"\",\""+data.get("LINK_EMPLOYEE_ID")+"\");'>"+openMidCount+"</span>",
                         "TAG_NAME":tagName,
                     });
 
@@ -336,6 +336,65 @@
                 $("#TAG_TEXT").val(tagName);
                 $("#QUERY_TAG_ID").val(tagId);
                 backPopup(document.getElementById("UI-TAG4QUERY"));
+            },
+
+            showMidProdDetail:function(openId,employeeId){
+                console.log(openId,employeeId);
+                $.ajaxPost('showMidProdDetail', '&OPEN_ID=' + openId+'&EMPLOYEE_ID='+employeeId, function (data) {
+                    let rst = new Wade.DataMap(data);
+                    let midProdInfo = rst.get("MIDPRODINFO");
+                    $.custServiceActionQuery.drawMidProd(midProdInfo);
+
+                    showPopup('UI-popup', 'MIDPRODUI-popup-query-cond');
+                });
+            },
+
+            drawMidProd: function (datas) {
+                $("#midprodinfo").empty();
+                var html = [];
+
+                if (datas == null || datas.length <= 0) {
+                    $("#messagebox").css("display", "");
+                    return;
+                }
+
+                $("#messagebox").css("display", "none");
+                console.log(datas);
+                var length = datas.length;
+                for (let i = 0; i < length; i++) {
+                    let data = datas.get(i);
+                    let title = data.get("TITLE");
+                    let sendTime = data.get("SEND_TIME");
+                    let openTime = data.get("OPEN_TIME");
+                    let staffName = data.get("STAFF_NAME");
+
+
+                    if (title == "undefined" || title == null)
+                        title = "";
+                    if (sendTime == "undefined" || sendTime == null)
+                        sendTime = "";
+                    if (openTime == "undefined" || openTime == null)
+                        openTime = "";
+
+                    html.push("<li class='link'><div class=\"group\"><div class=\"content\"><div class='l_padding'><div class=\"pic pic-middle\">");
+                    html.push("</div></div>");
+                    html.push("<div class=\"main\"><div class=\"title title-auto\">");
+                    html.push(title);
+                    html.push("</div>");
+                    html.push("<div class='content content-auto'>推送时间：");
+                    html.push(sendTime);
+                    html.push("</div>");
+                    html.push("<div class='content content-auto'>打开时间：");
+                    html.push(openTime);
+                    html.push("</div>");
+                    html.push("<div class='content content-auto'>推送人：");
+                    html.push(staffName);
+                    html.push("</div>");
+                    html.push("</div>");
+                    html.push("</div></div></li>");
+                }
+
+                $.insertHtml('beforeend', $("#midprodinfo"), html.join(""));
             },
 
             export : function() {
