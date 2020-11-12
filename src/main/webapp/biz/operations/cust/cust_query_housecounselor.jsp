@@ -11,7 +11,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 	<title>客户查询（家装顾问）</title>
 	<jsp:include page="/common.jsp"></jsp:include>
-	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20201105"></script>
+	<script src="scripts/biz/cust/cust.query.housecounselor.js?a=20201111"></script>
 </head>
 <body>
 <div class="c_header e_show">
@@ -99,6 +99,19 @@
                                  </ul>
                            </div>
                      </div>
+                </div>
+
+                <div class="c_popupItem" id="MIDPRODUI-popup-query-cond">
+                                     <div class="c_header">
+                                          <div class="back" ontap="hidePopup(this)">中间产品信息</div>
+                                     </div>
+                                     <div class="c_scroll c_scroll-float c_scroll-header c_scroll-submit">
+                                           <div class="c_list c_list-line c_list-border c_list-space l_padding">
+                                                 <ul id="midprodinfo">
+
+                                                 </ul>
+                                           </div>
+                                     </div>
                 </div>
 
 				<div class="c_popupItem" id="QueryCondPopupItem">

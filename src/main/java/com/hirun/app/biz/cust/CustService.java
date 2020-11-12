@@ -460,4 +460,26 @@ public class CustService extends GenericService {
         response.set("PROJECTXQLTYINFO",ConvertTool.toJSONArray(recordSet));
         return response;
     }
+
+
+    /**
+     * 家装顾问查下需求蓝图一具体内容
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    public ServiceResponse showMidProdDetail(ServiceRequest request) throws Exception {
+        ServiceResponse response=new ServiceResponse();
+        String openId=request.getString("OPEN_ID");
+        String houseCounselorId=request.getString("EMPLOYEE_ID");
+        CustDAO custDAO = DAOFactory.createDAO(CustDAO.class);
+
+        RecordSet recordSet=custDAO.queryMidOpen(openId,houseCounselorId);
+        if(recordSet.size()<=0){
+            return response;
+        }
+
+        response.set("MIDPRODINFO",ConvertTool.toJSONArray(recordSet));
+        return response;
+    }
 }

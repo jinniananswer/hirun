@@ -171,7 +171,7 @@ public class CustDAO extends StrongObjectDAO {
         parameter.put("WX_NICK", wxNick);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT customer.CUST_ID,CUST_NAME, HOUSE_COUNSELOR_ID, employee.NAME ,customer.WX_NICK,customer.first_plan_date,mpo.opencount FROM ins_customer customer ");
+        sb.append("SELECT customer.CUST_ID,CUST_NAME, HOUSE_COUNSELOR_ID, employee.NAME ,customer.WX_NICK,customer.first_plan_date,mpo.opencount,customer.identify_code as OPEN_ID FROM ins_customer customer ");
         sb.append("LEFT JOIN ins_employee employee ON (employee.EMPLOYEE_ID = customer.HOUSE_COUNSELOR_ID and employee.STATUS = '0' ) ");
 
         //20201106
@@ -232,6 +232,23 @@ public class CustDAO extends StrongObjectDAO {
         sb.append(" and action_code in ('XQLTY','XQLTY_A','XQLTY_B','XQLTY_C')");
         sb.append(" and rel_employee_id=:REL_EMPLOYEE_ID");
         sb.append(" order by create_time ");
+        parameter.put("OPEN_ID", openid);
+        parameter.put("REL_EMPLOYEE_ID", relEmployeeId);
+        RecordSet recordSet = queryBySql(sb.toString(), parameter);
+
+        if (recordSet.size() < 0) {
+            return null;
+        }
+        return recordSet;
+    }
+
+    public RecordSet queryMidOpen(String openid, String relEmployeeId) throws Exception {
+        Map<String, String> parameter = new HashMap<String, String>();
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from ins_midprod_open ");
+        sb.append("where OPEN_ID=:OPEN_ID  ");
+        sb.append(" and employee_id=:REL_EMPLOYEE_ID");
+        sb.append(" order by open_time ");
         parameter.put("OPEN_ID", openid);
         parameter.put("REL_EMPLOYEE_ID", relEmployeeId);
         RecordSet recordSet = queryBySql(sb.toString(), parameter);
