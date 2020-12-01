@@ -192,10 +192,13 @@
                                 <div id="courseTree" class="c_tree"></div>
                             </div>
                         </div>
-                        <div class="l_bottom">
-                            <div class="l_bottom c_submit c_submit-full">
-                                <button type="button" ontap="$.train.confirmCourse();" class="e_button-l e_button-green">确定</button>
-                            </div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
+                        <div class="c_space-3"></div>
+                    </div>
+                    <div class="l_bottom">
+                        <div class="c_submit c_submit-full">
+                            <button type="button" ontap="$.train.confirmCourse();" class="e_button-l e_button-green">确定</button>
                         </div>
                     </div>
                 </div>
