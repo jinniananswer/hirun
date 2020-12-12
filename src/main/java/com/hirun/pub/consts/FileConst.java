@@ -12,5 +12,5 @@ public class FileConst {
 
     public static final String SUPPORT_FILE_TYPE = "|.doc|.docx|.xls|.xlsx|.ppt|.pptx|";
 
-    public static final String STORAGE_PATH = "http://139.129.29.141:8080/doc/";
+    public static final String STORAGE_PATH = "http://bss.hi-run.net:8080/doc/";
 }
