@@ -13,6 +13,12 @@
                     $.prework.treeName = nodeData.text;
                     $.prework.dataId = nodeData.dataid;
                     $.prework.hasChild = nodeData.haschild;
+                    let isExpand = (document.getElementById("courseTree○" + nodeData.dataid).className.indexOf("unfold") >= 0 ? true : false);
+                    if (!isExpand && nodeData.haschild) {
+                        window["courseTree"].expand("courseTree○" + nodeData.dataid);
+                    } else if (isExpand) {
+                        window["courseTree"].collapse("courseTree○" + nodeData.dataid);
+                    }
                     return false;
                 });
 
